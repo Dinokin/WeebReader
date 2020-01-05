@@ -20,6 +20,7 @@ namespace WeebReader.Data.Entities.Abstract
         public byte[] Cover { get; set; }
         public Statuses Status { get; set; }
         public bool Visible { get; set; }
+        public string Type { get; set; }
 
         public IEnumerable<TitleTag> TitleTags { get; set; }
     }
