@@ -19,7 +19,7 @@ namespace Services
 
         public async Task<bool> AddAnnouncement(Announcement announcement)
         {
-            if (!await ValidateAnnouncement(announcement))
+            if (ValidateAnnouncement(announcement))
                 return false;
 
             announcement.Id = Guid.Empty;
@@ -32,10 +32,14 @@ namespace Services
 
         public async Task<bool> EditAnnouncement(Announcement announcement)
         {
-            if (!await ValidateAnnouncement(announcement, true))
+            if (ValidateAnnouncement(announcement))
                 return false;
 
-            var ann = Context.Announcements.Single(a => a.Id == announcement.Id);
+            var ann = await Context.Announcements.SingleOrDefaultAsync(a => a.Id == announcement.Id);
+
+            if (ann == null)
+                return false;
+
             ann.Name = announcement.Name;
             ann.Content = announcement.Content;
             ann.ReleaseDate = announcement.ReleaseDate;
@@ -57,12 +61,9 @@ namespace Services
             return await Context.SaveChangesAsync() > 0;
         }
 
-        private async Task<bool> ValidateAnnouncement(Announcement announcement, bool edit = false)
+        private static bool ValidateAnnouncement(Announcement announcement)
         {
             if (announcement == null)
-                return false;
-
-            if (edit && !await Context.Announcements.AnyAsync(ann => ann.Id == announcement.Id))
                 return false;
 
             var titleExists = !string.IsNullOrWhiteSpace(announcement.Name);
