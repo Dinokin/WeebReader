@@ -7,7 +7,7 @@ namespace WeebReader.Data.Contexts.Factories
     {
         private string ConnectionString { get; }
 
-        public SQLiteContextFactory() => ConnectionString = "Data Source = database.db;";
+        public SQLiteContextFactory() => ConnectionString = "Data Source = :memory:;";
         
         public SQLiteContext CreateDbContext(string[] args) => new SQLiteContext(new DbContextOptionsBuilder().UseSqlite(ConnectionString).Options);
     }
