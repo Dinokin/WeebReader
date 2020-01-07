@@ -9,7 +9,7 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations.SQLite
 {
     [DbContext(typeof(SQLiteContext))]
-    [Migration("20200107001237_Initial")]
+    [Migration("20200107161612_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

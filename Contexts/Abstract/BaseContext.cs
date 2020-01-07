@@ -106,7 +106,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(package => package.Name).IsRequired();
                 typeBuilder.Property(package => package.Content).IsRequired();
-                typeBuilder.HasDiscriminator<string>("Type").HasValue<Resource>(typeof(Resource).Name).HasValue<Package>(typeof(Package).Name);
+                typeBuilder.HasDiscriminator(resource => resource.Type).HasValue<Resource>(typeof(Resource).Name).HasValue<Package>(typeof(Package).Name);
             });
 
             builder.Entity<Package>(typeBuilder =>
