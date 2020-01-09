@@ -8,7 +8,7 @@ namespace WeebReader.Data.Contexts.Factories
         public MariaDbContext CreateDbContext(string[] args)
         {
             var options = new DbContextOptionsBuilder();
-            options.UseMySql("Server=localhost;Database=NaniWeb;Uid=root;Pwd=123456;");
+            options.UseMySql("Server=localhost;Database=WeebDb;Uid=root;Pwd=123456;");
             
             return new MariaDbContext(options.Options);
         }
