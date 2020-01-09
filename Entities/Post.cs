@@ -3,11 +3,10 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Entities
 {
-    public class Announcement : BaseEntity
+    public class Post : BaseEntity
     {
         public string Name { get; set; }
         public string Content { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime Date { get; set; }
     }
 }

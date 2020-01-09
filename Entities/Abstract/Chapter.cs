@@ -8,10 +8,9 @@ namespace WeebReader.Data.Entities.Abstract
         public ushort Volume { get; set; }
         public decimal Number { get; set; }
         public string Name { get; set; }
-        public DateTime CreationDate { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime Date { get; set; }
+        public bool Visible { get; set; }
         public Guid TitleId { get; set; }
-        
-        public Package Package { get; set; }
+        public byte Type { get; set; }
     }
 }

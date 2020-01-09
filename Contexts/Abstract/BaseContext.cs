@@ -16,8 +16,7 @@ namespace WeebReader.Data.Contexts.Abstract
         public DbSet<NovelChapter> NovelChapters { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TitleTag> TitleTags { get; set; }
-        public DbSet<Announcement> Announcements { get; set; }
-        public DbSet<Package> Packages { get; set; }
+        public DbSet<Post> Posts { get; set; }
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<Setting> Settings { get; set; }
@@ -28,43 +27,73 @@ namespace WeebReader.Data.Contexts.Abstract
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<IdentityUser<Guid>>().ToTable("Users");
-            builder.Entity<IdentityRole<Guid>>().ToTable("Roles");
-            builder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+            builder.Entity<IdentityUser<Guid>>(typeBuilder =>
+            {
+                typeBuilder.Property(user => user.UserName).HasMaxLength(25);
+                typeBuilder.Property(user => user.NormalizedUserName).HasMaxLength(25);
+                typeBuilder.Property(user => user.Email).HasMaxLength(320);
+                typeBuilder.Property(user => user.NormalizedEmail).HasMaxLength(320);
+                typeBuilder.ToTable("Users");
+            });
+            
+            builder.Entity<IdentityRole<Guid>>(typeBuilder =>
+            {
+                typeBuilder.Property(role => role.Name).HasMaxLength(25);
+                typeBuilder.Property(role => role.NormalizedName).HasMaxLength(25);
+                typeBuilder.ToTable("Roles");
+            });
+
+            builder.Entity<IdentityUserClaim<Guid>>(typeBuilder =>
+            {
+                typeBuilder.Property(role => role.ClaimType).HasMaxLength(25);
+                typeBuilder.Property(role => role.ClaimValue).HasMaxLength(25);
+                typeBuilder.ToTable("UserClaims");
+            });
+            
             builder.Entity<IdentityUserRole<Guid>>().ToTable("UserRoles");
-            builder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+
+            builder.Entity<IdentityUserLogin<Guid>>(typeBuilder =>
+            {
+                typeBuilder.Property(userLogin => userLogin.LoginProvider).HasMaxLength(50);
+                typeBuilder.Property(userLogin => userLogin.ProviderKey).HasMaxLength(512);
+                typeBuilder.ToTable("UserLogins");
+            });
+            
             builder.Entity<IdentityRoleClaim<Guid>>().ToTable("RoleClaims");
-            builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+
+            builder.Entity<IdentityUserToken<Guid>>(typeBuilder =>
+            {
+                typeBuilder.Property(userToken => userToken.LoginProvider).HasMaxLength(50);
+                typeBuilder.Property(userToken => userToken.Name).HasMaxLength(50);
+                typeBuilder.ToTable("UserTokens");
+            });
 
             builder.Entity<Title>(typeBuilder =>
             {
-                typeBuilder.Property(title => title.Name).IsRequired();
-                typeBuilder.Property(title => title.Author).IsRequired();
-                typeBuilder.Property(title => title.Artist).IsRequired();
+                typeBuilder.Property(title => title.Name).IsRequired().HasMaxLength(200);
+                typeBuilder.Property(title => title.Author).IsRequired().HasMaxLength(50);
+                typeBuilder.Property(title => title.Artist).IsRequired().HasMaxLength(50);
                 typeBuilder.Property(title => title.Synopsis).IsRequired();
-                typeBuilder.Property(title => title.Cover).IsRequired();
                 typeBuilder.Property(title => title.Status).IsRequired();
                 typeBuilder.Property(title => title.Visible).IsRequired();
-                typeBuilder.HasIndex(title => new {title.Name, title.Type}).IsUnique();
                 typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title).HasForeignKey(titleTag => titleTag.TitleId);
-                typeBuilder.HasDiscriminator(title => title.Type).HasValue<Comic>(typeof(Comic).Name).HasValue<Novel>(typeof(Novel).Name);
+                typeBuilder.HasDiscriminator(title => title.Type).HasValue<Comic>(0).HasValue<Novel>(1);
             });
             
             builder.Entity<Chapter>(typeBuilder =>
             {
                 typeBuilder.Property(chapter => chapter.Number).IsRequired();
-                typeBuilder.Property(chapter => chapter.CreationDate).IsRequired();
+                typeBuilder.Property(chapter => chapter.Name).HasMaxLength(100);
+                typeBuilder.Property(chapter => chapter.Date).IsRequired();
                 typeBuilder.Property(chapter => chapter.TitleId).IsRequired();
                 typeBuilder.HasIndex(chapter => new {chapter.Number, chapter.TitleId}).IsUnique();
-                typeBuilder.HasOne(chapter => chapter.Package).WithOne(package => package.Chapter).HasForeignKey<Package>(package => package.ChapterId);
-                typeBuilder.HasDiscriminator<string>("Type").HasValue<ComicChapter>(typeof(ComicChapter).Name).HasValue<NovelChapter>(typeof(NovelChapter).Name);
+                typeBuilder.HasDiscriminator(chapter => chapter.Type).HasValue<ComicChapter>(0).HasValue<NovelChapter>(1);
             });
             
             builder.Entity<Page>(typeBuilder =>
             {
                 typeBuilder.Property(page => page.Animated).IsRequired();
                 typeBuilder.Property(page => page.ChapterId).IsRequired();
-                typeBuilder.Property(page => page.Content).IsRequired();
             });
 
             builder.Entity<Comic>(typeBuilder =>
@@ -88,36 +117,25 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<Tag>(typeBuilder =>
             {
-                typeBuilder.Property(tag => tag.Name).IsRequired();
+                typeBuilder.Property(tag => tag.Name).IsRequired().HasMaxLength(20);
                 typeBuilder.HasIndex(tag => tag.Name).IsUnique();
                 typeBuilder.HasMany(tag => tag.TitleTag).WithOne(titleTag => titleTag.Tag).HasForeignKey(titleTag => titleTag.TagId);
             });
 
             builder.Entity<TitleTag>(typeBuilder => typeBuilder.HasIndex(titleTag => new {titleTag.TagId, titleTag.TitleId}).IsUnique());
 
-            builder.Entity<Announcement>(typeBuilder =>
+            builder.Entity<Post>(typeBuilder =>
             {
-                typeBuilder.Property(announcement => announcement.Name).IsRequired();
+                typeBuilder.Property(announcement => announcement.Name).IsRequired().HasMaxLength(100);
                 typeBuilder.Property(announcement => announcement.Content).IsRequired();
-                typeBuilder.Property(announcement => announcement.CreationDate).IsRequired();
+                typeBuilder.Property(announcement => announcement.Date).IsRequired();
             });
             
-            builder.Entity<Resource>(typeBuilder =>
-            {
-                typeBuilder.Property(package => package.Name).IsRequired();
-                typeBuilder.Property(package => package.Content).IsRequired();
-                typeBuilder.HasDiscriminator(resource => resource.Type).HasValue<Resource>(typeof(Resource).Name).HasValue<Package>(typeof(Package).Name);
-            });
-
-            builder.Entity<Package>(typeBuilder =>
-            {
-                typeBuilder.Property(package => package.ChapterId).IsRequired();
-                typeBuilder.HasIndex(package => package.ChapterId).IsUnique();
-            });
+            builder.Entity<Resource>(typeBuilder => typeBuilder.Property(package => package.Name).IsRequired().HasMaxLength(100));
             
             builder.Entity<Link>(typeBuilder =>
             {
-                typeBuilder.Property(link => link.Name).IsRequired();
+                typeBuilder.Property(link => link.Name).IsRequired().HasMaxLength(20);
                 typeBuilder.HasIndex(link => link.Name).IsUnique();
                 typeBuilder.Property(link => link.Destination).IsRequired();
                 typeBuilder.Property(link => link.Active).IsRequired();
@@ -125,9 +143,8 @@ namespace WeebReader.Data.Contexts.Abstract
             
             builder.Entity<Setting>(typeBuilder =>
             {
-                typeBuilder.Property(setting => setting.Key).IsRequired();
+                typeBuilder.Property(setting => setting.Key).IsRequired().HasMaxLength(50);
                 typeBuilder.HasIndex(setting => setting.Key).IsUnique();
-                typeBuilder.Property(setting => setting.Key).IsRequired();
             });
         }
     }

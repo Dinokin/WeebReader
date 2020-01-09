@@ -1,34 +1,20 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WeebReader.Data.Contexts.Migrations.SQLite
+namespace WeebReader.Data.Contexts.Migrations
 {
     public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Announcements",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Content = table.Column<string>(nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "DATETIME", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Announcements", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Links",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Destination = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 20, nullable: false),
+                    Destination = table.Column<string>(type: "TEXT", nullable: false),
                     Active = table.Column<bool>(type: "BOOLEAN", nullable: false)
                 },
                 constraints: table =>
@@ -37,13 +23,39 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 });
 
             migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Content = table.Column<string>(nullable: false),
+                    Date = table.Column<DateTime>(type: "DATETIME", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Resources",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resources", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(maxLength: 25, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 25, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,8 +67,8 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Key = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: false)
+                    Key = table.Column<string>(maxLength: 50, nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -68,7 +80,7 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,15 +92,14 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(maxLength: 200, nullable: false),
                     OriginalName = table.Column<string>(nullable: false),
-                    Author = table.Column<string>(nullable: false),
-                    Artist = table.Column<string>(nullable: false),
-                    Synopsis = table.Column<string>(nullable: false),
-                    Cover = table.Column<byte[]>(nullable: false),
-                    Status = table.Column<int>(type: "UNSIGNED TINYINT", nullable: false),
+                    Author = table.Column<string>(maxLength: 50, nullable: false),
+                    Artist = table.Column<string>(maxLength: 50, nullable: false),
+                    Synopsis = table.Column<string>(type: "TEXT", nullable: false),
+                    Status = table.Column<byte>(type: "TINYINT UNSIGNED", nullable: false),
                     Visible = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    Type = table.Column<string>(nullable: false),
+                    Type = table.Column<byte>(type: "TINYINT UNSIGNED", nullable: false),
                     LongStrip = table.Column<bool>(type: "BOOLEAN", nullable: true)
                 },
                 constraints: table =>
@@ -101,20 +112,20 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    UserName = table.Column<string>(maxLength: 25, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 25, nullable: true),
+                    Email = table.Column<string>(maxLength: 320, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 320, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "DATETIME", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "INT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,10 +137,10 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     RoleId = table.Column<Guid>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -147,13 +158,13 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Volume = table.Column<ushort>(type: "UNSIGNED SMALLINT", nullable: false),
+                    Volume = table.Column<ushort>(type: "SMALLINT UNSIGNED", nullable: false),
                     Number = table.Column<decimal>(type: "DECIMAL", nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Visible = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     TitleId = table.Column<Guid>(nullable: false),
-                    Type = table.Column<string>(nullable: false),
+                    Type = table.Column<byte>(type: "TINYINT UNSIGNED", nullable: false),
                     Content = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -203,10 +214,10 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<Guid>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
+                    ClaimType = table.Column<string>(maxLength: 25, nullable: true),
+                    ClaimValue = table.Column<string>(maxLength: 25, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -223,8 +234,8 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 name: "UserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(maxLength: 50, nullable: false),
+                    ProviderKey = table.Column<string>(maxLength: 512, nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
                     UserId = table.Column<Guid>(nullable: false)
                 },
@@ -268,9 +279,9 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 columns: table => new
                 {
                     UserId = table.Column<Guid>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
+                    LoginProvider = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -289,37 +300,15 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Animated = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    Content = table.Column<byte[]>(nullable: false),
                     ChapterId = table.Column<Guid>(nullable: false),
                     Discriminator = table.Column<string>(nullable: false),
-                    Number = table.Column<ushort>(type: "UNSIGNED SMALLINT", nullable: true)
+                    Number = table.Column<ushort>(type: "SMALLINT UNSIGNED", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Page", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Page_Chapter_ChapterId",
-                        column: x => x.ChapterId,
-                        principalTable: "Chapter",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Resources",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Content = table.Column<byte[]>(nullable: false),
-                    Type = table.Column<string>(nullable: false),
-                    ChapterId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Resources", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Resources_Chapter_ChapterId",
                         column: x => x.ChapterId,
                         principalTable: "Chapter",
                         principalColumn: "Id",
@@ -360,12 +349,6 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Resources_ChapterId",
-                table: "Resources",
-                column: "ChapterId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
                 table: "RoleClaims",
                 column: "RoleId");
@@ -386,12 +369,6 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
                 name: "IX_Tags_Name",
                 table: "Tags",
                 column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Title_Name_Type",
-                table: "Title",
-                columns: new[] { "Name", "Type" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -435,13 +412,13 @@ namespace WeebReader.Data.Contexts.Migrations.SQLite
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Announcements");
-
-            migrationBuilder.DropTable(
                 name: "Links");
 
             migrationBuilder.DropTable(
                 name: "Page");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "Resources");
