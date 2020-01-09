@@ -25,7 +25,7 @@ namespace WeebReader.Web.Portal
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MariaDbContext>(builder => builder.UseMySql(_configuration.GetConnectionString("MariaDb")));
+            services.AddDbContext<BaseContext, MariaDbContext>(builder => builder.UseMySql(_configuration.GetConnectionString("MariaDb")));
 
             services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
                 {
