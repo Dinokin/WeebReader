@@ -4,6 +4,6 @@
         <AssemblyName>WeebReader.Data.Entities</AssemblyName>
         <RootNamespace>WeebReader.Data.Entities</RootNamespace>
         <LangVersion>latest</LangVersion>
-        <Nullable>enable</Nullable>
+        <Nullable>disable</Nullable>
     </PropertyGroup>
 </Project>

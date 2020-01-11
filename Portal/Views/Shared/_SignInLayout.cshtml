@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_SharedHeaders"/>
+    <style type="text/css">
+        body > .grid {
+            height: 100%;
+        }
+
+        .image {
+            margin-top: -100px;
+        }
+    
+        .column {
+            max-width: 450px;
+        }
+    </style>
+    @await RenderSectionAsync("Headers", false)
+</head>
+<body class="background">
+@RenderBody()
+</body>
+</html>

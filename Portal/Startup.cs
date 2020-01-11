@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
+using WeebReader.Web.Portal.Services;
 
 namespace WeebReader.Web.Portal
 {
@@ -50,14 +51,16 @@ namespace WeebReader.Web.Portal
             {
                 options.LoginPath = "/admin/";
                 options.LogoutPath = "/admin/signout";
-                options.AccessDeniedPath = "/denied";
+                options.AccessDeniedPath = "/denied"; 
             });
             
             services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}Keys"))
                 .ProtectKeysWithCertificate(Utilities.GetCertificate());
 
             services.AddControllersWithViews()
-                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = true);
+                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
+
+            services.AddTransient<EmailSender>();
         }
         
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)

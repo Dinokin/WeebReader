@@ -1,0 +1,91 @@
+﻿@inject BaseContext BaseContext;
+@model SignInFormModel
+
+@{
+    ViewData["Title"] = "Sign in";
+    var emailEnable = await BaseContext.Settings.SingleAsync(setting => setting.Key == "EmailEnabled");
+}
+
+@section Headers
+{
+    <script>
+    $(function() {
+      $(".form").form({
+      on: "blur",
+      fields: {
+          username: {
+              identifier: "username",
+              rules: [
+                  {
+                      type: "empty",
+                      prompt: "A username is required to sign in."
+                  },
+                  {
+                      type: "length[3]",
+                      prompt: "A username must have at least 3 characters."
+                  }
+              ]
+          },
+          password: {
+              identifier: "password",
+              rules: [
+                  {
+                      type: "empty",
+                      prompt: "A password is required to sign in."
+                  },
+                  {
+                      type: "length[3]",
+                      prompt: "A password must have at least 8 characters."
+                  }
+              ]
+          }
+      }
+      }).api({
+      url: "@Url.Action("SignIn")",
+      serializeForm: true,
+      method: "POST",
+      onSuccess: function(response) {
+        window.location.href = response.destination;
+      },
+      onFailure: function(response) {
+        addError($(".error .message"), response);
+      }
+      });
+    });
+    </script>
+}
+
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui image header">
+            <img class="image" src="assets/logo.png" alt="Logo">
+            <div class="content">
+                Sign in to your account
+            </div>
+        </h2>
+        <form id="sing-in-form" class="ui large form" novalidate>
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="username" placeholder="Username" asp-for="Username">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" placeholder="Password" asp-for="Password">
+                    </div>
+                </div>
+                <input class="ui fluid large black submit button" type="submit" value="Sign in"/>
+            </div>
+            <div class="ui error message"></div>
+        </form>
+        @if (bool.Parse(emailEnable.Value))
+        {
+            <div class="ui message">
+                Forgot your password? <a href="@Url.Action("ResetPassword","SignIn")">Reset it.</a>
+            </div>   
+        }
+    </div>
+</div>

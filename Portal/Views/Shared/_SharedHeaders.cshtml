@@ -1,0 +1,46 @@
+﻿@inject BaseContext BaseContext
+
+@{
+    ViewData["SiteName"] = (await BaseContext.Settings.SingleAsync(setting => setting.Key == "SiteName")).Value;
+    ViewData["SiteDescription"] = (await BaseContext.Settings.SingleAsync(setting => setting.Key == "SiteDescription")).Value;
+}
+
+<!-- Standard Meta -->
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- Site Properties -->
+<title>@ViewData["Title"]@(ViewData["TitleSeparator"] ?? " - ")@ViewData["SiteName"]</title>
+<meta name="description" content="@ViewData["SiteDescription"]">
+@if (Convert.ToBoolean(ViewData["AllowIndexing"]))
+{
+    <meta name="robots" content="noindex, nofollow">
+}
+<link rel="icon" href="~/assets/logo.png">
+<link rel="stylesheet" href="~/libs/semantic.2.4.2.css"/>
+<link rel="stylesheet" href="~/libs/weebreader.1.0.css"/>
+<link rel="stylesheet" href="~/libs/cookieconsent.3.1.1.css"/>
+<link rel="stylesheet" href="~/libs/overrides.css"/>
+<script src="~/libs/jquery-3.4.1.js"></script>
+<script src="~/libs/jquery.serialize-object.2.5.0.js"></script>
+<script src="~/libs/semantic.2.4.2.js"></script>
+<script src="~/libs/cookieconsent.3.1.1.js"></script>
+<script src="~/libs/weebreader.1.0.js"></script>
+<script>
+$(function() {
+  window.cookieconsent.initialise({
+  "palette": {
+    "popup": {
+      "background": "#333"
+    },
+    "button": {
+      "background": "#000000"
+    }},
+    "theme": "edgeless",
+    "position": "bottom-right",
+    "content": {
+      "message": "This website uses cookies to personalize your user experience. By using our website, you agree to our use of cookies."
+    }});
+});
+</script>
