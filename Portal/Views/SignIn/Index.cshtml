@@ -1,8 +1,9 @@
-﻿@inject BaseContext BaseContext;
-@model SignInFormModel
+﻿@inject BaseContext BaseContext
+@model SignInModel
 
 @{
     ViewData["Title"] = "Sign in";
+    var successMessage = TempData["SuccessMessage"];
     var emailEnable = await BaseContext.Settings.SingleAsync(setting => setting.Key == "EmailEnabled");
 }
 
@@ -18,11 +19,11 @@
               rules: [
                   {
                       type: "empty",
-                      prompt: "A username is required to sign in."
+                      prompt: "An username is required to sign in."
                   },
                   {
                       type: "length[3]",
-                      prompt: "A username must have at least 3 characters."
+                      prompt: "An username must have at least 3 characters."
                   }
               ]
           },
@@ -48,7 +49,7 @@
         window.location.href = response.destination;
       },
       onFailure: function(response) {
-        addError($(".error .message"), response);
+        addError($(".form .message"), response);
       }
       });
     });
@@ -63,7 +64,7 @@
                 Sign in to your account
             </div>
         </h2>
-        <form id="sing-in-form" class="ui large form" novalidate>
+        <form class="ui large form" novalidate>
             <div class="ui stacked segment">
                 <div class="field">
                     <div class="ui left icon input">
@@ -79,12 +80,23 @@
                 </div>
                 <input class="ui fluid large black submit button" type="submit" value="Sign in"/>
             </div>
-            <div class="ui error message"></div>
+            @if (successMessage != null)
+            {
+                <div class="ui message success visible">
+                    <ul class="list">
+                        <li>@successMessage</li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="ui message error"></div>
+            }
         </form>
         @if (bool.Parse(emailEnable.Value))
         {
             <div class="ui message">
-                Forgot your password? <a href="@Url.Action("ResetPassword","SignIn")">Reset it.</a>
+                Forgot your password? <a href="@Url.Action("ForgotPassword","SignIn")">Reset it.</a>
             </div>   
         }
     </div>
