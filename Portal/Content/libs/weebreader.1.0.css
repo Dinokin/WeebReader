@@ -4,3 +4,11 @@
     background-size: 100%;
     background-attachment: fixed;
 }
+
+.no-margin-top {
+    margin-top: 0 !important;
+}
+
+.no-border-radius {
+    border-radius: 0 !important;
+}

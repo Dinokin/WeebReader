@@ -2,6 +2,16 @@ $.fn.api.settings.successTest = function(response) {
     return response.success;
 };
 
+$(function () {
+    $(".form").on("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            
+            return false;
+        }
+    });
+});
+
 function addError(element, response) {
     element.removeClass("success");
     element.addClass("error");
