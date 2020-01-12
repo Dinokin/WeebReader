@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Sign in";
     var successMessage = TempData["SuccessMessage"];
+    var errorMessage = TempData["ErrorMessage"];
     var emailEnable = await BaseContext.Settings.SingleAsync(setting => setting.Key == "EmailEnabled");
 }
 
@@ -35,7 +36,7 @@
                       prompt: "A password is required to sign in."
                   },
                   {
-                      type: "length[3]",
+                      type: "length[8]",
                       prompt: "A password must have at least 8 characters."
                   }
               ]
@@ -59,7 +60,7 @@
 <div class="ui middle aligned center aligned grid">
     <div class="column">
         <h2 class="ui image header">
-            <img class="image" src="assets/logo.png" alt="Logo">
+            <img class="image" src="~/assets/logo.png" alt="Logo">
             <div class="content">
                 Sign in to your account
             </div>
@@ -80,17 +81,17 @@
                 </div>
                 <input class="ui fluid large black submit button" type="submit" value="Sign in"/>
             </div>
-            @if (successMessage != null)
+            @if (successMessage == null && errorMessage == null)
             {
-                <div class="ui message success visible">
-                    <ul class="list">
-                        <li>@successMessage</li>
-                    </ul>
-                </div>
+                <div class="ui message error"></div>
             }
             else
             {
-                <div class="ui message error"></div>
+                <div class="ui message @(successMessage == null ? "error" : "success") visible">
+                    <ul class="list">
+                        <li>@(successMessage ?? errorMessage)</li>
+                    </ul>
+                </div>
             }
         </form>
         @if (bool.Parse(emailEnable.Value))

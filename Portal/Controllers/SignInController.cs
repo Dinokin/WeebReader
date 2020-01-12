@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Web.Portal.Models.SignIn;
@@ -37,6 +38,13 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost]
         public async Task<IActionResult> SignIn(SignInModel signInModel)
         {
+            if (_signInManager.IsSignedIn(User))
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {"You're already signed in."}
+                });
+            
             if (TryValidateModel(signInModel))
             {
                 var result = await _signInManager.PasswordSignInAsync(signInModel.Username, signInModel.Password, false, true);
@@ -90,6 +98,13 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
                 });
             }
+            
+            if (_signInManager.IsSignedIn(User))
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {"You're already signed in. Please sign out or change your password in the administrator panel."}
+                });
 
             if (TryValidateModel(forgotPasswordModel))
             {
@@ -105,9 +120,11 @@ namespace WeebReader.Web.Portal.Controllers
                     var stringBuilder = new StringBuilder();
 
                     stringBuilder.AppendLine($"Hello {user.UserName},");
+                    stringBuilder.AppendLine();
                     stringBuilder.AppendLine($"A password reset was request at {siteName.Value}.");
-                    stringBuilder.AppendLine("Please go to the following URL to proceed with the reset.No action is need if you didn't request this.");
-                    stringBuilder.AppendLine($"{siteAddress.Value}{Url.Action("ResetPassword", new {id = user.Id, token})}");
+                    stringBuilder.AppendLine("Please go to the following URL to proceed with the reset. No action is need if you didn't request this.");
+                    stringBuilder.AppendLine();
+                    stringBuilder.AppendLine($"{siteAddress.Value}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 
                     await _emailSender.SendEmail(siteEmail.Value, user.Email, $"Password Reset - {siteName.Value}", stringBuilder.ToString());
                 }
@@ -128,9 +145,53 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        public async Task<IActionResult> ResetPassword()
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPasswordModel)
         {
-            throw new NotImplementedException();
+            if (_signInManager.IsSignedIn(User))
+                return RedirectToAction("YourProfile", "UserManager");
+            
+            TryValidateModel(resetPasswordModel);
+
+            if (ModelState["Token"].ValidationState == ModelValidationState.Valid && await _context.Users.AnyAsync(user => user.Id == resetPasswordModel.UserId))
+                return View(resetPasswordModel);
+
+            TempData["ErrorMessage"] = "We cannot proceed with the password reset because invalid data was supplied.";
+
+            return RedirectToAction("Index");
+        }
+        
+        public async Task<IActionResult> CompleteResetPassword(ResetPasswordModel resetPasswordModel)
+        {
+            if (_signInManager.IsSignedIn(User))
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {"You're already signed in. Please sign out or change your password in the administrator panel."}
+                });
+
+            if (TryValidateModel(resetPasswordModel) && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) is var user && user != null)
+            {
+                var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    TempData["SuccessMessage"] = "Your password was changed successfully. You can now sign in using your new password.";
+                    
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        destination = Url.Action("Index")
+                    });
+                }
+                
+                ModelState.AddModelError("NotSucceeded", "We could not complete your password reset. Please try again or restart the process.");
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
+            });
         }
     }
 }

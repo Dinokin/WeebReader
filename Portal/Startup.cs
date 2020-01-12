@@ -41,11 +41,7 @@ namespace WeebReader.Web.Portal
                 })
                 .AddDefaultTokenProviders().AddEntityFrameworkStores<BaseContext>();
 
-            services.AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-                options.LowercaseQueryStrings = true;
-            });
+            services.AddRouting(options => options.LowercaseUrls = true);
             
             services.ConfigureApplicationCookie(options =>
             {
