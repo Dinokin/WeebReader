@@ -9,6 +9,9 @@ namespace WeebReader.Data.Contexts.Abstract
 {
     public abstract class BaseContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
+        public DbSet<Title> Titles { get; set; }
+        public DbSet<Chapter> Chapters { get; set; }
+        public DbSet<Page> Pages { get; set; }
         public DbSet<Comic> Comics { get; set; }
         public DbSet<ComicChapter> ComicChapters { get; set; }
         public DbSet<ComicPage> ComicPages { get; set; }

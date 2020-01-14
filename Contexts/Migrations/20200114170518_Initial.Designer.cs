@@ -9,7 +9,7 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200109214523_Initial")]
+    [Migration("20200114170518_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,7 +226,6 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
                         .HasMaxLength(100);
 
@@ -250,7 +249,7 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.HasIndex("Number", "TitleId")
                         .IsUnique();
 
-                    b.ToTable("Chapter");
+                    b.ToTable("Chapters");
 
                     b.HasDiscriminator<byte>("Type");
                 });
@@ -273,7 +272,7 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Page");
+                    b.ToTable("Pages");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Page");
                 });
@@ -300,7 +299,6 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasMaxLength(200);
 
                     b.Property<string>("OriginalName")
-                        .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<byte>("Status")
@@ -318,7 +316,7 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Title");
+                    b.ToTable("Titles");
 
                     b.HasDiscriminator<byte>("Type");
                 });
@@ -400,7 +398,6 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasMaxLength(50);
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -470,7 +467,7 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasIndex("TitleId")
-                        .HasName("IX_Chapter_TitleId1");
+                        .HasName("IX_Chapters_TitleId1");
 
                     b.HasDiscriminator().HasValue((byte)1);
                 });
@@ -587,7 +584,7 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.HasOne("WeebReader.Data.Entities.Novel", "Title")
                         .WithMany("Chapters")
                         .HasForeignKey("TitleId")
-                        .HasConstraintName("FK_Chapter_Title_TitleId1")
+                        .HasConstraintName("FK_Chapters_Titles_TitleId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

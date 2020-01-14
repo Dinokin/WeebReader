@@ -68,7 +68,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Key = table.Column<string>(maxLength: 50, nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: false)
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -88,12 +88,12 @@ namespace WeebReader.Data.Contexts.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Title",
+                name: "Titles",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
-                    OriginalName = table.Column<string>(nullable: false),
+                    OriginalName = table.Column<string>(nullable: true),
                     Author = table.Column<string>(maxLength: 50, nullable: false),
                     Artist = table.Column<string>(maxLength: 50, nullable: false),
                     Synopsis = table.Column<string>(type: "TEXT", nullable: false),
@@ -104,7 +104,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Title", x => x.Id);
+                    table.PrimaryKey("PK_Titles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,13 +154,13 @@ namespace WeebReader.Data.Contexts.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chapter",
+                name: "Chapters",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Volume = table.Column<ushort>(type: "SMALLINT UNSIGNED", nullable: false),
                     Number = table.Column<decimal>(type: "DECIMAL", nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: true),
                     Date = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     Visible = table.Column<bool>(type: "BOOLEAN", nullable: false),
                     TitleId = table.Column<Guid>(nullable: false),
@@ -169,17 +169,17 @@ namespace WeebReader.Data.Contexts.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chapter", x => x.Id);
+                    table.PrimaryKey("PK_Chapters", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Chapter_Title_TitleId",
+                        name: "FK_Chapters_Titles_TitleId",
                         column: x => x.TitleId,
-                        principalTable: "Title",
+                        principalTable: "Titles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Chapter_Title_TitleId1",
+                        name: "FK_Chapters_Titles_TitleId1",
                         column: x => x.TitleId,
-                        principalTable: "Title",
+                        principalTable: "Titles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -202,9 +202,9 @@ namespace WeebReader.Data.Contexts.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TitleTags_Title_TitleId",
+                        name: "FK_TitleTags_Titles_TitleId",
                         column: x => x.TitleId,
-                        principalTable: "Title",
+                        principalTable: "Titles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -295,7 +295,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Page",
+                name: "Pages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -306,29 +306,29 @@ namespace WeebReader.Data.Contexts.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Page", x => x.Id);
+                    table.PrimaryKey("PK_Pages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Page_Chapter_ChapterId",
+                        name: "FK_Pages_Chapters_ChapterId",
                         column: x => x.ChapterId,
-                        principalTable: "Chapter",
+                        principalTable: "Chapters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapter_Number_TitleId",
-                table: "Chapter",
+                name: "IX_Chapters_Number_TitleId",
+                table: "Chapters",
                 columns: new[] { "Number", "TitleId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapter_TitleId",
-                table: "Chapter",
+                name: "IX_Chapters_TitleId",
+                table: "Chapters",
                 column: "TitleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapter_TitleId1",
-                table: "Chapter",
+                name: "IX_Chapters_TitleId1",
+                table: "Chapters",
                 column: "TitleId");
 
             migrationBuilder.CreateIndex(
@@ -338,13 +338,13 @@ namespace WeebReader.Data.Contexts.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Page_ChapterId",
-                table: "Page",
+                name: "IX_Pages_ChapterId",
+                table: "Pages",
                 column: "ChapterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Page_Number_ChapterId",
-                table: "Page",
+                name: "IX_Pages_Number_ChapterId",
+                table: "Pages",
                 columns: new[] { "Number", "ChapterId" },
                 unique: true);
 
@@ -415,7 +415,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 name: "Links");
 
             migrationBuilder.DropTable(
-                name: "Page");
+                name: "Pages");
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -445,7 +445,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "Chapter");
+                name: "Chapters");
 
             migrationBuilder.DropTable(
                 name: "Tags");
@@ -457,7 +457,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Title");
+                name: "Titles");
         }
     }
 }
