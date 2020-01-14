@@ -3,8 +3,8 @@
 
 @{
     ViewData["Title"] = "Sign in";
-    var successMessage = TempData["SuccessMessage"];
-    var errorMessage = TempData["ErrorMessage"];
+    var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
+    var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
     var emailEnable = await BaseContext.Settings.SingleAsync(setting => setting.Key == "EmailEnabled");
 }
 

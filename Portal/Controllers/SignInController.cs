@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
+using WeebReader.Web.Portal.Models.Shared;
 using WeebReader.Web.Portal.Models.SignIn;
 using WeebReader.Web.Portal.Services;
 
@@ -34,8 +35,7 @@ namespace WeebReader.Web.Portal.Controllers
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UserManager") : (IActionResult) View();
         }
-
-        [HttpPost]
+        
         public async Task<IActionResult> SignIn(SignInModel signInModel)
         {
             if (_signInManager.IsSignedIn(User))
@@ -77,6 +77,7 @@ namespace WeebReader.Web.Portal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
         public async Task<IActionResult> ForgotPassword()
         {
             if (!bool.Parse((await _context.Settings.SingleAsync(setting => setting.Key == "EmailEnabled")).Value) || _signInManager.IsSignedIn(User))
@@ -86,7 +87,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ForgotPasswordSendMail(ForgotPasswordModel forgotPasswordModel)
+        public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
             if (!bool.Parse((await _context.Settings.SingleAsync(setting => setting.Key == "EmailEnabled")).Value))
             {
@@ -121,15 +122,15 @@ namespace WeebReader.Web.Portal.Controllers
 
                     stringBuilder.AppendLine($"Hello {user.UserName},");
                     stringBuilder.AppendLine();
-                    stringBuilder.AppendLine($"A password reset was request at {siteName.Value}.");
-                    stringBuilder.AppendLine("Please go to the following URL to proceed with the reset. No action is need if you didn't request this.");
+                    stringBuilder.AppendLine($"A password reset was requested at {siteName.Value}.");
+                    stringBuilder.AppendLine("Please go to the following URL to proceed with the reset. You can safely ignore this email if you didn't request this.");
                     stringBuilder.AppendLine();
                     stringBuilder.AppendLine($"{siteAddress.Value}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 
                     await _emailSender.SendEmail(siteEmail.Value, user.Email, $"Password Reset - {siteName.Value}", stringBuilder.ToString());
                 }
 
-                TempData["SuccessMessage"] = "If that address exists in our database, a message will be send with the details on how to proceed.";
+                TempData["SuccessMessage"] = new[] {"If that address exists in our database, an e-mail will be send with the details on how to proceed with the password reset."};
                 
                 return new JsonResult(new
                 {
@@ -143,8 +144,8 @@ namespace WeebReader.Web.Portal.Controllers
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
-        }
-
+        } 
+        
         public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPasswordModel)
         {
             if (_signInManager.IsSignedIn(User))
@@ -152,15 +153,15 @@ namespace WeebReader.Web.Portal.Controllers
             
             TryValidateModel(resetPasswordModel);
 
-            if (ModelState["Token"].ValidationState == ModelValidationState.Valid && await _context.Users.AnyAsync(user => user.Id == resetPasswordModel.UserId))
+            if (ModelState["Token"].ValidationState == ModelValidationState.Valid && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) != null)
                 return View(resetPasswordModel);
 
-            TempData["ErrorMessage"] = "We cannot proceed with the password reset because invalid data was supplied.";
+            TempData["ErrorMessage"] = new[] {"We cannot proceed with the password reset because invalid data was supplied."};
 
             return RedirectToAction("Index");
-        }
+        } 
         
-        public async Task<IActionResult> CompleteResetPassword(ResetPasswordModel resetPasswordModel)
+        public async Task<IActionResult> ProcessResetPassword(ResetPasswordModel resetPasswordModel)
         {
             if (_signInManager.IsSignedIn(User))
                 return new JsonResult(new
@@ -175,7 +176,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (result.Succeeded)
                 {
-                    TempData["SuccessMessage"] = "Your password was changed successfully. You can now sign in using your new password.";
+                    TempData["SuccessMessage"] = new[] {"Your password was changed successfully. You can now sign in using your new password."};
                     
                     return new JsonResult(new
                     {
@@ -192,6 +193,33 @@ namespace WeebReader.Web.Portal.Controllers
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
+        }
+
+        public async Task<IActionResult> ChangeEmail(ChangeEmailModel changeEmailModel)
+        {
+            if (TryValidateModel(changeEmailModel))
+            {
+                if (await _userManager.FindByEmailAsync(changeEmailModel.Email) is var candidate && candidate != null)
+                    TempData["ErrorMessage"] = new[] {"The requested e-mail is already in use."};
+                else
+                {
+                    var user = await _userManager.FindByIdAsync(changeEmailModel.UserId.ToString());
+
+                    if (user != null)
+                    {
+                        var result = await _userManager.ChangeEmailAsync(user, changeEmailModel.Email, changeEmailModel.Token);
+
+                        if (result.Succeeded)
+                            TempData["SuccessMessage"] = new[] {"Your e-mail was changed successfully."};
+                    }
+                    else
+                        ModelState.AddModelError("NotSucceeded", "We could not change your e-mail. Please try again or contact an administrator.");
+                }
+            }
+            else
+                TempData["ErrorMessage"] = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage);
+            
+            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UserManager") : RedirectToAction("Index");
         }
     }
 }

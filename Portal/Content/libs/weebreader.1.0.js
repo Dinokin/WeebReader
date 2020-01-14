@@ -10,16 +10,20 @@ $(function () {
             return false;
         }
     });
+
+    $(".message .close").on("click", function() {
+            $(this).closest(".message").transition("fade");
+        });
 });
 
 function addError(element, response) {
-    element.removeClass("success");
+    element.removeClass("success hidden");
     element.addClass("error");
     addMessages(element, response);
 }
 
 function addSuccess(element, response) {
-    element.removeClass("error");
+    element.removeClass("error hidden");
     element.addClass("success");
     addMessages(element, response);
 }
