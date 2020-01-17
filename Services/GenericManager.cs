@@ -8,7 +8,7 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    public abstract class GenericManager<TEntity> where TEntity : BaseEntity
+    public class GenericManager<TEntity> where TEntity : BaseEntity
     {
         protected readonly BaseContext Context;
         protected readonly DbSet<TEntity> DbSet;
