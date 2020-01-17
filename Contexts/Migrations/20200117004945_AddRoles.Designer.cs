@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeebReader.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    partial class MariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200117004945_AddRoles")]
+    partial class AddRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

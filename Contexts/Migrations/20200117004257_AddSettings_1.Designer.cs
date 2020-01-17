@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WeebReader.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    partial class MariaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200117004257_AddSettings_1")]
+    partial class AddSettings_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,29 +44,6 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"),
-                            ConcurrencyStamp = "26cd3943-23ff-41f5-86ed-8b867cf233b4",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        },
-                        new
-                        {
-                            Id = new Guid("08d79ae6-7ec1-478f-867c-a8170f075a27"),
-                            ConcurrencyStamp = "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7",
-                            Name = "Moderator",
-                            NormalizedName = "MODERATOR"
-                        },
-                        new
-                        {
-                            Id = new Guid("08d79ae6-7ec3-42ce-8a94-00a56192c379"),
-                            ConcurrencyStamp = "352e1584-d439-45dc-8015-9428b4e47c76",
-                            Name = "Uploader",
-                            NormalizedName = "UPLOADER"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
