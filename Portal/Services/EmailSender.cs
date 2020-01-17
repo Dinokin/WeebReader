@@ -6,18 +6,19 @@ using MimeKit;
 using MimeKit.Text;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
+using WeebReader.Data.Services;
 
 namespace WeebReader.Web.Portal.Services
 {
     public class EmailSender
     {
-        private readonly BaseContext _context;
+        private readonly SettingManager _settingManager;
 
-        public EmailSender(BaseContext baseContext) => _context = baseContext;
+        public EmailSender(SettingManager settingManager) => _settingManager = settingManager;
 
         public async Task<bool> SendEmail(string origin, string destination, string subject, string content)
         {
-            if (bool.Parse((await _context.Settings.SingleAsync(setting => setting.Key == "EmailEnabled")).Value))
+            if (await _settingManager.GetValue<bool>("EmailEnabled"))
             {
                 try
                 {
@@ -31,14 +32,14 @@ namespace WeebReader.Web.Portal.Services
                         Text = content
                     };
 
-                    Setting server = await _context.Settings.SingleAsync(setting => setting.Key == "SmtpServer"),
-                        port = await _context.Settings.SingleAsync(setting => setting.Key == "SmtpServerPort"),
-                        user = await _context.Settings.SingleAsync(setting => setting.Key == "SmtpServerUser"),
-                        password = await _context.Settings.SingleAsync(setting => setting.Key == "SmtpServerPassword");
+                    string server = await _settingManager.GetValue("SmtpServer"),
+                        port = await _settingManager.GetValue("SmtpServerPort"),
+                        user = await _settingManager.GetValue("SmtpServerUser"),
+                        password = await _settingManager.GetValue("SmtpServerPassword");
                     
                     using var client = new SmtpClient {ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true};
-                    await client.ConnectAsync(server.Value, int.Parse(port.Value));
-                    await client.AuthenticateAsync(user.Value, password.Value);
+                    await client.ConnectAsync(server, int.Parse(port));
+                    await client.AuthenticateAsync(user, password);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
 

@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
-using WeebReader.Data.Contexts.Abstract;
+using WeebReader.Data.Services;
 using WeebReader.Web.Portal.Models.Shared;
 using WeebReader.Web.Portal.Models.SignIn;
 using WeebReader.Web.Portal.Services;
@@ -18,14 +17,14 @@ namespace WeebReader.Web.Portal.Controllers
     {
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
-        private readonly BaseContext _context;
+        private readonly SettingManager _settingManager;
         private readonly EmailSender _emailSender;
 
-        public SignInController(SignInManager<IdentityUser<Guid>> signInManager, UserManager<IdentityUser<Guid>> userManager, BaseContext context, EmailSender emailSender)
+        public SignInController(SignInManager<IdentityUser<Guid>> signInManager, UserManager<IdentityUser<Guid>> userManager, SettingManager settingManager, EmailSender emailSender)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _context = context;
+            _settingManager = settingManager;
             _emailSender = emailSender;
         }
 
@@ -80,7 +79,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> ForgotPassword()
         {
-            if (!bool.Parse((await _context.Settings.SingleAsync(setting => setting.Key == "EmailEnabled")).Value) || _signInManager.IsSignedIn(User))
+            if (await _settingManager.GetValue<bool>("EmailEnabled") || _signInManager.IsSignedIn(User))
                 return RedirectToAction("Index");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UserManager") : (IActionResult) View();
@@ -89,7 +88,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
-            if (!bool.Parse((await _context.Settings.SingleAsync(setting => setting.Key == "EmailEnabled")).Value))
+            if (await _settingManager.GetValue<bool>("EmailEnabled"))
             {
                 ModelState.AddModelError("FunctionalityDisabled", "This functionality is disabled, please contact an administrator.");
 
@@ -114,20 +113,20 @@ namespace WeebReader.Web.Portal.Controllers
                 if (user != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var siteName = await _context.Settings.SingleAsync(setting => setting.Key == "SiteName");
-                    var siteAddress = await _context.Settings.SingleAsync(setting => setting.Key == "SiteAddress");
-                    var siteEmail = await _context.Settings.SingleAsync(setting => setting.Key == "SiteEmail");
+                    var siteName = await _settingManager.GetValue("SiteName");
+                    var siteAddress = await _settingManager.GetValue("SiteAddress");
+                    var siteEmail = await _settingManager.GetValue("SiteEmail");
                 
                     var stringBuilder = new StringBuilder();
 
                     stringBuilder.AppendLine($"Hello {user.UserName},");
                     stringBuilder.AppendLine();
-                    stringBuilder.AppendLine($"A password reset was requested at {siteName.Value}.");
+                    stringBuilder.AppendLine($"A password reset was requested at {siteName}.");
                     stringBuilder.AppendLine("Please go to the following URL to proceed with the reset. You can safely ignore this email if you didn't request this.");
                     stringBuilder.AppendLine();
-                    stringBuilder.AppendLine($"{siteAddress.Value}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
+                    stringBuilder.AppendLine($"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 
-                    await _emailSender.SendEmail(siteEmail.Value, user.Email, $"Password Reset - {siteName.Value}", stringBuilder.ToString());
+                    await _emailSender.SendEmail(siteEmail, user.Email, $"Password Reset - {siteName}", stringBuilder.ToString());
                 }
 
                 TempData["SuccessMessage"] = new[] {"If that address exists in our database, an e-mail will be send with the details on how to proceed with the password reset."};

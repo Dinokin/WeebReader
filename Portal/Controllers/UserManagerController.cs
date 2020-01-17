@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WeebReader.Data.Contexts.Abstract;
+using WeebReader.Data.Services;
 using WeebReader.Web.Portal.Models.Shared;
 using WeebReader.Web.Portal.Models.UserManager;
 using WeebReader.Web.Portal.Services;
@@ -17,13 +16,13 @@ namespace WeebReader.Web.Portal.Controllers
     public class UserManagerController : Controller
     {
         private readonly UserManager<IdentityUser<Guid>> _userManager;
-        private readonly BaseContext _context;
+        private readonly SettingManager _settingManager;
         private readonly EmailSender _emailSender;
 
-        public UserManagerController(UserManager<IdentityUser<Guid>> userManager, BaseContext context, EmailSender emailSender)
+        public UserManagerController(UserManager<IdentityUser<Guid>> userManager, SettingManager settingManager, EmailSender emailSender)
         {
             _userManager = userManager;
-            _context = context;
+            _settingManager = settingManager;
             _emailSender = emailSender;
         }
 
@@ -71,20 +70,20 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
                 var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
-                var siteName = await _context.Settings.SingleAsync(setting => setting.Key == "SiteName");
-                var siteAddress = await _context.Settings.SingleAsync(setting => setting.Key == "SiteAddress");
-                var siteEmail = await _context.Settings.SingleAsync(setting => setting.Key == "SiteEmail");
+                var siteName = await _settingManager.GetValue("SiteName");
+                var siteAddress = await _settingManager.GetValue("SiteAddress");
+                var siteEmail = await _settingManager.GetValue("SiteEmail");
                 
                 var stringBuilder = new StringBuilder();
 
                 stringBuilder.AppendLine($"Hello {user.UserName},");
                 stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"An e-mail change was requested at {siteName.Value}.");
+                stringBuilder.AppendLine($"An e-mail change was requested at {siteName}.");
                 stringBuilder.AppendLine("Please go to the following URL to proceed with the change. If you changed your mind, you can safely ignore this email.");
                 stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"{siteAddress.Value}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
+                stringBuilder.AppendLine($"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
                 
-                var result =  await _emailSender.SendEmail(siteEmail.Value, emailModel.Email, $"Change E-mail - {siteName.Value}", stringBuilder.ToString());
+                var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, $"Change E-mail - {siteName}", stringBuilder.ToString());
 
                 if(result)
                     return new JsonResult(new

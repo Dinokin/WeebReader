@@ -1,11 +1,11 @@
-﻿@inject BaseContext BaseContext
+﻿@inject SettingManager SettingManager
 @model SignInModel
 
 @{
     ViewData["Title"] = "Sign in";
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var emailEnable = await BaseContext.Settings.SingleAsync(setting => setting.Key == "EmailEnabled");
+    var emailEnable = await SettingManager.GetValue<bool>("EmailEnabled");
 }
 
 @section Headers
@@ -94,7 +94,7 @@
                 </div>
             }
         </form>
-        @if (bool.Parse(emailEnable.Value))
+        @if (emailEnable)
         {
             <div class="ui message">
                 Forgot your password? <a href="@Url.Action("ForgotPassword","SignIn")">Reset it.</a>

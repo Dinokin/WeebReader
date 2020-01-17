@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
+using WeebReader.Data.Entities;
+using WeebReader.Data.Entities.Abstract;
+using WeebReader.Data.Services;
 using WeebReader.Web.Portal.Services;
 
 namespace WeebReader.Web.Portal
@@ -57,6 +60,18 @@ namespace WeebReader.Web.Portal
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
 
             services.AddTransient<EmailSender>();
+            services.AddTransient<SettingManager>();
+            services.AddTransient<GenericManager<Post>>();
+            services.AddTransient<GenericManager<Link>>();
+            services.AddTransient<GenericManager<Resource>>();
+            services.AddTransient<TitleManager<Title>>();
+            services.AddTransient<TitleManager<Comic>>();
+            services.AddTransient<TitleManager<Novel>>();
+            services.AddTransient<ChapterManager<Chapter>>();
+            services.AddTransient<ChapterManager<ComicChapter>>();
+            services.AddTransient<ChapterManager<NovelChapter>>();
+            services.AddTransient<PageManager<Page>>();
+            services.AddTransient<PageManager<ComicPage>>();
         }
         
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)

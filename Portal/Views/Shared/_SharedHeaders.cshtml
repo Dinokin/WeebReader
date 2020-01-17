@@ -1,8 +1,8 @@
-﻿@inject BaseContext BaseContext
+﻿@inject SettingManager SettingManager
 
 @{
-    ViewData["SiteName"] = (await BaseContext.Settings.SingleAsync(setting => setting.Key == "SiteName")).Value;
-    ViewData["SiteDescription"] = (await BaseContext.Settings.SingleAsync(setting => setting.Key == "SiteDescription")).Value;
+    ViewData["SiteName"] = await SettingManager.GetValue("SiteName");
+    ViewData["SiteDescription"] = await SettingManager.GetValue("SiteDescription");
 }
 
 <!-- Standard Meta -->
