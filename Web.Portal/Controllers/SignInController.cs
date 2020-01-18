@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WeebReader.Data.Services;
 using WeebReader.Web.Portal.Models.Shared;
 using WeebReader.Web.Portal.Models.SignIn;
-using WeebReader.Web.Portal.Services;
+using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
 {

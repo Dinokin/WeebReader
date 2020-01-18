@@ -17,7 +17,7 @@ using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
-using WeebReader.Web.Portal.Services;
+using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal
 {

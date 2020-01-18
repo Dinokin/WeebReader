@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
-using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using MimeKit.Text;
-using WeebReader.Data.Contexts.Abstract;
-using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 
-namespace WeebReader.Web.Portal.Services
+namespace WeebReader.Web.Services
 {
     public class EmailSender
     {
