@@ -76,6 +76,8 @@ namespace WeebReader.Data.Services
             }
             catch
             {
+                await transaction.RollbackAsync();
+                
                 return false;
             }
         }
