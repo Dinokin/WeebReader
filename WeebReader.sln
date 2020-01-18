@@ -2,15 +2,15 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{3A26DD19-688C-42B3-B42B-5588B4B73285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{EF4C72E5-E3C2-4174-970F-95261540673E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Entities", "Data.Entities\Data.Entities.csproj", "{EF4C72E5-E3C2-4174-970F-95261540673E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contexts", "Contexts\Contexts.csproj", "{4F6F195B-2D97-4E77-BDA3-9E16197E5E51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Contexts", "Data.Contexts\Data.Contexts.csproj", "{4F6F195B-2D97-4E77-BDA3-9E16197E5E51}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{AA5BFB04-9266-4DBE-8026-B3B96CA47215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal", "Portal\Portal.csproj", "{15E340D6-EA94-44BD-836E-2DEC5F8F5F67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Portal", "Web.Portal\Web.Portal.csproj", "{15E340D6-EA94-44BD-836E-2DEC5F8F5F67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{5B915DC5-A04C-40E1-9A9B-DA65B7D9B34E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Services", "Data.Services\Data.Services.csproj", "{5B915DC5-A04C-40E1-9A9B-DA65B7D9B34E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
