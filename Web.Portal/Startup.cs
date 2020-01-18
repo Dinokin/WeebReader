@@ -70,7 +70,6 @@ namespace WeebReader.Web.Portal
             services.AddTransient<ChapterManager<Chapter>>();
             services.AddTransient<ChapterManager<ComicChapter>>();
             services.AddTransient<ChapterManager<NovelChapter>>();
-            services.AddTransient<PageManager<Page>>();
             services.AddTransient<PageManager<ComicPage>>();
         }
         
