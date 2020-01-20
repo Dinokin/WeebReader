@@ -1,4 +1,9 @@
-﻿.background {
+﻿.ui.vertical.menu .item > i.icon.left {
+    float: none;
+    margin: 0 0.35714286em 0 0;
+}
+
+.background {
     background-image: url(/assets/background.png);
     background-repeat: no-repeat;
     background-size: 100%;
@@ -7,6 +12,10 @@
 
 .no-margin-top {
     margin-top: 0 !important;
+}
+
+.no-margin-bottom {
+    margin-bottom: 0 !important;
 }
 
 .no-border {
