@@ -23,7 +23,9 @@ namespace WeebReader.Data.Services
 
         public virtual async Task<TEntity> GetById(Guid id) => await DbSet.SingleOrDefaultAsync(entity => entity.Id == id);
 
+#pragma warning disable 1998
         public virtual async Task<IEnumerable<TEntity>> GetRange(int skip, int take) => DbSet.Skip(skip).Take(take);
+#pragma warning restore 1998
 
         public virtual async Task<bool> Add(TEntity entity)
         {

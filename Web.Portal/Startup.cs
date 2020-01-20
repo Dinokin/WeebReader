@@ -71,6 +71,10 @@ namespace WeebReader.Web.Portal
             services.AddTransient<ChapterManager<ComicChapter>>();
             services.AddTransient<ChapterManager<NovelChapter>>();
             services.AddTransient<PageManager<ComicPage>>();
+            services.AddTransient<TitlePacker<Comic>>();
+            services.AddTransient<TitlePacker<Novel>>();
+            services.AddTransient<ChapterPacker<ComicChapter>>();
+            services.AddTransient<ChapterPacker<NovelChapter>>();
         }
         
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)

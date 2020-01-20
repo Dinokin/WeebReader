@@ -14,6 +14,8 @@ namespace WeebReader.Data.Services
 
         public async Task<long> CountPagesByChapterId(Guid chapterId) => await DbSet.LongCountAsync(page => page.ChapterId == chapterId);
 
+#pragma warning disable 1998
         public async Task<IEnumerable<TPage>> GetPagesByChapterId(Guid chapterId) => DbSet.Where(page => page.ChapterId == chapterId);
+#pragma warning restore 1998
     }
 }
