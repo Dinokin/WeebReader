@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WeebReader.Web.Portal.Models.UserManager
+namespace WeebReader.Web.Models.Models.UserManager
 {
     public class ChangePasswordModel
     {

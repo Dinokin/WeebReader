@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WeebReader.Web.Portal.Models.Shared
+namespace WeebReader.Web.Models.Models.Shared
 {
     public class EmailModel
     {

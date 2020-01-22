@@ -19,6 +19,10 @@ $(function () {
     $("input[type=\"file\"]").on("change", function (event) {
         $("label.button").html("<i class=\"file icon\"></i>" + event.target.files[0].name.substr(0, 14) + (event.target.files[0].name.length > 15 ? "..." : ""));
     });
+
+    $(".ui.dropdown").dropdown({
+        allowAdditions: true
+    });
 });
 
 function addError(element, response) {

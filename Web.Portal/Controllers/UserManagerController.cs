@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WeebReader.Data.Services;
-using WeebReader.Web.Portal.Models.Shared;
-using WeebReader.Web.Portal.Models.UserManager;
+using WeebReader.Web.Models.Models.Shared;
+using WeebReader.Web.Models.Models.UserManager;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers

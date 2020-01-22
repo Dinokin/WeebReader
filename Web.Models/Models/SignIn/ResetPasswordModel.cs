@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace WeebReader.Web.Portal.Models.SignIn
+namespace WeebReader.Web.Models.Models.SignIn
 {
     public class ResetPasswordModel
     {

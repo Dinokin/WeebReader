@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
-using WeebReader.Web.Portal.Attributes;
+using WeebReader.Data.Entities.Abstract;
+using WeebReader.Web.Models.Attributes;
 
-namespace WeebReader.Web.Portal.Models.TitleManager
+namespace WeebReader.Web.Models.Models.TitleManager
 {
     public class TitleModel
     {
@@ -17,10 +18,11 @@ namespace WeebReader.Web.Portal.Models.TitleManager
         [Required(ErrorMessage = "The name of the artist is a required.")]
         [MaxLength(50, ErrorMessage = "The name of the artist must not surpass 50 characters.")]
         public string Artist { get; set; }
+        public string Tags { get; set; }
         [Required(ErrorMessage = "A synopsis is required for this title.")]
         public string Synopsis { get; set; }
         [Required(ErrorMessage = "A status is required for this title.")]
-        public Data.Entities.Abstract.Title.Statuses Status { get; set; }
+        public Title.Statuses Status { get; set; }
         [Required(ErrorMessage = "The visibility must be set.")]
         public bool Visible { get; set; }
         [AllowedFormats(".png,.jpg,.jpeg", ErrorMessage = "Unsupported cover format. The supported formats are: .png and .jpg/jpeg")]

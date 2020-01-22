@@ -1,9 +1,10 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WeebReader.Data.Entities;
-using WeebReader.Web.Portal.Models.TitleManager;
+using WeebReader.Web.Models.Mappers;
+using WeebReader.Web.Models.Models.TitleManager;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -15,6 +16,8 @@ namespace WeebReader.Web.Portal.Controllers
 
         public ComicsManagerController(TitlePacker<Comic> titlePacker) => _titlePacker = titlePacker;
 
+        public IActionResult Index() => View();
+        
         [HttpGet]
         public IActionResult Add() => View();
 
@@ -26,19 +29,7 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 if (comicModel.Cover != null)
                 {
-                    var comic = new Comic
-                    {
-                        Name = comicModel.Name,
-                        OriginalName = comicModel.OriginalName,
-                        Author = comicModel.Author,
-                        Artist = comicModel.Artist,
-                        Synopsis = comicModel.Synopsis,
-                        Status = comicModel.Status,
-                        Visible = comicModel.Visible,
-                        LongStrip = comicModel.LongStrip
-                    };
-
-                    if (await _titlePacker.AddTitle(comic, comicModel.Cover.OpenReadStream()))
+                    if (await _titlePacker.AddTitle(TitleMapper.MapComicToEntity(comicModel), comicModel.Tags.Split(","), comicModel.Cover.OpenReadStream()))
                     {
                         TempData["SuccessMessage"] = new[] {"Title added successfully."};
                 

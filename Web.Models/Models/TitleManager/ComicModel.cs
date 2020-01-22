@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WeebReader.Web.Portal.Models.TitleManager
+namespace WeebReader.Web.Models.Models.TitleManager
 {
     public class ComicModel : TitleModel
     {

@@ -1,8 +1,8 @@
-﻿﻿using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using WeebReader.Web.Portal.Models.Shared;
+using WeebReader.Web.Models.Models.Shared;
 
-namespace WeebReader.Web.Portal.Models.SignIn
+namespace WeebReader.Web.Models.Models.SignIn
 {
     public class ChangeEmailModel : EmailModel
     {

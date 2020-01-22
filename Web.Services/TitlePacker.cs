@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -18,12 +19,14 @@ namespace WeebReader.Web.Services
             _environment = environment;
         }
 
-        public async Task<bool> AddTitle(TTitle title, Stream cover)
+        public async Task<bool> AddTitle(TTitle title, IEnumerable<string> tags, Stream cover)
         {
             try
             {
                 if (!await _titleManager.Add(title))
                     return false;
+
+                await _titleManager.TagTitle(title.Id, tags);
                 
                 var directory = new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}");
                 directory.Create();
@@ -48,12 +51,14 @@ namespace WeebReader.Web.Services
             }
         }
 
-        public async Task<bool> EditTitle(TTitle title, Stream cover)
+        public async Task<bool> EditTitle(TTitle title, IEnumerable<string> tags, Stream cover)
         {
             try
             {
                 if (!await _titleManager.Edit(title))
                     return false;
+                
+                await _titleManager.TagTitle(title.Id, tags);
 
                 try
                 {
