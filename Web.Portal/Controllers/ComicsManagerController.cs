@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,12 +39,16 @@ namespace WeebReader.Web.Portal.Controllers
                     };
 
                     if (await _titlePacker.AddTitle(comic, comicModel.Cover.OpenReadStream()))
+                    {
+                        TempData["SuccessMessage"] = new[] {"Title added successfully."};
+                
                         return new JsonResult(new
                         {
                             success = true,
-                            messages = new[] {"Title added successfully."}
+                            destination = Url.Action("Index")
                         });
-                    
+                    }
+
                     return new JsonResult(new
                     {
                         success = false,

@@ -55,13 +55,6 @@
                   type   : "maxLength[50]",
                   prompt : "The name of the artist must not surpass 50 characters."
               }]
-          },
-          synopsis: {
-              identifier: "synopsis",
-              rules: [{
-                  type: "empty",
-                  prompt: "A synopsis is required for this title."
-              }]
           }
       }
       }).api({
@@ -82,11 +75,7 @@
       },
       onRequest: () => uploadStatus.removeClass(".deactivated"),
       onComplete: () => uploadStatus.addClass(".deactivated"),
-      onSuccess: (response) => {
-          addSuccess(messageField, response);
-          $(".form").trigger("reset");
-          resetFileInputButton($("label.button"));
-      },
+      onSuccess: (response) => window.location.href = response.destination,
       onFailure: (response) => addError(messageField, response)
       })
     });
