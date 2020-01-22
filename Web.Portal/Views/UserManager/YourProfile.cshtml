@@ -2,15 +2,16 @@
     ViewData["Title"] = "Your Profile";
     var user = (IdentityUser<Guid>) ViewData["User"];
     var role = (string) ViewData["Role"];
-    var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
-    var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
 }
 
 @section Headers
 {
-    <script>
+    <script>    
     $(function() {
-      $("#change-password-form").form({
+      let changePasswordForm = $("#change-password-form");
+      let changeEmailForm = $("#change-email-form");
+  
+      changePasswordForm.form({
       on: "blur",
       fields: {
           password: {
@@ -21,7 +22,7 @@
                       prompt: "The current password is required."
                   },
                   {
-                      type: "length[8]",
+                      type: "minLength[8]",
                       prompt: "The password must have at least 8 characters."
                   }
               ]
@@ -34,7 +35,7 @@
                       prompt: "A new password is required."
                   },
                   {
-                      type: "length[8]",
+                      type: "minLength[8]",
                       prompt: "The password must have at least 8 characters."
                   }
               ]
@@ -53,15 +54,14 @@
       url: "@Url.Action("ChangePassword")",
       serializeForm: true,
       method: "POST",
-      onSuccess: function(response) {
-        addSuccess($("#change-password-form .message"), response)
+      onSuccess: (response) => {
+          addSuccess(changePasswordForm.children(".message"), response); 
+          changePasswordForm.trigger("reset");
       },
-      onFailure: function(response) {
-        addError($("#change-password-form .message"), response);
-      }
+      onFailure: (response) => addError(changePasswordForm.children(".message"), response)
       });
       
-      $("#change-email-form").form({
+      changeEmailForm.form({
       on: "blur",
       fields: {
           email: {
@@ -91,87 +91,72 @@
       url: "@Url.Action("ChangeEmail")",
       serializeForm: true,
       method: "POST",
-      onSuccess: function(response) {
-        addSuccess($("#change-email-form .message"), response)
+      onSuccess: (response) => {
+          addSuccess(changeEmailForm.children(".message"), response);
+          changeEmailForm.trigger("reset");
       },
-      onFailure: function(response) {
-        addError($("#change-email-form .message"), response);
-      }
+      onFailure: (response) => addError(changeEmailForm.children(".message"), response)
       });
     });
     </script>
 }
 
-<div class="ui container">
-    @if (successMessage != null || errorMessage != null)
-    {
-        <div class="ui message @(successMessage == null ? "error" : "success")">
-            <i class="close icon"></i>
-            <ul class="list">
-                <li>@(successMessage ?? errorMessage)</li>
-            </ul>
-        </div>
-    }
-    <h2 class="ui dividing header">
-        Your Profile
-    </h2>
-    <div class="ui three column stackable grid">
-        <div class="center aligned column">
-            Username: @(user.UserName)
-        </div>
-        <div class="center aligned column">
-            Email: @(user.Email)
-        </div>
-        <div class="center aligned column">
-            Role: @(role ?? "None")
-        </div>
+<div class="ui three column stackable grid">
+    <div class="center aligned column">
+        Username: @(user.UserName)
     </div>
-    <div class="ui two column stackable centered grid">
-        <div class="column">
-            <form id="change-password-form" class="ui large form" novalidate>
-                <div class="ui stacked segment">
-                    <div class="field">
-                        <div class="ui left icon input">
-                            <i class="lock icon"></i>
-                            <input type="password" name="password" placeholder="Password">
-                        </div>
+    <div class="center aligned column">
+        Email: @(user.Email)
+    </div>
+    <div class="center aligned column">
+        Role: @(role ?? "None")
+    </div>
+</div>
+<div class="ui two column stackable centered grid">
+    <div class="column">
+        <form id="change-password-form" class="ui form" novalidate>
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" placeholder="Password">
                     </div>
-                    <div class="field">
-                        <div class="ui left icon input">
-                            <i class="lock icon"></i>
-                            <input type="password" name="newPassword" placeholder="New Password">
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui left icon input">
-                            <i class="lock icon"></i>
-                            <input type="password" name="repeatNewPassword" placeholder="Repeat the Password">
-                        </div>
-                    </div>
-                    <input class="ui fluid large black submit button" type="submit" value="Change Password"/>
                 </div>
-                <div class="ui message error"></div>
-            </form>
-        </div>
-        <div class="column">
-            <form id="change-email-form" class="ui large form" novalidate>
-                <div class="ui stacked segment">
-                    <div class="field">
-                        <div class="ui left icon input">
-                            <i class="user icon"></i>
-                            <input type="email" name="email" placeholder="New e-mail address">
-                        </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="newPassword" placeholder="New Password">
                     </div>
-                    <div class="field">
-                        <div class="ui left icon input">
-                            <i class="user icon"></i>
-                            <input type="email" name="repeatEmail" placeholder="Repeat new e-mail address">
-                        </div>
-                    </div>
-                    <input class="ui fluid large black submit button" type="submit" value="Change Email"/>
                 </div>
-                <div class="ui message error"></div>
-            </form>
-        </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="repeatNewPassword" placeholder="Repeat the Password">
+                    </div>
+                </div>
+                <input class="ui fluid large black submit button" type="submit" value="Change Password"/>
+            </div>
+            <div class="ui message error"></div>
+        </form>
+    </div>
+    <div class="column">
+        <form id="change-email-form" class="ui form" novalidate>
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="email" name="email" placeholder="New e-mail address">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="email" name="repeatEmail" placeholder="Repeat new e-mail address">
+                    </div>
+                </div>
+                <input class="ui fluid large black submit button" type="submit" value="Change Email"/>
+            </div>
+            <div class="ui message error"></div>
+        </form>
     </div>
 </div>

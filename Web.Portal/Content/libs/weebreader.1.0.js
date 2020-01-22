@@ -1,6 +1,4 @@
-$.fn.api.settings.successTest = function(response) {
-    return response.success;
-};
+$.fn.api.settings.successTest = (response) => response.success;
 
 $(function () {
     $(".form").on("keypress", function (event) {
@@ -13,7 +11,14 @@ $(function () {
 
     $(".message .close").on("click", function() {
             $(this).closest(".message").transition("fade");
-        });
+    });
+
+    $(".ui.checkbox").checkbox();
+    $("select.dropdown").dropdown();
+
+    $("input[type=\"file\"]").on("change", function (event) {
+        $("label.button").html("<i class=\"file icon\"></i>" + event.target.files[0].name.substr(0, 14) + (event.target.files[0].name.length > 15 ? "..." : ""));
+    });
 });
 
 function addError(element, response) {
@@ -34,4 +39,14 @@ function addMessages(element, response) {
     response.messages.forEach(function (currentValue) {
         list.append("<li>" + currentValue + "</li>")
     });
+}
+
+function animateProgressBar(element, event) {
+    element.progress({
+        percent: event.loaded / event.total * 100
+    });
+}
+
+function resetFileInputButton(element) {
+    element.html("<i class=\"file icon\"></i>Open File");
 }

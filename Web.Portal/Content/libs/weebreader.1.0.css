@@ -25,3 +25,7 @@
 .no-border-radius {
     border-radius: 0 !important;
 }
+
+.deactivated {
+    display: none !important;
+}

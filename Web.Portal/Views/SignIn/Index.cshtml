@@ -23,7 +23,7 @@
                       prompt: "An username is required to sign in."
                   },
                   {
-                      type: "length[3]",
+                      type: "minLength[3]",
                       prompt: "An username must have at least 3 characters."
                   }
               ]
@@ -36,7 +36,7 @@
                       prompt: "A password is required to sign in."
                   },
                   {
-                      type: "length[8]",
+                      type: "minLength[8]",
                       prompt: "A password must have at least 8 characters."
                   }
               ]
@@ -46,12 +46,8 @@
       url: "@Url.Action("SignIn")",
       serializeForm: true,
       method: "POST",
-      onSuccess: function(response) {
-        window.location.href = response.destination;
-      },
-      onFailure: function(response) {
-        addError($(".form .message"), response);
-      }
+      onSuccess: (response) => window.location.href = response.destination,
+      onFailure: (response) => addError($(".form .message"), response)
       });
     });
     </script>

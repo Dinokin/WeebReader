@@ -25,14 +25,18 @@ namespace WeebReader.Web.Services
                 if (!await _titleManager.Add(title))
                     return false;
                 
+                var directory = new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}");
+                directory.Create();
+
                 try
                 {
-                    Utilities.WriteImage(new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}"), Utilities.ProcessImage(cover), "cover");
+                    Utilities.WriteImage(directory, Utilities.ProcessImage(cover), "cover");
 
                     return true;
                 }
                 catch
                 {
+                    directory.Delete();
                     await _titleManager.Delete(title.Id);
 
                     return false;

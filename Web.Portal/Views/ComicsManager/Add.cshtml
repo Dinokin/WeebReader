@@ -1,0 +1,165 @@
+﻿@model ComicModel
+
+@{
+    ViewData["Title"] = "Add Comic";
+}
+
+@section Headers
+{
+    <partial name="_TinyMCE"/>
+    <script>
+    $(function() {
+      let messageField = $(".message");
+      let uploadStatus = $(".indicating");
+        
+      $(".form").form({
+      on: "blur",
+      fields: {
+          name: {
+              identifier: "name",
+              rules: [{
+                  type: "empty",
+                  prompt: "The name of the title is a required."
+              },
+              {
+                  type   : "maxLength[200]",
+                  prompt : "The name of the title must not surpass 200 characters."
+              }]
+          },
+          originalName: {
+              identifier: "originalName",
+              rules: [
+              {
+                  type   : "maxLength[200]",
+                  prompt : "The original name of the title must not surpass 200 characters."
+              }]
+          },
+          author: {
+              identifier: "author",
+              rules: [{
+                  type: "empty",
+                  prompt: "The name of the author is a required."
+              },
+              {
+                  type   : "maxLength[50]",
+                  prompt : "The name of the author must not surpass 50 characters."
+              }]
+          },
+          artist: {
+              identifier: "artist",
+              rules: [{
+                  type: "empty",
+                  prompt: "The name of the artist is a required."
+              },
+              {
+                  type   : "maxLength[50]",
+                  prompt : "The name of the artist must not surpass 50 characters."
+              }]
+          },
+          synopsis: {
+              identifier: "synopsis",
+              rules: [{
+                  type: "empty",
+                  prompt: "A synopsis is required for this title."
+              }]
+          }
+      }
+      }).api({
+      xhr: () => {
+        let xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener("progress", (event) => animateProgressBar($(".indicating"), event), false);
+        
+        return xhr;
+      },
+      url: "@Url.Action("Add")",
+      method: "POST",
+      processData: false,
+      contentType: false,
+      beforeSend: (settings) => {
+        settings.data = new FormData($(".form").get(0));
+        
+        return settings;
+      },
+      onRequest: () => uploadStatus.removeClass(".deactivated"),
+      onComplete: () => uploadStatus.addClass(".deactivated"),
+      onSuccess: (response) => {
+          addSuccess(messageField, response);
+          $(".form").trigger("reset");
+          resetFileInputButton($("label.button"));
+      },
+      onFailure: (response) => addError(messageField, response)
+      })
+    });
+    </script>
+}
+
+<form class="ui form" novalidate style="margin-bottom: 4.6rem">
+    <div class="ui message error"></div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>Name</label>
+                <input type="text" name="name" asp-for="Name"/>
+            </div>
+            <div class="field">
+                <label>Original Name</label>
+                <input type="text" name="originalName" asp-for="OriginalName"/>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>Author</label>
+                <input type="text" name="author" asp-for="Author"/>
+            </div>
+            <div class="field">
+                <label>Artist</label>
+                <input type="text" name="artist" asp-for="Artist"/>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>Synopsis</label>
+        <textarea id="editor-area" name="synopsis" asp-for="Synopsis"></textarea>
+    </div>
+    <div class="field">
+        <div class="four fields">
+            <div class="field">
+                <label>Status</label>
+                <select class="ui fluid dropdown" name="status" asp-for="Status">
+                    @foreach (var item in Enum.GetNames(typeof(Title.Statuses)))
+                    {
+                        <option>@item</option>
+                    }
+                </select>
+            </div>
+            <div class="field">
+                <label>Type</label>
+                <div class="ui toggle checkbox">
+                    <input class="hidden" type="checkbox" name="longStrip" asp-for="LongStrip"/>
+                    <label>Use long strip</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>Visibility</label>
+                <div class="ui toggle checkbox">
+                    <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
+                    <label>Make visible</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>Cover</label>
+                <label id="file-label" for="file" class="ui icon button no-margin-bottom" style="margin-top: 0.5rem;"><i class="file icon"></i>Open File</label>
+                <input type="file" id="file" style="display:none" name="cover" accept=".png,.gif" asp-for="Cover">
+            </div>
+        </div>
+    </div>
+    <input class="ui right floated black submit button" type="submit" value="Add Comic"/>
+</form>
+<div class="ui indicating progress deactivated">
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    <div class="label">Uploading...</div>
+</div>

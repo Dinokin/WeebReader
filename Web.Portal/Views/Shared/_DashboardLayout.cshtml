@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
+    var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <partial name="_SharedHeaders"/>
@@ -27,7 +32,7 @@
                 Profile
             </a>
             <a class="item" href="@Url.Action("SignOut", "SignIn")">
-                <i class="sign-out icon"></i>
+                <i class="sign out alternate icon"></i>
                 Sign out
             </a>
         </div>
@@ -46,12 +51,12 @@
                 <i class="user icon"></i>
             </a>
             <a class="item" href="@Url.Action("SignOut", "SignIn")">
-                <i class="sign-out icon"></i>
+                <i class="sign out alternate icon"></i>
             </a>
         </div>
     </div>
 </div>
-<div class="ui bottom attached segment pushable no-border no-border-radius">
+<div class="ui bottom attached segment pushable no-border no-border-radius no-margin-bottom">
     <div class="ui inverted left vertical sidebar menu">
         <a class="item">
             <i class="left table icon"></i>
@@ -84,7 +89,21 @@
     </div>
     <div class="pusher">
         <div class="ui hidden section divider"></div>
-        @RenderBody()
+        <div class="ui container" style="margin-bottom: 2rem">
+            @if (successMessage != null || errorMessage != null)
+            {
+                <div class="ui message @(successMessage == null ? "error" : "success")">
+                    <i class="close icon"></i>
+                    <ul class="list">
+                        <li>@(successMessage ?? errorMessage)</li>
+                    </ul>
+                </div>
+            }
+            <h2 class="ui dividing header">
+                @ViewData["Title"]
+            </h2>
+            @RenderBody()
+        </div>
     </div>
 </div>
 </body>
