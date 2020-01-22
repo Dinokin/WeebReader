@@ -95,7 +95,10 @@
                 <div class="ui message @(successMessage == null ? "error" : "success")">
                     <i class="close icon"></i>
                     <ul class="list">
-                        <li>@(successMessage ?? errorMessage)</li>
+                        @foreach (var item in successMessage ?? errorMessage)
+                        {
+                            <li>@item</li>
+                        }
                     </ul>
                 </div>
             }

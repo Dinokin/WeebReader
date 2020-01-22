@@ -73,8 +73,8 @@
         
         return settings;
       },
-      onRequest: () => uploadStatus.removeClass(".deactivated"),
-      onComplete: () => uploadStatus.addClass(".deactivated"),
+      onRequest: () => uploadStatus.removeClass("deactivated"),
+      onComplete: () => uploadStatus.addClass("deactivated"),
       onSuccess: (response) => window.location.href = response.destination,
       onFailure: (response) => addError(messageField, response)
       })
@@ -109,18 +109,14 @@
         </div>
     </div>
     <div class="field">
-        <div class="ui sub header">Multiple</div>
-        <div class="ui fluid multiple search selection dropdown">
-            <input name="tags" type="hidden" asp-for="Tags">
-            <div class="default text">Tags</div>
-        </div>
-    </div>
-    <div class="field">
-        <label>Synopsis</label>
-        <textarea id="editor-area" name="synopsis" asp-for="Synopsis"></textarea>
-    </div>
-    <div class="field">
-        <div class="four fields">
+        <div class="two fields">
+            <div class="field">
+                <label>Tags</label>
+                <div class="ui fluid multiple search selection dropdown">
+                    <input name="tags" type="hidden" asp-for="Tags">
+                    <div class="default text"></div>
+                </div>
+            </div>
             <div class="field">
                 <label>Status</label>
                 <select class="ui fluid dropdown" name="status" asp-for="Status">
@@ -130,6 +126,14 @@
                     }
                 </select>
             </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>Synopsis</label>
+        <textarea id="editor-area" name="synopsis" asp-for="Synopsis"></textarea>
+    </div>
+    <div class="field">
+        <div class="three fields">
             <div class="field">
                 <label>Type</label>
                 <div class="ui toggle checkbox">
