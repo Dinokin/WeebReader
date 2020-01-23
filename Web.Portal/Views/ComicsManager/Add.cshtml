@@ -82,7 +82,7 @@
     </script>
 }
 
-<form class="ui form" novalidate style="margin-bottom: 4.6rem">
+<form class="ui form" novalidate>
     <div class="ui message error"></div>
     <div class="field">
         <div class="two fields">
@@ -155,7 +155,9 @@
             </div>
         </div>
     </div>
-    <input class="ui right floated black submit button" type="submit" value="Add Comic"/>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">Add Comic</div>
+    </div>
 </form>
 <div class="ui indicating progress deactivated">
     <div class="bar">
