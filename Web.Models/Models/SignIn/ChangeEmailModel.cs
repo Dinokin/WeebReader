@@ -6,9 +6,9 @@ namespace WeebReader.Web.Models.Models.SignIn
 {
     public class ChangeEmailModel : EmailModel
     {
-        [Required(ErrorMessage = "An user ID is necessary to reset a password.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG003")]
         public Guid UserId { get; set; }
-        [Required(ErrorMessage = "A token is necessary to reset a password.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG004")]
         public string Token { get; set; }
     }
 }

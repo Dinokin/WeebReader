@@ -5,12 +5,12 @@ namespace WeebReader.Web.Models.Models.SignIn
 {
     public class ResetPasswordModel
     {
-        [Required(ErrorMessage = "An user ID is necessary to reset a password.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG003")]
         public Guid UserId { get; set; }
-        [Required(ErrorMessage = "A token is necessary to reset a password.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG004")]
         public string Token { get; set; }
-        [Required(ErrorMessage = "A new password is necessary to proceed with the reset.")]
-        [MinLength(8, ErrorMessage = "The password must have at least 8 characters.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG005")]
+        [MinLength(8, ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG006")]
         public string NewPassword { get; set; }
     }
 }

@@ -37,7 +37,7 @@ function addSuccess(element, response) {
     addMessages(element, response);
 }
 
-function  addGenericError(element) {
+function addGenericError(element) {
     let mockResponse = {
         messages: ["Something went wrong, please try again or contact an adminsitrator."]
     };

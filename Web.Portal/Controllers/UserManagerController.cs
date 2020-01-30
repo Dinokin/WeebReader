@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -46,10 +45,10 @@ namespace WeebReader.Web.Portal.Controllers
                     return new JsonResult(new
                     {
                         success = true,
-                        messages = new[] {"Password changed successfully."}
+                        messages = new[] {PortalMessages.MSG011}
                     });
 
-                ModelState.AddModelError("NotSucceeded", "We could not change your password, please verify your password and try again.");
+                ModelState.AddModelError("NotSucceeded", PortalMessages.MSG016);
             }
             
             return new JsonResult(new
@@ -68,7 +67,7 @@ namespace WeebReader.Web.Portal.Controllers
                     return new JsonResult(new
                     {
                         success = false,
-                        messages = new[] {"The requested e-mail is already in use."}
+                        messages = new[] {PortalMessages.MSG013}
                     });
 
                 var user = await _userManager.GetUserAsync(User);
@@ -76,26 +75,19 @@ namespace WeebReader.Web.Portal.Controllers
                 var siteName = await _settingManager.GetValue("SiteName");
                 var siteAddress = await _settingManager.GetValue("SiteAddress");
                 var siteEmail = await _settingManager.GetValue("SiteEmail");
-                
-                var stringBuilder = new StringBuilder();
 
-                stringBuilder.AppendLine($"Hello {user.UserName},");
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"An e-mail change was requested at {siteName}.");
-                stringBuilder.AppendLine("Please go to the following URL to proceed with the change. If you changed your mind, you can safely ignore this email.");
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine($"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
-                
-                var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, $"Change E-mail - {siteName}", stringBuilder.ToString());
+                var message = string.Format(PortalMessages.MSG017, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
+
+                var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(PortalMessages.MSG018, siteName), message);
 
                 if(result)
                     return new JsonResult(new
                     {
                         success = true,
-                        messages = new[] {"An e-mail was sent to the new e-mail with the details on how to proceed with the change."}
+                        messages = new[] {PortalMessages.MSG019}
                     });
                 
-                ModelState.AddModelError("NotSucceeded", "We could not send a confirmation email, please try again or contact an administrator.");
+                ModelState.AddModelError("NotSucceeded", PortalMessages.MSG020);
             }
             
             return new JsonResult(new

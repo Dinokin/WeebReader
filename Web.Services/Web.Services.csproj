@@ -9,12 +9,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Data.Services\Data.Services.csproj" />
+        <ProjectReference Include="..\Data.Services\Data.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="itext7.pdfhtml" Version="2.1.6" />
-      <PackageReference Include="Magick.NET-Q8-x64" Version="7.15.0" />
-      <PackageReference Include="MailKit" Version="2.4.1" />
+        <PackageReference Include="itext7.pdfhtml" Version="2.1.6" />
+        <PackageReference Include="Magick.NET-Q8-x64" Version="7.15.0" />
+        <PackageReference Include="MailKit" Version="2.4.1" />
     </ItemGroup>
 </Project>

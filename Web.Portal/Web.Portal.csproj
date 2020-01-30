@@ -8,19 +8,34 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Data.Contexts\Data.Contexts.csproj" />
-      <ProjectReference Include="..\Data.Services\Data.Services.csproj" />
-      <ProjectReference Include="..\Web.Models\Web.Models.csproj" />
-      <ProjectReference Include="..\Web.Services\Web.Services.csproj" />
+        <ProjectReference Include="..\Data.Contexts\Data.Contexts.csproj" />
+        <ProjectReference Include="..\Data.Services\Data.Services.csproj" />
+        <ProjectReference Include="..\Web.Models\Web.Models.csproj" />
+        <ProjectReference Include="..\Web.Services\Web.Services.csproj" />
     </ItemGroup>
     
     <ItemGroup>
-      <Content Include="Content\**">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <Content Include="Content\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Compile Update="PortalMessages.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>PortalMessages.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <EmbeddedResource Update="PortalMessages.resx">
+            <Generator>PublicResXFileCodeGenerator</Generator>
+            <LastGenOutput>PortalMessages.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 </Project>

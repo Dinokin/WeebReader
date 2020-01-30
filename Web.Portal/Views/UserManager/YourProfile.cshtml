@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Your Profile";
+    ViewData["Title"] = PortalMessages.MSG047;
     var user = (IdentityUser<Guid>) ViewData["User"];
     var role = (string) ViewData["Role"];
 }
@@ -21,11 +21,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "The current password is required."
+                        prompt: "@ModelMessages.MSG010"
                     },
                     {
                         type: "minLength[8]",
-                        prompt: "The password must have at least 8 characters."
+                        prompt: "@ModelMessages.MSG006"
                     }
                 ]
             },
@@ -34,11 +34,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "A new password is required."
+                        prompt: "@ModelMessages.MSG005"
                     },
                     {
                         type: "minLength[8]",
-                        prompt: "The password must have at least 8 characters."
+                        prompt: "@ModelMessages.MSG006"
                     }
                 ]
             },
@@ -47,7 +47,7 @@
                 rules: [
                     {
                         type: "match[newPassword]",
-                        prompt: "The passwords must be equal."
+                        prompt: "@PortalMessages.MSG042"
                     }
                 ]
             }
@@ -72,11 +72,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "An e-mail address is required."
+                        prompt: "@ModelMessages.MSG001"
                     },
                     {
                         type: "email",
-                        prompt: "A valid e-mail address is required."
+                        prompt: "@ModelMessages.MSG002"
                     }
                 ]
             },
@@ -85,7 +85,7 @@
                 rules: [
                     {
                         type: "match[email]",
-                        prompt: "The e-mails must be equal."
+                        prompt: "@PortalMessages.MSG048"
                     }
                 ]
             }
@@ -107,13 +107,13 @@
 
 <div class="ui three column stackable grid">
     <div class="center aligned column">
-        Username: @(user.UserName)
+        @PortalMessages.MSG038: @(user.UserName)
     </div>
     <div class="center aligned column">
-        Email: @(user.Email)
+        @PortalMessages.MSG049: @(user.Email)
     </div>
     <div class="center aligned column">
-        Role: @(role ?? "None")
+        @PortalMessages.MSG050: @(role ?? "None")
     </div>
 </div>
 <div class="ui two column stackable centered grid">
@@ -123,22 +123,22 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" placeholder="Password">
+                        <input type="password" name="password" placeholder="@PortalMessages.MSG039">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="newPassword" placeholder="New Password">
+                        <input type="password" name="newPassword" placeholder="@PortalMessages.MSG045">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="repeatNewPassword" placeholder="Repeat the Password">
+                        <input type="password" name="repeatNewPassword" placeholder="@PortalMessages.MSG046">
                     </div>
                 </div>
-                <div class="ui fluid large black submit button">Change Password</div>
+                <div class="ui fluid large black submit button">@PortalMessages.MSG043</div>
             </div>
             <div class="ui message error"></div>
         </form>
@@ -149,16 +149,16 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="email" name="email" placeholder="New e-mail address">
+                        <input type="email" name="email" placeholder="@PortalMessages.MSG051">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="email" name="repeatEmail" placeholder="Repeat new e-mail address">
+                        <input type="email" name="repeatEmail" placeholder="@PortalMessages.MSG052">
                     </div>
                 </div>
-                <div class="ui fluid large black submit button">Change Email</div>
+                <div class="ui fluid large black submit button">@PortalMessages.MSG053</div>
             </div>
             <div class="ui message error"></div>
         </form>

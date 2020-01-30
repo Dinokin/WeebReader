@@ -4,12 +4,12 @@ namespace WeebReader.Web.Models.Models.SignIn
 {
     public class SignInModel
     {
-        [Required(ErrorMessage = "An username is required to sign in.")]
-        [MinLength(3, ErrorMessage = "An username must have at least 3 characters.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG007")]
+        [MinLength(3, ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG008")]
         public string Username { get; set; }
         
-        [Required(ErrorMessage = "A password is required to sign in.")]
-        [MinLength(8, ErrorMessage = "A password must have at least 8 characters.")]
+        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG009")]
+        [MinLength(8, ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG006")]
         public string Password { get; set; }
     }
 }

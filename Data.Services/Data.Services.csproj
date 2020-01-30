@@ -6,7 +6,8 @@
         <LangVersion>latest</LangVersion>
         <Nullable>disable</Nullable>
     </PropertyGroup>
+    
     <ItemGroup>
-      <ProjectReference Include="..\Data.Contexts\Data.Contexts.csproj" />
+        <ProjectReference Include="..\Data.Contexts\Data.Contexts.csproj" />
     </ItemGroup>
 </Project>
