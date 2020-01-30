@@ -8,10 +8,10 @@
 <head>
     <partial name="_SharedHeaders"/>
     <script>
-    $(function() {
-      $(".ui.sidebar").sidebar({
+    $(() => {
+        $(".ui.sidebar").sidebar({
         context: $(".bottom.segment")
-      }).sidebar("attach events", "#computer-toggler,#mobile-toggler");
+        }).sidebar("attach events", "#computer-toggler,#mobile-toggler");
     })
     </script>
     @await RenderSectionAsync("Headers", false)
@@ -59,12 +59,8 @@
 <div class="ui bottom attached segment pushable no-border no-border-radius no-margin-bottom">
     <div class="ui inverted left vertical sidebar menu">
         <a class="item">
-            <i class="left table icon"></i>
-            Comics
-        </a>
-        <a class="item">
             <i class="left book icon"></i>
-            Novels
+            Titles
         </a>
         <a class="item">
             <i class="left newspaper icon"></i>
@@ -90,21 +86,22 @@
     <div class="pusher">
         <div class="ui hidden section divider"></div>
         <div class="ui container" style="margin-bottom: 5rem">
-            @if (successMessage != null || errorMessage != null)
-            {
-                <div class="ui message @(successMessage == null ? "error" : "success")">
-                    <i class="close icon"></i>
-                    <ul class="list">
+            <h2 class="ui dividing header">
+                @ViewData["Title"]
+            </h2>
+            @await RenderSectionAsync("Title", false)
+            <div class="ui hidden message @(successMessage == null ? "error" : "success")">
+                <i class="close icon"></i>
+                <ul class="list">
+                    @if (successMessage != null || errorMessage != null)
+                    {
                         @foreach (var item in successMessage ?? errorMessage)
                         {
                             <li>@item</li>
                         }
-                    </ul>
-                </div>
-            }
-            <h2 class="ui dividing header">
-                @ViewData["Title"]
-            </h2>
+                    }
+                </ul>
+            </div>
             @RenderBody()
         </div>
     </div>

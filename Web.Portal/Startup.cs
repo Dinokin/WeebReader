@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +19,7 @@ using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
+using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal
@@ -57,7 +60,12 @@ namespace WeebReader.Web.Portal
                 .ProtectKeysWithCertificate(Utilities.GetCertificate());
 
             services.AddControllersWithViews()
-                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false);
+                .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false)
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+                });
 
             services.AddTransient<EmailSender>();
             services.AddTransient<SettingManager>();

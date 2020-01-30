@@ -3,6 +3,12 @@
     margin: 0 0.35714286em 0 0;
 }
 
+.ui.fixed.table th,
+.ui.fixed.table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .background {
     background-image: url(/assets/background.png);
     background-repeat: no-repeat;
@@ -28,4 +34,16 @@
 
 .deactivated {
     display: none !important;
+}
+
+.height-100 {
+    height: 100%;
+}
+
+.margin-top-minus-100 {
+    margin-top: -100px;
+}
+
+.max-width-450{
+    max-width: 450px;
 }

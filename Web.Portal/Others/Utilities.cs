@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WeebReader.Web.Portal
+namespace WeebReader.Web.Portal.Others
 {
     internal static class Utilities
     {

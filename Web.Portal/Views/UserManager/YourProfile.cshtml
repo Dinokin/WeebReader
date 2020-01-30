@@ -7,96 +7,100 @@
 @section Headers
 {
     <script>    
-    $(function() {
-      let changePasswordForm = $("#change-password-form");
-      let changeEmailForm = $("#change-email-form");
+    $(() => {
+        let changePasswordForm = $("#change-password-form");
+        let changeEmailForm = $("#change-email-form");
+        let changePasswordMessage = changePasswordForm.children(".message");
+        let changeEmailMessage = changeEmailForm.children(".message");
   
-      changePasswordForm.form({
-      on: "blur",
-      fields: {
-          password: {
-              identifier: "password",
-              rules: [
-                  {
-                      type: "empty",
-                      prompt: "The current password is required."
-                  },
-                  {
-                      type: "minLength[8]",
-                      prompt: "The password must have at least 8 characters."
-                  }
-              ]
-          },
-          newPassword: {
-              identifier: "newPassword",
-              rules: [
-                  {
-                      type: "empty",
-                      prompt: "A new password is required."
-                  },
-                  {
-                      type: "minLength[8]",
-                      prompt: "The password must have at least 8 characters."
-                  }
-              ]
-          },
-          repeatNewPassword: {
-              identifier: "repeatNewPassword",
-              rules: [
-                  {
-                      type: "match[newPassword]",
-                      prompt: "The passwords must be equal."
-                  }
-              ]
-          }
-      }
-      }).api({
-      url: "@Url.Action("ChangePassword")",
-      serializeForm: true,
-      method: "POST",
-      onSuccess: (response) => {
-          addSuccess(changePasswordForm.children(".message"), response); 
-          changePasswordForm.trigger("reset");
-      },
-      onFailure: (response) => addError(changePasswordForm.children(".message"), response)
-      });
-      
-      changeEmailForm.form({
-      on: "blur",
-      fields: {
-          email: {
-              identifier: "email",
-              rules: [
-                  {
-                      type: "empty",
-                      prompt: "An e-mail address is required."
-                  },
-                  {
-                      type: "email",
-                      prompt: "A valid e-mail address is required."
-                  }
-              ]
-          },
-          repeatNewPassword: {
-              identifier: "repeatEmail",
-              rules: [
-                  {
-                      type: "match[email]",
-                      prompt: "The e-mails must be equal."
-                  }
-              ]
-          }
-      }
-      }).api({
-      url: "@Url.Action("ChangeEmail")",
-      serializeForm: true,
-      method: "POST",
-      onSuccess: (response) => {
-          addSuccess(changeEmailForm.children(".message"), response);
-          changeEmailForm.trigger("reset");
-      },
-      onFailure: (response) => addError(changeEmailForm.children(".message"), response)
-      });
+        changePasswordForm.form({
+        on: "blur",
+        fields: {
+            password: {
+                identifier: "password",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "The current password is required."
+                    },
+                    {
+                        type: "minLength[8]",
+                        prompt: "The password must have at least 8 characters."
+                    }
+                ]
+            },
+            newPassword: {
+                identifier: "newPassword",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "A new password is required."
+                    },
+                    {
+                        type: "minLength[8]",
+                        prompt: "The password must have at least 8 characters."
+                    }
+                ]
+            },
+            repeatNewPassword: {
+                identifier: "repeatNewPassword",
+                rules: [
+                    {
+                        type: "match[newPassword]",
+                        prompt: "The passwords must be equal."
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@Url.Action("ChangePassword")",
+        serializeForm: true,
+        method: "PATCH",
+        onSuccess: (response) => {
+            addSuccess(changePasswordMessage, response); 
+            changePasswordForm.trigger("reset");
+        },
+        onFailure: (response) => addError(changePasswordMessage, response),
+        onerror: (errorMessage, element, xhr) =>  addGenericError(changePasswordMessage)
+        });
+                
+        changeEmailForm.form({
+        on: "blur",
+        fields: {
+            email: {
+                identifier: "email",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "An e-mail address is required."
+                    },
+                    {
+                        type: "email",
+                        prompt: "A valid e-mail address is required."
+                    }
+                ]
+            },
+            repeatNewPassword: {
+                identifier: "repeatEmail",
+                rules: [
+                    {
+                        type: "match[email]",
+                        prompt: "The e-mails must be equal."
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@Url.Action("ChangeEmail")",
+        serializeForm: true,
+        method: "PATCH",
+        onSuccess: (response) => {
+            addSuccess(changeEmailMessage, response);
+            changeEmailForm.trigger("reset");
+        },
+        onFailure: (response) => addError(changeEmailMessage, response),
+        onerror: () => addGenericError(changeEmailMessage)
+        });
     });
     </script>
 }

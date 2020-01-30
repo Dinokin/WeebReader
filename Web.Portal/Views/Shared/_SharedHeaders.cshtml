@@ -28,19 +28,19 @@
 <script src="~/libs/cookieconsent.3.1.1.js"></script>
 <script src="~/libs/weebreader.1.0.js"></script>
 <script>
-$(function() {
-  window.cookieconsent.initialise({
-  "palette": {
-    "popup": {
-      "background": "#333"
-    },
-    "button": {
-      "background": "#000000"
-    }},
-    "theme": "edgeless",
-    "position": "bottom-right",
-    "content": {
-      "message": "This website uses cookies to personalize your user experience. By using our website, you agree to our use of cookies."
+$(() => {
+    window.cookieconsent.initialise({
+    "palette": {
+        "popup": {
+            "background": "#333"
+            },
+            "button": {
+            "background": "#000000"
+        }},
+        "theme": "edgeless",
+        "position": "bottom-right",
+        "content": {
+        "message": "This website uses cookies to personalize your user experience. By using our website, you agree to our use of cookies."
     }});
 });
 </script>

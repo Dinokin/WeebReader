@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 
-namespace WeebReader.Web.Models.Attributes
+namespace WeebReader.Web.Models.Validation
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
     public class AllowedFormats : ValidationAttribute

@@ -26,6 +26,7 @@ namespace WeebReader.Web.Portal.Controllers
             _emailSender = emailSender;
         }
 
+        [HttpGet]
         public async Task<IActionResult> YourProfile()
         {
             ViewData["User"] = await _userManager.GetUserAsync(User);
@@ -34,6 +35,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View();
         }
 
+        [HttpPatch]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
         {
             if (TryValidateModel(changePasswordModel))
@@ -57,6 +59,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
+        [HttpPatch]
         public async Task<IActionResult> ChangeEmail(EmailModel emailModel)
         {
             if (TryValidateModel(emailModel))

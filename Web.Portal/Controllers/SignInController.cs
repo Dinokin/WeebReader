@@ -28,6 +28,7 @@ namespace WeebReader.Web.Portal.Controllers
             _emailSender = emailSender;
         }
 
+        [HttpGet]
         public IActionResult Index(string returnUrl)
         {
             TempData["ReturnUrl"] = !string.IsNullOrWhiteSpace(returnUrl) ? returnUrl : null;
@@ -35,6 +36,7 @@ namespace WeebReader.Web.Portal.Controllers
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UserManager") : (IActionResult) View();
         }
         
+        [HttpPost]
         public async Task<IActionResult> SignIn(SignInModel signInModel)
         {
             if (_signInManager.IsSignedIn(User))
@@ -69,6 +71,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();
@@ -145,6 +148,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         } 
         
+        [HttpGet]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPasswordModel)
         {
             if (_signInManager.IsSignedIn(User))
@@ -160,6 +164,7 @@ namespace WeebReader.Web.Portal.Controllers
             return RedirectToAction("Index");
         } 
         
+        [HttpPatch]
         public async Task<IActionResult> ProcessResetPassword(ResetPasswordModel resetPasswordModel)
         {
             if (_signInManager.IsSignedIn(User))
@@ -194,6 +199,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
+        [HttpGet]
         public async Task<IActionResult> ChangeEmail(ChangeEmailModel changeEmailModel)
         {
             if (TryValidateModel(changeEmailModel))

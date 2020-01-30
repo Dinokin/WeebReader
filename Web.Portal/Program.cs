@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using WeebReader.Web.Portal.Others;
 
 namespace WeebReader.Web.Portal
 {

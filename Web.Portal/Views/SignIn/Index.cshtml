@@ -11,52 +11,55 @@
 @section Headers
 {
     <script>
-    $(function() {
-      $(".form").form({
-      on: "blur",
-      fields: {
-          username: {
-              identifier: "username",
-              rules: [
-                  {
-                      type: "empty",
-                      prompt: "An username is required to sign in."
-                  },
-                  {
-                      type: "minLength[3]",
-                      prompt: "An username must have at least 3 characters."
-                  }
-              ]
-          },
-          password: {
-              identifier: "password",
-              rules: [
-                  {
-                      type: "empty",
-                      prompt: "A password is required to sign in."
-                  },
-                  {
-                      type: "minLength[8]",
-                      prompt: "A password must have at least 8 characters."
-                  }
-              ]
-          }
-      }
-      }).api({
-      url: "@Url.Action("SignIn")",
-      serializeForm: true,
-      method: "POST",
-      onSuccess: (response) => window.location.href = response.destination,
-      onFailure: (response) => addError($(".form .message"), response)
-      });
+    $(() => {
+        let messageContainer = $(".form .message");
+        
+        $(".form").form({
+        on: "blur",
+        fields: {
+            username: {
+                identifier: "username",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "An username is required to sign in."
+                    },
+                    {
+                        type: "minLength[3]",
+                        prompt: "An username must have at least 3 characters."
+                    }
+                ]
+            },
+            password: {
+                identifier: "password",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "A password is required to sign in."
+                    },
+                    {
+                        type: "minLength[8]",
+                        prompt: "A password must have at least 8 characters."
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@Url.Action("SignIn")",
+        serializeForm: true,
+        method: "POST",
+        onSuccess: (response) => window.location.href = response.destination,
+        onFailure: (response) => addError(messageContainer, response),
+        onerror: () =>  addGenericError(messageContainer)
+        });
     });
     </script>
 }
 
-<div class="ui middle aligned center aligned grid">
-    <div class="column">
-        <h2 class="ui image header">
-            <img class="image" src="~/assets/logo.png" alt="Logo">
+<div class="ui middle aligned center aligned grid height-100">
+    <div class="column max-width-450">
+        <h2 class="ui image header margin-top-minus-100">
+            <img class="image margin-top-minus-100" src="~/assets/logo.png" alt="Logo">
             <div class="content">
                 Sign in to your account
             </div>
