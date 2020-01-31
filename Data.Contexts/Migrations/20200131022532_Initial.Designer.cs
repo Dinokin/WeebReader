@@ -9,7 +9,7 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200114170518_Initial")]
+    [Migration("20200131022532_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,29 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"),
+                            ConcurrencyStamp = "26cd3943-23ff-41f5-86ed-8b867cf233b4",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        },
+                        new
+                        {
+                            Id = new Guid("08d79ae6-7ec1-478f-867c-a8170f075a27"),
+                            ConcurrencyStamp = "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7",
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
+                        },
+                        new
+                        {
+                            Id = new Guid("08d79ae6-7ec3-42ce-8a94-00a56192c379"),
+                            ConcurrencyStamp = "352e1584-d439-45dc-8015-9428b4e47c76",
+                            Name = "Uploader",
+                            NormalizedName = "UPLOADER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -392,9 +415,8 @@ namespace WeebReader.Data.Contexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                    b.Property<ushort>("Key")
+                        .HasColumnType("SMALLINT UNSIGNED")
                         .HasMaxLength(50);
 
                     b.Property<string>("Value")
@@ -406,6 +428,26 @@ namespace WeebReader.Data.Contexts.Migrations
                         .IsUnique();
 
                     b.ToTable("Settings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("040569bc-3251-47d1-b51a-1a728c3d49ec"),
+                            Key = (ushort)0,
+                            Value = "WeebReader"
+                        },
+                        new
+                        {
+                            Id = new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"),
+                            Key = (ushort)1,
+                            Value = "We read weebs."
+                        },
+                        new
+                        {
+                            Id = new Guid("94010814-1ba1-4fca-8e57-a879ef51ba1a"),
+                            Key = (ushort)2,
+                            Value = "http://127.0.0.1:5000"
+                        });
                 });
 
             modelBuilder.Entity("WeebReader.Data.Entities.Tag", b =>

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Models.Models.Shared;
 using WeebReader.Web.Models.Models.UserManager;
@@ -72,9 +73,9 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
                 var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
-                var siteName = await _settingManager.GetValue("SiteName");
-                var siteAddress = await _settingManager.GetValue("SiteAddress");
-                var siteEmail = await _settingManager.GetValue("SiteEmail");
+                var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
+                var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
+                var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
                 var message = string.Format(PortalMessages.MSG017, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
 

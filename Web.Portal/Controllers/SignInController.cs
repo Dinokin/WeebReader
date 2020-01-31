@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Models.Models.Shared;
 using WeebReader.Web.Models.Models.SignIn;
@@ -81,7 +82,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet]
         public async Task<IActionResult> ForgotPassword()
         {
-            if (await _settingManager.GetValue<bool>("EmailEnabled") || _signInManager.IsSignedIn(User))
+            if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled) || _signInManager.IsSignedIn(User))
                 return RedirectToAction("Index");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UserManager") : (IActionResult) View();
@@ -90,7 +91,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
-            if (await _settingManager.GetValue<bool>("EmailEnabled"))
+            if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
             {
                 ModelState.AddModelError("FunctionalityDisabled", PortalMessages.MSG004);
 
@@ -115,9 +116,9 @@ namespace WeebReader.Web.Portal.Controllers
                 if (user != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var siteName = await _settingManager.GetValue("SiteName");
-                    var siteAddress = await _settingManager.GetValue("SiteAddress");
-                    var siteEmail = await _settingManager.GetValue("SiteEmail");
+                    var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
+                    var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
+                    var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
                     var message = string.Format(PortalMessages.MSG006, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 

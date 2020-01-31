@@ -10,8 +10,8 @@ namespace WeebReader.Data.Services
     {
         public SettingManager(BaseContext context) : base(context) { }
 
-        public async Task<string> GetValue(string key) => await DbSet.SingleOrDefaultAsync(setting => setting.Key == key) is var result && result != null ? result.Value : string.Empty;
+        public async Task<string> GetValue(Setting.Keys key) => await DbSet.SingleOrDefaultAsync(setting => setting.Key == key) is var result && result != null ? result.Value : string.Empty;
 
-        public async Task<T> GetValue<T>(string key) => (T) Convert.ChangeType((await DbSet.SingleOrDefaultAsync(setting => setting.Key == key))?.Value, typeof(T));
+        public async Task<T> GetValue<T>(Setting.Keys key) => (T) Convert.ChangeType((await DbSet.SingleOrDefaultAsync(setting => setting.Key == key))?.Value, typeof(T));
     }
 }

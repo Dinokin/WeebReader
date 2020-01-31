@@ -2,6 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using WeebReader.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
@@ -411,9 +413,8 @@ namespace WeebReader.Data.Contexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                    b.Property<ushort>("Key")
+                        .HasColumnType("SMALLINT UNSIGNED")
                         .HasMaxLength(50);
 
                     b.Property<string>("Value")
@@ -430,56 +431,20 @@ namespace WeebReader.Data.Contexts.Migrations
                         new
                         {
                             Id = new Guid("040569bc-3251-47d1-b51a-1a728c3d49ec"),
-                            Key = "SiteName",
+                            Key = (ushort)0,
                             Value = "WeebReader"
                         },
                         new
                         {
                             Id = new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"),
-                            Key = "SiteDescription",
+                            Key = (ushort)1,
                             Value = "We read weebs."
                         },
                         new
                         {
                             Id = new Guid("94010814-1ba1-4fca-8e57-a879ef51ba1a"),
-                            Key = "SiteAddress",
+                            Key = (ushort)2,
                             Value = "http://127.0.0.1:5000"
-                        },
-                        new
-                        {
-                            Id = new Guid("1c629bb9-e897-4e6c-9017-300aef64d077"),
-                            Key = "SiteEmail",
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = new Guid("af86f645-4209-4eeb-aec0-86ba7e2dc2f6"),
-                            Key = "EmailEnabled",
-                            Value = "False"
-                        },
-                        new
-                        {
-                            Id = new Guid("bd69a35d-2eec-49a5-a05f-cd2d6089c323"),
-                            Key = "SmtpServer",
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = new Guid("4fa188c4-1892-40cb-bf63-8606df9fcbc8"),
-                            Key = "SmtpServerPort",
-                            Value = "0"
-                        },
-                        new
-                        {
-                            Id = new Guid("0e51d7f2-d71a-4924-a5c9-363b9197b5b2"),
-                            Key = "SmtpServerUser",
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = new Guid("ff4d59aa-3a8a-428f-8840-b75e5aba23b4"),
-                            Key = "SmtpServerPassword",
-                            Value = ""
                         });
                 });
 

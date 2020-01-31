@@ -9,6 +9,9 @@ namespace WeebReader.Web.Models.Validation
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
     public class AllowedFormats : ValidationAttribute
     {
+        /// <summary>
+        ///     List of comma separated file extensions to be tested against an <see cref="IFormFile"/>.
+        /// </summary>
         public string AllowedExtensions { get; set; }
 
         public AllowedFormats(string allowedExtensions) => AllowedExtensions = allowedExtensions;
@@ -16,7 +19,7 @@ namespace WeebReader.Web.Models.Validation
         public override bool IsValid(object value)
         {
             if (value == null)
-                return true;
+                return false;
 
             var allowedExtensions = AllowedExtensions.Replace(",", "|").ToLowerInvariant();
             

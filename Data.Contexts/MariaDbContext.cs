@@ -73,7 +73,11 @@ namespace WeebReader.Data.Contexts
                 typeBuilder.Property(link => link.Active).HasColumnType("BOOLEAN");
             });
             
-            builder.Entity<Setting>(typeBuilder => typeBuilder.Property(setting => setting.Value).HasColumnType("TEXT"));
+            builder.Entity<Setting>(typeBuilder =>
+            {
+                typeBuilder.Property(setting => setting.Key).HasColumnType("SMALLINT UNSIGNED");
+                typeBuilder.Property(setting => setting.Value).HasColumnType("TEXT");
+            });
         }
     }
 }

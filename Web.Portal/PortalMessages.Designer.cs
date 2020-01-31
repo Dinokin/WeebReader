@@ -536,5 +536,14 @@ namespace WeebReader.Web.Portal {
                 return ResourceManager.GetString("MSG053", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string MSG054 {
+            get {
+                return ResourceManager.GetString("MSG054", resourceCulture);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
 using MimeKit.Text;
+using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 
 namespace WeebReader.Web.Services
@@ -15,7 +16,7 @@ namespace WeebReader.Web.Services
 
         public async Task<bool> SendEmail(string origin, string destination, string subject, string content)
         {
-            if (await _settingManager.GetValue<bool>("EmailEnabled"))
+            if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
             {
                 try
                 {
@@ -29,13 +30,13 @@ namespace WeebReader.Web.Services
                         Text = content
                     };
 
-                    string server = await _settingManager.GetValue("SmtpServer"),
-                        port = await _settingManager.GetValue("SmtpServerPort"),
-                        user = await _settingManager.GetValue("SmtpServerUser"),
-                        password = await _settingManager.GetValue("SmtpServerPassword");
+                    string server = await _settingManager.GetValue(Setting.Keys.SmtpServer),
+                        user = await _settingManager.GetValue(Setting.Keys.SmtpServerUser),
+                        password = await _settingManager.GetValue(Setting.Keys.SmtpServerPassword);
+                    var port = await _settingManager.GetValue<int>(Setting.Keys.SmtpServerPort);
                     
                     using var client = new SmtpClient {ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true};
-                    await client.ConnectAsync(server, int.Parse(port));
+                    await client.ConnectAsync(server, port);
                     await client.AuthenticateAsync(user, password);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);

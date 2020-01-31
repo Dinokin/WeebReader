@@ -5,7 +5,7 @@
     ViewData["Title"] = PortalMessages.MSG036;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var emailEnable = await SettingManager.GetValue<bool>("EmailEnabled");
+    var emailEnable = await SettingManager.GetValue<bool>(Setting.Keys.EmailEnabled);
 }
 
 @section Headers

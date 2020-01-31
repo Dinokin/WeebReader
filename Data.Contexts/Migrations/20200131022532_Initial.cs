@@ -67,7 +67,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Key = table.Column<string>(maxLength: 50, nullable: false),
+                    Key = table.Column<ushort>(type: "SMALLINT UNSIGNED", maxLength: 50, nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -313,6 +313,26 @@ namespace WeebReader.Data.Contexts.Migrations
                         principalTable: "Chapters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { new Guid("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"), "26cd3943-23ff-41f5-86ed-8b867cf233b4", "Administrator", "ADMINISTRATOR" },
+                    { new Guid("08d79ae6-7ec1-478f-867c-a8170f075a27"), "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7", "Moderator", "MODERATOR" },
+                    { new Guid("08d79ae6-7ec3-42ce-8a94-00a56192c379"), "352e1584-d439-45dc-8015-9428b4e47c76", "Uploader", "UPLOADER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Settings",
+                columns: new[] { "Id", "Key", "Value" },
+                values: new object[,]
+                {
+                    { new Guid("040569bc-3251-47d1-b51a-1a728c3d49ec"), (ushort)0, "WeebReader" },
+                    { new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"), (ushort)1, "We read weebs." },
+                    { new Guid("94010814-1ba1-4fca-8e57-a879ef51ba1a"), (ushort)2, "http://127.0.0.1:5000" }
                 });
 
             migrationBuilder.CreateIndex(
