@@ -1,0 +1,136 @@
+﻿@model CreateUserModel
+
+@{
+    Layout = "_SignInLayout";
+}
+
+@{
+    ViewData["Title"] = PortalMessages.MSG057;
+    var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
+    var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
+}
+
+@section Headers
+{
+    <script>
+    $(() => {
+        let messageContainer = $(".form .message");
+        
+        $(".form").form({
+        on: "blur",
+        fields: {
+            username: {
+                identifier: "username",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ModelMessages.MSG007"
+                    },
+                    {
+                        type: "minLength[3]",
+                        prompt: "@ModelMessages.MSG008"
+                    }
+                ]
+            },
+            email: {
+                identifier: "email",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ModelMessages.MSG001"
+                        },
+                        {
+                            type: "email",
+                            prompt: "@ModelMessages.MSG002"
+                        }
+                        ]
+            },
+            password: {
+                identifier: "password",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ModelMessages.MSG009"
+                    },
+                    {
+                        type: "minLength[8]",
+                        prompt: "@ModelMessages.MSG006"
+                    }
+                ]
+            },
+            repeatNewPassword: {
+                identifier: "repeatPassword",
+                rules: [
+                    {
+                        type: "match[password]",
+                        prompt: "@PortalMessages.MSG042"
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@Url.Action("Install")",
+        serializeForm: true,
+        method: "POST",
+        onSuccess: (response) => window.location.href = response.destination,
+        onFailure: (response) => addError(messageContainer, response),
+        onerror: () =>  addGenericError(messageContainer)
+        });
+    });
+    </script>
+}
+
+<div class="ui middle aligned center aligned grid height-100">
+    <div class="column max-width-450">
+        <h2 class="ui image header margin-top-minus-100">
+            <img class="image margin-top-minus-100" src="~/assets/logo.png" alt="Logo">
+            <div class="content">
+                @PortalMessages.MSG058
+            </div>
+        </h2>
+        <form class="ui large form" novalidate>
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="username" placeholder="@PortalMessages.MSG038" asp-for="Username">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="email" name="email" placeholder="@PortalMessages.MSG034" asp-for="Email">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" placeholder="@PortalMessages.MSG039" asp-for="Password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="repeatPassword" placeholder="@PortalMessages.MSG046">
+                    </div>
+                </div>
+                <div class="ui fluid large black submit button">@PortalMessages.MSG057</div>
+            </div>
+            @if (successMessage == null && errorMessage == null)
+            {
+                <div class="ui message error"></div>
+            }
+            else
+            {
+                <div class="ui message @(successMessage == null ? "error" : "success") visible">
+                    <ul class="list">
+                        @foreach (var item in successMessage ?? errorMessage)
+                        {
+                            <li>@item</li>
+                        }
+                    </ul>
+                </div>
+            }
+        </form>
+    </div>
+</div>

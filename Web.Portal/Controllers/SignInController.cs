@@ -13,6 +13,7 @@ using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
 {
+    [Route("Admin/{action:slugify=Index}")]
     public class SignInController : Controller
     {
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
@@ -158,7 +159,7 @@ namespace WeebReader.Web.Portal.Controllers
         } 
         
         [HttpPatch]
-        public async Task<IActionResult> ProcessResetPassword(ResetPasswordModel resetPasswordModel)
+        public async Task<IActionResult> ChangePassword(ResetPasswordModel resetPasswordModel)
         {
             if (_signInManager.IsSignedIn(User))
                 return new JsonResult(new

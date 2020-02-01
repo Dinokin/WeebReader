@@ -47,7 +47,11 @@ namespace WeebReader.Web.Portal
                 })
                 .AddDefaultTokenProviders().AddEntityFrameworkStores<BaseContext>();
 
-            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddRouting(options =>
+            {
+                options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
+                options.LowercaseUrls = true;
+            });
             
             services.ConfigureApplicationCookie(options =>
             {
@@ -107,7 +111,7 @@ namespace WeebReader.Web.Portal
             application.UseAuthentication();
             application.UseAuthorization();
 
-            application.UseEndpoints(builder => builder.MapDefaultControllerRoute());
+            application.UseEndpoints(builder => builder.MapControllers());
 
             using var scope = application.ApplicationServices.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<BaseContext>();

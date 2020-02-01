@@ -545,5 +545,50 @@ namespace WeebReader.Web.Portal {
                 return ResourceManager.GetString("MSG054", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Something wrong is not right..
+        /// </summary>
+        public static string MSG055 {
+            get {
+                return ResourceManager.GetString("MSG055", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WeebReader installed successfully. You can now sign-in..
+        /// </summary>
+        public static string MSG056 {
+            get {
+                return ResourceManager.GetString("MSG056", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string MSG057 {
+            get {
+                return ResourceManager.GetString("MSG057", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install WeebReader.
+        /// </summary>
+        public static string MSG058 {
+            get {
+                return ResourceManager.GetString("MSG058", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The installation cannot proceed because the application is already installed..
+        /// </summary>
+        public static string MSG059 {
+            get {
+                return ResourceManager.GetString("MSG059", resourceCulture);
+            }
+        }
     }
 }

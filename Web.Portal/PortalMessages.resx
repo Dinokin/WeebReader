@@ -180,4 +180,19 @@
     <data name="MSG054">
         <value>None</value>
     </data>
+    <data name="MSG055">
+        <value>Something wrong is not right.</value>
+    </data>
+    <data name="MSG056">
+        <value>WeebReader installed successfully. You can now sign-in.</value>
+    </data>
+    <data name="MSG057">
+        <value>Install</value>
+    </data>
+    <data name="MSG058">
+        <value>Install WeebReader</value>
+    </data>
+    <data name="MSG059">
+        <value>The installation cannot proceed because the application is already installed.</value>
+    </data>
 </root>
