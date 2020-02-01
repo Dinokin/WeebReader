@@ -23,7 +23,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Install() => await AllowInstaller() ? (IActionResult) RedirectToAction("Index") : View();
+        public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index");
 
         [HttpPost]
         public async Task<IActionResult> Install(CreateUserModel createUserModel)

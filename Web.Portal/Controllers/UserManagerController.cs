@@ -13,7 +13,7 @@ using WeebReader.Web.Services;
 namespace WeebReader.Web.Portal.Controllers
 {
     [Authorize]
-    [Route("Admin/Users{action:slugify=Index}")]
+    [Route("Admin/Users/{action:slugify=Index}")]
     public class UserManagerController : Controller
     {
         private readonly UserManager<IdentityUser<Guid>> _userManager;
