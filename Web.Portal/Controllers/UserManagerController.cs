@@ -74,22 +74,39 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
                 var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
-                var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
-                var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
-                var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
-                var message = string.Format(PortalMessages.MSG017, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
+                if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+                {
+                    var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
+                    var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
+                    var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
-                var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(PortalMessages.MSG018, siteName), message);
+                    var message = string.Format(PortalMessages.MSG017, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
 
-                if(result)
-                    return new JsonResult(new
-                    {
-                        success = true,
-                        messages = new[] {PortalMessages.MSG019}
-                    });
-                
-                ModelState.AddModelError("NotSucceeded", PortalMessages.MSG020);
+                    var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(PortalMessages.MSG018, siteName), message);
+
+                    if(result)
+                        return new JsonResult(new
+                        {
+                            success = true,
+                            messages = new[] {PortalMessages.MSG019}
+                        });
+                    
+                    ModelState.AddModelError("NotSucceeded", PortalMessages.MSG020);
+                }
+                else
+                {
+                    var result = await _userManager.ChangeEmailAsync(user, emailModel.Email, token);
+                    
+                    if(result.Succeeded)
+                        return new JsonResult(new
+                        {
+                            success = true,
+                            messages = new[] {PortalMessages.MSG014}
+                        });   
+                    
+                    ModelState.AddModelError("NotSucceeded", PortalMessages.MSG015);
+                }
             }
             
             return new JsonResult(new
