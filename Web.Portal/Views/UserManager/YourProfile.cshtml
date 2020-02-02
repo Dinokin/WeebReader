@@ -12,6 +12,8 @@
         let changeEmailForm = $("#change-email-form");
         let changePasswordMessage = changePasswordForm.children(".message");
         let changeEmailMessage = changeEmailForm.children(".message");
+        
+        $("#your-profile-computer,#your-profile-mobile").addClass("active");
   
         changePasswordForm.form({
         on: "blur",
@@ -60,8 +62,7 @@
             addSuccess(changePasswordMessage, response); 
             changePasswordForm.trigger("reset");
         },
-        onFailure: (response) => addError(changePasswordMessage, response),
-        onerror: (errorMessage, element, xhr) =>  addGenericError(changePasswordMessage)
+        onFailure: (response) => addError(changePasswordMessage, response)
         });
                 
         changeEmailForm.form({
@@ -98,8 +99,7 @@
             addSuccess(changeEmailMessage, response);
             changeEmailForm.trigger("reset");
         },
-        onFailure: (response) => addError(changeEmailMessage, response),
-        onerror: () => addGenericError(changeEmailMessage)
+        onFailure: (response) => addError(changeEmailMessage, response)
         });
     });
     </script>

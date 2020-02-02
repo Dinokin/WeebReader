@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WeebReader.Data.Contexts.Others;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Models.Models.Shared;
 using WeebReader.Web.Models.Models.UserManager;
+using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -27,11 +31,64 @@ namespace WeebReader.Web.Portal.Controllers
             _emailSender = emailSender;
         }
 
+        [HttpGet("{page:int?}")]
+        [Authorize(Roles = RoleMapper.Administrator)]
+        public async Task<IActionResult> Index(ushort page = 1)
+        {
+            ViewData["Page"] = page > 1 ? page : 1;
+            ViewData["TotalPages"] = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
+
+            return View();
+        }
+
+        [HttpGet("{page:int?}")]
+        [Authorize(Roles = RoleMapper.Administrator)]
+        public async Task<IActionResult> List(ushort page = 1)
+        {
+            page = (ushort) (page > 1 ? page : 1);
+            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage).AsEnumerable()
+                .Select(user =>
+                {
+                    dynamic result = new ExpandoObject();
+
+                    result.id = user.Id;
+                    result.userName = user.UserName;
+                    result.email = user.Email;
+                    result.role = null;
+
+                    return result;
+                }).ToArray();
+
+            foreach (var user in users)
+                user.role = RoleMapper.Map((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync((string) user.id.ToString()))).FirstOrDefault()) ?? PortalMessages.MSG054;
+            
+            return new JsonResult(new
+            {
+                success = true,
+                page,
+                totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage),
+                users
+            });
+        }
+
+        [Authorize(Roles = RoleMapper.Administrator)]
+        public IActionResult Add()
+        {
+            throw new NotImplementedException();
+        }
+
+        [HttpGet("{userId:guid?}")]
+        [Authorize(Roles = RoleMapper.Administrator)]
+        public IActionResult Edit(Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+        
         [HttpGet]
         public async Task<IActionResult> YourProfile()
         {
             ViewData["User"] = await _userManager.GetUserAsync(User);
-            ViewData["Role"] = (await _userManager.GetRolesAsync((IdentityUser<Guid>) ViewData["User"])).FirstOrDefault();
+            ViewData["Role"] = RoleMapper.Map((await _userManager.GetRolesAsync((IdentityUser<Guid>) ViewData["User"])).FirstOrDefault());
 
             return View();
         }

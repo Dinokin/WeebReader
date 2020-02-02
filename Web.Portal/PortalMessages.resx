@@ -175,7 +175,7 @@
         <value>Repeat new e-mail address</value>
     </data>
     <data name="MSG053">
-        <value>Change Email</value>
+        <value>Change E-mail</value>
     </data>
     <data name="MSG054">
         <value>None</value>
@@ -194,5 +194,20 @@
     </data>
     <data name="MSG059">
         <value>The installation cannot proceed because the application is already installed.</value>
+    </data>
+    <data name="MSG060">
+        <value>Users</value>
+    </data>
+    <data name="MSG061">
+        <value>No users were found.</value>
+    </data>
+    <data name="MSG062">
+        <value>Add User</value>
+    </data>
+    <data name="MSG063">
+        <value>Actions</value>
+    </data>
+    <data name="MSG064">
+        <value>{0} of {1}</value>
     </data>
 </root>

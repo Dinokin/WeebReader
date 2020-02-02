@@ -1,0 +1,109 @@
+﻿@{
+    ViewData["Title"] = PortalMessages.MSG060;
+    var currentPage = (ushort) (int) ViewData["Page"];
+    var totalPages = (decimal) ViewData["TotalPages"];
+}
+
+@section Headers
+{
+    <script>
+    $(() => {
+        let page = @currentPage;
+        let totalPages = @totalPages;
+        let placeholder = $(".placeholder");
+        let table = $("table");
+        let grid = $(".grid");
+        let previous = $("#previous-page");
+        let current = $("#current-page");
+        let next = $("#next-page");
+        
+        $("#users").addClass("active");
+        
+        table.on("click", "button", (event) => {
+            let targetId = $(event.target).parent().parent().attr("data-id");
+            
+            window.location.href = "@Url.Action("Edit")" + "/" + targetId;
+        });
+        
+        getData();
+        
+        function getData() {
+            table.api({
+            on: "now",
+            url: "@Url.Action("List")" + "/" + page,
+            method: "GET",
+            onSuccess: (response) => loadTable(response)
+            });
+        }
+        
+        function loadTable(data) {
+            page = data.page;
+            totalPages = data.totalPages;
+            
+            current.text().replace(/[0-9]+(\D+)[0-9]+/, current + "$1" + totalPages);
+            
+            if (totalPages >= 1) {
+                buildUserTable(table, data.users);
+                
+                if (current <= 1) {
+                    previous.addClass("disabled");
+                } else {
+                    previous.removeClass("disabled");
+                }
+                
+                if (current >= totalPages) {
+                    next.removeClass("disabled");
+                } else {
+                    next.addClass("disabled");
+                }
+            } else {
+                table.addClass("deactivated");
+                grid.addClass("deactivated");
+                placeholder.removeClass("deactivated");
+            }
+        }
+    });
+    </script>
+}
+
+@section TopRightSlot
+{
+    <a class="ui icon right floated mini positive button" style="margin-top: 0.1rem" href="@Url.Action("Add")">
+        <i class="plus icon"></i>
+    </a>
+}
+
+<div class="ui placeholder segment deactivated">
+    <div class="ui icon header">
+        <i class="users icon"></i>
+        @PortalMessages.MSG061
+    </div>
+    <div class="ui primary button">@PortalMessages.MSG062</div>
+</div>
+<table class="ui unstackable very basic fixed single line center aligned table">
+    <thead>
+    <tr>
+        <th>@PortalMessages.MSG038</th>
+        <th>@PortalMessages.MSG049</th>
+        <th>@PortalMessages.MSG050</th>
+        <th>@PortalMessages.MSG063</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div class="ui three column centered grid">
+    <div class="left aligned column">
+        <button id="previous-page" class="ui basic icon button">
+            <i class="arrow left icon"></i>
+        </button>
+    </div>
+    <div id="current-page" class="center aligned column">
+        @string.Format(PortalMessages.MSG064, currentPage, totalPages)
+    </div>
+    <div class="right aligned column">
+        <button id="next-page" class="ui basic icon button">
+            <i class="arrow right icon"></i>
+        </button>
+    </div>
+</div>

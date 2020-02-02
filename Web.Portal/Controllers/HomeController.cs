@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WeebReader.Data.Contexts;
+using WeebReader.Data.Contexts.Others;
 using WeebReader.Web.Models.Models.UserManager;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -47,7 +47,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (userResult.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, ContextMessages.MSG001);
+                    var roleResult = await _userManager.AddToRoleAsync(user, RoleMapper.Administrator);
 
                     if (roleResult.Succeeded)
                     {

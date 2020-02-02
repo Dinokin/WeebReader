@@ -48,20 +48,20 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.HasData(new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"),
-                    Name = ContextMessages.MSG001,
-                    NormalizedName = ContextMessages.MSG001.ToUpperInvariant(),
+                    Name = Others.RoleMapper.Administrator,
+                    NormalizedName = Others.RoleMapper.Administrator.ToUpperInvariant(),
                     ConcurrencyStamp = "26cd3943-23ff-41f5-86ed-8b867cf233b4"
                 }, new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7ec1-478f-867c-a8170f075a27"),
-                    Name = ContextMessages.MSG002,
-                    NormalizedName = ContextMessages.MSG002.ToUpperInvariant(),
+                    Name = Others.RoleMapper.Moderator,
+                    NormalizedName = Others.RoleMapper.Moderator.ToUpperInvariant(),
                     ConcurrencyStamp = "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7"
                 }, new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7ec3-42ce-8a94-00a56192c379"),
-                    Name = ContextMessages.MSG003,
-                    NormalizedName = ContextMessages.MSG003.ToUpperInvariant(),
+                    Name = Others.RoleMapper.Uploader,
+                    NormalizedName = Others.RoleMapper.Uploader.ToUpperInvariant(),
                     ConcurrencyStamp = "352e1584-d439-45dc-8015-9428b4e47c76"
                 });
             });

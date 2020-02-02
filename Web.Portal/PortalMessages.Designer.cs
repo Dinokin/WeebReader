@@ -529,7 +529,7 @@ namespace WeebReader.Web.Portal {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change Email.
+        ///   Looks up a localized string similar to Change E-mail.
         /// </summary>
         public static string MSG053 {
             get {
@@ -588,6 +588,51 @@ namespace WeebReader.Web.Portal {
         public static string MSG059 {
             get {
                 return ResourceManager.GetString("MSG059", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        public static string MSG060 {
+            get {
+                return ResourceManager.GetString("MSG060", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No users were found..
+        /// </summary>
+        public static string MSG061 {
+            get {
+                return ResourceManager.GetString("MSG061", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add User.
+        /// </summary>
+        public static string MSG062 {
+            get {
+                return ResourceManager.GetString("MSG062", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string MSG063 {
+            get {
+                return ResourceManager.GetString("MSG063", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} of {1}.
+        /// </summary>
+        public static string MSG064 {
+            get {
+                return ResourceManager.GetString("MSG064", resourceCulture);
             }
         }
     }
