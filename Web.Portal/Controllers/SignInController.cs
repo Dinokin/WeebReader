@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
-using WeebReader.Web.Models.Models.Shared;
 using WeebReader.Web.Models.Models.SignIn;
 using WeebReader.Web.Services;
 
@@ -174,6 +173,9 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (result.Succeeded)
                 {
+                    user.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(user);
+                    
                     TempData["SuccessMessage"] = new[] {PortalMessages.MSG011};
                     
                     return new JsonResult(new

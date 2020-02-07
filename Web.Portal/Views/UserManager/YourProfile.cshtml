@@ -1,7 +1,7 @@
-﻿@{
+﻿@model UserModel
+
+@{
     ViewData["Title"] = PortalMessages.MSG047;
-    var user = (IdentityUser<Guid>) ViewData["User"];
-    var role = (string) ViewData["Role"];
 }
 
 @section Headers
@@ -107,13 +107,13 @@
 
 <div class="ui three column stackable grid">
     <div class="center aligned column">
-        @PortalMessages.MSG038: @(user.UserName)
+        @PortalMessages.MSG038: @Model.Username
     </div>
     <div class="center aligned column">
-        @PortalMessages.MSG049: @(user.Email)
+        @PortalMessages.MSG049: @Model.Email
     </div>
     <div class="center aligned column">
-        @PortalMessages.MSG050: @(role ?? PortalMessages.MSG054)
+        @PortalMessages.MSG050: @(Model.Role ?? PortalMessages.MSG054)
     </div>
 </div>
 <div class="ui two column stackable centered grid">

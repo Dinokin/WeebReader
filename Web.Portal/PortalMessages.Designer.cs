@@ -635,5 +635,77 @@ namespace WeebReader.Web.Portal {
                 return ResourceManager.GetString("MSG064", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified user was not found..
+        /// </summary>
+        public static string MSG065 {
+            get {
+                return ResourceManager.GetString("MSG065", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This user could not be updated because this user is the last administrator..
+        /// </summary>
+        public static string MSG066 {
+            get {
+                return ResourceManager.GetString("MSG066", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User updated successfully..
+        /// </summary>
+        public static string MSG067 {
+            get {
+                return ResourceManager.GetString("MSG067", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User create successfully..
+        /// </summary>
+        public static string MSG068 {
+            get {
+                return ResourceManager.GetString("MSG068", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User create successfully. A message sent to the user&apos;s e-mail with instructions on how to proceed..
+        /// </summary>
+        public static string MSG069 {
+            get {
+                return ResourceManager.GetString("MSG069", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Creation - {0}.
+        /// </summary>
+        public static string MSG070 {
+            get {
+                return ResourceManager.GetString("MSG070", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hello {0},\nA account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn&apos;t request this account, you can ignore this e-mail.\n{2}.
+        /// </summary>
+        public static string MSG071 {
+            get {
+                return ResourceManager.GetString("MSG071", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested Username is already in use..
+        /// </summary>
+        public static string MSG072 {
+            get {
+                return ResourceManager.GetString("MSG072", resourceCulture);
+            }
+        }
     }
 }

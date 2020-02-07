@@ -210,4 +210,28 @@
     <data name="MSG064">
         <value>{0} of {1}</value>
     </data>
+    <data name="MSG065">
+        <value>The specified user was not found.</value>
+    </data>
+    <data name="MSG066">
+        <value>This user could not be updated because this user is the last administrator.</value>
+    </data>
+    <data name="MSG067">
+        <value>User updated successfully.</value>
+    </data>
+    <data name="MSG068">
+        <value>User create successfully.</value>
+    </data>
+    <data name="MSG069">
+        <value>User create successfully. A message sent to the user's e-mail with instructions on how to proceed.</value>
+    </data>
+    <data name="MSG070">
+        <value>Account Creation - {0}</value>
+    </data>
+    <data name="MSG071">
+        <value>Hello {0},\nA account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn't request this account, you can ignore this e-mail.\n{2}</value>
+    </data>
+    <data name="MSG072">
+        <value>The requested Username is already in use.</value>
+    </data>
 </root>

@@ -23,50 +23,27 @@ namespace WeebReader.Data.Services
 
         public virtual async Task<TEntity> GetById(Guid id) => await DbSet.SingleOrDefaultAsync(entity => entity.Id == id);
 
-#pragma warning disable 1998
-        public virtual async Task<IEnumerable<TEntity>> GetRange(int skip, int take) => DbSet.Skip(skip).Take(take);
-#pragma warning restore 1998
+        public virtual Task<IEnumerable<TEntity>> GetRange(int skip, int take) => Task.FromResult<IEnumerable<TEntity>>(DbSet.Skip(skip).Take(take));
 
         public virtual async Task<bool> Add(TEntity entity)
         {
-            try
-            {
-                await DbSet.AddAsync(entity);
+            await DbSet.AddAsync(entity);
 
-                return await Context.SaveChangesAsync() > 0;
-            }
-            catch
-            {
-                return false;
-            }
+            return await Context.SaveChangesAsync() > 0;
         }
 
         public virtual async Task<bool> Edit(TEntity entity)
         {
-            try
-            { 
-                DbSet.Update(entity);
+            DbSet.Update(entity);
 
-                return await Context.SaveChangesAsync() > 0;
-            }
-            catch
-            {
-                return false;
-            }
+            return await Context.SaveChangesAsync() > 0;
         }
 
         public virtual async Task<bool> Delete(Guid id)
         {
-            try
-            { 
-                DbSet.Remove(await DbSet.SingleAsync(entity => entity.Id == id));
+            DbSet.Remove(await DbSet.SingleAsync(entity => entity.Id == id));
 
-                return await Context.SaveChangesAsync() > 0;
-            }
-            catch
-            {
-                return false;
-            }
+            return await Context.SaveChangesAsync() > 0;
         }
     }
 }

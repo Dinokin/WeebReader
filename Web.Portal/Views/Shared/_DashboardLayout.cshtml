@@ -12,6 +12,10 @@
         $(".ui.sidebar").sidebar({
         context: $(".bottom.segment")
         }).sidebar("attach events", "#computer-toggler,#mobile-toggler");
+        
+        $(".message .close").on("click", function() {
+            $(this).closest(".message").transition("fade");
+        });
     })
     </script>
     @await RenderSectionAsync("Headers", false)
@@ -90,17 +94,17 @@
             <h2 class="ui dividing header">
                 @ViewData["Title"]
             </h2>
-            <div class="ui hidden message @(successMessage == null ? "error" : "success")">
+            <div class="ui @(successMessage == null && errorMessage == null ? "hidden" : string.Empty) message @(successMessage == null ? "error" : "success")">
                 <i class="close icon"></i>
-                <ul class="list">
-                    @if (successMessage != null || errorMessage != null)
-                    {
+                @if (successMessage != null || errorMessage != null)
+                {
+                    <ul class="list">
                         @foreach (var item in successMessage ?? errorMessage)
                         {
                             <li>@item</li>
                         }
-                    }
-                </ul>
+                    </ul>
+                }
             </div>
             @RenderBody()
         </div>

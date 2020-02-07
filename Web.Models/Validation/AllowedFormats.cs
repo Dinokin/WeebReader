@@ -19,7 +19,7 @@ namespace WeebReader.Web.Models.Validation
         public override bool IsValid(object value)
         {
             if (value == null)
-                return false;
+                return true;
 
             var allowedExtensions = AllowedExtensions.Replace(",", "|").ToLowerInvariant();
             

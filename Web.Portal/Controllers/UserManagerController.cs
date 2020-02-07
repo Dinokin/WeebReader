@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Others;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
-using WeebReader.Web.Models.Models.Shared;
+using WeebReader.Web.Models;
+using WeebReader.Web.Models.Models.SignIn;
 using WeebReader.Web.Models.Models.UserManager;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
@@ -46,21 +46,17 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> List(ushort page = 1)
         {
             page = (ushort) (page > 1 ? page : 1);
-            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage).AsEnumerable()
-                .Select(user =>
+            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
+                .Select(user => new UserModel
                 {
-                    dynamic result = new ExpandoObject();
-
-                    result.id = user.Id;
-                    result.userName = user.UserName;
-                    result.email = user.Email;
-                    result.role = null;
-
-                    return result;
+                    UserId = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    Role = null
                 }).ToArray();
 
             foreach (var user in users)
-                user.role = RoleMapper.Map((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync((string) user.id.ToString()))).FirstOrDefault()) ?? PortalMessages.MSG054;
+                user.Role = RoleMapper.Map((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault() ?? PortalMessages.MSG054);
             
             return new JsonResult(new
             {
@@ -71,26 +67,188 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
+        [HttpGet]
         [Authorize(Roles = RoleMapper.Administrator)]
-        public IActionResult Add()
+        public IActionResult Add() => View();
+        
+        [HttpPost]
+        [Authorize(Roles = RoleMapper.Administrator)]
+        public async Task<IActionResult> Add(UserModel userModel)
         {
-            throw new NotImplementedException();
+            if (TryValidateModel(userModel))
+            {
+                if (await _userManager.FindByEmailAsync(userModel.Email) != null)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {PortalMessages.MSG013}
+                    });
+                
+                if (await _userManager.FindByNameAsync(userModel.Username) != null)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {PortalMessages.MSG072}
+                    });
+
+                var user = new IdentityUser<Guid>
+                {
+                    UserName = userModel.Username,
+                    Email = userModel.Email
+                };
+                
+                if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+                {
+                    var userResult = await _userManager.CreateAsync(user, userModel.Password);
+
+                    if (userResult.Succeeded)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
+                        var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
+                        var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
+
+                        var message = string.Format(PortalMessages.MSG071, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token})}");
+
+                        await _emailSender.SendEmail(siteEmail, user.Email, string.Format(PortalMessages.MSG070, siteName), message);
+                        
+                        TempData["SuccessMessage"] = new[] {PortalMessages.MSG069};
+
+                        return new JsonResult(new
+                        {
+                            success = true,
+                            destination = Url.Action("Index")
+                        });
+                    }
+                    
+                    ModelState.AddModelError("SomethingWrong", PortalMessages.MSG055);
+                }
+                else
+                {
+                    user.EmailConfirmed = true;
+
+                    if (!string.IsNullOrWhiteSpace(userModel.Password))
+                    {
+                        var userResult = await _userManager.CreateAsync(user, userModel.Password);
+                        
+                        if (userResult.Succeeded)
+                        {
+                            if (RoleMapper.UnMap(userModel.Role) is var resultingRole && resultingRole != null)
+                            {
+                                var roleResult = await _userManager.AddToRoleAsync(user, resultingRole);
+
+                                if (roleResult.Succeeded)
+                                {
+                                    TempData["SuccessMessage"] = new[] {PortalMessages.MSG068};
+
+                                    return new JsonResult(new
+                                    {
+                                        success = true,
+                                        destination = Url.Action("Index")
+                                    });
+                                }
+                                
+                                await _userManager.DeleteAsync(user);
+                            }
+                            else
+                            {
+                                TempData["SuccessMessage"] = new[] {PortalMessages.MSG068};
+
+                                return new JsonResult(new
+                                {
+                                    success = true,
+                                    destination = Url.Action("Index")
+                                });
+                            }
+                        }
+                        
+                        ModelState.AddModelError("SomethingWrong", PortalMessages.MSG055);
+                    }
+                    else
+                        ModelState.AddModelError("InvalidPassword", ModelMessages.MSG006);
+                }
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = new[] {ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)}
+            });
         }
 
-        [HttpGet("{userId:guid?}")]
+        [HttpPatch("{userId:guid?}")]
         [Authorize(Roles = RoleMapper.Administrator)]
-        public IActionResult Edit(Guid userId)
+        public async Task<IActionResult> Edit(Guid userId, UserModel userModel)
         {
-            throw new NotImplementedException();
+            if (TryValidateModel(userModel))
+            {
+                if (await _userManager.FindByIdAsync(userId.ToString()) is var user && user == null)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {PortalMessages.MSG065}
+                    });
+
+                if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() == RoleMapper.Administrator && (await _userManager.GetUsersInRoleAsync(RoleMapper.Administrator)).Count == 1)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {PortalMessages.MSG066}
+                    });
+
+                var removeResult = await _userManager.RemoveFromRolesAsync(user, new[] {RoleMapper.Administrator, RoleMapper.Moderator, RoleMapper.Uploader});
+
+                if (removeResult.Succeeded)
+                {
+                    if (RoleMapper.UnMap(userModel.Role) is var resultingRole && resultingRole != null)
+                    {
+                        var roleResult = await _userManager.AddToRoleAsync(user, resultingRole);
+
+                        if (roleResult.Succeeded)
+                        {
+                            TempData["SuccessMessage"] = new[] {PortalMessages.MSG067};
+
+                            return new JsonResult(new
+                            {
+                                success = true,
+                                destination = Url.Action("Index")
+                            });
+                        }
+                    }
+                    else
+                    {
+                        TempData["SuccessMessage"] = new[] {PortalMessages.MSG067};
+
+                        return new JsonResult(new
+                        {
+                            success = true,
+                            destination = Url.Action("Index")
+                        });
+                    }
+                }
+            }
+
+            ModelState.AddModelError("SomethingWrong", PortalMessages.MSG055);
+
+            return new JsonResult(new
+            {
+                success = false,
+                messages = new[] {ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)}
+            });
         }
         
         [HttpGet]
         public async Task<IActionResult> YourProfile()
         {
-            ViewData["User"] = await _userManager.GetUserAsync(User);
-            ViewData["Role"] = RoleMapper.Map((await _userManager.GetRolesAsync((IdentityUser<Guid>) ViewData["User"])).FirstOrDefault());
+            var user = await _userManager.GetUserAsync(User);
 
-            return View();
+            return View(new UserModel
+            {
+                UserId = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                Role = RoleMapper.Map((await _userManager.GetRolesAsync(user)).FirstOrDefault())
+            });
         }
 
         [HttpPatch]

@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WeebReader.Web.Models.Models.SignIn;
 
-namespace WeebReader.Web.Models.Models.UserManager
+namespace WeebReader.Web.Models.Models.SignIn
 {
-    public class CreateUserModel : SignInModel
+    public class EmailModel
     {
         [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG001")]
         [EmailAddress(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG002")]

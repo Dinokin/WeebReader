@@ -25,6 +25,20 @@
             window.location.href = "@Url.Action("Edit")" + "/" + targetId;
         });
         
+        previous.on("click", () => {
+            if (page > 1) {
+                page--;
+                getData();
+            }
+        });
+        
+        next.on("click", () => {
+            if (page < totalPages) {
+                page++;
+                getData();
+            }
+        });
+        
         getData();
         
         function getData() {
@@ -39,19 +53,18 @@
         function loadTable(data) {
             page = data.page;
             totalPages = data.totalPages;
-            
-            current.text().replace(/[0-9]+(\D+)[0-9]+/, current + "$1" + totalPages);
+            current.text(current.text().replace(/[0-9]+(\D+)[0-9]+/, page + "$1" + totalPages));
             
             if (totalPages >= 1) {
                 buildUserTable(table, data.users);
                 
-                if (current <= 1) {
+                if (page <= 1) {
                     previous.addClass("disabled");
                 } else {
                     previous.removeClass("disabled");
                 }
                 
-                if (current >= totalPages) {
+                if (page < totalPages) {
                     next.removeClass("disabled");
                 } else {
                     next.addClass("disabled");
@@ -61,6 +74,20 @@
                 grid.addClass("deactivated");
                 placeholder.removeClass("deactivated");
             }
+        }
+        
+        function buildUserTable(table, data) {
+            let body = table.children("tbody");
+            body.empty();
+            
+            data.forEach((value) => {
+                body.append("<tr data-id=\""+ value.userId + "\">" 
+                    + "<td>" + value.username + "</td>"
+                    + "<td>" + value.email + "</td>"
+                    + "<td>" + value.role + "</td>"
+                    + "<td>" + "<button class=\"ui icon primary mini button\"><i class=\"pen icon\"></i></button>" + "</td>"
+                    + "</tr>");
+            });
         }
     });
     </script>

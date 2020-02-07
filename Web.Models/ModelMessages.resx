@@ -48,4 +48,7 @@
     <data name="MSG010">
         <value>The current password is required.</value>
     </data>
+    <data name="MSG011">
+        <value>A role must be defined.</value>
+    </data>
 </root>

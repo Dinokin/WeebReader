@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Others;
-using WeebReader.Web.Models.Models.UserManager;
+using WeebReader.Web.Models.Models.Home;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -26,7 +26,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index");
 
         [HttpPost]
-        public async Task<IActionResult> Install(CreateUserModel createUserModel)
+        public async Task<IActionResult> Install(CreateAdminUserModel userModel)
         {
             if (!await AllowInstaller())
                 return new JsonResult(new
@@ -35,15 +35,15 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = new[] {PortalMessages.MSG059}
                 });
 
-            if (TryValidateModel(createUserModel))
+            if (TryValidateModel(userModel))
             {
                 var user = new IdentityUser<Guid>
                 {
-                    UserName = createUserModel.Username,
-                    Email = createUserModel.Email
+                    UserName = userModel.Username,
+                    Email = userModel.Email
                 };
                 
-                var userResult = await _userManager.CreateAsync(user, createUserModel.Password);
+                var userResult = await _userManager.CreateAsync(user, userModel.Password);
 
                 if (userResult.Succeeded)
                 {

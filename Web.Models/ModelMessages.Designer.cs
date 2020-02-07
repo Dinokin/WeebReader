@@ -149,5 +149,14 @@ namespace WeebReader.Web.Models {
                 return ResourceManager.GetString("MSG010", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A role must be defined..
+        /// </summary>
+        public static string MSG011 {
+            get {
+                return ResourceManager.GetString("MSG011", resourceCulture);
+            }
+        }
     }
 }
