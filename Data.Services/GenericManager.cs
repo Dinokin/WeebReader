@@ -34,14 +34,17 @@ namespace WeebReader.Data.Services
 
         public virtual async Task<bool> Edit(TEntity entity)
         {
+            if (!await DbSet.AnyAsync(target => target.Id == entity.Id))
+                return false;
+            
             DbSet.Update(entity);
 
             return await Context.SaveChangesAsync() > 0;
         }
 
-        public virtual async Task<bool> Delete(Guid id)
+        public virtual async Task<bool> Delete(TEntity entity)
         {
-            DbSet.Remove(await DbSet.SingleAsync(entity => entity.Id == id));
+            DbSet.Remove(entity);
 
             return await Context.SaveChangesAsync() > 0;
         }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Contexts.Others;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
@@ -20,12 +21,14 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Users/{action:slugify=Index}")]
     public class UserManagerController : Controller
     {
+        private readonly BaseContext _context;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
         private readonly SettingManager _settingManager;
         private readonly EmailSender _emailSender;
 
-        public UserManagerController(UserManager<IdentityUser<Guid>> userManager, SettingManager settingManager, EmailSender emailSender)
+        public UserManagerController(BaseContext context, UserManager<IdentityUser<Guid>> userManager, SettingManager settingManager, EmailSender emailSender)
         {
+            _context = context;
             _userManager = userManager;
             _settingManager = settingManager;
             _emailSender = emailSender;
@@ -35,17 +38,9 @@ namespace WeebReader.Web.Portal.Controllers
         [Authorize(Roles = RoleMapper.Administrator)]
         public async Task<IActionResult> Index(ushort page = 1)
         {
-            ViewData["Page"] = page > 1 ? page : 1;
-            ViewData["TotalPages"] = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
+            var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1); 
 
-            return View();
-        }
-
-        [HttpGet("{page:int?}")]
-        [Authorize(Roles = RoleMapper.Administrator)]
-        public async Task<IActionResult> List(ushort page = 1)
-        {
-            page = (ushort) (page > 1 ? page : 1);
             var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
                 .Select(user => new UserModel
                 {
@@ -57,14 +52,11 @@ namespace WeebReader.Web.Portal.Controllers
 
             foreach (var user in users)
                 user.Role = RoleMapper.Map((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault() ?? PortalMessages.MSG054);
+
+            ViewData["Page"] = page;
+            ViewData["TotalPages"] = totalPages;
             
-            return new JsonResult(new
-            {
-                success = true,
-                page,
-                totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage),
-                users
-            });
+            return View(users);
         }
 
         [HttpGet]
@@ -96,29 +88,46 @@ namespace WeebReader.Web.Portal.Controllers
                     UserName = userModel.Username,
                     Email = userModel.Email
                 };
+
+                await using var transaction = await _context.Database.BeginTransactionAsync();
                 
                 if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
                 {
-                    var userResult = await _userManager.CreateAsync(user, userModel.Password);
+                    var userResult = string.IsNullOrWhiteSpace(userModel.Password) ? await _userManager.CreateAsync(user) : await _userManager.CreateAsync(user, userModel.Password);
 
                     if (userResult.Succeeded)
                     {
-                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                        var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
-                        var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
-                        var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
-
-                        var message = string.Format(PortalMessages.MSG071, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token})}");
-
-                        await _emailSender.SendEmail(siteEmail, user.Email, string.Format(PortalMessages.MSG070, siteName), message);
-                        
-                        TempData["SuccessMessage"] = new[] {PortalMessages.MSG069};
-
-                        return new JsonResult(new
+                        if (RoleMapper.UnMap(userModel.Role) is var resultingRole && resultingRole != null)
                         {
-                            success = true,
-                            destination = Url.Action("Index")
-                        });
+                            var roleResult = await _userManager.AddToRoleAsync(user, resultingRole);
+
+                            if (roleResult.Succeeded)
+                            {
+                                TempData["SuccessMessage"] = new[] {PortalMessages.MSG068};
+
+                                await transaction.CommitAsync();
+                                await SendAccountCreationEmail(user);
+
+                                return new JsonResult(new
+                                {
+                                    success = true,
+                                    destination = Url.Action("Index")
+                                });
+                            }
+                        }
+                        else
+                        {
+                            TempData["SuccessMessage"] = new[] {PortalMessages.MSG068};
+
+                            await transaction.CommitAsync();
+                            await SendAccountCreationEmail(user);
+                            
+                            return new JsonResult(new
+                            {
+                                success = true,
+                                destination = Url.Action("Index")
+                            });
+                        }
                     }
                     
                     ModelState.AddModelError("SomethingWrong", PortalMessages.MSG055);
@@ -141,18 +150,20 @@ namespace WeebReader.Web.Portal.Controllers
                                 {
                                     TempData["SuccessMessage"] = new[] {PortalMessages.MSG068};
 
+                                    await transaction.CommitAsync();
+
                                     return new JsonResult(new
                                     {
                                         success = true,
                                         destination = Url.Action("Index")
                                     });
                                 }
-                                
-                                await _userManager.DeleteAsync(user);
                             }
                             else
                             {
                                 TempData["SuccessMessage"] = new[] {PortalMessages.MSG068};
+
+                                await transaction.CommitAsync();
 
                                 return new JsonResult(new
                                 {
@@ -176,6 +187,26 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
+        [HttpGet("{userId:guid?}")]
+        [Authorize(Roles = RoleMapper.Administrator)]
+        public async Task<IActionResult> Edit(Guid userId)
+        {
+            if (await _userManager.FindByIdAsync(userId.ToString()) is var user && user == null)
+            {
+                ViewData["ErrorMessage"] = new[] {PortalMessages.MSG065};
+                
+                return RedirectToAction("Index");
+            }
+
+            return View(new UserModel
+            {
+                UserId = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
+                Role = RoleMapper.Map((await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? PortalMessages.MSG054)
+            });
+        }
+
         [HttpPatch("{userId:guid?}")]
         [Authorize(Roles = RoleMapper.Administrator)]
         public async Task<IActionResult> Edit(Guid userId, UserModel userModel)
@@ -188,37 +219,43 @@ namespace WeebReader.Web.Portal.Controllers
                         success = false,
                         messages = new[] {PortalMessages.MSG065}
                     });
+                
+                if (await _userManager.FindByEmailAsync(userModel.Email) != user)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {PortalMessages.MSG013}
+                    });
 
-                if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() == RoleMapper.Administrator && (await _userManager.GetUsersInRoleAsync(RoleMapper.Administrator)).Count == 1)
+                if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() is var role && role == RoleMapper.Administrator && (await _userManager.GetUsersInRoleAsync(RoleMapper.Administrator)).Count == 1 && RoleMapper.UnMap(userModel.Role) != role)
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {PortalMessages.MSG066}
                     });
 
-                var removeResult = await _userManager.RemoveFromRolesAsync(user, new[] {RoleMapper.Administrator, RoleMapper.Moderator, RoleMapper.Uploader});
+                user.UserName = userModel.Username;
+                user.Email = userModel.Email;
+                user.EmailConfirmed = true;
+                
+                if (!string.IsNullOrWhiteSpace(userModel.Password))
+                    user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userModel.Password);
 
-                if (removeResult.Succeeded)
+                await using var transaction = await _context.Database.BeginTransactionAsync();
+
+                if ((await _userManager.UpdateAsync(user)).Succeeded)
                 {
-                    if (RoleMapper.UnMap(userModel.Role) is var resultingRole && resultingRole != null)
-                    {
-                        var roleResult = await _userManager.AddToRoleAsync(user, resultingRole);
+                    var roleResult = true;
 
-                        if (roleResult.Succeeded)
-                        {
-                            TempData["SuccessMessage"] = new[] {PortalMessages.MSG067};
+                    if (role != RoleMapper.UnMap(userModel.Role))
+                        roleResult = (await _userManager.RemoveFromRoleAsync(user, role)).Succeeded && (await _userManager.AddToRoleAsync(user, RoleMapper.UnMap(userModel.Role))).Succeeded;
 
-                            return new JsonResult(new
-                            {
-                                success = true,
-                                destination = Url.Action("Index")
-                            });
-                        }
-                    }
-                    else
+                    if (roleResult)
                     {
+                        await transaction.CommitAsync();
+                        
                         TempData["SuccessMessage"] = new[] {PortalMessages.MSG067};
-
+                        
                         return new JsonResult(new
                         {
                             success = true,
@@ -288,10 +325,10 @@ namespace WeebReader.Web.Portal.Controllers
                     });
 
                 var user = await _userManager.GetUserAsync(User);
-                var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
 
                 if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
                 {
+                    var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
                     var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
                     var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
                     var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
@@ -311,7 +348,10 @@ namespace WeebReader.Web.Portal.Controllers
                 }
                 else
                 {
-                    var result = await _userManager.ChangeEmailAsync(user, emailModel.Email, token);
+                    user.Email = emailModel.Email;
+                    user.EmailConfirmed = true;
+                    
+                    var result = await _userManager.UpdateAsync(user);
                     
                     if(result.Succeeded)
                         return new JsonResult(new
@@ -329,6 +369,18 @@ namespace WeebReader.Web.Portal.Controllers
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
+        }
+
+        private async Task<bool> SendAccountCreationEmail(IdentityUser<Guid> user)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
+            var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
+            var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
+
+            var message = string.Format(PortalMessages.MSG071, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token})}");
+
+            return await _emailSender.SendEmail(siteEmail, user.Email, string.Format(PortalMessages.MSG070, siteName), message);
         }
     }
 }

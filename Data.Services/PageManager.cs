@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +11,8 @@ namespace WeebReader.Data.Services
     {
         public PageManager(BaseContext context) : base(context) { }
 
-        public async Task<long> CountPagesByChapterId(Guid chapterId) => await DbSet.LongCountAsync(page => page.ChapterId == chapterId);
+        public async Task<long> CountPagesByChapter(Chapter chapter) => await DbSet.LongCountAsync(page => page.ChapterId == chapter.Id);
 
-        public Task<IEnumerable<TPage>> GetPagesByChapterId(Guid chapterId) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapterId));
+        public Task<IEnumerable<TPage>> GetPagesByChapter(Chapter chapter) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapter.Id));
     }
 }

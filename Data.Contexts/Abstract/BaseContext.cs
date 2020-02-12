@@ -99,6 +99,7 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(title => title.Synopsis).IsRequired();
                 typeBuilder.Property(title => title.Status).IsRequired();
                 typeBuilder.Property(title => title.Visible).IsRequired();
+                typeBuilder.HasIndex(title => new {title.Name, title.Type}).IsUnique();
                 typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title).HasForeignKey(titleTag => titleTag.TitleId);
                 typeBuilder.HasDiscriminator(title => title.Type).HasValue<Comic>(0).HasValue<Novel>(1);
             });

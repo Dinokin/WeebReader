@@ -707,5 +707,14 @@ namespace WeebReader.Web.Portal {
                 return ResourceManager.GetString("MSG072", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit User.
+        /// </summary>
+        public static string MSG073 {
+            get {
+                return ResourceManager.GetString("MSG073", resourceCulture);
+            }
+        }
     }
 }

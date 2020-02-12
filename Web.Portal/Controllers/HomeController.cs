@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Contexts.Others;
 using WeebReader.Web.Models.Models.Home;
 
@@ -12,9 +13,14 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("{action=Index}")]
     public class HomeController : Controller
     {
+        private readonly BaseContext _context;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
 
-        public HomeController(UserManager<IdentityUser<Guid>> userManager) => _userManager = userManager;
+        public HomeController(BaseContext context, UserManager<IdentityUser<Guid>> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
 
         [HttpGet]
         public IActionResult Index()
@@ -37,6 +43,8 @@ namespace WeebReader.Web.Portal.Controllers
 
             if (TryValidateModel(userModel))
             {
+                await using var transaction = await _context.Database.BeginTransactionAsync();
+                
                 var user = new IdentityUser<Guid>
                 {
                     UserName = userModel.Username,
@@ -51,6 +59,8 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (roleResult.Succeeded)
                     {
+                        await transaction.CommitAsync();
+                        
                         TempData["SuccessMessage"] = new[] {PortalMessages.MSG056};
 
                         return new JsonResult(new
@@ -59,8 +69,6 @@ namespace WeebReader.Web.Portal.Controllers
                             destination = Url.Action("Index", "SignIn")
                         });
                     }
-                    
-                    await _userManager.DeleteAsync(user);
                 }
 
                 ModelState.AddModelError("SomethingWrong", PortalMessages.MSG055);

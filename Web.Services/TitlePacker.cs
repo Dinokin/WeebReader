@@ -23,10 +23,8 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _titleManager.Add(title))
+                if (!await _titleManager.Add(title, tags))
                     return false;
-
-                await _titleManager.TagTitle(title.Id, tags);
                 
                 var directory = new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}");
                 directory.Create();
@@ -40,7 +38,7 @@ namespace WeebReader.Web.Services
                 catch
                 {
                     directory.Delete();
-                    await _titleManager.Delete(title.Id);
+                    await _titleManager.Delete(title);
 
                     return false;
                 }
@@ -55,11 +53,9 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _titleManager.Edit(title))
+                if (!await _titleManager.Edit(title, tags))
                     return false;
                 
-                await _titleManager.TagTitle(title.Id, tags);
-
                 try
                 {
                     Utilities.WriteImage(new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}"), Utilities.ProcessImage(cover), "cover");
@@ -81,7 +77,7 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _titleManager.Delete(title.Id))
+                if (!await _titleManager.Delete(title))
                     return false;
 
                 try

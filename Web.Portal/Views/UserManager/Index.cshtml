@@ -1,94 +1,16 @@
-﻿@{
+﻿@model IEnumerable<UserModel>
+
+@{
     ViewData["Title"] = PortalMessages.MSG060;
-    var currentPage = (ushort) (int) ViewData["Page"];
+    var page = (ushort) ViewData["Page"];
     var totalPages = (decimal) ViewData["TotalPages"];
 }
 
 @section Headers
 {
     <script>
-    $(() => {
-        let page = @currentPage;
-        let totalPages = @totalPages;
-        let placeholder = $(".placeholder");
-        let table = $("table");
-        let grid = $(".grid");
-        let previous = $("#previous-page");
-        let current = $("#current-page");
-        let next = $("#next-page");
-        
+    $(() => {        
         $("#users").addClass("active");
-        
-        table.on("click", "button", (event) => {
-            let targetId = $(event.target).parent().parent().attr("data-id");
-            
-            window.location.href = "@Url.Action("Edit")" + "/" + targetId;
-        });
-        
-        previous.on("click", () => {
-            if (page > 1) {
-                page--;
-                getData();
-            }
-        });
-        
-        next.on("click", () => {
-            if (page < totalPages) {
-                page++;
-                getData();
-            }
-        });
-        
-        getData();
-        
-        function getData() {
-            table.api({
-            on: "now",
-            url: "@Url.Action("List")" + "/" + page,
-            method: "GET",
-            onSuccess: (response) => loadTable(response)
-            });
-        }
-        
-        function loadTable(data) {
-            page = data.page;
-            totalPages = data.totalPages;
-            current.text(current.text().replace(/[0-9]+(\D+)[0-9]+/, page + "$1" + totalPages));
-            
-            if (totalPages >= 1) {
-                buildUserTable(table, data.users);
-                
-                if (page <= 1) {
-                    previous.addClass("disabled");
-                } else {
-                    previous.removeClass("disabled");
-                }
-                
-                if (page < totalPages) {
-                    next.removeClass("disabled");
-                } else {
-                    next.addClass("disabled");
-                }
-            } else {
-                table.addClass("deactivated");
-                grid.addClass("deactivated");
-                placeholder.removeClass("deactivated");
-            }
-        }
-        
-        function buildUserTable(table, data) {
-            let body = table.children("tbody");
-            body.empty();
-            
-            data.forEach((value) => {
-                body.append("<tr data-id=\""+ value.userId + "\">" 
-                    + "<td>" + value.username + "</td>"
-                    + "<td>" + value.email + "</td>"
-                    + "<td>" + value.role + "</td>"
-                    + "<td>" + "<button class=\"ui icon primary mini button\"><i class=\"pen icon\"></i></button>" + "</td>"
-                    + "</tr>");
-            });
-        }
     });
     </script>
 }
@@ -100,37 +22,54 @@
     </a>
 }
 
-<div class="ui placeholder segment deactivated">
-    <div class="ui icon header">
-        <i class="users icon"></i>
-        @PortalMessages.MSG061
+@if (Model.Any())
+{
+    <table class="ui unstackable very basic fixed single line center aligned table">
+        <thead>
+        <tr>
+            <th>@PortalMessages.MSG038</th>
+            <th>@PortalMessages.MSG049</th>
+            <th>@PortalMessages.MSG050</th>
+            <th>@PortalMessages.MSG063</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td>
+                <td>
+                    <a class="ui icon primary mini button" href="@Url.Action("Edit", new { userId = user.UserId })"><i class="pen icon"></i></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="ui three column centered grid">
+        <div class="left aligned column">
+            <a id="previous-page" class="ui basic icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Index", new { page = page - 1 })">
+                <i class="arrow left icon"></i>
+            </a>
+        </div>
+        <div id="current-page" class="center aligned column">
+            @string.Format(PortalMessages.MSG064, page, totalPages)
+        </div>
+        <div class="right aligned column">
+            <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new { page = page + 1 })">
+                <i class="arrow right icon"></i>
+            </a>
+        </div>
     </div>
-    <div class="ui primary button">@PortalMessages.MSG062</div>
-</div>
-<table class="ui unstackable very basic fixed single line center aligned table">
-    <thead>
-    <tr>
-        <th>@PortalMessages.MSG038</th>
-        <th>@PortalMessages.MSG049</th>
-        <th>@PortalMessages.MSG050</th>
-        <th>@PortalMessages.MSG063</th>
-    </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-<div class="ui three column centered grid">
-    <div class="left aligned column">
-        <button id="previous-page" class="ui basic icon button">
-            <i class="arrow left icon"></i>
-        </button>
-    </div>
-    <div id="current-page" class="center aligned column">
-        @string.Format(PortalMessages.MSG064, currentPage, totalPages)
-    </div>
-    <div class="right aligned column">
-        <button id="next-page" class="ui basic icon button">
-            <i class="arrow right icon"></i>
-        </button>
-    </div>
-</div>
+}
+else
+{
+    <div class="ui placeholder segment">
+        <div class="ui icon header">
+            <i class="users icon"></i>
+            @PortalMessages.MSG061
+        </div>
+        <a class="ui primary button" href="@Url.Action("Add")">@PortalMessages.MSG062</a>
+    </div>   
+}

@@ -50,7 +50,7 @@ namespace WeebReader.Web.Services
                 }
                 catch
                 {
-                    await _chapterManager.Delete(chapter.Id);
+                    await _chapterManager.Delete(chapter);
                     
                     return false;
                 }
@@ -99,7 +99,7 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _chapterManager.Delete(chapter.Id))
+                if (!await _chapterManager.Delete(chapter))
                     return false;
 
                 try
@@ -134,8 +134,8 @@ namespace WeebReader.Web.Services
                 ChapterId = chapter.Id
             });
 
-            foreach (var page in await _pageManager.GetPagesByChapterId(chapter.Id))
-                await _pageManager.Delete(page.Id);
+            foreach (var page in await _pageManager.GetPagesByChapter(chapter))
+                await _pageManager.Delete(page);
 
             using var archive = new ZipArchive(new FileInfo($"{location}{Path.DirectorySeparatorChar}download.zip").Create(), ZipArchiveMode.Create);
             
