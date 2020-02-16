@@ -135,4 +135,13 @@
     <data name="EditUser">
         <value>Edit User</value>
     </data>
+    <data name="RepeatNewPassword">
+        <value>Repeat the new password</value>
+    </data>
+    <data name="Success">
+        <value>Success</value>
+    </data>
+    <data name="Error">
+        <value>Error</value>
+    </data>
 </root>

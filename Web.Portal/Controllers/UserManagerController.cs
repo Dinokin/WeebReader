@@ -61,8 +61,15 @@ namespace WeebReader.Web.Portal.Controllers
 
         [HttpGet]
         [Authorize(Roles = RoleTranslator.Administrator)]
-        public IActionResult Add() => View();
-        
+        public IActionResult Add()
+        {
+            ViewData["Title"] = Labels.AddUser;
+            ViewData["ActionRoute"] = Url.Action("Add");
+            ViewData["Method"] = "POST";
+            
+            return View("UserEditor");
+        }
+
         [HttpPost]
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Add(UserModel userModel)
@@ -183,7 +190,7 @@ namespace WeebReader.Web.Portal.Controllers
             return new JsonResult(new
             {
                 success = false,
-                messages = new[] {ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)}
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
         }
 
@@ -197,8 +204,12 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 return RedirectToAction("Index");
             }
+            
+            ViewData["Title"] = Labels.EditUser;
+            ViewData["ActionRoute"] = Url.Action("Edit");
+            ViewData["Method"] = "PATCH";
 
-            return View(new UserModel
+            return View("UserEditor", new UserModel
             {
                 UserId = user.Id,
                 Username = user.UserName,
@@ -276,7 +287,7 @@ namespace WeebReader.Web.Portal.Controllers
             return new JsonResult(new
             {
                 success = false,
-                messages = new[] {ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)}
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
         }
         

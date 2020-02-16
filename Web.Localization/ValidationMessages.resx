@@ -43,7 +43,7 @@
         <value>An username must have at least 3 characters.</value>
     </data>
     <data name="PasswordRequired">
-        <value>The password required.</value>
+        <value>A password required.</value>
     </data>
     <data name="CurrentPasswordRequired">
         <value>The current password is required.</value>
@@ -70,7 +70,7 @@
         <value>The specified user was not found.</value>
     </data>
     <data name="UserIsLastAdministrator">
-        <value>This user could not be updated because this user is the last administrator.</value>
+        <value>This user could not be updated because the role cannot be change since this user is the last administrator.</value>
     </data>
     <data name="UsernameAlreadyInUse">
         <value>The requested Username is already in use.</value>

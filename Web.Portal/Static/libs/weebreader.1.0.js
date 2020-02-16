@@ -25,7 +25,7 @@ function addSuccess(element, response) {
 function addMessages(element, response) {
     element.empty();
     let list = element.append("<ul class=\"list\"></ul>").find("ul");
-    response.messages.forEach(function (currentValue) {
+    response.messages.forEach(currentValue => {
         list.append("<li>" + currentValue + "</li>")
     });
 }

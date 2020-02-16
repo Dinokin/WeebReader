@@ -160,6 +160,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Forgot Password.
         /// </summary>
         public static string ForgotPassword1 {
@@ -286,6 +295,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Repeat the new password.
+        /// </summary>
+        public static string RepeatNewPassword {
+            get {
+                return ResourceManager.GetString("RepeatNewPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repeat the Password.
         /// </summary>
         public static string RepeatPassword {
@@ -354,6 +372,15 @@ namespace WeebReader.Web.Localization {
         public static string SignOut {
             get {
                 return ResourceManager.GetString("SignOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Success.
+        /// </summary>
+        public static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
             }
         }
         

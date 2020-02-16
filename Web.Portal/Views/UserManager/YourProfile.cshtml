@@ -58,11 +58,11 @@
         url: "@Url.Action("ChangePassword")",
         serializeForm: true,
         method: "PATCH",
-        onSuccess: (response) => {
+        onSuccess: response => {
             addSuccess(changePasswordMessage, response); 
-            changePasswordForm.trigger("reset");
+            changePasswordForm.form("reset");
         },
-        onFailure: (response) => addError(changePasswordMessage, response)
+        onFailure: response => addError(changePasswordMessage, response)
         });
                 
         changeEmailForm.form({
@@ -95,11 +95,11 @@
         url: "@Url.Action("ChangeEmail")",
         serializeForm: true,
         method: "PATCH",
-        onSuccess: (response) => {
+        onSuccess: response => {
             addSuccess(changeEmailMessage, response);
-            changeEmailForm.trigger("reset");
+            changeEmailForm.form("reset");
         },
-        onFailure: (response) => addError(changeEmailMessage, response)
+        onFailure: response => addError(changeEmailMessage, response)
         });
     });
     </script>
@@ -135,7 +135,7 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="repeatNewPassword" placeholder="@Labels.RepeatPassword">
+                        <input type="password" name="repeatNewPassword" placeholder="@Labels.RepeatNewPassword">
                     </div>
                 </div>
                 <div class="ui fluid large black submit button">@Labels.ChangePassword</div>

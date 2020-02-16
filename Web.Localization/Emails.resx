@@ -34,6 +34,6 @@
         <value>Account Creation - {0}</value>
     </data>
     <data name="AccountCreationEmailBody">
-        <value>Hello {0},\nA account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn't request this account, you can ignore this e-mail.\n{2}</value>
+        <value>Hello {0},\nAn account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn't request this account, you can ignore this e-mail.\n{2}</value>
     </data>
 </root>

@@ -61,7 +61,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello {0},\nA account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn&apos;t request this account, you can ignore this e-mail.\n{2}.
+        ///   Looks up a localized string similar to Hello {0},\nAn account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn&apos;t request this account, you can ignore this e-mail.\n{2}.
         /// </summary>
         public static string AccountCreationEmailBody {
             get {

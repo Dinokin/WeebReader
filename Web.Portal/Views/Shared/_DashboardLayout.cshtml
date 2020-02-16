@@ -98,6 +98,9 @@
                 <i class="close icon"></i>
                 @if (successMessage != null || errorMessage != null)
                 {
+                    <div class="header">
+                        @(successMessage != null ? Labels.Success : Labels.Error)
+                    </div>
                     <ul class="list">
                         @foreach (var item in successMessage ?? errorMessage)
                         {

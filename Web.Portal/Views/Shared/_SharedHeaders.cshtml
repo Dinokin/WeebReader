@@ -1,8 +1,8 @@
 ﻿@inject SettingManager SettingManager
 
 @{
-    ViewData["SiteName"] = await SettingManager.GetValue(Setting.Keys.SiteName);
-    ViewData["SiteDescription"] = await SettingManager.GetValue(Setting.Keys.SiteDescription);
+    var siteName = await SettingManager.GetValue(Setting.Keys.SiteName);
+    var siteDescription = await SettingManager.GetValue(Setting.Keys.SiteDescription);
 }
 
 <!-- Standard Meta -->
@@ -11,8 +11,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <!-- Site Properties -->
-<title>@ViewData["Title"]@(ViewData["TitleSeparator"] ?? " - ")@ViewData["SiteName"]</title>
-<meta name="description" content="@ViewData["SiteDescription"]">
+<title>@ViewData["Title"]@(ViewData["TitleSeparator"] ?? " - ")@siteName</title>
+<meta name="description" content="@siteDescription">
 @if (Convert.ToBoolean(ViewData["AllowIndexing"]))
 {
     <meta name="robots" content="noindex, nofollow">

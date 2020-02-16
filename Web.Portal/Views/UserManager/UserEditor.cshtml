@@ -1,0 +1,122 @@
+﻿@model UserModel
+
+@{
+    var roles = new List<string> {Labels.None};
+
+    roles.AddRange(typeof(RoleTranslator).GetFields().Select(info => RoleTranslator.FromRole(info.GetValue(null).ToString())).Reverse());
+}
+
+@section Headers
+{
+    <script>
+    $(() => {
+        let messageContainer = $(".form .message");
+        
+        $("#users").addClass("active");
+        
+        $(".form").form({
+        on: "blur",
+        fields: {
+            username: {
+                identifier: "username",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.UsernameRequired"
+                    },
+                    {
+                        type: "minLength[3]",
+                        prompt: "@ValidationMessages.MinimumUsernameLength"
+                    }
+                ]
+            },
+            email: {
+                identifier: "email",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.EmailRequired"
+                        },
+                        {
+                            type: "email",
+                            prompt: "@ValidationMessages.ValidEmailRequired"
+                        }
+                        ]
+            },
+            role: {
+                identifier  : "role",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.RoleRequired"
+                    }
+                ]
+            },
+            password: {
+                identifier: "password",
+                optional: true,
+                rules: [
+                    {
+                        type: "minLength[8]",
+                        prompt: "@ValidationMessages.MinimumPasswordLength"
+                    }
+                ]
+            },
+            repeatNewPassword: {
+                identifier: "repeatPassword",
+                rules: [
+                    {
+                        type: "match[password]",
+                        prompt: "@ValidationMessages.PasswordsMustBeEqual"
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@ViewData["ActionRoute"]",
+        serializeForm: true,
+        method: "@ViewData["Method"]",
+        onSuccess: response => window.location.href = response.destination,
+        onFailure: response => addError(messageContainer, response)
+        });
+        
+        $(".dropdown").dropdown();
+    });
+    </script>
+}
+
+<form class="ui form" novalidate>
+    <div class="ui message error"></div>
+    <div class="three fields">
+        <div class="field">
+            <label>@Labels.Username</label>
+            <input type="text" name="username" placeholder="@Labels.Username" asp-for="Username"/>
+        </div>
+        <div class="field">
+            <label>@Labels.Email</label>
+            <input type="email" name="email" placeholder="@Labels.EmailAddress" asp-for="Email">
+        </div>
+        <div class="field">
+            <label>@Labels.Role</label>
+            <select class="ui search dropdown" name="role" asp-for="Role">
+                @foreach (var role in roles)
+                {
+                    <option value="@role">@role</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>@Labels.Password</label>
+            <input type="password" name="password" placeholder="@Labels.Password" asp-for="Password">
+        </div>
+        <div class="field">
+            <label>@Labels.RepeatPassword</label>
+            <input type="password" name="repeatPassword" placeholder="@Labels.RepeatPassword"/>
+        </div>
+    </div>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">@ViewData["Title"]</div>
+    </div>
+</form>

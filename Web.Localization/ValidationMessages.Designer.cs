@@ -142,7 +142,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The password required..
+        ///   Looks up a localized string similar to A password required..
         /// </summary>
         public static string PasswordRequired {
             get {
@@ -187,7 +187,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This user could not be updated because this user is the last administrator..
+        ///   Looks up a localized string similar to This user could not be updated because the role cannot be change since this user is the last administrator..
         /// </summary>
         public static string UserIsLastAdministrator {
             get {
