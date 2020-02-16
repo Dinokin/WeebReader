@@ -10,20 +10,6 @@
         
         <ItemGroup>
                 <ProjectReference Include="..\Data.Entities\Data.Entities.csproj" />
-        </ItemGroup>
-
-        <ItemGroup>
-                <Compile Update="ModelMessages.Designer.cs">
-                        <DesignTime>True</DesignTime>
-                        <AutoGen>True</AutoGen>
-                        <DependentUpon>ModelMessages.resx</DependentUpon>
-                </Compile>
-        </ItemGroup>
-
-        <ItemGroup>
-                <EmbeddedResource Update="ModelMessages.resx">
-                        <Generator>PublicResXFileCodeGenerator</Generator>
-                        <LastGenOutput>ModelMessages.Designer.cs</LastGenOutput>
-                </EmbeddedResource>
+                <ProjectReference Include="..\Web.Localization\Web.Localization.csproj" />
         </ItemGroup>
 </Project>

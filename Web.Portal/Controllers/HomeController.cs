@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
-using WeebReader.Data.Contexts.Others;
+using WeebReader.Web.Localization;
+using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Models.Home;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -38,7 +39,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return new JsonResult(new
                 {
                     success = false,
-                    messages = new[] {PortalMessages.MSG059}
+                    messages = new[] {ValidationMessages.CannotProceedAlreadyInstalled}
                 });
 
             if (TryValidateModel(userModel))
@@ -55,13 +56,13 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (userResult.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, RoleMapper.Administrator);
+                    var roleResult = await _userManager.AddToRoleAsync(user, RoleTranslator.Administrator);
 
                     if (roleResult.Succeeded)
                     {
                         await transaction.CommitAsync();
                         
-                        TempData["SuccessMessage"] = new[] {PortalMessages.MSG056};
+                        TempData["SuccessMessage"] = new[] {OtherMessages.InstalledSuccessfully};
 
                         return new JsonResult(new
                         {
@@ -71,7 +72,7 @@ namespace WeebReader.Web.Portal.Controllers
                     }
                 }
 
-                ModelState.AddModelError("SomethingWrong", PortalMessages.MSG055);
+                ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
             return new JsonResult(new

@@ -2,7 +2,7 @@
 @model SignInModel
 
 @{
-    ViewData["Title"] = PortalMessages.MSG036;
+    ViewData["Title"] = Labels.SignIn;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
     var emailEnable = await SettingManager.GetValue<bool>(Setting.Keys.EmailEnabled);
@@ -22,11 +22,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "@ModelMessages.MSG007"
+                        prompt: "@ValidationMessages.UsernameRequired"
                     },
                     {
                         type: "minLength[3]",
-                        prompt: "@ModelMessages.MSG008"
+                        prompt: "@ValidationMessages.MinimumUsernameLength"
                     }
                 ]
             },
@@ -35,11 +35,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "@ModelMessages.MSG009"
+                        prompt: "@ValidationMessages.PasswordRequired"
                     },
                     {
                         type: "minLength[8]",
-                        prompt: "@ModelMessages.MSG006"
+                        prompt: "@ValidationMessages.MinimumPasswordLength"
                     }
                 ]
             }
@@ -60,7 +60,7 @@
         <h2 class="ui image header margin-top-minus-100">
             <img class="image margin-top-minus-100" src="~/assets/logo.png" alt="Logo">
             <div class="content">
-                @PortalMessages.MSG037
+                @Labels.SignInToAccount
             </div>
         </h2>
         <form class="ui large form" novalidate>
@@ -68,16 +68,16 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="text" name="username" placeholder="@PortalMessages.MSG038" asp-for="Username">
+                        <input type="text" name="username" placeholder="@Labels.Username" asp-for="Username">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" placeholder="@PortalMessages.MSG039" asp-for="Password">
+                        <input type="password" name="password" placeholder="@Labels.Password" asp-for="Password">
                     </div>
                 </div>
-                <div class="ui fluid large black submit button">@PortalMessages.MSG036</div>
+                <div class="ui fluid large black submit button">@Labels.SignIn</div>
             </div>
             @if (successMessage == null && errorMessage == null)
             {
@@ -98,7 +98,7 @@
         @if (emailEnable)
         {
             <div class="ui message">
-                @PortalMessages.MSG040 <a href="@Url.Action("ForgotPassword","SignIn")">@PortalMessages.MSG041</a>
+                @Labels.ForgotPassword2 <a href="@Url.Action("ForgotPassword","SignIn")">@Labels.ResetIt</a>
             </div>   
         }
     </div>

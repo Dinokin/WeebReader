@@ -48,20 +48,20 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.HasData(new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"),
-                    Name = Others.RoleMapper.Administrator,
-                    NormalizedName = Others.RoleMapper.Administrator.ToUpperInvariant(),
+                    Name = "Administrator",
+                    NormalizedName = "Administrator".ToUpperInvariant(),
                     ConcurrencyStamp = "26cd3943-23ff-41f5-86ed-8b867cf233b4"
                 }, new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7ec1-478f-867c-a8170f075a27"),
-                    Name = Others.RoleMapper.Moderator,
-                    NormalizedName = Others.RoleMapper.Moderator.ToUpperInvariant(),
+                    Name = "Moderator",
+                    NormalizedName = "Moderator".ToUpperInvariant(),
                     ConcurrencyStamp = "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7"
                 }, new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7ec3-42ce-8a94-00a56192c379"),
-                    Name = Others.RoleMapper.Uploader,
-                    NormalizedName = Others.RoleMapper.Uploader.ToUpperInvariant(),
+                    Name = "Uploader",
+                    NormalizedName = "Uploader".ToUpperInvariant(),
                     ConcurrencyStamp = "352e1584-d439-45dc-8015-9428b4e47c76"
                 });
             });
@@ -174,12 +174,12 @@ namespace WeebReader.Data.Contexts.Abstract
                 {
                     Id = Guid.Parse("040569bc-3251-47d1-b51a-1a728c3d49ec"),
                     Key = Setting.Keys.SiteName,
-                    Value = ContextMessages.MSG004
+                    Value = "WeebReader"
                 }, new Setting
                 {
                     Id = Guid.Parse("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"),
                     Key = Setting.Keys.SiteDescription,
-                    Value = ContextMessages.MSG005
+                    Value = "We reader weebs."
                 }, new Setting
                 {
                     Id = Guid.Parse("94010814-1ba1-4fca-8e57-a879ef51ba1a"),

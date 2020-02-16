@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<UserModel>
 
 @{
-    ViewData["Title"] = PortalMessages.MSG060;
+    ViewData["Title"] = Labels.Users;
     var page = (ushort) ViewData["Page"];
     var totalPages = (decimal) ViewData["TotalPages"];
 }
@@ -27,10 +27,10 @@
     <table class="ui unstackable very basic fixed single line center aligned table">
         <thead>
         <tr>
-            <th>@PortalMessages.MSG038</th>
-            <th>@PortalMessages.MSG049</th>
-            <th>@PortalMessages.MSG050</th>
-            <th>@PortalMessages.MSG063</th>
+            <th>@Labels.Username</th>
+            <th>@Labels.Email</th>
+            <th>@Labels.Role</th>
+            <th>@Labels.Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -54,7 +54,7 @@
             </a>
         </div>
         <div id="current-page" class="center aligned column">
-            @string.Format(PortalMessages.MSG064, page, totalPages)
+            @string.Format(Labels.XOfY, page, totalPages)
         </div>
         <div class="right aligned column">
             <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new { page = page + 1 })">
@@ -68,8 +68,8 @@ else
     <div class="ui placeholder segment">
         <div class="ui icon header">
             <i class="users icon"></i>
-            @PortalMessages.MSG061
+            @OtherMessages.NoUsersFound
         </div>
-        <a class="ui primary button" href="@Url.Action("Add")">@PortalMessages.MSG062</a>
+        <a class="ui primary button" href="@Url.Action("Add")">@Labels.AddUser</a>
     </div>   
 }

@@ -2,6 +2,6 @@
 {
     internal static class Constants
     {
-        public const ushort ItemsPerPage = 20;
+        public const ushort ItemsPerPage = 100;
     }
 }

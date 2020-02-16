@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WeebReader.Web.Localization;
 
 namespace WeebReader.Web.Models.Models.UserManager
 {
@@ -7,18 +8,18 @@ namespace WeebReader.Web.Models.Models.UserManager
     {
         public Guid UserId { get; set; }
         
-        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG007")]
-        [MinLength(3, ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG008")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UsernameRequired")]
+        [MinLength(3, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumUsernameLength")]
         public string Username { get; set; }
         
-        [MinLength(8, ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG006")]
+        [MinLength(8, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumPasswordLength")]
         public string Password { get; set; }
         
-        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG001")]
-        [EmailAddress(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG002")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "EmailRequired")]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequired")]
         public string Email { get; set; }
         
-        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG011")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "RoleRequired")]
         public string Role { get; set; }
     }
 }

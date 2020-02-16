@@ -331,7 +331,7 @@ namespace WeebReader.Data.Contexts.Migrations
                 values: new object[,]
                 {
                     { new Guid("040569bc-3251-47d1-b51a-1a728c3d49ec"), (ushort)0, "WeebReader" },
-                    { new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"), (ushort)1, "We read weebs." },
+                    { new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"), (ushort)1, "We reader weebs." },
                     { new Guid("94010814-1ba1-4fca-8e57-a879ef51ba1a"), (ushort)2, "http://127.0.0.1:5000" }
                 });
 
@@ -389,6 +389,12 @@ namespace WeebReader.Data.Contexts.Migrations
                 name: "IX_Tags_Name",
                 table: "Tags",
                 column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Titles_Name_Type",
+                table: "Titles",
+                columns: new[] { "Name", "Type" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

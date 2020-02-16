@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WeebReader.Data.Contexts {
+namespace WeebReader.Web.Localization {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace WeebReader.Data.Contexts {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ContextMessages {
+    public class Emails {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ContextMessages() {
+        internal Emails() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace WeebReader.Data.Contexts {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeebReader.Data.Contexts.ContextMessages", typeof(ContextMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WeebReader.Web.Localization.Emails", typeof(Emails).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,56 @@ namespace WeebReader.Data.Contexts {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Administrator.
+        ///   Looks up a localized string similar to Hello {0},\nA account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn&apos;t request this account, you can ignore this e-mail.\n{2}.
         /// </summary>
-        public static string MSG001 {
+        public static string AccountCreationEmailBody {
             get {
-                return ResourceManager.GetString("MSG001", resourceCulture);
+                return ResourceManager.GetString("AccountCreationEmailBody", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Moderator.
+        ///   Looks up a localized string similar to Account Creation - {0}.
         /// </summary>
-        public static string MSG002 {
+        public static string AccountCreationEmailSubject {
             get {
-                return ResourceManager.GetString("MSG002", resourceCulture);
+                return ResourceManager.GetString("AccountCreationEmailSubject", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Uploader.
+        ///   Looks up a localized string similar to Hello {0},\nAn e-mail change was requested at {1}.\nPlease go to the following URL to proceed with the change. If you changed your mind, you can safely ignore this e-mail.\n{2}.
         /// </summary>
-        public static string MSG003 {
+        public static string ChangeEmailBody {
             get {
-                return ResourceManager.GetString("MSG003", resourceCulture);
+                return ResourceManager.GetString("ChangeEmailBody", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to WeebReader.
+        ///   Looks up a localized string similar to Change E-mail - {0}.
         /// </summary>
-        public static string MSG004 {
+        public static string ChangeEmailSubject {
             get {
-                return ResourceManager.GetString("MSG004", resourceCulture);
+                return ResourceManager.GetString("ChangeEmailSubject", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We read weebs..
+        ///   Looks up a localized string similar to Hello {0},\nA password reset was requested at {1}.\nPlease go to the following URL to proceed with the reset. You can safely ignore this e-mail if you didn&apos;t request this.\n{2}.
         /// </summary>
-        public static string MSG005 {
+        public static string PasswordResetEmailBody {
             get {
-                return ResourceManager.GetString("MSG005", resourceCulture);
+                return ResourceManager.GetString("PasswordResetEmailBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password Reset - {0}.
+        /// </summary>
+        public static string PasswordResetEmailSubject {
+            get {
+                return ResourceManager.GetString("PasswordResetEmailSubject", resourceCulture);
             }
         }
     }

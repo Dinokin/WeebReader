@@ -24,7 +24,7 @@ namespace WeebReader.Web.Portal
             builder.ConfigureKestrel((context, options) => options.Listen(IPAddress.Parse(context.Configuration.GetValue("Application:IP", IPAddress.Any.ToString())), context.Configuration.GetValue("Application:Port", 5000)));
             
             builder.UseContentRoot(Utilities.CurrentDirectory.FullName);
-            builder.UseWebRoot($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}Content");
+            builder.UseWebRoot($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}Static");
             builder.UseStartup<Startup>();
         }).Build().RunAsync();
     }

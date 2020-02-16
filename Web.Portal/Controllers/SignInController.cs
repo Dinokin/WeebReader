@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
+using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Models.SignIn;
 using WeebReader.Web.Services;
 
@@ -43,7 +44,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return new JsonResult(new
                 {
                     success = false,
-                    messages = new[] {PortalMessages.MSG001}
+                    messages = new[] {OtherMessages.AlreadySignedIn}
                 });
             
             if (TryValidateModel(signInModel))
@@ -58,9 +59,9 @@ namespace WeebReader.Web.Portal.Controllers
                     });
                 
                 if (result.IsLockedOut)
-                    ModelState.AddModelError("LockedOut", PortalMessages.MSG002);
+                    ModelState.AddModelError("LockedOut", OtherMessages.TooManyFailedSignIn);
                 else
-                    ModelState.AddModelError("InvalidCredentials", PortalMessages.MSG003);
+                    ModelState.AddModelError("InvalidCredentials", ValidationMessages.InvalidCredentials);
             }
             
             return new JsonResult(new
@@ -93,7 +94,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
             {
-                ModelState.AddModelError("FunctionalityDisabled", PortalMessages.MSG004);
+                ModelState.AddModelError("FunctionalityDisabled", OtherMessages.DisableFunctionality);
 
                 return new JsonResult(new
                 {
@@ -106,7 +107,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return new JsonResult(new
                 {
                     success = false,
-                    messages = new[] {PortalMessages.MSG005}
+                    messages = new[] {OtherMessages.AlreadySignedInChangePassword}
                 });
 
             if (TryValidateModel(forgotPasswordModel))
@@ -120,12 +121,12 @@ namespace WeebReader.Web.Portal.Controllers
                     var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
                     var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
-                    var message = string.Format(PortalMessages.MSG006, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
+                    var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 
-                    await _emailSender.SendEmail(siteEmail, user.Email, string.Format(PortalMessages.MSG007, siteName), message);
+                    await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.PasswordResetEmailSubject, siteName), message);
                 }
 
-                TempData["SuccessMessage"] = new[] {PortalMessages.MSG008};
+                TempData["SuccessMessage"] = new[] {OtherMessages.EmailAlreadyInDatabaseWarning};
                 
                 return new JsonResult(new
                 {
@@ -152,7 +153,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState["Token"].ValidationState == ModelValidationState.Valid && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) != null)
                 return View(resetPasswordModel);
 
-            TempData["ErrorMessage"] = new[] {PortalMessages.MSG009};
+            TempData["ErrorMessage"] = new[] {OtherMessages.PasswordResetInvalidData};
 
             return RedirectToAction("Index");
         } 
@@ -164,7 +165,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return new JsonResult(new
                 {
                     success = false,
-                    messages = new[] {PortalMessages.MSG010}
+                    messages = new[] {OtherMessages.AlreadySignedInChangePassword}
                 });
 
             if (TryValidateModel(resetPasswordModel) && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) is var user && user != null)
@@ -176,7 +177,7 @@ namespace WeebReader.Web.Portal.Controllers
                     user.EmailConfirmed = true;
                     await _userManager.UpdateAsync(user);
                     
-                    TempData["SuccessMessage"] = new[] {PortalMessages.MSG011};
+                    TempData["SuccessMessage"] = new[] {OtherMessages.PasswordChangedSuccessfully};
                     
                     return new JsonResult(new
                     {
@@ -185,7 +186,7 @@ namespace WeebReader.Web.Portal.Controllers
                     });
                 }
                 
-                ModelState.AddModelError("NotSucceeded", PortalMessages.MSG012);
+                ModelState.AddModelError("NotSucceeded", OtherMessages.CouldNotChangePassword);
             }
             
             return new JsonResult(new
@@ -201,7 +202,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (TryValidateModel(changeEmailModel))
             {
                 if (await _userManager.FindByEmailAsync(changeEmailModel.Email) is var candidate && candidate != null)
-                    TempData["ErrorMessage"] = new[] {PortalMessages.MSG013};
+                    TempData["ErrorMessage"] = new[] {ValidationMessages.EmailAlreadyInUse};
                 else
                 {
                     var user = await _userManager.FindByIdAsync(changeEmailModel.UserId.ToString());
@@ -211,10 +212,10 @@ namespace WeebReader.Web.Portal.Controllers
                         var result = await _userManager.ChangeEmailAsync(user, changeEmailModel.Email, changeEmailModel.Token);
 
                         if (result.Succeeded)
-                            TempData["SuccessMessage"] = new[] {PortalMessages.MSG014};
+                            TempData["SuccessMessage"] = new[] {OtherMessages.EmailChangedSuccessfully};
                     }
                     else
-                        ModelState.AddModelError("NotSucceeded", PortalMessages.MSG015);
+                        ModelState.AddModelError("NotSucceeded", OtherMessages.CouldNotChangeEmail);
                 }
             }
             else

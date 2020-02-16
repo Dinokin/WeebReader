@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="AlreadySignedIn">
+        <value>You're already signed in.</value>
+    </data>
+    <data name="TooManyFailedSignIn">
+        <value>This account cannot sign in due to too many failed sign in attempts.</value>
+    </data>
+    <data name="DisableFunctionality">
+        <value>This functionality is disabled, please contact an administrator.</value>
+    </data>
+    <data name="AlreadySignedInChangePassword">
+        <value>You're already signed in. Please sign out or change your password in the administrator panel.</value>
+    </data>
+    <data name="EmailAlreadyInDatabaseWarning">
+        <value>If that address exists in our database, an e-mail will be send with the details on how to proceed with the password reset.</value>
+    </data>
+    <data name="PasswordResetInvalidData">
+        <value>We cannot proceed with the password reset because invalid data was supplied.</value>
+    </data>
+    <data name="PasswordChangedSuccessfully">
+        <value>Your password was changed successfully. You can now sign in using your new password.</value>
+    </data>
+    <data name="CouldNotChangePassword">
+        <value>We could not complete your password reset. Please try again or restart the process.</value>
+    </data>
+    <data name="EmailChangedSuccessfully">
+        <value>Your e-mail was changed successfully.</value>
+    </data>
+    <data name="CouldNotChangeEmail">
+        <value>We could not change your e-mail. Please try again or contact an administrator.</value>
+    </data>
+    <data name="ChangeEmailSent">
+        <value>An e-mail was sent to the new e-mail with the details on how to proceed with the change.</value>
+    </data>
+    <data name="CouldNotSendConfirmationEmail">
+        <value>We could not send a confirmation e-mail, please try again or contact an administrator.</value>
+    </data>
+    <data name="CookieNotice">
+        <value>This website uses cookies to personalize your user experience. By using our website, you agree to our use of cookies.</value>
+    </data>
+    <data name="SomethingWrong">
+        <value>Something wrong is not right.</value>
+    </data>
+    <data name="InstalledSuccessfully">
+        <value>WeebReader installed successfully. You can now sign-in.</value>
+    </data>
+    <data name="NoUsersFound">
+        <value>No users were found.</value>
+    </data>
+    <data name="UserUpdatedSuccessfully">
+        <value>User updated successfully.</value>
+    </data>
+    <data name="UserCreatedSuccessfully">
+        <value>User created successfully.</value>
+    </data>
+    <data name="UserCreatedEmailSent">
+        <value>User created successfully. A message was sent to the user's e-mail with instructions on how to proceed.</value>
+    </data>
+</root>

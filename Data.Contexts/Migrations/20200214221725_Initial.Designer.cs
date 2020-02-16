@@ -9,7 +9,7 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200131022532_Initial")]
+    [Migration("20200214221725_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -339,6 +339,9 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name", "Type")
+                        .IsUnique();
+
                     b.ToTable("Titles");
 
                     b.HasDiscriminator<byte>("Type");
@@ -440,7 +443,7 @@ namespace WeebReader.Data.Contexts.Migrations
                         {
                             Id = new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"),
                             Key = (ushort)1,
-                            Value = "We read weebs."
+                            Value = "We reader weebs."
                         },
                         new
                         {

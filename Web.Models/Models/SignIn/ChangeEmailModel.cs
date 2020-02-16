@@ -1,18 +1,19 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WeebReader.Web.Localization;
 
 namespace WeebReader.Web.Models.Models.SignIn
 {
     public class ChangeEmailModel
     {
-        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG003")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UserIdRequired")]
         public Guid UserId { get; set; }
         
-        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG004")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "TokenRequired")]
         public string Token { get; set; }
         
-        [Required(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG001")]
-        [EmailAddress(ErrorMessageResourceType = typeof(ModelMessages), ErrorMessageResourceName = "MSG002")]
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "EmailRequired")]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequired")]
         public string Email { get; set; }
     }
 }

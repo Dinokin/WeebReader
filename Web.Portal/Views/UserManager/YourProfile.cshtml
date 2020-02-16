@@ -1,7 +1,7 @@
 ﻿@model UserModel
 
 @{
-    ViewData["Title"] = PortalMessages.MSG047;
+    ViewData["Title"] = Labels.YourProfile;
 }
 
 @section Headers
@@ -23,11 +23,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "@ModelMessages.MSG010"
+                        prompt: "@ValidationMessages.PasswordRequired"
                     },
                     {
                         type: "minLength[8]",
-                        prompt: "@ModelMessages.MSG006"
+                        prompt: "@ValidationMessages.MinimumPasswordLength"
                     }
                 ]
             },
@@ -36,11 +36,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "@ModelMessages.MSG005"
+                        prompt: "@ValidationMessages.NewPasswordRequired"
                     },
                     {
                         type: "minLength[8]",
-                        prompt: "@ModelMessages.MSG006"
+                        prompt: "@ValidationMessages.MinimumPasswordLength"
                     }
                 ]
             },
@@ -49,7 +49,7 @@
                 rules: [
                     {
                         type: "match[newPassword]",
-                        prompt: "@PortalMessages.MSG042"
+                        prompt: "@ValidationMessages.PasswordsMustBeEqual"
                     }
                 ]
             }
@@ -73,11 +73,11 @@
                 rules: [
                     {
                         type: "empty",
-                        prompt: "@ModelMessages.MSG001"
+                        prompt: "@ValidationMessages.EmailRequired"
                     },
                     {
                         type: "email",
-                        prompt: "@ModelMessages.MSG002"
+                        prompt: "@ValidationMessages.ValidEmailRequired"
                     }
                 ]
             },
@@ -86,7 +86,7 @@
                 rules: [
                     {
                         type: "match[email]",
-                        prompt: "@PortalMessages.MSG048"
+                        prompt: "@ValidationMessages.EmailsMustBeEqual"
                     }
                 ]
             }
@@ -107,13 +107,13 @@
 
 <div class="ui three column stackable grid">
     <div class="center aligned column">
-        @PortalMessages.MSG038: @Model.Username
+        @Labels.Username: @Model.Username
     </div>
     <div class="center aligned column">
-        @PortalMessages.MSG049: @Model.Email
+        @Labels.Email: @Model.Email
     </div>
     <div class="center aligned column">
-        @PortalMessages.MSG050: @(Model.Role ?? PortalMessages.MSG054)
+        @Labels.Role: @Model.Role
     </div>
 </div>
 <div class="ui two column stackable centered grid">
@@ -123,22 +123,22 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" placeholder="@PortalMessages.MSG039">
+                        <input type="password" name="password" placeholder="@Labels.Password">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="newPassword" placeholder="@PortalMessages.MSG045">
+                        <input type="password" name="newPassword" placeholder="@Labels.NewPassword">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="repeatNewPassword" placeholder="@PortalMessages.MSG046">
+                        <input type="password" name="repeatNewPassword" placeholder="@Labels.RepeatPassword">
                     </div>
                 </div>
-                <div class="ui fluid large black submit button">@PortalMessages.MSG043</div>
+                <div class="ui fluid large black submit button">@Labels.ChangePassword</div>
             </div>
             <div class="ui message error"></div>
         </form>
@@ -149,16 +149,16 @@
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="email" name="email" placeholder="@PortalMessages.MSG051">
+                        <input type="email" name="email" placeholder="@Labels.NewEmailAddress">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
-                        <input type="email" name="repeatEmail" placeholder="@PortalMessages.MSG052">
+                        <input type="email" name="repeatEmail" placeholder="@Labels.RepeatNewEmailAddress">
                     </div>
                 </div>
-                <div class="ui fluid large black submit button">@PortalMessages.MSG053</div>
+                <div class="ui fluid large black submit button">@Labels.ChangeEmail</div>
             </div>
             <div class="ui message error"></div>
         </form>

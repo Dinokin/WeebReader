@@ -51,13 +51,15 @@ namespace WeebReader.Web.Portal
             {
                 options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
                 options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
             });
             
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/admin/";
                 options.LogoutPath = "/admin/signout";
-                options.AccessDeniedPath = "/denied"; 
+                options.AccessDeniedPath = "/denied";
+                options.ReturnUrlParameter = "returnUrl";
             });
             
             services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}Keys"))
@@ -112,12 +114,6 @@ namespace WeebReader.Web.Portal
             application.UseAuthorization();
 
             application.UseEndpoints(builder => builder.MapControllers());
-
-            using var scope = application.ApplicationServices.CreateScope();
-            using var context = scope.ServiceProvider.GetRequiredService<BaseContext>();
-            
-            if (context.Database.GetPendingMigrations().Any())
-                context.Database.Migrate();
         }
     }
 }
