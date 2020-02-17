@@ -12,24 +12,24 @@ using WeebReader.Data.Services;
 
 namespace WeebReader.Web.Services
 {
-    public class ChapterPacker<TChapter> where TChapter : Chapter
+    public class ChaptersArchiver<TChapter> where TChapter : Chapter
     {
-        private readonly ChapterManager<TChapter> _chapterManager;
-        private readonly PageManager<ComicPage> _pageManager;
         private readonly IWebHostEnvironment _environment;
+        private readonly PagesManager<ComicPage> _pagesManager;
+        private readonly ChaptersManager<TChapter> _chaptersManager;
 
-        public ChapterPacker(ChapterManager<TChapter> chapterManager, PageManager<ComicPage> pageManager, IWebHostEnvironment environment)
+        public ChaptersArchiver(IWebHostEnvironment environment, PagesManager<ComicPage> pagesManager, ChaptersManager<TChapter> chaptersManager)
         {
-            _chapterManager = chapterManager;
-            _pageManager = pageManager;
             _environment = environment;
+            _pagesManager = pagesManager;
+            _chaptersManager = chaptersManager;
         }
 
         public async Task<bool> AddChapter(TChapter chapter, Stream pages)
         {
             try
             {
-                if (!await _chapterManager.Add(chapter))
+                if (!await _chaptersManager.Add(chapter))
                     return false;
 
                 try
@@ -50,7 +50,7 @@ namespace WeebReader.Web.Services
                 }
                 catch
                 {
-                    await _chapterManager.Delete(chapter);
+                    await _chaptersManager.Delete(chapter);
                     
                     return false;
                 }
@@ -65,7 +65,7 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _chapterManager.Edit(chapter))
+                if (!await _chaptersManager.Edit(chapter))
                     return false;
 
                 try
@@ -99,7 +99,7 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _chapterManager.Delete(chapter))
+                if (!await _chaptersManager.Delete(chapter))
                     return false;
 
                 try
@@ -134,14 +134,14 @@ namespace WeebReader.Web.Services
                 ChapterId = chapter.Id
             });
 
-            foreach (var page in await _pageManager.GetPagesByChapter(chapter))
-                await _pageManager.Delete(page);
+            foreach (var page in await _pagesManager.GetPagesByChapter(chapter))
+                await _pagesManager.Delete(page);
 
             using var archive = new ZipArchive(new FileInfo($"{location}{Path.DirectorySeparatorChar}download.zip").Create(), ZipArchiveMode.Create);
             
             foreach (var page in chapter.Pages)
             {
-                await _pageManager.Add(page);
+                await _pagesManager.Add(page);
                 var file = Utilities.WriteImage(location, images[page.Number], page.ChapterId.ToString());
                 archive.CreateEntryFromFile($"{file}", page.Number.ToString(), CompressionLevel.Optimal);
             }

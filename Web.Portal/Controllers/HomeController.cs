@@ -21,15 +21,15 @@ namespace WeebReader.Web.Portal.Controllers
     {
         private readonly BaseContext _context;
         private readonly EmailSender _emailSender;
-        private readonly SettingManager _settingManager;
+        private readonly SettingsManager _settingsManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
 
-        public HomeController(BaseContext context, EmailSender emailSender, SettingManager settingManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
+        public HomeController(BaseContext context, EmailSender emailSender, SettingsManager settingsManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
         {
             _context = context;
             _emailSender = emailSender;
-            _settingManager = settingManager;
+            _settingsManager = settingsManager;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -147,7 +147,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword()
         {
-            if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled) || _signInManager.IsSignedIn(User))
+            if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled) || _signInManager.IsSignedIn(User))
                 return RedirectToAction("Index");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
@@ -156,7 +156,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
-            if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+            if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled))
             {
                 ModelState.AddModelError("FunctionalityDisabled", OtherMessages.DisableFunctionality);
 
@@ -181,9 +181,9 @@ namespace WeebReader.Web.Portal.Controllers
                 if (user != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
-                    var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
-                    var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
+                    var siteName = await _settingsManager.GetValue(Setting.Keys.SiteName);
+                    var siteAddress = await _settingsManager.GetValue(Setting.Keys.SiteAddress);
+                    var siteEmail = await _settingsManager.GetValue(Setting.Keys.SiteEmail);
 
                     var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 

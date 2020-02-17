@@ -8,9 +8,9 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    public class TitleManager<TTitle> : GenericManager<TTitle> where TTitle : Title
+    public class TitlesManager<TTitle> : GenericManager<TTitle> where TTitle : Title
     { 
-        public TitleManager(BaseContext context) : base(context) { }
+        public TitlesManager(BaseContext context) : base(context) { }
         
         public async Task<long> CountTitlesByTag(string tagName)
         {

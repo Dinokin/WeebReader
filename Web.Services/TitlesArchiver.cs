@@ -8,22 +8,22 @@ using WeebReader.Data.Services;
 
 namespace WeebReader.Web.Services
 {
-    public class TitlePacker<TTitle> where TTitle : Title
+    public class TitlesArchiver<TTitle> where TTitle : Title
     {
-        private readonly TitleManager<TTitle> _titleManager;
         private readonly IWebHostEnvironment _environment;
+        private readonly TitlesManager<TTitle> _titlesManager;
 
-        public TitlePacker(TitleManager<TTitle> titleManager, IWebHostEnvironment environment)
+        public TitlesArchiver(IWebHostEnvironment environment, TitlesManager<TTitle> titlesManager)
         {
-            _titleManager = titleManager;
             _environment = environment;
+            _titlesManager = titlesManager;
         }
 
         public async Task<bool> AddTitle(TTitle title, IEnumerable<string> tags, Stream cover)
         {
             try
             {
-                if (!await _titleManager.Add(title, tags))
+                if (!await _titlesManager.Add(title, tags))
                     return false;
                 
                 var directory = new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}");
@@ -38,7 +38,7 @@ namespace WeebReader.Web.Services
                 catch
                 {
                     directory.Delete();
-                    await _titleManager.Delete(title);
+                    await _titlesManager.Delete(title);
 
                     return false;
                 }
@@ -53,7 +53,7 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _titleManager.Edit(title, tags))
+                if (!await _titlesManager.Edit(title, tags))
                     return false;
                 
                 try
@@ -77,7 +77,7 @@ namespace WeebReader.Web.Services
         {
             try
             {
-                if (!await _titleManager.Delete(title))
+                if (!await _titlesManager.Delete(title))
                     return false;
 
                 try

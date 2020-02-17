@@ -7,9 +7,9 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    public class ChapterManager<TChapter> : GenericManager<TChapter> where TChapter : Chapter
+    public class ChaptersManager<TChapter> : GenericManager<TChapter> where TChapter : Chapter
     {
-        public ChapterManager(BaseContext context) : base(context) { }
+        public ChaptersManager(BaseContext context) : base(context) { }
 
         public async Task<long> CountChaptersByTitle(Title title) => await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id);
 

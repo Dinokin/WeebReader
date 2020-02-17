@@ -7,9 +7,9 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    public class PageManager<TPage> : GenericManager<TPage> where TPage : Page
+    public class PagesManager<TPage> : GenericManager<TPage> where TPage : Page
     {
-        public PageManager(BaseContext context) : base(context) { }
+        public PagesManager(BaseContext context) : base(context) { }
 
         public async Task<long> CountPagesByChapter(Chapter chapter) => await DbSet.LongCountAsync(page => page.ChapterId == chapter.Id);
 

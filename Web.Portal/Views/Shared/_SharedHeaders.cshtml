@@ -1,8 +1,8 @@
-﻿@inject SettingManager SettingManager
+﻿@inject SettingsManager SettingsManager
 
 @{
-    var siteName = await SettingManager.GetValue(Setting.Keys.SiteName);
-    var siteDescription = await SettingManager.GetValue(Setting.Keys.SiteDescription);
+    var siteName = await SettingsManager.GetValue(Setting.Keys.SiteName);
+    var siteDescription = await SettingsManager.GetValue(Setting.Keys.SiteDescription);
 }
 
 <!-- Standard Meta -->

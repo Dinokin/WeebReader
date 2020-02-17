@@ -13,12 +13,12 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Blog/")]
     public class BlogManagerController : Controller
     {
-        private readonly SettingManager _settingManager;
+        private readonly SettingsManager _settingsManager;
         private readonly GenericManager<Post> _postManager;
 
-        public BlogManagerController(SettingManager settingManager, GenericManager<Post> postManager)
+        public BlogManagerController(SettingsManager settingsManager, GenericManager<Post> postManager)
         {
-            _settingManager = settingManager;
+            _settingsManager = settingsManager;
             _postManager = postManager;
         }
 

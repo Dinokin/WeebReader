@@ -23,14 +23,14 @@ namespace WeebReader.Web.Portal.Controllers
     {
         private readonly BaseContext _context;
         private readonly EmailSender _emailSender;
-        private readonly SettingManager _settingManager;
+        private readonly SettingsManager _settingsManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
 
-        public UsersManagerController(BaseContext context, EmailSender emailSender, SettingManager settingManager, UserManager<IdentityUser<Guid>> userManager)
+        public UsersManagerController(BaseContext context, EmailSender emailSender, SettingsManager settingsManager, UserManager<IdentityUser<Guid>> userManager)
         {
             _context = context;
             _emailSender = emailSender;
-            _settingManager = settingManager;
+            _settingsManager = settingsManager;
             _userManager = userManager;
         }
 
@@ -98,7 +98,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 
-                if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+                if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled))
                 {
                     var userResult = string.IsNullOrWhiteSpace(userModel.Password) ? await _userManager.CreateAsync(user) : await _userManager.CreateAsync(user, userModel.Password);
 
@@ -343,12 +343,12 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
 
-                if (await _settingManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+                if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled))
                 {
                     var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
-                    var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
-                    var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
-                    var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
+                    var siteName = await _settingsManager.GetValue(Setting.Keys.SiteName);
+                    var siteAddress = await _settingsManager.GetValue(Setting.Keys.SiteAddress);
+                    var siteEmail = await _settingsManager.GetValue(Setting.Keys.SiteEmail);
 
                     var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "Home", new {userId = user.Id, email = emailModel.Email, token})}");
 
@@ -391,9 +391,9 @@ namespace WeebReader.Web.Portal.Controllers
         private async Task<bool> SendAccountCreationEmail(IdentityUser<Guid> user)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var siteName = await _settingManager.GetValue(Setting.Keys.SiteName);
-            var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
-            var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
+            var siteName = await _settingsManager.GetValue(Setting.Keys.SiteName);
+            var siteAddress = await _settingsManager.GetValue(Setting.Keys.SiteAddress);
+            var siteEmail = await _settingsManager.GetValue(Setting.Keys.SiteEmail);
 
             var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "Home", new {userId = user.Id, token})}");
 

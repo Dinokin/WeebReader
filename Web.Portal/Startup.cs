@@ -73,21 +73,21 @@ namespace WeebReader.Web.Portal
                 });
 
             services.AddTransient<EmailSender>();
-            services.AddTransient<SettingManager>();
+            services.AddTransient<SettingsManager>();
             services.AddTransient<GenericManager<Post>>();
             services.AddTransient<GenericManager<Link>>();
             services.AddTransient<GenericManager<Resource>>();
-            services.AddTransient<TitleManager<Title>>();
-            services.AddTransient<TitleManager<Comic>>();
-            services.AddTransient<TitleManager<Novel>>();
-            services.AddTransient<ChapterManager<Chapter>>();
-            services.AddTransient<ChapterManager<ComicChapter>>();
-            services.AddTransient<ChapterManager<NovelChapter>>();
-            services.AddTransient<PageManager<ComicPage>>();
-            services.AddTransient<TitlePacker<Comic>>();
-            services.AddTransient<TitlePacker<Novel>>();
-            services.AddTransient<ChapterPacker<ComicChapter>>();
-            services.AddTransient<ChapterPacker<NovelChapter>>();
+            services.AddTransient<TitlesManager<Title>>();
+            services.AddTransient<TitlesManager<Comic>>();
+            services.AddTransient<TitlesManager<Novel>>();
+            services.AddTransient<ChaptersManager<Chapter>>();
+            services.AddTransient<ChaptersManager<ComicChapter>>();
+            services.AddTransient<ChaptersManager<NovelChapter>>();
+            services.AddTransient<PagesManager<ComicPage>>();
+            services.AddTransient<TitlesArchiver<Comic>>();
+            services.AddTransient<TitlesArchiver<Novel>>();
+            services.AddTransient<ChaptersArchiver<ComicChapter>>();
+            services.AddTransient<ChaptersArchiver<NovelChapter>>();
         }
         
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)

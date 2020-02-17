@@ -10,9 +10,9 @@ namespace WeebReader.Web.Services
 {
     public class EmailSender
     {
-        private readonly SettingManager _settingManager;
+        private readonly SettingsManager _settingManager;
 
-        public EmailSender(SettingManager settingManager) => _settingManager = settingManager;
+        public EmailSender(SettingsManager settingsManager) => _settingManager = settingsManager;
 
         public async Task<bool> SendEmail(string origin, string destination, string subject, string content)
         {
