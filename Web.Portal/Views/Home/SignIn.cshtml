@@ -2,6 +2,7 @@
 @model SignInModel
 
 @{
+    Layout = "_SignInLayout";
     ViewData["Title"] = Labels.SignIn;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
@@ -98,7 +99,7 @@
         @if (emailEnable)
         {
             <div class="ui message">
-                @Labels.ForgotPassword2 <a href="@Url.Action("ForgotPassword","SignIn")">@Labels.ResetIt</a>
+                @Labels.ForgotPassword2 <a href="@Url.Action("ForgotPassword")">@Labels.ResetIt</a>
             </div>   
         }
     </div>

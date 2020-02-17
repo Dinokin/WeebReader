@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.Models.UserManager
+namespace WeebReader.Web.Models.UsersManager
 {
     public class UserModel
     {

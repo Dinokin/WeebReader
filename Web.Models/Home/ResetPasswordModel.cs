@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.Models.SignIn
+namespace WeebReader.Web.Models.Home
 {
     public class ResetPasswordModel
     {

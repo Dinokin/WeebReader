@@ -31,11 +31,11 @@
             @Labels.Menu
         </a>
         <div class="right menu">
-            <a id="your-profile-computer" class="item" href="@Url.Action("YourProfile", "UserManager")">
+            <a id="your-profile-computer" class="item" href="@Url.Action("YourProfile", "UsersManager")">
                 <i class="user icon"></i>
                 @Labels.YourProfile
             </a>
-            <a class="item" href="@Url.Action("SignOut", "SignIn")">
+            <a class="item" href="@Url.Action("SignOut", "Home")">
                 <i class="sign out alternate icon"></i>
                 @Labels.SignOut
             </a>
@@ -51,10 +51,10 @@
             <i class="sidebar icon"></i>
         </a>
         <div class="right menu">
-            <a id="your-profile-mobile" class="item" href="@Url.Action("YourProfile", "UserManager")">
+            <a id="your-profile-mobile" class="item" href="@Url.Action("YourProfile", "UsersManager")">
                 <i class="user icon"></i>
             </a>
-            <a class="item" href="@Url.Action("SignOut", "SignIn")">
+            <a class="item" href="@Url.Action("SignOut", "Home")">
                 <i class="sign out alternate icon"></i>
             </a>
         </div>
@@ -66,7 +66,7 @@
             <i class="left book icon"></i>
             @Labels.Titles
         </a>
-        <a id="blog" class="item">
+        <a id="blog" class="item" href="@Url.Action("Index", "BlogManager")">
             <i class="left newspaper icon"></i>
             @Labels.Blog
         </a>
@@ -78,7 +78,7 @@
             <i class="left external alternate icon"></i>
             @Labels.Links
         </a>
-        <a id="users" class="item" href="@Url.Action("Index", "UserManager")">
+        <a id="users" class="item" href="@Url.Action("Index", "UsersManager")">
             <i class="left users icon"></i>
             @Labels.Users
         </a>

@@ -10,28 +10,28 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models.Models.SignIn;
-using WeebReader.Web.Models.Models.UserManager;
+using WeebReader.Web.Models.Home;
+using WeebReader.Web.Models.UsersManager;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
 {
     [Authorize]
-    [Route("Admin/Users/{action:slugify=Index}")]
-    public class UserManagerController : Controller
+    [Route("Admin/Users/")]
+    public class UsersManagerController : Controller
     {
         private readonly BaseContext _context;
-        private readonly UserManager<IdentityUser<Guid>> _userManager;
-        private readonly SettingManager _settingManager;
         private readonly EmailSender _emailSender;
+        private readonly SettingManager _settingManager;
+        private readonly UserManager<IdentityUser<Guid>> _userManager;
 
-        public UserManagerController(BaseContext context, UserManager<IdentityUser<Guid>> userManager, SettingManager settingManager, EmailSender emailSender)
+        public UsersManagerController(BaseContext context, EmailSender emailSender, SettingManager settingManager, UserManager<IdentityUser<Guid>> userManager)
         {
             _context = context;
-            _userManager = userManager;
-            _settingManager = settingManager;
             _emailSender = emailSender;
+            _settingManager = settingManager;
+            _userManager = userManager;
         }
 
         [HttpGet("{page:int?}")]
@@ -59,7 +59,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View(users);
         }
 
-        [HttpGet]
+        [HttpGet("{action}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
         public IActionResult Add()
         {
@@ -70,7 +70,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View("UserEditor");
         }
 
-        [HttpPost]
+        [HttpPost("{action}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Add(UserModel userModel)
         {
@@ -194,7 +194,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpGet("{userId:guid?}")]
+        [HttpGet("{action}/{userId:guid?}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Edit(Guid userId)
         {
@@ -218,13 +218,13 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpPatch("{userId:guid?}")]
+        [HttpPatch("{action}/{userId:guid?}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
-        public async Task<IActionResult> Edit(Guid userId, UserModel userModel)
+        public async Task<IActionResult> Edit(UserModel userModel)
         {
             if (TryValidateModel(userModel))
             {
-                if (await _userManager.FindByIdAsync(userId.ToString()) is var user && user == null)
+                if (await _userManager.FindByIdAsync(userModel.ToString()) is var user && user == null)
                     return new JsonResult(new
                     {
                         success = false,
@@ -291,7 +291,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
         
-        [HttpGet]
+        [HttpGet("{action:slugify}")]
         public async Task<IActionResult> YourProfile()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -305,7 +305,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpPatch]
+        [HttpPatch("{action:slugify}")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
         {
             if (TryValidateModel(changePasswordModel))
@@ -329,7 +329,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpPatch]
+        [HttpPatch("{action:slugify}")]
         public async Task<IActionResult> ChangeEmail(EmailModel emailModel)
         {
             if (TryValidateModel(emailModel))
@@ -350,7 +350,7 @@ namespace WeebReader.Web.Portal.Controllers
                     var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
                     var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
-                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
+                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "Home", new {userId = user.Id, email = emailModel.Email, token})}");
 
                     var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
@@ -395,7 +395,7 @@ namespace WeebReader.Web.Portal.Controllers
             var siteAddress = await _settingManager.GetValue(Setting.Keys.SiteAddress);
             var siteEmail = await _settingManager.GetValue(Setting.Keys.SiteEmail);
 
-            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token})}");
+            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "Home", new {userId = user.Id, token})}");
 
             return await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }

@@ -47,19 +47,29 @@
         }
         </tbody>
     </table>
-    <div class="ui three column centered grid">
+    <div class="ui three column grid">
         <div class="left aligned column">
-            <a id="previous-page" class="ui basic icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Index", new { page = page - 1 })">
-                <i class="arrow left icon"></i>
-            </a>
+            <div class="ui basic small buttons">
+                <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = 1})">
+                    <i class="angle double left icon"></i>
+                </a>
+                <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = page - 1})">
+                    <i class="angle left icon"></i>
+                </a>
+            </div>
         </div>
-        <div id="current-page" class="center aligned column">
+        <div id="current-page" class="middle aligned center aligned column">
             @string.Format(Labels.XOfY, page, totalPages)
         </div>
         <div class="right aligned column">
-            <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new { page = page + 1 })">
-                <i class="arrow right icon"></i>
-            </a>
+            <div class="ui basic small buttons">
+                <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = page + 1})">
+                    <i class="angle right icon"></i>
+                </a>
+                <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = totalPages})">
+                    <i class="angle double right icon"></i>
+                </a>
+            </div>
         </div>
     </div>
 }
