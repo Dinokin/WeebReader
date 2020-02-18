@@ -1,12 +1,19 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using WeebReader.Web.Localization;
 
 namespace WeebReader.Web.Models.BlogManager
 {
     public class PostModel
     {
-        public Guid Id { get; set; }
+        public Guid PostId { get; set; }
+        
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveTitle")]
         public string Name { get; set; }
+        
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveContent")]
         public string Content { get; set; }
-        public string Date { get; set; }
+        
+        public DateTime? Date { get; set; }
     }
 }

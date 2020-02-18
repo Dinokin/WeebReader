@@ -187,6 +187,33 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Post added successfully..
+        /// </summary>
+        public static string PostAddedSuccessfully {
+            get {
+                return ResourceManager.GetString("PostAddedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post deleted successfully..
+        /// </summary>
+        public static string PostDeletedSuccessfully {
+            get {
+                return ResourceManager.GetString("PostDeletedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post updated successfully..
+        /// </summary>
+        public static string PostUpdatedSuccessfully {
+            get {
+                return ResourceManager.GetString("PostUpdatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something wrong is not right..
         /// </summary>
         public static string SomethingWrong {

@@ -160,6 +160,42 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A post must have content..
+        /// </summary>
+        public static string PostMustHaveContent {
+            get {
+                return ResourceManager.GetString("PostMustHaveContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A post must have a title..
+        /// </summary>
+        public static string PostMustHaveTitle {
+            get {
+                return ResourceManager.GetString("PostMustHaveTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A post with the specified name already exists..
+        /// </summary>
+        public static string PostNameAlreadyExist {
+            get {
+                return ResourceManager.GetString("PostNameAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified post was not found..
+        /// </summary>
+        public static string PostNotFound {
+            get {
+                return ResourceManager.GetString("PostNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A role must be defined..
         /// </summary>
         public static string RoleRequired {

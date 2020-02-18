@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
+using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.BlogManager;
+using WeebReader.Web.Portal.Others;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -14,48 +19,167 @@ namespace WeebReader.Web.Portal.Controllers
     public class BlogManagerController : Controller
     {
         private readonly SettingsManager _settingsManager;
-        private readonly GenericManager<Post> _postManager;
+        private readonly GenericManager<Post> _postsManager;
 
-        public BlogManagerController(SettingsManager settingsManager, GenericManager<Post> postManager)
+        public BlogManagerController(SettingsManager settingsManager, GenericManager<Post> postsManager)
         {
             _settingsManager = settingsManager;
-            _postManager = postManager;
+            _postsManager = postsManager;
         }
 
         [HttpGet("{page:int?}")]
-        public IActionResult Index(ushort page = 1)
+        public async Task<IActionResult> Index(ushort page = 1)
         {
-            throw new NotImplementedException();
+            var totalPages = Math.Ceiling(await _postsManager.Count() / (decimal) Constants.ItemsPerPage);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+
+            var posts = (await _postsManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage))
+                .Select(post => new PostModel
+                {
+                    PostId = post.Id,
+                    Name = post.Name,
+                    Content = post.Content,
+                    Date = post.Date
+                });
+
+            ViewData["Page"] = page;
+            ViewData["TotalPages"] = totalPages;
+            
+            return View(posts);
         }
 
         [HttpGet("{action}")]
         public IActionResult Add()
         {
-            throw new NotImplementedException();
+            ViewData["Title"] = Labels.AddPost;
+            ViewData["ActionRoute"] = Url.Action("Add");
+            ViewData["Method"] = "POST";
+            
+            return View("PostEditor");
         }
 
         [HttpPost("{action}")]
-        public IActionResult Add(PostModel postModel)
+        public async Task<IActionResult> Add(PostModel postModel)
         {
-            throw new NotImplementedException();
+            if (TryValidateModel(postModel))
+            {
+                if (await _postsManager.Entities.AnyAsync(entity => entity.Name == postModel.Name))
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {ValidationMessages.PostNameAlreadyExist} 
+                    });
+
+                var post = new Post
+                {
+                    Name = postModel.Name,
+                    Content = postModel.Content,
+                    Date = postModel.Date ?? DateTime.UtcNow
+                };
+
+                if (await _postsManager.Add(post))
+                {
+                    ViewData["SuccessMessage"] = new[] {OtherMessages.PostAddedSuccessfully};
+                    
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        destination = Url.Action("Index")
+                    });
+                }
+
+                ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
+            });
         }
 
         [HttpGet("{action}/{postId:guid}")]
-        public IActionResult Edit(Guid postId)
+        public async Task<IActionResult> Edit(Guid postId)
         {
-            throw new NotImplementedException();
+            if (await _postsManager.GetById(postId) is var post && post == null)
+            {
+                ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
+                
+                return RedirectToAction("Index");
+            }
+
+            return View("PostEditor", new PostModel
+            {
+                PostId = post.Id,
+                Name = post.Name,
+                Content = post.Content,
+                Date = post.Date
+            });
         }
 
         [HttpPatch("{action}")]
-        public IActionResult Edit(PostModel postModel)
+        public async Task<IActionResult> Edit(PostModel postModel)
         {
-            throw new NotImplementedException();
+            if (TryValidateModel(postModel))
+            {
+                if (await _postsManager.GetById(postModel.PostId) is var post && post == null)
+                {
+                    ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
+                
+                    return RedirectToAction("Index");
+                }
+
+                post.Name = postModel.Name;
+                post.Content = postModel.Content;
+                post.Date = postModel.Date ?? post.Date;
+
+                if (await _postsManager.Edit(post))
+                {
+                    ViewData["SuccessMessage"] = new[] {OtherMessages.PostUpdatedSuccessfully};
+                    
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        destination = Url.Action("Index")
+                    });
+                }
+
+                ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = new[] {OtherMessages.SomethingWrong}
+            });
         }
 
         [HttpDelete("{postId:guid}")]
-        public IActionResult Delete(Guid postId)
+        public async Task<IActionResult> Delete(Guid postId)
         {
-            throw new NotImplementedException();
+            if (await _postsManager.GetById(postId) is var post && post == null)
+            {
+                ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
+                
+                return RedirectToAction("Index");
+            }
+
+            if (await _postsManager.Delete(post))
+            {
+                TempData["SuccessMessage"] = new[] {OtherMessages.PostDeletedSuccessfully};
+                
+                return new JsonResult(new
+                {
+                    success = true,
+                    destination = Url.Action("Index")
+                });
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = new[] {OtherMessages.SomethingWrong}
+            });
         }
     }
 }

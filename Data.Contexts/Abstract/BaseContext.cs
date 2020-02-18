@@ -150,9 +150,10 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<Post>(typeBuilder =>
             {
-                typeBuilder.Property(announcement => announcement.Name).IsRequired().HasMaxLength(100);
-                typeBuilder.Property(announcement => announcement.Content).IsRequired();
-                typeBuilder.Property(announcement => announcement.Date).IsRequired();
+                typeBuilder.Property(post => post.Name).IsRequired().HasMaxLength(100);
+                typeBuilder.HasIndex(post => post.Name).IsUnique();
+                typeBuilder.Property(post => post.Content).IsRequired();
+                typeBuilder.Property(post => post.Date).IsRequired();
             });
             
             builder.Entity<Resource>(typeBuilder => typeBuilder.Property(package => package.Name).IsRequired().HasMaxLength(100));

@@ -144,4 +144,7 @@
     <data name="Error">
         <value>Error</value>
     </data>
+    <data name="AddPost">
+        <value>Add Post</value>
+    </data>
 </root>

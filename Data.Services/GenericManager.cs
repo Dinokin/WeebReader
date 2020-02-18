@@ -12,13 +12,16 @@ namespace WeebReader.Data.Services
     {
         protected readonly BaseContext Context;
         protected readonly DbSet<TEntity> DbSet;
+        
+        public IQueryable<TEntity> Entities { get; }
 
         public GenericManager(BaseContext context)
         {
             Context = context;
             DbSet = (DbSet<TEntity>) typeof(BaseContext).GetProperties().Single(info => info.PropertyType == typeof(DbSet<TEntity>)).GetValue(Context);
+            Entities = DbSet.AsQueryable();
         }
-
+        
         public virtual async Task<long> Count() => await DbSet.LongCountAsync();
 
         public virtual async Task<TEntity> GetById(Guid id) => await DbSet.SingleOrDefaultAsync(entity => entity.Id == id);

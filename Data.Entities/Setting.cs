@@ -14,7 +14,8 @@ namespace WeebReader.Data.Entities
             SmtpServer,
             SmtpServerPort,
             SmtpServerUser,
-            SmtpServerPassword
+            SmtpServerPassword,
+            BlogEnabled
         }
         
         public Keys Key { get; set; }

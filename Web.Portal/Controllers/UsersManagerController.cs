@@ -280,10 +280,10 @@ namespace WeebReader.Web.Portal.Controllers
                         });
                     }
                 }
+                
+                ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
-
-            ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
-
+            
             return new JsonResult(new
             {
                 success = false,

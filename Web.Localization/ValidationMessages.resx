@@ -75,4 +75,16 @@
     <data name="UsernameAlreadyInUse">
         <value>The requested Username is already in use.</value>
     </data>
+    <data name="PostMustHaveTitle">
+        <value>A post must have a title.</value>
+    </data>
+    <data name="PostMustHaveContent">
+        <value>A post must have content.</value>
+    </data>
+    <data name="PostNotFound">
+        <value>The specified post was not found.</value>
+    </data>
+    <data name="PostNameAlreadyExist">
+        <value>A post with the specified name already exists.</value>
+    </data>
 </root>

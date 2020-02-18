@@ -70,6 +70,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Post.
+        /// </summary>
+        public static string AddPost {
+            get {
+                return ResourceManager.GetString("AddPost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add User.
         /// </summary>
         public static string AddUser {

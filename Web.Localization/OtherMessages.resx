@@ -75,4 +75,13 @@
     <data name="UserCreatedEmailSent">
         <value>User created successfully. A message was sent to the user's e-mail with instructions on how to proceed.</value>
     </data>
+    <data name="PostDeletedSuccessfully">
+        <value>Post deleted successfully.</value>
+    </data>
+    <data name="PostAddedSuccessfully">
+        <value>Post added successfully.</value>
+    </data>
+    <data name="PostUpdatedSuccessfully">
+        <value>Post updated successfully.</value>
+    </data>
 </root>
