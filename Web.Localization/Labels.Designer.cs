@@ -133,11 +133,29 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm Deletion.
+        /// </summary>
+        public static string ConfirmDeletion {
+            get {
+                return ResourceManager.GetString("ConfirmDeletion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Got it!.
         /// </summary>
         public static string CookieConfirmation {
             get {
                 return ResourceManager.GetString("CookieConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Post.
+        /// </summary>
+        public static string EditPost {
+            get {
+                return ResourceManager.GetString("EditPost", resourceCulture);
             }
         }
         
@@ -264,6 +282,15 @@ namespace WeebReader.Web.Localization {
         public static string NewPassword {
             get {
                 return ResourceManager.GetString("NewPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        public static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
             }
         }
         
@@ -435,6 +462,15 @@ namespace WeebReader.Web.Localization {
         public static string XOfY {
             get {
                 return ResourceManager.GetString("XOfY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        public static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
         

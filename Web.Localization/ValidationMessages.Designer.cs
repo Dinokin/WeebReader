@@ -214,20 +214,20 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This user could not be delete because this user is the last administrator..
+        /// </summary>
+        public static string UserDeleteIsLastAdministrator {
+            get {
+                return ResourceManager.GetString("UserDeleteIsLastAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An user ID is required..
         /// </summary>
         public static string UserIdRequired {
             get {
                 return ResourceManager.GetString("UserIdRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This user could not be updated because the role cannot be change since this user is the last administrator..
-        /// </summary>
-        public static string UserIsLastAdministrator {
-            get {
-                return ResourceManager.GetString("UserIsLastAdministrator", resourceCulture);
             }
         }
         
@@ -255,6 +255,15 @@ namespace WeebReader.Web.Localization {
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This user could not be updated because the role cannot be changed since this user is the last administrator..
+        /// </summary>
+        public static string UserUpdateIsLastAdministrator {
+            get {
+                return ResourceManager.GetString("UserUpdateIsLastAdministrator", resourceCulture);
             }
         }
         

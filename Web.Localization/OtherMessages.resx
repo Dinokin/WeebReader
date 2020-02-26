@@ -84,4 +84,10 @@
     <data name="PostUpdatedSuccessfully">
         <value>Post updated successfully.</value>
     </data>
+    <data name="UserDeletedSuccessfully">
+        <value>User deleted successfully.</value>
+    </data>
+    <data name="ConfirmDeleteUser">
+        <value>Are you sure that you want to delete this user?</value>
+    </data>
 </root>

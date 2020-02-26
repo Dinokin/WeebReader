@@ -18,14 +18,9 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Blog/")]
     public class BlogManagerController : Controller
     {
-        private readonly SettingsManager _settingsManager;
         private readonly GenericManager<Post> _postsManager;
 
-        public BlogManagerController(SettingsManager settingsManager, GenericManager<Post> postsManager)
-        {
-            _settingsManager = settingsManager;
-            _postsManager = postsManager;
-        }
+        public BlogManagerController(GenericManager<Post> postsManager) => _postsManager = postsManager;
 
         [HttpGet("{page:int?}")]
         public async Task<IActionResult> Index(ushort page = 1)
@@ -44,7 +39,8 @@ namespace WeebReader.Web.Portal.Controllers
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
-            
+            ViewData["DeletionRoute"] = Url.Action("Delete", new {userId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
+
             return View(posts);
         }
 
@@ -98,7 +94,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpGet("{action}/{postId:guid}")]
+        [HttpGet("{postId:guid}")]
         public async Task<IActionResult> Edit(Guid postId)
         {
             if (await _postsManager.GetById(postId) is var post && post == null)
@@ -107,6 +103,10 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 return RedirectToAction("Index");
             }
+            
+            ViewData["Title"] = Labels.EditPost;
+            ViewData["ActionRoute"] = Url.Action("Edit", new {postId});
+            ViewData["Method"] = "POST";
 
             return View("PostEditor", new PostModel
             {
@@ -117,7 +117,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpPatch("{action}")]
+        [HttpPatch("{postId:guid}")]
         public async Task<IActionResult> Edit(PostModel postModel)
         {
             if (TryValidateModel(postModel))
@@ -128,6 +128,13 @@ namespace WeebReader.Web.Portal.Controllers
                 
                     return RedirectToAction("Index");
                 }
+                
+                if (await _postsManager.Entities.AnyAsync(entity => post.Name == postModel.Name && post != entity))
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {ValidationMessages.PostNameAlreadyExist} 
+                    });
 
                 post.Name = postModel.Name;
                 post.Content = postModel.Content;
@@ -158,11 +165,11 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Delete(Guid postId)
         {
             if (await _postsManager.GetById(postId) is var post && post == null)
-            {
-                ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
-                
-                return RedirectToAction("Index");
-            }
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {ValidationMessages.PostNotFound}
+                });
 
             if (await _postsManager.Delete(post))
             {
@@ -170,8 +177,7 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 return new JsonResult(new
                 {
-                    success = true,
-                    destination = Url.Action("Index")
+                    success = true
                 });
             }
             

@@ -147,4 +147,16 @@
     <data name="AddPost">
         <value>Add Post</value>
     </data>
+    <data name="ConfirmDeletion">
+        <value>Confirm Deletion</value>
+    </data>
+    <data name="Yes">
+        <value>Yes</value>
+    </data>
+    <data name="No">
+        <value>No</value>
+    </data>
+    <data name="EditPost">
+        <value>Edit Post</value>
+    </data>
 </root>

@@ -4,13 +4,40 @@
     ViewData["Title"] = Labels.Users;
     var page = (ushort) ViewData["Page"];
     var totalPages = (decimal) ViewData["TotalPages"];
+    var deletionRoute = (string) ViewData["DeletionRoute"];
 }
 
 @section Headers
 {
     <script>
-    $(() => {        
+    $(() => {
+        let deletionTarget;
+        let deletionModal = $(".modal");
+        
         $("#users").addClass("active");
+        
+        deletionModal.modal({
+        closable: false,
+        onDeny: () => deletionTarget = null,
+        onApprove: () => {
+            deletionModal.api({
+            on: "now",
+            url: "@deletionRoute" + deletionTarget,
+            method: "DELETE",
+            onSuccess: () => location.reload(),
+            onFailure: response => addError($(".message"), response)
+            })
+        }
+        });
+        
+        $(".negative.button").on("click", (event) => {
+            if ($(event.target).is("i"))
+                deletionTarget = $(event.target).parent().attr("user-id");
+            else
+                deletionTarget = $(event.target).attr("user-id");
+            
+            deletionModal.modal("show");
+        });
     });
     </script>
 }
@@ -24,6 +51,25 @@
 
 @if (Model.Any())
 {
+    <div class="ui basic mini modal">
+        <div class="ui icon header">
+            <i class="trash icon"></i>
+            @Labels.ConfirmDeletion
+        </div>
+        <div class="content">
+            <p>@OtherMessages.ConfirmDeleteUser</p>
+        </div>
+        <div class="actions">
+            <div class="ui cancel inverted button">
+                <i class="times icon"></i>
+                @Labels.No
+            </div>
+            <div class="ui ok green inverted button">
+                <i class="check icon"></i>
+                @Labels.Yes
+            </div>
+        </div>
+    </div>
     <table class="ui unstackable very basic fixed single line center aligned table">
         <thead>
         <tr>
@@ -41,7 +87,10 @@
                 <td>@user.Email</td>
                 <td>@user.Role</td>
                 <td>
-                    <a class="ui icon primary mini button" href="@Url.Action("Edit", new { userId = user.UserId })"><i class="pen icon"></i></a>
+                    <div class="ui mini buttons">
+                        <a class="ui icon primary button" href="@Url.Action("Edit", new {userId = user.UserId})"><i class="pen icon"></i></a>
+                        <a class="ui icon negative button" user-id="@user.UserId"><i class="trash icon"></i></a>
+                    </div>
                 </td>
             </tr>
         }

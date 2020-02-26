@@ -55,6 +55,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
+            ViewData["DeletionRoute"] = Url.Action("Delete", new {userId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
             return View(users);
         }
@@ -194,7 +195,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpGet("{action}/{userId:guid?}")]
+        [HttpGet("{userId:guid}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Edit(Guid userId)
         {
@@ -206,7 +207,7 @@ namespace WeebReader.Web.Portal.Controllers
             }
             
             ViewData["Title"] = Labels.EditUser;
-            ViewData["ActionRoute"] = Url.Action("Edit");
+            ViewData["ActionRoute"] = Url.Action("Edit", new {userId});
             ViewData["Method"] = "PATCH";
 
             return View("UserEditor", new UserModel
@@ -218,20 +219,20 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        [HttpPatch("{action}/{userId:guid?}")]
+        [HttpPatch("{userId:guid}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Edit(UserModel userModel)
         {
             if (TryValidateModel(userModel))
             {
-                if (await _userManager.FindByIdAsync(userModel.ToString()) is var user && user == null)
+                if (await _userManager.FindByIdAsync(userModel.UserId.ToString()) is var user && user == null)
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.UserNotFound}
                     });
                 
-                if (await _userManager.FindByEmailAsync(userModel.Email) != user)
+                if (await _userManager.FindByEmailAsync(userModel.Email) is var emailUser && emailUser != null && emailUser != user)
                     return new JsonResult(new
                     {
                         success = false,
@@ -242,7 +243,7 @@ namespace WeebReader.Web.Portal.Controllers
                     return new JsonResult(new
                     {
                         success = false,
-                        messages = new[] {ValidationMessages.UserIsLastAdministrator}
+                        messages = new[] {ValidationMessages.UserUpdateIsLastAdministrator}
                     });
 
                 user.UserName = userModel.Username;
@@ -288,6 +289,40 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
+            });
+        }
+
+        [HttpDelete("{userId:guid}")]
+        public async Task<IActionResult> Delete(Guid userId)
+        {
+            if (await _userManager.FindByIdAsync(userId.ToString()) is var user && user == null)
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {ValidationMessages.UserNotFound}
+                });
+
+            if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() == RoleTranslator.Administrator && (await _userManager.GetUsersInRoleAsync(RoleTranslator.Administrator)).Count == 1)
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {ValidationMessages.UserDeleteIsLastAdministrator}
+                });
+
+            if ((await _userManager.DeleteAsync(user)).Succeeded)
+            {
+                TempData["SuccessMessage"] = new[] {OtherMessages.UserDeletedSuccessfully};
+
+                return new JsonResult(new
+                {
+                    success = true
+                });
+            }
+
+            return new JsonResult(new
+            {
+                success = false,
+                messages = new[] {OtherMessages.SomethingWrong}
             });
         }
         

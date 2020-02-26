@@ -88,6 +88,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure that you want to delete this user?.
+        /// </summary>
+        public static string ConfirmDeleteUser {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This website uses cookies to personalize your user experience. By using our website, you agree to our use of cookies..
         /// </summary>
         public static string CookieNotice {
@@ -246,6 +255,15 @@ namespace WeebReader.Web.Localization {
         public static string UserCreatedSuccessfully {
             get {
                 return ResourceManager.GetString("UserCreatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User deleted successfully..
+        /// </summary>
+        public static string UserDeletedSuccessfully {
+            get {
+                return ResourceManager.GetString("UserDeletedSuccessfully", resourceCulture);
             }
         }
         

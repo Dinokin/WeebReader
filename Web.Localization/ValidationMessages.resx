@@ -69,8 +69,8 @@
     <data name="UserNotFound">
         <value>The specified user was not found.</value>
     </data>
-    <data name="UserIsLastAdministrator">
-        <value>This user could not be updated because the role cannot be change since this user is the last administrator.</value>
+    <data name="UserUpdateIsLastAdministrator">
+        <value>This user could not be updated because the role cannot be changed since this user is the last administrator.</value>
     </data>
     <data name="UsernameAlreadyInUse">
         <value>The requested Username is already in use.</value>
@@ -86,5 +86,8 @@
     </data>
     <data name="PostNameAlreadyExist">
         <value>A post with the specified name already exists.</value>
+    </data>
+    <data name="UserDeleteIsLastAdministrator">
+        <value>This user could not be delete because this user is the last administrator.</value>
     </data>
 </root>
