@@ -44,7 +44,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index");
 
         [HttpPost("{action}")]
-        public async Task<IActionResult> Install(UserModel userModel)
+        public async Task<IActionResult> Install(InstallerModel installerModel)
         {
             if (!await AllowInstaller())
                 return new JsonResult(new
@@ -52,18 +52,18 @@ namespace WeebReader.Web.Portal.Controllers
                     success = false,
                     messages = new[] {ValidationMessages.CannotProceedAlreadyInstalled}
                 });
-
-            if (TryValidateModel(userModel))
+            
+            if (TryValidateModel(installerModel))
             {
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 
                 var user = new IdentityUser<Guid>
                 {
-                    UserName = userModel.Username,
-                    Email = userModel.Email
+                    UserName = installerModel.Username,
+                    Email = installerModel.Email
                 };
                 
-                var userResult = await _userManager.CreateAsync(user, userModel.Password);
+                var userResult = await _userManager.CreateAsync(user, installerModel.Password);
 
                 if (userResult.Succeeded)
                 {

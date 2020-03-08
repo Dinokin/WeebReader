@@ -1,1 +1,133 @@
 ﻿@model IEnumerable<PostModel>
+
+@{
+    ViewData["Title"] = Labels.Posts;
+    var page = (ushort) ViewData["Page"];
+    var totalPages = (decimal) ViewData["TotalPages"];
+    var deletionRoute = (string) ViewData["DeletionRoute"];
+}
+
+@section Headers
+{
+    <script>
+    $(() => {
+        let deletionTarget;
+        let deletionModal = $(".modal");
+        
+        $("#blog").addClass("active");
+        
+        deletionModal.modal({
+        closable: false,
+        onDeny: () => deletionTarget = null,
+        onApprove: () => {
+            deletionModal.api({
+            on: "now",
+            url: "@deletionRoute" + deletionTarget,
+            method: "DELETE",
+            onSuccess: () => location.reload(),
+            onFailure: response => addError($(".message"), response)
+            })
+        }
+        });
+        
+        $(".negative.button").on("click", (event) => {
+            if ($(event.target).is("i"))
+                deletionTarget = $(event.target).parent().attr("post-id");
+            else
+                deletionTarget = $(event.target).attr("post-id");
+            
+            deletionModal.modal("show");
+        });
+    });
+    </script>
+}
+
+@if (Model.Any())
+{
+    
+@section TopRightSlot
+{
+    <a class="ui icon right floated mini positive button" style="margin-top: 0.1rem" href="@Url.Action("Add")">
+        <i class="plus icon"></i>
+    </a>
+}
+
+    <div class="ui basic mini modal">
+        <div class="ui icon header">
+            <i class="trash icon"></i>
+            @Labels.ConfirmDeletion
+        </div>
+        <div class="content">
+            <p>@OtherMessages.ConfirmDeletePost</p>
+        </div>
+        <div class="actions">
+            <div class="ui cancel inverted button">
+                <i class="times icon"></i>
+                @Labels.No
+            </div>
+            <div class="ui ok green inverted button">
+                <i class="check icon"></i>
+                @Labels.Yes
+            </div>
+        </div>
+    </div>
+    <table class="ui unstackable very basic fixed single line center aligned table">
+        <thead>
+        <tr>
+            <th>@Labels.Title</th>
+            <th>@Labels.Date</th>
+            <th>@Labels.Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var post in Model)
+        {
+            <tr>
+                <td>@post.Title</td>
+                <td>@post.Date</td>
+                <td>
+                    <div class="ui mini buttons">
+                        <a class="ui icon primary button" href="@Url.Action("Edit", new {postId = post.PostId})"><i class="pen icon"></i></a>
+                        <a class="ui icon negative button" post-id="@post.PostId"><i class="trash icon"></i></a>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="ui three column grid">
+        <div class="left aligned column">
+            <div class="ui basic small buttons">
+                <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = 1})">
+                    <i class="angle double left icon"></i>
+                </a>
+                <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = page - 1})">
+                    <i class="angle left icon"></i>
+                </a>
+            </div>
+        </div>
+        <div id="current-page" class="middle aligned center aligned column">
+            @string.Format(Labels.XOfY, page, totalPages)
+        </div>
+        <div class="right aligned column">
+            <div class="ui basic small buttons">
+                <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = page + 1})">
+                    <i class="angle right icon"></i>
+                </a>
+                <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Index", new {page = totalPages})">
+                    <i class="angle double right icon"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="ui placeholder segment">
+        <div class="ui icon header">
+            <i class="newspaper icon"></i>
+            @OtherMessages.NoPostExist
+        </div>
+        <a class="ui primary button" href="@Url.Action("Add")">@Labels.AddPost</a>
+    </div>   
+}

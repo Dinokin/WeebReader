@@ -26,10 +26,13 @@
         <a class="item" href="/">
             <img src="~/assets/logo.png" alt="Logo"/>
         </a>
-        <a id="computer-toggler" class="item">
-            <i class="sidebar icon"></i>
-            @Labels.Menu
-        </a>
+        @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+        {
+            <a id="computer-toggler" class="item">
+                <i class="sidebar icon"></i>
+                @Labels.Menu
+            </a>   
+        }
         <div class="right menu">
             <a id="your-profile-computer" class="item" href="@Url.Action("YourProfile", "UsersManager")">
                 <i class="user icon"></i>
@@ -62,30 +65,39 @@
 </div>
 <div class="ui bottom attached segment pushable no-border no-border-radius no-margin-bottom">
     <div class="ui inverted left vertical sidebar menu">
-        <a id="titles" class="item">
-            <i class="left book icon"></i>
-            @Labels.Titles
-        </a>
-        <a id="blog" class="item" href="@Url.Action("Index", "BlogManager")">
-            <i class="left newspaper icon"></i>
-            @Labels.Blog
-        </a>
-        <a id="resources" class="item">
-            <i class="left file outline icon"></i>
-            @Labels.Resources
-        </a>
-        <a id="links" class="item">
-            <i class="left external alternate icon"></i>
-            @Labels.Links
-        </a>
-        <a id="users" class="item" href="@Url.Action("Index", "UsersManager")">
-            <i class="left users icon"></i>
-            @Labels.Users
-        </a>
-        <a id="settings" class="item">
-            <i class="left cogs icon"></i>
-            @Labels.Settings
-        </a>
+        @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+        {
+            <a id="titles" class="item">
+                <i class="left book icon"></i>
+                @Labels.Titles
+            </a>   
+        }
+        @if (User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+        {
+            <a id="blog" class="item" href="@Url.Action("Index", "BlogManager")">
+                <i class="left newspaper icon"></i>
+                @Labels.Blog
+            </a>
+            <a id="resources" class="item">
+                <i class="left file outline icon"></i>
+                @Labels.Resources
+            </a>
+            <a id="links" class="item">
+                <i class="left external alternate icon"></i>
+                @Labels.Links
+            </a>
+        }
+        @if (User.IsInRole(RoleTranslator.Administrator))
+        {
+            <a id="users" class="item" href="@Url.Action("Index", "UsersManager")">
+                <i class="left users icon"></i>
+                @Labels.Users
+            </a>
+            <a id="settings" class="item">
+                <i class="left cogs icon"></i>
+                @Labels.Settings
+            </a>
+        }
     </div>
     <div class="pusher">
         <div class="ui hidden section divider"></div>

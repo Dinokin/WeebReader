@@ -42,6 +42,9 @@
     </script>
 }
 
+@if (Model.Any())
+{
+    
 @section TopRightSlot
 {
     <a class="ui icon right floated mini positive button" style="margin-top: 0.1rem" href="@Url.Action("Add")">
@@ -49,8 +52,7 @@
     </a>
 }
 
-@if (Model.Any())
-{
+    
     <div class="ui basic mini modal">
         <div class="ui icon header">
             <i class="trash icon"></i>
@@ -127,7 +129,7 @@ else
     <div class="ui placeholder segment">
         <div class="ui icon header">
             <i class="users icon"></i>
-            @OtherMessages.NoUsersFound
+            @OtherMessages.NoUserExist
         </div>
         <a class="ui primary button" href="@Url.Action("Add")">@Labels.AddUser</a>
     </div>   

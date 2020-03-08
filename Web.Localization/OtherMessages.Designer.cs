@@ -88,6 +88,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Are you sure that you want to delete this post?.
+        /// </summary>
+        public static string ConfirmDeletePost {
+            get {
+                return ResourceManager.GetString("ConfirmDeletePost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure that you want to delete this user?.
         /// </summary>
         public static string ConfirmDeleteUser {
@@ -169,11 +178,20 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No users were found..
+        ///   Looks up a localized string similar to No post exist in the database..
         /// </summary>
-        public static string NoUsersFound {
+        public static string NoPostExist {
             get {
-                return ResourceManager.GetString("NoUsersFound", resourceCulture);
+                return ResourceManager.GetString("NoPostExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No user exist in the database..
+        /// </summary>
+        public static string NoUserExist {
+            get {
+                return ResourceManager.GetString("NoUserExist", resourceCulture);
             }
         }
         

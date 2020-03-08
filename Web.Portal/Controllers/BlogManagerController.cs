@@ -32,14 +32,14 @@ namespace WeebReader.Web.Portal.Controllers
                 .Select(post => new PostModel
                 {
                     PostId = post.Id,
-                    Name = post.Name,
+                    Title = post.Title,
                     Content = post.Content,
                     Date = post.Date
                 });
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
-            ViewData["DeletionRoute"] = Url.Action("Delete", new {userId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
+            ViewData["DeletionRoute"] = Url.Action("Delete", new {postId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
 
             return View(posts);
         }
@@ -59,7 +59,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (TryValidateModel(postModel))
             {
-                if (await _postsManager.Entities.AnyAsync(entity => entity.Name == postModel.Name))
+                if (await _postsManager.Entities.AnyAsync(entity => entity.Title == postModel.Title))
                     return new JsonResult(new
                     {
                         success = false,
@@ -68,7 +68,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var post = new Post
                 {
-                    Name = postModel.Name,
+                    Title = postModel.Title,
                     Content = postModel.Content,
                     Date = postModel.Date ?? DateTime.UtcNow
                 };
@@ -111,7 +111,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View("PostEditor", new PostModel
             {
                 PostId = post.Id,
-                Name = post.Name,
+                Title = post.Title,
                 Content = post.Content,
                 Date = post.Date
             });
@@ -129,14 +129,14 @@ namespace WeebReader.Web.Portal.Controllers
                     return RedirectToAction("Index");
                 }
                 
-                if (await _postsManager.Entities.AnyAsync(entity => post.Name == postModel.Name && post != entity))
+                if (await _postsManager.Entities.AnyAsync(entity => post.Title == postModel.Title && post != entity))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
                     });
 
-                post.Name = postModel.Name;
+                post.Title = postModel.Title;
                 post.Content = postModel.Content;
                 post.Date = postModel.Date ?? post.Date;
 

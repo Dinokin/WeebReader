@@ -159,4 +159,22 @@
     <data name="EditPost">
         <value>Edit Post</value>
     </data>
+    <data name="Posts">
+        <value>Posts</value>
+    </data>
+    <data name="Title">
+        <value>Title</value>
+    </data>
+    <data name="Date">
+        <value>Date</value>
+    </data>
+    <data name="Content">
+        <value>Content</value>
+    </data>
+    <data name="Visibility">
+        <value>Visibility</value>
+    </data>
+    <data name="MakeVisible">
+        <value>Make Visible</value>
+    </data>
 </root>

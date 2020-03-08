@@ -63,8 +63,8 @@
     <data name="InstalledSuccessfully">
         <value>WeebReader installed successfully. You can now sign-in.</value>
     </data>
-    <data name="NoUsersFound">
-        <value>No users were found.</value>
+    <data name="NoUserExist">
+        <value>No user exist in the database.</value>
     </data>
     <data name="UserUpdatedSuccessfully">
         <value>User updated successfully.</value>
@@ -89,5 +89,11 @@
     </data>
     <data name="ConfirmDeleteUser">
         <value>Are you sure that you want to delete this user?</value>
+    </data>
+    <data name="ConfirmDeletePost">
+        <value>Are you sure that you want to delete this post?</value>
+    </data>
+    <data name="NoPostExist">
+        <value>No post exist in the database.</value>
     </data>
 </root>

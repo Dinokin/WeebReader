@@ -1,1 +1,43 @@
-﻿
+﻿@model PostModel
+
+@section Headers
+{
+    <partial name="_TinyMCE"/>
+    <script>
+    $(() => {
+        $(".checkbox").checkbox();
+        $(".ui.calendar").calendar();
+    });
+    </script>
+}
+
+<form class="ui form" novalidate>
+    <input type="hidden" name="postId" asp-for="PostId"/>
+    <div class="ui message error"></div>
+    <div class="field">
+        <label>@Labels.Title</label>
+        <input type="text" name="title" placeholder="@Labels.Title" asp-for="Title"/>
+    </div>
+    <div class="field">
+        <label>@Labels.Content</label>
+        <textarea id="editor-area" name="content" asp-for="Content"></textarea>
+    </div>
+            <div class="field">
+                <label>@Labels.Date</label>
+                <div class="ui calendar">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input type="text" name="date" placeholder="@Labels.Date"/>
+                    </div>
+                </div>
+            </div>
+    <div class="two fields">
+        <div class="field">
+            <label>@Labels.Visibility</label>
+            <div class="ui toggle checkbox">
+                <input class="hidden" type="checkbox" name="visible"/>
+                <label>@Labels.MakeVisible</label>
+            </div>
+        </div>
+    </div>
+</form>

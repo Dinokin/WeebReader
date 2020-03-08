@@ -27,9 +27,10 @@ namespace WeebReader.Data.Contexts.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Title = table.Column<string>(maxLength: 100, nullable: false),
                     Content = table.Column<string>(nullable: false),
-                    Date = table.Column<DateTime>(type: "DATETIME", nullable: false)
+                    Date = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    Visible = table.Column<bool>(type: "BOOLEAN", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +42,8 @@ namespace WeebReader.Data.Contexts.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    Name = table.Column<string>(maxLength: 100, nullable: false)
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    Visible = table.Column<bool>(type: "BOOLEAN", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -369,9 +371,9 @@ namespace WeebReader.Data.Contexts.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_Name",
+                name: "IX_Posts_Title",
                 table: "Posts",
-                column: "Name",
+                column: "Title",
                 unique: true);
 
             migrationBuilder.CreateIndex(

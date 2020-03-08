@@ -9,7 +9,7 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200217225829_Initial")]
+    [Migration("20200301233220_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -386,14 +386,17 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("DATETIME");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
                         .HasMaxLength(100);
 
+                    b.Property<bool>("Visible")
+                        .HasColumnType("BOOLEAN");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Title")
                         .IsUnique();
 
                     b.ToTable("Posts");
@@ -409,6 +412,9 @@ namespace WeebReader.Data.Contexts.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
                         .HasMaxLength(100);
+
+                    b.Property<bool>("Visible")
+                        .HasColumnType("BOOLEAN");
 
                     b.HasKey("Id");
 

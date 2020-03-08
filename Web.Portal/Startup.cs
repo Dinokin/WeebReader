@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
@@ -113,6 +114,12 @@ namespace WeebReader.Web.Portal
             application.UseAuthorization();
 
             application.UseEndpoints(builder => builder.MapControllers());
+            
+            using var scope = application.ApplicationServices.CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<BaseContext>();
+            
+            if (context.Database.GetPendingMigrations().Any())
+                context.Database.Migrate();
         }
     }
 }

@@ -65,7 +65,13 @@ namespace WeebReader.Data.Contexts
 
             builder.Entity<ComicPage>(typeBuilder => typeBuilder.Property(page => page.Number).HasColumnType("SMALLINT UNSIGNED"));
             
-            builder.Entity<Post>(typeBuilder => typeBuilder.Property(post => post.Date).HasColumnType("DATETIME"));
+            builder.Entity<Post>(typeBuilder =>
+            {
+                typeBuilder.Property(post => post.Date).HasColumnType("DATETIME");
+                typeBuilder.Property(post => post.Visible).HasColumnType("BOOLEAN");
+            });
+
+            builder.Entity<Resource>(typeBuilder => typeBuilder.Property(resource => resource.Visible).HasColumnType("BOOLEAN"));
 
             builder.Entity<Link>(typeBuilder =>
             {
