@@ -225,7 +225,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (TryValidateModel(userModel))
             {
-                if (await _userManager.FindByIdAsync(userModel.UserId.ToString()) is var user && user == null)
+                if (userModel.UserId == null || await _userManager.FindByIdAsync(userModel.UserId.ToString()) is var user && user == null)
                     return new JsonResult(new
                     {
                         success = false,

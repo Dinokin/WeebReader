@@ -6,7 +6,7 @@ namespace WeebReader.Web.Models.BlogManager
 {
     public class PostModel
     {
-        public Guid PostId { get; set; }
+        public Guid? PostId { get; set; }
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveTitle")]
         public string Title { get; set; }

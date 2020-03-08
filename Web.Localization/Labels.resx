@@ -177,4 +177,13 @@
     <data name="MakeVisible">
         <value>Make Visible</value>
     </data>
+    <data name="ReleaseDate">
+        <value>Release Date</value>
+    </data>
+    <data name="Visible">
+        <value>Visible</value>
+    </data>
+    <data name="Hidden">
+        <value>Hidden</value>
+    </data>
 </root>

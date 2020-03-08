@@ -34,7 +34,8 @@ namespace WeebReader.Web.Portal.Controllers
                     PostId = post.Id,
                     Title = post.Title,
                     Content = post.Content,
-                    Date = post.Date
+                    Date = post.Date,
+                    Visible = post.Visible
                 });
 
             ViewData["Page"] = page;
@@ -70,7 +71,8 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     Title = postModel.Title,
                     Content = postModel.Content,
-                    Date = postModel.Date ?? DateTime.UtcNow
+                    Date = postModel.Date ?? DateTime.UtcNow,
+                    Visible = postModel.Visible
                 };
 
                 if (await _postsManager.Add(post))
@@ -106,14 +108,15 @@ namespace WeebReader.Web.Portal.Controllers
             
             ViewData["Title"] = Labels.EditPost;
             ViewData["ActionRoute"] = Url.Action("Edit", new {postId});
-            ViewData["Method"] = "POST";
+            ViewData["Method"] = "PATCH";
 
             return View("PostEditor", new PostModel
             {
                 PostId = post.Id,
                 Title = post.Title,
                 Content = post.Content,
-                Date = post.Date
+                Date = post.Date,
+                Visible = post.Visible
             });
         }
 
@@ -122,7 +125,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (TryValidateModel(postModel))
             {
-                if (await _postsManager.GetById(postModel.PostId) is var post && post == null)
+                if (postModel.PostId == null || await _postsManager.GetById(postModel.PostId.Value) is var post && post == null)
                 {
                     ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
                 
@@ -139,6 +142,7 @@ namespace WeebReader.Web.Portal.Controllers
                 post.Title = postModel.Title;
                 post.Content = postModel.Content;
                 post.Date = postModel.Date ?? post.Date;
+                post.Visible = postModel.Visible;
 
                 if (await _postsManager.Edit(post))
                 {

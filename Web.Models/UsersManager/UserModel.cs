@@ -6,7 +6,7 @@ namespace WeebReader.Web.Models.UsersManager
 {
     public class UserModel
     {
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UsernameRequired")]
         [MinLength(3, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumUsernameLength")]

@@ -5,8 +5,42 @@
     <partial name="_TinyMCE"/>
     <script>
     $(() => {
+        let messageContainer = $(".form .message");
+        
         $(".checkbox").checkbox();
-        $(".ui.calendar").calendar();
+        $(".ui.calendar").calendar({
+        ampm: false
+        });
+        
+        $(".form").on("submit", () => tinyMCE.triggerSave()).form({
+        on: "blur",
+        fields: {
+            title: {
+                identifier  : "title",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.PostMustHaveTitle"
+                    }
+                ]
+            },
+            content: {
+                identifier  : "content",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.PostMustHaveContent"
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@ViewData["ActionRoute"]",
+        serializeForm: true,
+        method: "@ViewData["Method"]",
+        onSuccess: response => window.location.href = response.destination,
+        onFailure: response => addError(messageContainer, response)
+        });
     });
     </script>
 }
@@ -22,22 +56,25 @@
         <label>@Labels.Content</label>
         <textarea id="editor-area" name="content" asp-for="Content"></textarea>
     </div>
-            <div class="field">
-                <label>@Labels.Date</label>
-                <div class="ui calendar">
-                    <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="text" name="date" placeholder="@Labels.Date"/>
-                    </div>
-                </div>
-            </div>
     <div class="two fields">
         <div class="field">
             <label>@Labels.Visibility</label>
             <div class="ui toggle checkbox">
-                <input class="hidden" type="checkbox" name="visible"/>
+                <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
                 <label>@Labels.MakeVisible</label>
             </div>
         </div>
+        <div class="field">
+            <label>@Labels.Date</label>
+            <div class="ui calendar">
+                <div class="ui input left icon">
+                    <i class="calendar icon"></i>
+                    <input type="text" name="date" placeholder="@Labels.ReleaseDate" asp-for="Date"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">@ViewData["Title"]</div>
     </div>
 </form>

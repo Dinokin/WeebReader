@@ -76,6 +76,7 @@
         <tr>
             <th>@Labels.Title</th>
             <th>@Labels.Date</th>
+            <th>@Labels.Visibility</th>
             <th>@Labels.Actions</th>
         </tr>
         </thead>
@@ -85,6 +86,7 @@
             <tr>
                 <td>@post.Title</td>
                 <td>@post.Date</td>
+                <td>@(post.Visible ? Labels.Visible : Labels.Hidden)</td>
                 <td>
                     <div class="ui mini buttons">
                         <a class="ui icon primary button" href="@Url.Action("Edit", new {postId = post.PostId})"><i class="pen icon"></i></a>
