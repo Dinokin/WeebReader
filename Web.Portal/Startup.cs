@@ -17,7 +17,6 @@ using Microsoft.Extensions.Hosting;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
-using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
@@ -74,21 +73,13 @@ namespace WeebReader.Web.Portal
                 });
 
             services.AddTransient<EmailSender>();
-            services.AddTransient<SettingsManager>();
-            services.AddTransient<GenericManager<Post>>();
-            services.AddTransient<GenericManager<Link>>();
-            services.AddTransient<GenericManager<Resource>>();
-            services.AddTransient<TitlesManager<Title>>();
-            services.AddTransient<TitlesManager<Comic>>();
-            services.AddTransient<TitlesManager<Novel>>();
-            services.AddTransient<ChaptersManager<Chapter>>();
-            services.AddTransient<ChaptersManager<ComicChapter>>();
-            services.AddTransient<ChaptersManager<NovelChapter>>();
-            services.AddTransient<PagesManager<ComicPage>>();
-            services.AddTransient<TitlesArchiver<Comic>>();
-            services.AddTransient<TitlesArchiver<Novel>>();
-            services.AddTransient<ChaptersArchiver<ComicChapter>>();
-            services.AddTransient<ChaptersArchiver<NovelChapter>>();
+            services.AddTransient<ParameterManager>();
+            services.AddTransient<PostManager>();
+            services.AddTransient<TitleManager<Comic>>();
+            services.AddTransient<ChapterManager<ComicChapter>>();
+            services.AddTransient<PageManager<ComicPage>>();
+            services.AddTransient<TitleArchiver<Comic>>();
+            services.AddTransient<ChapterArchiver<ComicChapter>>();
         }
         
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
@@ -117,7 +108,6 @@ namespace WeebReader.Web.Portal
             
             using var scope = application.ApplicationServices.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<BaseContext>();
-            
             if (context.Database.GetPendingMigrations().Any())
                 context.Database.Migrate();
         }

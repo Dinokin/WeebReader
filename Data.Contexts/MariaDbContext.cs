@@ -46,7 +46,6 @@ namespace WeebReader.Data.Contexts
             {
                 typeBuilder.Property(title => title.Synopsis).HasColumnType("TEXT");
                 typeBuilder.Property(title => title.Status).HasColumnType("TINYINT UNSIGNED");
-                typeBuilder.Property(title => title.Type).HasColumnType("TINYINT UNSIGNED");
                 typeBuilder.Property(title => title.Visible).HasColumnType("BOOLEAN");
             });
 
@@ -54,9 +53,8 @@ namespace WeebReader.Data.Contexts
             {
                 typeBuilder.Property(chapter => chapter.Volume).HasColumnType("SMALLINT UNSIGNED");
                 typeBuilder.Property(chapter => chapter.Number).HasColumnType("DECIMAL");
-                typeBuilder.Property(chapter => chapter.Date).HasColumnType("DATETIME");
+                typeBuilder.Property(chapter => chapter.ReleaseDate).HasColumnType("DATETIME");
                 typeBuilder.Property(chapter => chapter.Visible).HasColumnType("BOOLEAN");
-                typeBuilder.Property(chapter => chapter.Type).HasColumnType("TINYINT UNSIGNED");
             });
 
             builder.Entity<Page>(typeBuilder => typeBuilder.Property(page => page.Animated).HasColumnType("BOOLEAN"));
@@ -67,21 +65,13 @@ namespace WeebReader.Data.Contexts
             
             builder.Entity<Post>(typeBuilder =>
             {
-                typeBuilder.Property(post => post.Date).HasColumnType("DATETIME");
+                typeBuilder.Property(post => post.ReleaseDate).HasColumnType("DATETIME");
                 typeBuilder.Property(post => post.Visible).HasColumnType("BOOLEAN");
             });
-
-            builder.Entity<Resource>(typeBuilder => typeBuilder.Property(resource => resource.Visible).HasColumnType("BOOLEAN"));
-
-            builder.Entity<Link>(typeBuilder =>
-            {
-                typeBuilder.Property(link => link.Destination).HasColumnType("TEXT");
-                typeBuilder.Property(link => link.Active).HasColumnType("BOOLEAN");
-            });
             
-            builder.Entity<Setting>(typeBuilder =>
+            builder.Entity<Parameter>(typeBuilder =>
             {
-                typeBuilder.Property(setting => setting.Key).HasColumnType("SMALLINT UNSIGNED");
+                typeBuilder.Property(setting => setting.Type).HasColumnType("SMALLINT UNSIGNED");
                 typeBuilder.Property(setting => setting.Value).HasColumnType("TEXT");
             });
         }

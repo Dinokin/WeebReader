@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
 namespace WeebReader.Web.Models.Home
@@ -7,6 +8,6 @@ namespace WeebReader.Web.Models.Home
     {
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "EmailRequired")]
         [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequired")]
-        public string Email { get; set; }
+        public string Email { get; set; } = String.Empty;
     }
 }

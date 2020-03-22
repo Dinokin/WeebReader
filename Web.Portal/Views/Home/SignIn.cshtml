@@ -1,4 +1,4 @@
-﻿@inject SettingsManager SettingsManager
+﻿@inject ParameterManager ParameterManager
 @model SignInModel
 
 @{
@@ -6,7 +6,7 @@
     ViewData["Title"] = Labels.SignIn;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var emailEnable = await SettingsManager.GetValue<bool>(Setting.Keys.EmailEnabled);
+    var emailEnable = await ParameterManager.GetValue<bool>(Parameter.Types.EmailEnabled);
 }
 
 @section Headers

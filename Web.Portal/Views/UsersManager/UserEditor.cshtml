@@ -3,7 +3,7 @@
 @{
     var roles = new List<string> {Labels.None};
 
-    roles.AddRange(typeof(RoleTranslator).GetFields().Select(info => RoleTranslator.FromRole(info.GetValue(null).ToString())).Reverse());
+    roles.AddRange(typeof(RoleTranslator).GetFields().Select(info => RoleTranslator.FromRole(info.GetValue(null)!.ToString())).Reverse());
 }
 
 @section Headers

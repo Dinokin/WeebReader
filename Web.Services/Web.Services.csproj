@@ -4,8 +4,10 @@
         <AssemblyName>WeebReader.Web.Services</AssemblyName>
         <RootNamespace>WeebReader.Web.Services</RootNamespace>
         <LangVersion>latest</LangVersion>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
+        <FileVersion>1.0.0</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,8 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="itext7.pdfhtml" Version="2.1.7" />
-        <PackageReference Include="Magick.NET-Q8-x64" Version="7.15.1" />
-        <PackageReference Include="MailKit" Version="2.5.1" />
+        <PackageReference Include="Magick.NET-Q8-x64" Version="7.15.4" />
+        <PackageReference Include="MailKit" Version="2.5.2" />
     </ItemGroup>
 </Project>

@@ -18,7 +18,7 @@ namespace WeebReader.Data.Services
         public GenericManager(BaseContext context)
         {
             Context = context;
-            DbSet = (DbSet<TEntity>) typeof(BaseContext).GetProperties().Single(info => info.PropertyType == typeof(DbSet<TEntity>)).GetValue(Context);
+            DbSet = (DbSet<TEntity>) typeof(BaseContext).GetProperties().Single(info => info.PropertyType == typeof(DbSet<TEntity>)).GetValue(Context)!;
             Entities = DbSet.AsQueryable();
         }
         
@@ -35,11 +35,15 @@ namespace WeebReader.Data.Services
             return await Context.SaveChangesAsync() > 0;
         }
 
+        public virtual async Task<bool> AddRange(IEnumerable<TEntity> entities)
+        {
+            await DbSet.AddRangeAsync(entities);
+            
+            return await Context.SaveChangesAsync() > 0;
+        }
+
         public virtual async Task<bool> Edit(TEntity entity)
         {
-            if (!await DbSet.AnyAsync(target => target.Id == entity.Id))
-                return false;
-            
             DbSet.Update(entity);
 
             return await Context.SaveChangesAsync() > 0;

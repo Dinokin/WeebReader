@@ -8,12 +8,12 @@ namespace WeebReader.Web.Models.Home
     {
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UserIdRequired")]
         public Guid UserId { get; set; }
-        
+
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "TokenRequired")]
-        public string Token { get; set; }
-        
+        public string Token { get; set; } = string.Empty;
+
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "EmailRequired")]
         [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequired")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 }

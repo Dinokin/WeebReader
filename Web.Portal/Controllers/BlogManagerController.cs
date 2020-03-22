@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
+using WeebReader.Web.Models;
 using WeebReader.Web.Models.BlogManager;
 using WeebReader.Web.Portal.Others;
 
@@ -18,31 +18,21 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Blog/")]
     public class BlogManagerController : Controller
     {
-        private readonly GenericManager<Post> _postsManager;
+        private readonly PostManager _postManager;
 
-        public BlogManagerController(GenericManager<Post> postsManager) => _postsManager = postsManager;
+        public BlogManagerController(PostManager postManager) => _postManager = postManager;
 
         [HttpGet("{page:int?}")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
-            var totalPages = Math.Ceiling(await _postsManager.Count() / (decimal) Constants.ItemsPerPage);
+            var totalPages = Math.Ceiling(await _postManager.Count() / (decimal) Constants.ItemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-
-            var posts = (await _postsManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage))
-                .Select(post => new PostModel
-                {
-                    PostId = post.Id,
-                    Title = post.Title,
-                    Content = post.Content,
-                    Date = post.Date,
-                    Visible = post.Visible
-                });
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {postId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
 
-            return View(posts);
+            return View((await _postManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage)).Select(Mapper.Map));
         }
 
         [HttpGet("{action}")]
@@ -60,22 +50,14 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (TryValidateModel(postModel))
             {
-                if (await _postsManager.Entities.AnyAsync(entity => entity.Title == postModel.Title))
+                if (await _postManager.Entities.AnyAsync(entity => entity.Title == postModel.Title))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
                     });
 
-                var post = new Post
-                {
-                    Title = postModel.Title,
-                    Content = postModel.Content,
-                    Date = postModel.Date ?? DateTime.UtcNow,
-                    Visible = postModel.Visible
-                };
-
-                if (await _postsManager.Add(post))
+                if (await _postManager.Add(Mapper.Map(postModel)))
                 {
                     ViewData["SuccessMessage"] = new[] {OtherMessages.PostAddedSuccessfully};
                     
@@ -99,7 +81,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{postId:guid}")]
         public async Task<IActionResult> Edit(Guid postId)
         {
-            if (await _postsManager.GetById(postId) is var post && post == null)
+            if (await _postManager.GetById(postId) is var post && post == null)
             {
                 ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
                 
@@ -110,14 +92,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["ActionRoute"] = Url.Action("Edit", new {postId});
             ViewData["Method"] = "PATCH";
 
-            return View("PostEditor", new PostModel
-            {
-                PostId = post.Id,
-                Title = post.Title,
-                Content = post.Content,
-                Date = post.Date,
-                Visible = post.Visible
-            });
+            return View("PostEditor", Mapper.Map(post));
         }
 
         [HttpPatch("{postId:guid}")]
@@ -125,26 +100,21 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (TryValidateModel(postModel))
             {
-                if (postModel.PostId == null || await _postsManager.GetById(postModel.PostId.Value) is var post && post == null)
+                if (postModel.PostId == null || await _postManager.GetById(postModel.PostId.Value) is var post && post == null)
                 {
                     ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
                 
                     return RedirectToAction("Index");
                 }
                 
-                if (await _postsManager.Entities.AnyAsync(entity => post.Title == postModel.Title && post != entity))
+                if (await _postManager.Entities.AnyAsync(entity => post.Title == postModel.Title && post != entity))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
                     });
 
-                post.Title = postModel.Title;
-                post.Content = postModel.Content;
-                post.Date = postModel.Date ?? post.Date;
-                post.Visible = postModel.Visible;
-
-                if (await _postsManager.Edit(post))
+                if (await _postManager.Edit(Mapper.Map(postModel)))
                 {
                     ViewData["SuccessMessage"] = new[] {OtherMessages.PostUpdatedSuccessfully};
                     
@@ -168,14 +138,14 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpDelete("{postId:guid}")]
         public async Task<IActionResult> Delete(Guid postId)
         {
-            if (await _postsManager.GetById(postId) is var post && post == null)
+            if (await _postManager.GetById(postId) is var post && post == null)
                 return new JsonResult(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.PostNotFound}
                 });
 
-            if (await _postsManager.Delete(post))
+            if (await _postManager.Delete(post))
             {
                 TempData["SuccessMessage"] = new[] {OtherMessages.PostDeletedSuccessfully};
                 

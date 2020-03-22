@@ -2,7 +2,7 @@
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    public class SettingsManagerController : Controller
+    public class ParametersManagerController : Controller
     {
         
     }

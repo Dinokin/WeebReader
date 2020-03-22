@@ -10,6 +10,7 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
+using WeebReader.Web.Models;
 using WeebReader.Web.Models.Home;
 using WeebReader.Web.Models.UsersManager;
 using WeebReader.Web.Portal.Others;
@@ -23,14 +24,14 @@ namespace WeebReader.Web.Portal.Controllers
     {
         private readonly BaseContext _context;
         private readonly EmailSender _emailSender;
-        private readonly SettingsManager _settingsManager;
+        private readonly ParameterManager _parameterManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
 
-        public UsersManagerController(BaseContext context, EmailSender emailSender, SettingsManager settingsManager, UserManager<IdentityUser<Guid>> userManager)
+        public UsersManagerController(BaseContext context, EmailSender emailSender, ParameterManager parameterManager, UserManager<IdentityUser<Guid>> userManager)
         {
             _context = context;
             _emailSender = emailSender;
-            _settingsManager = settingsManager;
+            _parameterManager = parameterManager;
             _userManager = userManager;
         }
 
@@ -39,16 +40,10 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1); 
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
-            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
-                .Select(user => new UserModel
-                {
-                    UserId = user.Id,
-                    Username = user.UserName,
-                    Email = user.Email,
-                    Role = null
-                }).ToArray();
+            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage).AsEnumerable()
+                .Select(Mapper.Map);
 
             foreach (var user in users)
                 user.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault());
@@ -91,15 +86,11 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.UsernameAlreadyInUse}
                     });
 
-                var user = new IdentityUser<Guid>
-                {
-                    UserName = userModel.Username,
-                    Email = userModel.Email
-                };
+                var user = Mapper.Map(userModel);
 
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 
-                if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
                 {
                     var userResult = string.IsNullOrWhiteSpace(userModel.Password) ? await _userManager.CreateAsync(user) : await _userManager.CreateAsync(user, userModel.Password);
 
@@ -210,13 +201,10 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["ActionRoute"] = Url.Action("Edit", new {userId});
             ViewData["Method"] = "PATCH";
 
-            return View("UserEditor", new UserModel
-            {
-                UserId = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault())
-            });
+            var model = Mapper.Map(user);
+            model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
+
+            return View("UserEditor", model);
         }
 
         [HttpPatch("{userId:guid}")]
@@ -246,8 +234,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.UserUpdateIsLastAdministrator}
                     });
 
-                user.UserName = userModel.Username;
-                user.Email = userModel.Email;
+                user = Mapper.Map(userModel);
                 user.EmailConfirmed = true;
                 
                 if (!string.IsNullOrWhiteSpace(userModel.Password))
@@ -330,14 +317,10 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> YourProfile()
         {
             var user = await _userManager.GetUserAsync(User);
+            var model = Mapper.Map(await _userManager.GetUserAsync(User));
+            model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
 
-            return View(new UserModel
-            {
-                UserId = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault()) ?? Labels.None
-            });
+            return View(model);
         }
 
         [HttpPatch("{action:slugify}")]
@@ -378,12 +361,12 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
 
-                if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
                 {
                     var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
-                    var siteName = await _settingsManager.GetValue(Setting.Keys.SiteName);
-                    var siteAddress = await _settingsManager.GetValue(Setting.Keys.SiteAddress);
-                    var siteEmail = await _settingsManager.GetValue(Setting.Keys.SiteEmail);
+                    var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
+                    var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
+                    var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
                     var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "Home", new {userId = user.Id, email = emailModel.Email, token})}");
 
@@ -426,9 +409,9 @@ namespace WeebReader.Web.Portal.Controllers
         private async Task<bool> SendAccountCreationEmail(IdentityUser<Guid> user)
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var siteName = await _settingsManager.GetValue(Setting.Keys.SiteName);
-            var siteAddress = await _settingsManager.GetValue(Setting.Keys.SiteAddress);
-            var siteEmail = await _settingsManager.GetValue(Setting.Keys.SiteEmail);
+            var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
+            var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
+            var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
             var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "Home", new {userId = user.Id, token})}");
 

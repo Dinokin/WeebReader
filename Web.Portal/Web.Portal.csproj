@@ -4,7 +4,7 @@
         <AssemblyName>WeebReader.Web.Portal</AssemblyName>
         <RootNamespace>WeebReader.Web.Portal</RootNamespace>
         <LangVersion>latest</LangVersion>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

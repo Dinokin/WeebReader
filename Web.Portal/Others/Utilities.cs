@@ -8,7 +8,7 @@ namespace WeebReader.Web.Portal.Others
 {
     internal static class Utilities
     {
-        public static DirectoryInfo CurrentDirectory => new FileInfo(Uri.UnescapeDataString(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath)).Directory;
+        public static DirectoryInfo CurrentDirectory => new FileInfo(Uri.UnescapeDataString(new Uri(Assembly.GetExecutingAssembly().CodeBase!).AbsolutePath)).Directory;
 
         public static X509Certificate2 GetCertificate()
         {

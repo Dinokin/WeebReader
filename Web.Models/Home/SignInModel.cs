@@ -7,10 +7,10 @@ namespace WeebReader.Web.Models.Home
     {
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UsernameRequired")]
         [MinLength(3, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumUsernameLength")]
-        public string Username { get; set; }
-        
+        public string Username { get; set; } = string.Empty;
+
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PasswordRequired")]
         [MinLength(8, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumPasswordLength")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
     }
 }

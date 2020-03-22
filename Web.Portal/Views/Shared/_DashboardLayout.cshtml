@@ -1,6 +1,6 @@
 ﻿@{
-    var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
-    var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
+    var successMessage = (IEnumerable<string>?) TempData["SuccessMessage"];
+    var errorMessage = (IEnumerable<string>?) TempData["ErrorMessage"];
 }
 
 <!DOCTYPE html>
@@ -78,14 +78,6 @@
                 <i class="left newspaper icon"></i>
                 @Labels.Blog
             </a>
-            <a id="resources" class="item">
-                <i class="left file outline icon"></i>
-                @Labels.Resources
-            </a>
-            <a id="links" class="item">
-                <i class="left external alternate icon"></i>
-                @Labels.Links
-            </a>
         }
         @if (User.IsInRole(RoleTranslator.Administrator))
         {
@@ -114,7 +106,7 @@
                         @(successMessage != null ? Labels.Success : Labels.Error)
                     </div>
                     <ul class="list">
-                        @foreach (var item in successMessage ?? errorMessage)
+                        @foreach (var item in successMessage! ?? errorMessage!)
                         {
                             <li>@item</li>
                         }

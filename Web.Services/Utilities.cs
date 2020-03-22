@@ -24,20 +24,28 @@ namespace WeebReader.Web.Services
             return magickImage;
         }
 
-        public static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename)
+        public static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename, bool forceStatic = false)
         {
             string extension;
             MagickFormat format;
 
-            if (image.Format == MagickFormat.Gif)
-            {
-                extension = ".gif";
-                format = MagickFormat.Gif;
-            }
-            else
+            if (forceStatic)
             {
                 extension = ".png";
                 format = image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24;
+            }
+            else
+            {
+                if (image.Format == MagickFormat.Gif)
+                {
+                    extension = ".gif";
+                    format = image.Format;
+                }
+                else
+                {
+                    extension = ".png";
+                    format = image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24;
+                }
             }
 
             var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}{extension}");

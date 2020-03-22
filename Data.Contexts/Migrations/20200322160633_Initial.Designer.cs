@@ -9,7 +9,7 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200301233220_Initial")]
+    [Migration("20200322160633_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -245,8 +245,9 @@ namespace WeebReader.Data.Contexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("DATETIME");
+                    b.Property<string>("ChapterType")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Name")
                         .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
@@ -255,16 +256,16 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.Property<decimal>("Number")
                         .HasColumnType("DECIMAL");
 
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("DATETIME");
+
                     b.Property<Guid>("TitleId")
                         .HasColumnType("char(36)");
-
-                    b.Property<byte>("Type")
-                        .HasColumnType("TINYINT UNSIGNED");
 
                     b.Property<bool>("Visible")
                         .HasColumnType("BOOLEAN");
 
-                    b.Property<ushort>("Volume")
+                    b.Property<ushort?>("Volume")
                         .HasColumnType("SMALLINT UNSIGNED");
 
                     b.HasKey("Id");
@@ -274,7 +275,7 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.ToTable("Chapters");
 
-                    b.HasDiscriminator<byte>("Type");
+                    b.HasDiscriminator<string>("ChapterType").HasValue("Chapter");
                 });
 
             modelBuilder.Entity("WeebReader.Data.Entities.Abstract.Page", b =>
@@ -331,46 +332,58 @@ namespace WeebReader.Data.Contexts.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<byte>("Type")
-                        .HasColumnType("TINYINT UNSIGNED");
+                    b.Property<string>("TitleType")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<bool>("Visible")
                         .HasColumnType("BOOLEAN");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name", "Type")
-                        .IsUnique();
-
                     b.ToTable("Titles");
 
-                    b.HasDiscriminator<byte>("Type");
+                    b.HasDiscriminator<string>("TitleType").HasValue("Title");
                 });
 
-            modelBuilder.Entity("WeebReader.Data.Entities.Link", b =>
+            modelBuilder.Entity("WeebReader.Data.Entities.Parameter", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("BOOLEAN");
+                    b.Property<ushort>("Type")
+                        .HasColumnType("SMALLINT UNSIGNED");
 
-                    b.Property<string>("Destination")
-                        .IsRequired()
+                    b.Property<string>("Value")
                         .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(20) CHARACTER SET utf8mb4")
-                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Type")
                         .IsUnique();
 
-                    b.ToTable("Links");
+                    b.ToTable("Settings");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6f74f3e3-b000-44e8-95f3-bcb595850994"),
+                            Type = (ushort)0,
+                            Value = "WeebReader"
+                        },
+                        new
+                        {
+                            Id = new Guid("ba5816af-e05a-49fb-9a63-64695cfc3510"),
+                            Type = (ushort)1,
+                            Value = "We read weebs."
+                        },
+                        new
+                        {
+                            Id = new Guid("06c2e610-cbb8-42e0-9fbb-068ada7df3e0"),
+                            Type = (ushort)2,
+                            Value = "http://127.0.0.1:5000"
+                        });
                 });
 
             modelBuilder.Entity("WeebReader.Data.Entities.Post", b =>
@@ -383,7 +396,7 @@ namespace WeebReader.Data.Contexts.Migrations
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("DATETIME");
 
                     b.Property<string>("Title")
@@ -400,66 +413,6 @@ namespace WeebReader.Data.Contexts.Migrations
                         .IsUnique();
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("WeebReader.Data.Entities.Resource", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
-                        .HasMaxLength(100);
-
-                    b.Property<bool>("Visible")
-                        .HasColumnType("BOOLEAN");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Resources");
-                });
-
-            modelBuilder.Entity("WeebReader.Data.Entities.Setting", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<ushort>("Key")
-                        .HasColumnType("SMALLINT UNSIGNED")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Key")
-                        .IsUnique();
-
-                    b.ToTable("Settings");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("040569bc-3251-47d1-b51a-1a728c3d49ec"),
-                            Key = (ushort)0,
-                            Value = "WeebReader"
-                        },
-                        new
-                        {
-                            Id = new Guid("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"),
-                            Key = (ushort)1,
-                            Value = "We reader weebs."
-                        },
-                        new
-                        {
-                            Id = new Guid("94010814-1ba1-4fca-8e57-a879ef51ba1a"),
-                            Key = (ushort)2,
-                            Value = "http://127.0.0.1:5000"
-                        });
                 });
 
             modelBuilder.Entity("WeebReader.Data.Entities.Tag", b =>
@@ -509,21 +462,7 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.HasIndex("TitleId");
 
-                    b.HasDiscriminator().HasValue((byte)0);
-                });
-
-            modelBuilder.Entity("WeebReader.Data.Entities.NovelChapter", b =>
-                {
-                    b.HasBaseType("WeebReader.Data.Entities.Abstract.Chapter");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasIndex("TitleId")
-                        .HasName("IX_Chapters_TitleId1");
-
-                    b.HasDiscriminator().HasValue((byte)1);
+                    b.HasDiscriminator().HasValue("Comic");
                 });
 
             modelBuilder.Entity("WeebReader.Data.Entities.ComicPage", b =>
@@ -548,14 +487,7 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.Property<bool>("LongStrip")
                         .HasColumnType("BOOLEAN");
 
-                    b.HasDiscriminator().HasValue((byte)0);
-                });
-
-            modelBuilder.Entity("WeebReader.Data.Entities.Novel", b =>
-                {
-                    b.HasBaseType("WeebReader.Data.Entities.Abstract.Title");
-
-                    b.HasDiscriminator().HasValue((byte)1);
+                    b.HasDiscriminator().HasValue("Comic");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -629,16 +561,6 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.HasOne("WeebReader.Data.Entities.Comic", "Title")
                         .WithMany("Chapters")
                         .HasForeignKey("TitleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WeebReader.Data.Entities.NovelChapter", b =>
-                {
-                    b.HasOne("WeebReader.Data.Entities.Novel", "Title")
-                        .WithMany("Chapters")
-                        .HasForeignKey("TitleId")
-                        .HasConstraintName("FK_Chapters_Titles_TitleId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

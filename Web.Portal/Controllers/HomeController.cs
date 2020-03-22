@@ -11,8 +11,8 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
+using WeebReader.Web.Models;
 using WeebReader.Web.Models.Home;
-using WeebReader.Web.Models.UsersManager;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -21,15 +21,15 @@ namespace WeebReader.Web.Portal.Controllers
     {
         private readonly BaseContext _context;
         private readonly EmailSender _emailSender;
-        private readonly SettingsManager _settingsManager;
+        private readonly ParameterManager _parameterManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
 
-        public HomeController(BaseContext context, EmailSender emailSender, SettingsManager settingsManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
+        public HomeController(BaseContext context, EmailSender emailSender, ParameterManager parameterManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
         {
             _context = context;
             _emailSender = emailSender;
-            _settingsManager = settingsManager;
+            _parameterManager = parameterManager;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -56,12 +56,8 @@ namespace WeebReader.Web.Portal.Controllers
             if (TryValidateModel(installerModel))
             {
                 await using var transaction = await _context.Database.BeginTransactionAsync();
-                
-                var user = new IdentityUser<Guid>
-                {
-                    UserName = installerModel.Username,
-                    Email = installerModel.Email
-                };
+
+                var user = Mapper.Map(installerModel);
                 
                 var userResult = await _userManager.CreateAsync(user, installerModel.Password);
 
@@ -147,7 +143,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword()
         {
-            if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled) || _signInManager.IsSignedIn(User))
+            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled) || _signInManager.IsSignedIn(User))
                 return RedirectToAction("Index");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
@@ -156,7 +152,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
-            if (await _settingsManager.GetValue<bool>(Setting.Keys.EmailEnabled))
+            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
             {
                 ModelState.AddModelError("FunctionalityDisabled", OtherMessages.DisableFunctionality);
 
@@ -181,9 +177,9 @@ namespace WeebReader.Web.Portal.Controllers
                 if (user != null)
                 {
                     var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var siteName = await _settingsManager.GetValue(Setting.Keys.SiteName);
-                    var siteAddress = await _settingsManager.GetValue(Setting.Keys.SiteAddress);
-                    var siteEmail = await _settingsManager.GetValue(Setting.Keys.SiteEmail);
+                    var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
+                    var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
+                    var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
                     var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
 

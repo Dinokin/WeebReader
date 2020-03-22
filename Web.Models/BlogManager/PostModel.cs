@@ -9,12 +9,12 @@ namespace WeebReader.Web.Models.BlogManager
         public Guid? PostId { get; set; }
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveTitle")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveContent")]
-        public string Content { get; set; }
+        public string Content { get; set; } = string.Empty;
         
-        public DateTime? Date { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         
         public bool Visible { get; set; }
     }

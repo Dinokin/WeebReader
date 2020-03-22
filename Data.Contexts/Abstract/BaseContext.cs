@@ -9,20 +9,16 @@ namespace WeebReader.Data.Contexts.Abstract
 {
     public abstract class BaseContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
-        public DbSet<Title> Titles { get; set; }
-        public DbSet<Chapter> Chapters { get; set; }
-        public DbSet<Page> Pages { get; set; }
-        public DbSet<Comic> Comics { get; set; }
-        public DbSet<ComicChapter> ComicChapters { get; set; }
-        public DbSet<ComicPage> ComicPages { get; set; }
-        public DbSet<Novel> Novels { get; set; }
-        public DbSet<NovelChapter> NovelChapters { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<TitleTag> TitleTags { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Resource> Resources { get; set; }
-        public DbSet<Link> Links { get; set; }
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Title> Titles { get; private set; } = null!;
+        public DbSet<Chapter> Chapters { get; private set; } = null!;
+        public DbSet<Page> Pages { get; private set; } = null!;
+        public DbSet<Comic> Comics { get; private set; } = null!;
+        public DbSet<ComicChapter> ComicChapters { get; private set; } = null!;
+        public DbSet<ComicPage> ComicPages { get; private set; } = null!;
+        public DbSet<Tag> Tags { get; private set; } = null!;
+        public DbSet<TitleTag> TitleTags { get; private set; } = null!;
+        public DbSet<Post> Posts { get; private set; } = null!;
+        public DbSet<Parameter> Settings { get; private set; } = null!;
 
         protected BaseContext(DbContextOptions options) : base(options) { }
 
@@ -99,19 +95,19 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(title => title.Synopsis).IsRequired();
                 typeBuilder.Property(title => title.Status).IsRequired();
                 typeBuilder.Property(title => title.Visible).IsRequired();
-                typeBuilder.HasIndex(title => new {title.Name, title.Type}).IsUnique();
-                typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title).HasForeignKey(titleTag => titleTag.TitleId);
-                typeBuilder.HasDiscriminator(title => title.Type).HasValue<Comic>(0).HasValue<Novel>(1);
+                typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title!).HasForeignKey(titleTag => titleTag.TitleId);
+                typeBuilder.HasDiscriminator<string>("TitleType").HasValue<Comic>("Comic");
             });
             
             builder.Entity<Chapter>(typeBuilder =>
             {
                 typeBuilder.Property(chapter => chapter.Number).IsRequired();
                 typeBuilder.Property(chapter => chapter.Name).HasMaxLength(100);
-                typeBuilder.Property(chapter => chapter.Date).IsRequired();
+                typeBuilder.Property(chapter => chapter.ReleaseDate).IsRequired();
+                typeBuilder.Property(chapter => chapter.Visible).IsRequired();
                 typeBuilder.Property(chapter => chapter.TitleId).IsRequired();
                 typeBuilder.HasIndex(chapter => new {chapter.Number, chapter.TitleId}).IsUnique();
-                typeBuilder.HasDiscriminator(chapter => chapter.Type).HasValue<ComicChapter>(0).HasValue<NovelChapter>(1);
+                typeBuilder.HasDiscriminator<string>("ChapterType").HasValue<ComicChapter>("Comic");
             });
             
             builder.Entity<Page>(typeBuilder =>
@@ -124,10 +120,10 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(comic => comic.LongStrip);
 
-                typeBuilder.HasMany(comic => comic.Chapters).WithOne(comic => comic.Title).HasForeignKey(chapter => chapter.TitleId);
+                typeBuilder.HasMany(comic => comic.Chapters).WithOne(comic => comic.Title!).HasForeignKey(chapter => chapter.TitleId);
             });
             
-            builder.Entity<ComicChapter>(typeBuilder => typeBuilder.HasMany(chapter => chapter.Pages).WithOne(page => page.Chapter).HasForeignKey(page => page.ChapterId));
+            builder.Entity<ComicChapter>(typeBuilder => typeBuilder.HasMany(chapter => chapter.Pages).WithOne(page => page.Chapter!).HasForeignKey(page => page.ChapterId));
             
             builder.Entity<ComicPage>(typeBuilder =>
             {
@@ -135,15 +131,11 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.HasIndex(page => new {page.Number, page.ChapterId}).IsUnique();
             });
 
-            builder.Entity<Novel>(typeBuilder => typeBuilder.HasMany(novel => novel.Chapters).WithOne(chapter => chapter.Title).HasForeignKey(chapter => chapter.TitleId));
-            
-            builder.Entity<NovelChapter>(typeBuilder => typeBuilder.Property(chapter => chapter.Content).IsRequired());
-
             builder.Entity<Tag>(typeBuilder =>
             {
                 typeBuilder.Property(tag => tag.Name).IsRequired().HasMaxLength(20);
                 typeBuilder.HasIndex(tag => tag.Name).IsUnique();
-                typeBuilder.HasMany(tag => tag.TitleTag).WithOne(titleTag => titleTag.Tag).HasForeignKey(titleTag => titleTag.TagId);
+                typeBuilder.HasMany(tag => tag.TitleTag).WithOne(titleTag => titleTag.Tag!).HasForeignKey(titleTag => titleTag.TagId);
             });
 
             builder.Entity<TitleTag>(typeBuilder => typeBuilder.HasIndex(titleTag => new {titleTag.TagId, titleTag.TitleId}).IsUnique());
@@ -153,45 +145,19 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(post => post.Title).IsRequired().HasMaxLength(100);
                 typeBuilder.HasIndex(post => post.Title).IsUnique();
                 typeBuilder.Property(post => post.Content).IsRequired();
-                typeBuilder.Property(post => post.Date).IsRequired();
+                typeBuilder.Property(post => post.ReleaseDate).IsRequired();
                 typeBuilder.Property(post => post.Visible).IsRequired();
             });
             
-            builder.Entity<Resource>(typeBuilder =>
+            builder.Entity<Parameter>(typeBuilder =>
             {
-                typeBuilder.Property(resource => resource.Name).IsRequired().HasMaxLength(100);
-                typeBuilder.Property(resource => resource.Visible).IsRequired();
-            });
-            
-            builder.Entity<Link>(typeBuilder =>
-            {
-                typeBuilder.Property(link => link.Name).IsRequired().HasMaxLength(20);
-                typeBuilder.HasIndex(link => link.Name).IsUnique();
-                typeBuilder.Property(link => link.Destination).IsRequired();
-                typeBuilder.Property(link => link.Active).IsRequired();
-            });
-            
-            builder.Entity<Setting>(typeBuilder =>
-            {
-                typeBuilder.Property(setting => setting.Key).IsRequired().HasMaxLength(50);
-                typeBuilder.HasIndex(setting => setting.Key).IsUnique();
+                typeBuilder.Property(setting => setting.Type).IsRequired();
+                typeBuilder.HasIndex(setting => setting.Type).IsUnique();
 
-                typeBuilder.HasData(new Setting
-                {
-                    Id = Guid.Parse("040569bc-3251-47d1-b51a-1a728c3d49ec"),
-                    Key = Setting.Keys.SiteName,
-                    Value = "WeebReader"
-                }, new Setting
-                {
-                    Id = Guid.Parse("a49f13c1-bd9a-41ac-90a4-4d9051b0cdec"),
-                    Key = Setting.Keys.SiteDescription,
-                    Value = "We reader weebs."
-                }, new Setting
-                {
-                    Id = Guid.Parse("94010814-1ba1-4fca-8e57-a879ef51ba1a"),
-                    Key = Setting.Keys.SiteAddress,
-                    Value = "http://127.0.0.1:5000"
-                });
+                typeBuilder.HasData(
+                    new Parameter(Guid.NewGuid(), Parameter.Types.SiteName, "WeebReader"), 
+                    new Parameter(Guid.NewGuid(), Parameter.Types.SiteDescription, "We read weebs."),
+                    new Parameter(Guid.NewGuid(), Parameter.Types.SiteAddress, "http://127.0.0.1:5000"));
             });
         }
     }

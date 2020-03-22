@@ -11,7 +11,7 @@
         /// </summary>
         /// <param name="role">Role string</param>
         /// <returns>Translatable string</returns>
-        public static string FromRole(string role) => role switch
+        public static string FromRole(string? role) => role switch
         {
             Administrator => Labels.Administrator,
             Moderator => Labels.Moderator,
@@ -24,7 +24,7 @@
         /// </summary>
         /// <param name="message">Translatable string</param>
         /// <returns>Role string, null if not found</returns>
-        public static string ToRole(string message)
+        public static string? ToRole(string? message)
         {
             if (message == Labels.Administrator)
                 return Administrator;

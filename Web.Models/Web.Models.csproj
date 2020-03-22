@@ -4,7 +4,7 @@
                 <AssemblyName>WeebReader.Web.Models</AssemblyName>
                 <RootNamespace>WeebReader.Web.Models</RootNamespace>
                 <LangVersion>latest</LangVersion>
-                <Nullable>disable</Nullable>
+                <Nullable>enable</Nullable>
                 <OutputType>Library</OutputType>
         </PropertyGroup>
         
