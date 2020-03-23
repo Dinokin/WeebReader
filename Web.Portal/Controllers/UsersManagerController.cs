@@ -42,9 +42,9 @@ namespace WeebReader.Web.Portal.Controllers
             var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
-            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage).AsEnumerable()
-                .Select(Mapper.Map);
-
+            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
+                .Select(Mapper.Map).ToArray();
+            
             foreach (var user in users)
                 user.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault());
 
@@ -234,7 +234,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.UserUpdateIsLastAdministrator}
                     });
 
-                user = Mapper.Map(userModel);
+                Mapper.Map(userModel, ref user);
                 user.EmailConfirmed = true;
                 
                 if (!string.IsNullOrWhiteSpace(userModel.Password))
@@ -248,7 +248,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (RoleTranslator.ToRole(userModel.Role) is var targetRole && targetRole != role && targetRole != null)
                     {
-                        roleResult = (await _userManager.RemoveFromRoleAsync(user, role)).Succeeded && (await _userManager.AddToRoleAsync(user, targetRole)).Succeeded;
+                        roleResult = (role == null || (await _userManager.RemoveFromRoleAsync(user, role)).Succeeded) && (await _userManager.AddToRoleAsync(user, targetRole)).Succeeded;
                     }
                     else if (role != null && targetRole == null)
                     {

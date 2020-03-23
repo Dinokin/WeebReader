@@ -24,8 +24,16 @@ namespace WeebReader.Web.Models
         public static Post Map(PostModel postModel)
         {
             return postModel.PostId.HasValue ? 
-                new Post(postModel.PostId.Value, postModel.Title, postModel.Content, postModel.ReleaseDate ?? DateTime.UtcNow, postModel.Visible) : 
-                new Post(postModel.Title, postModel.Content, postModel.ReleaseDate ?? DateTime.UtcNow, postModel.Visible);
+                new Post(postModel.PostId.Value, postModel.Title, postModel.Content, postModel.ReleaseDate ?? DateTime.Now, postModel.Visible) : 
+                new Post(postModel.Title, postModel.Content, postModel.ReleaseDate ?? DateTime.Now, postModel.Visible);
+        }
+
+        public static void Map(PostModel postModel, ref Post post)
+        {
+            post.Title = postModel.Title;
+            post.Content = postModel.Content;
+            post.Visible = postModel.Visible;
+            post.ReleaseDate = postModel.ReleaseDate ?? post.ReleaseDate;
         }
 
         public static IdentityUser<Guid> Map(InstallerModel installerModel)
@@ -55,6 +63,12 @@ namespace WeebReader.Web.Models
                 UserName = userModel.Username,
                 Email = userModel.Email
             };
+        }
+
+        public static void Map(UserModel userModel, ref IdentityUser<Guid> user)
+        {
+            user.UserName = userModel.Username;
+            user.Email = userModel.Email;
         }
     }
 }

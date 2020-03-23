@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
+using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
@@ -77,7 +78,7 @@ namespace WeebReader.Web.Portal
             services.AddTransient<PostManager>();
             services.AddTransient<TitleManager<Comic>>();
             services.AddTransient<ChapterManager<ComicChapter>>();
-            services.AddTransient<PageManager<ComicPage>>();
+            services.AddTransient<PageManager<Page>>();
             services.AddTransient<TitleArchiver<Comic>>();
             services.AddTransient<ChapterArchiver<ComicChapter>>();
         }

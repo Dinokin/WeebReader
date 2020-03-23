@@ -85,7 +85,7 @@
         {
             <tr>
                 <td>@post.Title</td>
-                <td>@post.ReleaseDate</td>
+                <td>@post.ReleaseDate?.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@(post.Visible ? Labels.Visible : Labels.Hidden)</td>
                 <td>
                     <div class="ui mini buttons">

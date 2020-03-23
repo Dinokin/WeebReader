@@ -9,7 +9,28 @@
         
         $(".checkbox").checkbox();
         $(".ui.calendar").calendar({
-        ampm: false
+        ampm: false,
+        formatter: {
+            date: (date, settings) => {
+                if (!date)
+                    return "";
+                
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                
+                return `${year}-${month <= 9 ? `0${month}` : month}-${day <= 9 ? `0${day}` : day}`;
+            },
+            time: (date, setting) => {
+                if (!date)
+                    return "";
+                
+                let hour = date.getHours();
+                let minutes = date.getMinutes();
+                
+                return `${hour <= 9 ? `0${hour}` : hour}:${minutes <= 9 ? `0${minutes}` : minutes}`;
+            } 
+        }
         });
         
         $(".form").on("submit", () => tinyMCE.triggerSave()).form({
@@ -69,7 +90,7 @@
             <div class="ui calendar">
                 <div class="ui input left icon">
                     <i class="calendar icon"></i>
-                    <input type="text" name="date" placeholder="@Labels.ReleaseDate" asp-for="ReleaseDate"/>
+                    <input type="text" name="releaseDate" placeholder="@Labels.ReleaseDate" asp-for="ReleaseDate"/>
                 </div>
             </div>
         </div>

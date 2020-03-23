@@ -13,7 +13,7 @@ namespace WeebReader.Web.Models.UsersManager
         public string Username { get; set; } = string.Empty;
 
         [MinLength(8, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumPasswordLength")]
-        public string Password { get; set; } = string.Empty;
+        public string? Password { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "EmailRequired")]
         [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequired")]

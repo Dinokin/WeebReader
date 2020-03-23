@@ -9,14 +9,14 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200322160633_Initial")]
+    [Migration("20200323003354_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -363,24 +363,24 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.HasIndex("Type")
                         .IsUnique();
 
-                    b.ToTable("Settings");
+                    b.ToTable("Parameters");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6f74f3e3-b000-44e8-95f3-bcb595850994"),
+                            Id = new Guid("22b9d4f5-ea7b-423b-adfb-691d7aacbd87"),
                             Type = (ushort)0,
                             Value = "WeebReader"
                         },
                         new
                         {
-                            Id = new Guid("ba5816af-e05a-49fb-9a63-64695cfc3510"),
+                            Id = new Guid("8bf490f6-ce70-4c7d-8c56-e32900c3acb4"),
                             Type = (ushort)1,
                             Value = "We read weebs."
                         },
                         new
                         {
-                            Id = new Guid("06c2e610-cbb8-42e0-9fbb-068ada7df3e0"),
+                            Id = new Guid("32842582-86c0-4ad4-a45d-250302b3e15d"),
                             Type = (ushort)2,
                             Value = "http://127.0.0.1:5000"
                         });

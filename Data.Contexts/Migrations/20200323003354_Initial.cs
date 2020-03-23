@@ -9,6 +9,19 @@ namespace WeebReader.Data.Contexts.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Parameters",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Type = table.Column<ushort>(type: "SMALLINT UNSIGNED", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parameters", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -35,19 +48,6 @@ namespace WeebReader.Data.Contexts.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Settings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    Type = table.Column<ushort>(type: "SMALLINT UNSIGNED", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Settings", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -284,6 +284,16 @@ namespace WeebReader.Data.Contexts.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Parameters",
+                columns: new[] { "Id", "Type", "Value" },
+                values: new object[,]
+                {
+                    { new Guid("22b9d4f5-ea7b-423b-adfb-691d7aacbd87"), (ushort)0, "WeebReader" },
+                    { new Guid("8bf490f6-ce70-4c7d-8c56-e32900c3acb4"), (ushort)1, "We read weebs." },
+                    { new Guid("32842582-86c0-4ad4-a45d-250302b3e15d"), (ushort)2, "http://127.0.0.1:5000" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -291,16 +301,6 @@ namespace WeebReader.Data.Contexts.Migrations
                     { new Guid("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"), "26cd3943-23ff-41f5-86ed-8b867cf233b4", "Administrator", "ADMINISTRATOR" },
                     { new Guid("08d79ae6-7ec1-478f-867c-a8170f075a27"), "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7", "Moderator", "MODERATOR" },
                     { new Guid("08d79ae6-7ec3-42ce-8a94-00a56192c379"), "352e1584-d439-45dc-8015-9428b4e47c76", "Uploader", "UPLOADER" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Settings",
-                columns: new[] { "Id", "Type", "Value" },
-                values: new object[,]
-                {
-                    { new Guid("6f74f3e3-b000-44e8-95f3-bcb595850994"), (ushort)0, "WeebReader" },
-                    { new Guid("ba5816af-e05a-49fb-9a63-64695cfc3510"), (ushort)1, "We read weebs." },
-                    { new Guid("06c2e610-cbb8-42e0-9fbb-068ada7df3e0"), (ushort)2, "http://127.0.0.1:5000" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -326,6 +326,12 @@ namespace WeebReader.Data.Contexts.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Parameters_Type",
+                table: "Parameters",
+                column: "Type",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_Title",
                 table: "Posts",
                 column: "Title",
@@ -340,12 +346,6 @@ namespace WeebReader.Data.Contexts.Migrations
                 name: "RoleNameIndex",
                 table: "Roles",
                 column: "NormalizedName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Settings_Type",
-                table: "Settings",
-                column: "Type",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -398,13 +398,13 @@ namespace WeebReader.Data.Contexts.Migrations
                 name: "Pages");
 
             migrationBuilder.DropTable(
+                name: "Parameters");
+
+            migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
-
-            migrationBuilder.DropTable(
-                name: "Settings");
 
             migrationBuilder.DropTable(
                 name: "TitleTags");

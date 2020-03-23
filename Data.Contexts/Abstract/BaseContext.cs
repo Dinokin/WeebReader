@@ -9,16 +9,16 @@ namespace WeebReader.Data.Contexts.Abstract
 {
     public abstract class BaseContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
-        public DbSet<Title> Titles { get; private set; } = null!;
-        public DbSet<Chapter> Chapters { get; private set; } = null!;
-        public DbSet<Page> Pages { get; private set; } = null!;
-        public DbSet<Comic> Comics { get; private set; } = null!;
-        public DbSet<ComicChapter> ComicChapters { get; private set; } = null!;
-        public DbSet<ComicPage> ComicPages { get; private set; } = null!;
-        public DbSet<Tag> Tags { get; private set; } = null!;
-        public DbSet<TitleTag> TitleTags { get; private set; } = null!;
-        public DbSet<Post> Posts { get; private set; } = null!;
-        public DbSet<Parameter> Settings { get; private set; } = null!;
+        public DbSet<Title> Titles { get; set; } = null!;
+        public DbSet<Chapter> Chapters { get; set; } = null!;
+        public DbSet<Page> Pages { get; set; } = null!;
+        public DbSet<Comic> Comics { get; set; } = null!;
+        public DbSet<ComicChapter> ComicChapters { get; set; } = null!;
+        public DbSet<ComicPage> ComicPages { get; set; } = null!;
+        public DbSet<Tag> Tags { get; set; } = null!;
+        public DbSet<TitleTag> TitleTags { get; set; } = null!;
+        public DbSet<Post> Posts { get; set; } = null!;
+        public DbSet<Parameter> Parameters { get; set; } = null!;
 
         protected BaseContext(DbContextOptions options) : base(options) { }
 

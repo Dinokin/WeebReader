@@ -31,7 +31,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {postId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
-
+            
             return View((await _postManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage)).Select(Mapper.Map));
         }
 
@@ -107,14 +107,16 @@ namespace WeebReader.Web.Portal.Controllers
                     return RedirectToAction("Index");
                 }
                 
-                if (await _postManager.Entities.AnyAsync(entity => post.Title == postModel.Title && post != entity))
+                if (await _postManager.Entities.AnyAsync(entity => entity.Title == postModel.Title && post != entity))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
                     });
 
-                if (await _postManager.Edit(Mapper.Map(postModel)))
+                Mapper.Map(postModel, ref post);
+                
+                if (await _postManager.Edit(post))
                 {
                     ViewData["SuccessMessage"] = new[] {OtherMessages.PostUpdatedSuccessfully};
                     
