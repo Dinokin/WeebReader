@@ -29,8 +29,8 @@ namespace WeebReader.Web.Services
             if (!await _chapterManager.Add(chapter))
                 return false;
 
-            if (pages != null && typeof(TChapter) == typeof(ComicChapter))
-                await AddComicPages(chapter, pages);
+            if (pages != null)
+                await AddPages(chapter, pages);
             
             return true;
         }
@@ -40,12 +40,9 @@ namespace WeebReader.Web.Services
             if (!await _chapterManager.Edit(chapter))
                 return false;
 
-            if (pages != null && typeof(TChapter) == typeof(ComicChapter))
-            {
-                GetChapterFolder(chapter).Delete(true);
-                await AddComicPages(chapter, pages);
-            }
-
+            if (pages != null)
+                await AddPages(chapter, pages, true);
+                
             return true;
         }
 
@@ -58,8 +55,22 @@ namespace WeebReader.Web.Services
 
             return true;
         }
+        
+        private DirectoryInfo GetChapterFolder(Chapter chapter) => new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{chapter.TitleId}{Path.DirectorySeparatorChar}{chapter.Id}");
 
-        private async Task<IEnumerable<FileInfo>> AddComicPages(TChapter chapter, ZipArchive pages)
+        private async Task<IEnumerable<FileInfo>> AddPages(TChapter chapter, ZipArchive pages, bool deleteOld = false)
+        {
+            if (deleteOld)
+                GetChapterFolder(chapter).Delete(true);
+
+            return chapter switch
+            {
+                ComicChapter comic => await AddComicPages(comic, pages),
+                _ => throw new InvalidOperationException()
+            };
+        }
+        
+        private async Task<IEnumerable<FileInfo>> AddComicPages(ComicChapter chapter, ZipArchive pages)
         {
             var location = GetChapterFolder(chapter);
             location.Create();
@@ -80,7 +91,5 @@ namespace WeebReader.Web.Services
 
             return pagesInfo.Select(tuple => tuple.Item2);
         }
-
-        private DirectoryInfo GetChapterFolder(TChapter chapter) => new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{chapter.TitleId}{Path.DirectorySeparatorChar}{chapter.Id}");
     }
 }

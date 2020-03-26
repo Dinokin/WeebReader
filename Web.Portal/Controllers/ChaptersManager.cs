@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    public class TitlesManager : Controller
+    public class ChaptersManager : Controller
     {
         public IActionResult Index()
         {
