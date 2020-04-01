@@ -1,0 +1,186 @@
+﻿@model ComicModel
+
+@section Headers
+{
+    <partial name="_TinyMCE"/>
+    <script>
+    $(() => {
+        let form = $(".form");
+        let messageContainer = $(".form .message");
+        let progressBar = $(".indicating");
+        
+        $(".checkbox").checkbox();
+        $("#status").dropdown();
+        $("#tags").dropdown({
+        allowAdditions: true
+        });
+        
+        form.on("submit", () => tinyMCE.triggerSave()).form({
+        on: "blur",
+        fields: {
+            name: {
+                identifier: "name",
+                rules: [{
+                    type: "empty",
+                    prompt: "@ValidationMessages.TitleMustHaveName"
+                },
+                {
+                    type   : "maxLength[200]",
+                    prompt : "@ValidationMessages.TitleNameMaxLength"
+                }
+                ]
+            },
+            originalName: {
+                identifier: "originalName",
+                rules: [
+                    {
+                        type   : "maxLength[200]",
+                        prompt : "@ValidationMessages.TitleOriginalNameMaxLength"
+                    }
+                ]
+            },
+            author: {
+                identifier: "author",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.TitleMustHaveAuthor"
+                    },
+                    {
+                        type   : "maxLength[50]",
+                        prompt : "@ValidationMessages.TitleAuthorMaxLength"
+                    }
+                    ]
+            },
+            artist: {
+                identifier: "artist",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.TitleMustHaveArtist"
+                    },
+                    {
+                        type   : "maxLength[50]",
+                        prompt : "@ValidationMessages.TitleArtistMaxLength"
+                    }
+                    ]
+            }
+        }
+        }).api({
+        xhr: () => {
+            let xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener("progress", (event) => animateProgressBar(progressBar, event), false);
+            
+            return xhr;
+        },
+        url: "@ViewData["ActionRoute"]",
+        method: "@ViewData["Method"]",
+        processData: false,
+        contentType: false,
+        beforeSend: (settings) => {
+            settings.data = new FormData(form.get(0));
+            
+            return settings;
+        },
+        onRequest: () => progressBar.removeClass("deactivated"),
+        onComplete: () => progressBar.addClass("deactivated"),
+        onSuccess: (response) => window.location.href = response.destination,
+        onFailure: (response) => addError(messageContainer, response)
+        });
+        
+        $("input[type=\"file\"]").on("change", (event) => {
+            $("label.button").html("<i class=\"file icon\"></i>" + event.target.files[0].name.substr(0, 14) + (event.target.files[0].name.length > 15 ? "..." : ""));
+        });
+    });
+    </script>
+}
+
+<form class="ui form" novalidate>
+    <input type="hidden" name="titleId" asp-for="TitleId"/>
+    <div class="ui message error"></div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>@Labels.Name</label>
+                <input type="text" name="name" asp-for="Name"/>
+            </div>
+            <div class="field">
+                <label>@Labels.OriginalName</label>
+                <input type="text" name="originalName" asp-for="OriginalName"/>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>@Labels.Author</label>
+                <input type="text" name="author" asp-for="Author"/>
+            </div>
+            <div class="field">
+                <label>@Labels.Artist</label>
+                <input type="text" name="artist" asp-for="Artist"/>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>@Labels.Tags</label>
+                <div id="tags" class="ui fluid multiple search selection dropdown">
+                    <input name="tags" type="hidden" asp-for="Tags">
+                    <div class="default text"></div>
+                </div>
+            </div>
+            <div class="field">
+                <label>@Labels.Status</label>
+                <div id="status" class="ui fluid selection dropdown">
+                    <input type="hidden" name="status" asp-for="Status">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">@Labels.Status</div>
+                    <div class="menu">
+                        <div class="item" data-value="@Title.Statuses.Ongoing">@Labels.Ongoing</div>
+                        <div class="item" data-value="@Title.Statuses.Hiatus">@Labels.Hiatus</div>
+                        <div class="item" data-value="@Title.Statuses.Completed">@Labels.Completed</div>
+                        <div class="item" data-value="@Title.Statuses.Dropped">@Labels.Dropped</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.Synopsis</label>
+        <textarea id="editor-area" name="synopsis" asp-for="Synopsis"></textarea>
+    </div>
+    <div class="field">
+        <div class="three fields">
+            <div class="field">
+                <label>@Labels.Format</label>
+                <div class="ui toggle checkbox">
+                    <input class="hidden" type="checkbox" name="longStrip" asp-for="LongStrip"/>
+                    <label>@Labels.UseLongStrip</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>@Labels.Visibility</label>
+                <div class="ui toggle checkbox">
+                    <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
+                    <label>@Labels.MakeVisible</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>@Labels.Cover</label>
+                <label id="file-label" for="file" class="ui icon button no-margin-bottom" style="margin-top: 0.5rem;"><i class="file icon"></i>@Labels.OpenFile</label>
+                <input type="file" id="file" style="display:none" name="cover" accept=".png,.jpg,.jpeg" asp-for="Cover">
+            </div>
+        </div>
+    </div>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">@ViewData["Title"]</div>
+    </div>
+</form>
+<div class="ui indicating progress deactivated">
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    <div class="label">@Labels.Uploading</div>
+</div>

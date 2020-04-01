@@ -70,6 +70,51 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A chapter must have a number..
+        /// </summary>
+        public static string ChapterMustHaveNumber {
+            get {
+                return ResourceManager.GetString("ChapterMustHaveNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A chapter must have pages..
+        /// </summary>
+        public static string ChapterMustHavePages {
+            get {
+                return ResourceManager.GetString("ChapterMustHavePages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the title must not surpass 100 characters..
+        /// </summary>
+        public static string ChapterNameMaxLength {
+            get {
+                return ResourceManager.GetString("ChapterNameMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified chapter was not found..
+        /// </summary>
+        public static string ChapterNotFound {
+            get {
+                return ResourceManager.GetString("ChapterNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A chapter with the specified number already exists for the specified title..
+        /// </summary>
+        public static string ChapterNumberAlreadyExist {
+            get {
+                return ResourceManager.GetString("ChapterNumberAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The current password is required..
         /// </summary>
         public static string CurrentPasswordRequired {
@@ -106,11 +151,29 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The format used for the cover page is not supported. Please use PNG or JPG/JPEG..
+        /// </summary>
+        public static string InvalidCoverFormat {
+            get {
+                return ResourceManager.GetString("InvalidCoverFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid credentials, please try again..
         /// </summary>
         public static string InvalidCredentials {
             get {
                 return ResourceManager.GetString("InvalidCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The format of the file used to send the pages is not supported. Please pack your pages into a single ZIP file..
+        /// </summary>
+        public static string InvalidPagesFormat {
+            get {
+                return ResourceManager.GetString("InvalidPagesFormat", resourceCulture);
             }
         }
         
@@ -201,6 +264,87 @@ namespace WeebReader.Web.Localization {
         public static string RoleRequired {
             get {
                 return ResourceManager.GetString("RoleRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the artist must not surpass 50 characters..
+        /// </summary>
+        public static string TitleArtistMaxLength {
+            get {
+                return ResourceManager.GetString("TitleArtistMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the author must not surpass 50 characters..
+        /// </summary>
+        public static string TitleAuthorMaxLength {
+            get {
+                return ResourceManager.GetString("TitleAuthorMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title must have an artist..
+        /// </summary>
+        public static string TitleMustHaveArtist {
+            get {
+                return ResourceManager.GetString("TitleMustHaveArtist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title must have an author..
+        /// </summary>
+        public static string TitleMustHaveAuthor {
+            get {
+                return ResourceManager.GetString("TitleMustHaveAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title must have a name..
+        /// </summary>
+        public static string TitleMustHaveName {
+            get {
+                return ResourceManager.GetString("TitleMustHaveName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title with the specified name already exists..
+        /// </summary>
+        public static string TitleNameAlreadyExist {
+            get {
+                return ResourceManager.GetString("TitleNameAlreadyExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The name of the title must not surpass 200 characters..
+        /// </summary>
+        public static string TitleNameMaxLength {
+            get {
+                return ResourceManager.GetString("TitleNameMaxLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified title was not found..
+        /// </summary>
+        public static string TitleNotFound {
+            get {
+                return ResourceManager.GetString("TitleNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The original name of the title must not surpass 200 characters..
+        /// </summary>
+        public static string TitleOriginalNameMaxLength {
+            get {
+                return ResourceManager.GetString("TitleOriginalNameMaxLength", resourceCulture);
             }
         }
         

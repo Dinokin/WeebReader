@@ -1,0 +1,107 @@
+﻿@model ComicChapterModel
+
+@section Headers
+{
+    <script>
+    $(() => {
+        let form = $(".form");
+        let messageContainer = $(".form .message");
+        let progressBar = $(".indicating");
+        
+        $(".checkbox").checkbox();
+        
+        form.form({
+        on: "blur",
+        fields: {
+            name: {
+                identifier: "name",
+                rules: [{
+                    type   : "maxLength[100]",
+                    prompt : "@ValidationMessages.ChapterNameMaxLength"
+                }
+                ]
+            }
+        }
+        }).api({
+        xhr: () => {
+            let xhr = new window.XMLHttpRequest();
+            xhr.upload.addEventListener("progress", (event) => animateProgressBar(progressBar, event), false);
+            
+            return xhr;
+        },
+        url: "@ViewData["ActionRoute"]",
+        method: "@ViewData["Method"]",
+        processData: false,
+        contentType: false,
+        beforeSend: (settings) => {
+            settings.data = new FormData(form.get(0));
+            
+            return settings;
+        },
+        onRequest: () => progressBar.removeClass("deactivated"),
+        onComplete: () => progressBar.addClass("deactivated"),
+        onSuccess: (response) => window.location.href = response.destination,
+        onFailure: (response) => addError(messageContainer, response)
+        });
+        
+        $("input[type=\"file\"]").on("change", (event) => {
+            $("label.button").html("<i class=\"file icon\"></i>" + event.target.files[0].name.substr(0, 14) + (event.target.files[0].name.length > 15 ? "..." : ""));
+        });
+    });
+    </script>
+}
+
+<form class="ui form" novalidate>
+    <input type="hidden" name="chapterId" asp-for="ChapterId"/>
+    <div class="ui message error"></div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>@Labels.Volume</label>
+                <input type="number" name="volume" asp-for="Volume"/>
+            </div>
+            <div class="field">
+                <label>@Labels.Number</label>
+                <input type="number" step="0.1" name="number" asp-for="Number"/>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.Name</label>
+        <input type="text" name="name" asp-for="Name"/>
+    </div>
+    <div class="field">
+        <div class="three fields">
+            <div class="field">
+                <label>@Labels.Date</label>
+                <div class="ui calendar">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input type="text" name="releaseDate" placeholder="@Labels.ReleaseDate" asp-for="ReleaseDate"/>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>@Labels.Visibility</label>
+                <div class="ui toggle checkbox">
+                    <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
+                    <label>@Labels.MakeVisible</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>@Labels.Pages</label>
+                <label id="file-label" for="file" class="ui icon button no-margin-bottom" style="margin-top: 0.5rem;"><i class="file icon"></i>@Labels.OpenFile</label>
+                <input type="file" id="file" style="display:none" name="pages" accept=".zip" asp-for="Pages">
+            </div>
+        </div>
+    </div>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">@ViewData["Function"]</div>
+    </div>
+</form>
+<div class="ui indicating progress deactivated">
+    <div class="bar">
+        <div class="progress"></div>
+    </div>
+    <div class="label">@Labels.Uploading</div>
+</div>

@@ -11,9 +11,9 @@ namespace WeebReader.Data.Services
     {
         public ChapterManager(BaseContext context) : base(context) { }
 
-        public async Task<long> CountChaptersByTitle(Title title) => await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id);
+        public async Task<long> Count(Title title) => await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id);
 
-        public Task<IEnumerable<TChapter>> GetChaptersByTitle(Title title, int skip, int take) => Task.FromResult<IEnumerable<TChapter>>(DbSet.Where(chapter => chapter.TitleId == title.Id)
+        public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take) => Task.FromResult<IEnumerable<TChapter>>(DbSet.Where(chapter => chapter.TitleId == title.Id)
             .OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
     }
 }

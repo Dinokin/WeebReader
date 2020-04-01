@@ -90,4 +90,52 @@
     <data name="UserDeleteIsLastAdministrator">
         <value>This user could not be delete because this user is the last administrator.</value>
     </data>
+    <data name="TitleNotFound">
+        <value>The specified title was not found.</value>
+    </data>
+    <data name="TitleNameAlreadyExist">
+        <value>A title with the specified name already exists.</value>
+    </data>
+    <data name="TitleMustHaveName">
+        <value>A title must have a name.</value>
+    </data>
+    <data name="TitleMustHaveAuthor">
+        <value>A title must have an author.</value>
+    </data>
+    <data name="TitleMustHaveArtist">
+        <value>A title must have an artist.</value>
+    </data>
+    <data name="TitleNameMaxLength">
+        <value>The name of the title must not surpass 200 characters.</value>
+    </data>
+    <data name="TitleOriginalNameMaxLength">
+        <value>The original name of the title must not surpass 200 characters.</value>
+    </data>
+    <data name="TitleAuthorMaxLength">
+        <value>The name of the author must not surpass 50 characters.</value>
+    </data>
+    <data name="TitleArtistMaxLength">
+        <value>The name of the artist must not surpass 50 characters.</value>
+    </data>
+    <data name="InvalidCoverFormat">
+        <value>The format used for the cover page is not supported. Please use PNG or JPG/JPEG.</value>
+    </data>
+    <data name="ChapterNumberAlreadyExist">
+        <value>A chapter with the specified number already exists for the specified title.</value>
+    </data>
+    <data name="ChapterMustHavePages">
+        <value>A chapter must have pages.</value>
+    </data>
+    <data name="ChapterNotFound">
+        <value>The specified chapter was not found.</value>
+    </data>
+    <data name="InvalidPagesFormat">
+        <value>The format of the file used to send the pages is not supported. Please pack your pages into a single ZIP file.</value>
+    </data>
+    <data name="ChapterNameMaxLength">
+        <value>The name of the title must not surpass 100 characters.</value>
+    </data>
+    <data name="ChapterMustHaveNumber">
+        <value>A chapter must have a number.</value>
+    </data>
 </root>

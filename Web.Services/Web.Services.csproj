@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Magick.NET-Q8-x64" Version="7.15.4" />
+        <PackageReference Include="Magick.NET-Q8-x64" Version="7.15.5" />
         <PackageReference Include="MailKit" Version="2.5.2" />
     </ItemGroup>
 </Project>

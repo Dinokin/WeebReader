@@ -96,4 +96,34 @@
     <data name="NoPostExist">
         <value>No post exist in the database.</value>
     </data>
+    <data name="ConfirmDeleteTitle">
+        <value>Are you sure that you want to delete this title?</value>
+    </data>
+    <data name="NoTitleExist">
+        <value>No title exist in the database.</value>
+    </data>
+    <data name="TitleDeletedSuccessfully">
+        <value>Title deleted successfully.</value>
+    </data>
+    <data name="TitleUpdatedSuccessfully">
+        <value>Title updated successfully.</value>
+    </data>
+    <data name="ConfirmDeleteChapter">
+        <value>Are you sure that you want to delete this chapter?</value>
+    </data>
+    <data name="NoChapterExist">
+        <value>No chapter exist in the database for the specified title.</value>
+    </data>
+    <data name="TitleAddedSuccessfully">
+        <value>Title added successfully.</value>
+    </data>
+    <data name="ChapterAddedSuccessfully">
+        <value>Chapter added successfully.</value>
+    </data>
+    <data name="ChapterDeletedSuccessfully">
+        <value>Chapter deleted successfully.</value>
+    </data>
+    <data name="ChapterUpdatedSuccessfully">
+        <value>Chapter updated successfully.</value>
+    </data>
 </root>

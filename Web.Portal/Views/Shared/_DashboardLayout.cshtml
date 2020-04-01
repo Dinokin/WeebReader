@@ -67,7 +67,7 @@
     <div class="ui inverted left vertical sidebar menu">
         @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
         {
-            <a id="titles" class="item">
+            <a id="titles" class="item" href="@Url.Action("Index", "TitlesManager")">
                 <i class="left book icon"></i>
                 @Labels.Titles
             </a>   
@@ -96,7 +96,7 @@
         <div class="ui container" style="margin-bottom: 5rem">
             @await RenderSectionAsync("TopRightSlot", false)
             <h2 class="ui dividing header">
-                @ViewData["Title"]
+                <div class="add-ellipsis">@ViewData["Title"]</div>
             </h2>
             <div class="ui @(successMessage == null && errorMessage == null ? "hidden" : string.Empty) message @(successMessage == null ? "error" : "success")">
                 <i class="close icon"></i>

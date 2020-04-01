@@ -6,50 +6,52 @@ namespace WeebReader.Web.Services
 {
     internal static class Utilities
     {
-        public static DirectoryInfo GetContentFolder(IWebHostEnvironment environment) => new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");
+        internal static DirectoryInfo GetContentFolder(IWebHostEnvironment environment) => new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");
         
-        public static MagickImage ProcessImage(Stream image)
+        internal static MagickImage ProcessImage(Stream image, bool disposeStream = true)
         {
             var magickImage = new MagickImage(image);
-
-            if (magickImage.Format != MagickFormat.Gif)
-            {
-                magickImage.Alpha(AlphaOption.Remove);
-                magickImage.BackgroundColor = MagickColor.FromRgb(255, 255, 255);
+            
+            magickImage.Alpha(AlphaOption.Remove);
+            magickImage.BackgroundColor = MagickColor.FromRgb(255, 255, 255);
                 
-                if (magickImage.DetermineColorType() == ColorType.Grayscale)
-                    magickImage.Grayscale();
-            }
+            if (magickImage.DetermineColorType() == ColorType.Grayscale)
+                magickImage.Grayscale();
 
+            if (disposeStream)
+                image.Dispose();
+            
             return magickImage;
         }
 
-        public static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename, bool forceStatic = false)
+        internal static MagickImageCollection ProcessAnimation(Stream image, bool disposeStream = true)
         {
-            string extension;
-            MagickFormat format;
+            var imageCollection = new MagickImageCollection(image);
 
-            if (forceStatic)
-            {
-                extension = ".png";
-                format = image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24;
-            }
-            else
-            {
-                if (image.Format == MagickFormat.Gif)
-                {
-                    extension = ".gif";
-                    format = image.Format;
-                }
-                else
-                {
-                    extension = ".png";
-                    format = image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24;
-                }
-            }
+            if (disposeStream)
+                image.Dispose();
 
-            var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}{extension}");
-            image.Write(file, format);
+            return imageCollection;
+        }
+
+        internal static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename, bool disposeImage = true)
+        {
+            var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}.png");
+            image.Write(file, image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24);
+
+            if (disposeImage) 
+                image.Dispose();
+
+            return file;
+        }
+
+        internal static FileInfo WriteAnimation(DirectoryInfo folder, MagickImageCollection image, string filename, bool disposeImage = true)
+        {
+            var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}.gif");
+            image.Write(file, MagickFormat.Gif);
+
+            if (disposeImage) 
+                image.Dispose();
 
             return file;
         }

@@ -1,5 +1,18 @@
-﻿<script src="~/libs/tinymce.min.5.1.5.js"></script>
-<script src="~/libs/jquery.tinymce.5.1.5.js"></script>
+﻿<script src="~/libs/tinymce.min.5.2.1.js"></script>
+@if (Labels.LangCode is var langCode && langCode != "en_US")
+{
+<script>
+tinymce.init({
+language: "@langCode",
+selector: "#editor-area",
+plugins: "autosave wordcount",
+toolbar: "restoredraft wordcount",
+height: 500
+});
+</script>
+}
+else
+{
 <script>
 tinymce.init({
 selector: "#editor-area",
@@ -8,3 +21,4 @@ toolbar: "restoredraft wordcount",
 height: 500
 });
 </script>
+}

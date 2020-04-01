@@ -11,8 +11,8 @@ namespace WeebReader.Data.Services
     {
         public PageManager(BaseContext context) : base(context) { }
 
-        public async Task<long> CountPagesByChapter(Chapter chapter) => await DbSet.LongCountAsync(page => page.ChapterId == chapter.Id);
+        public async Task<long> Count(Chapter chapter) => await DbSet.LongCountAsync(page => page.ChapterId == chapter.Id);
 
-        public Task<IEnumerable<TPage>> GetPagesByChapter(Chapter chapter) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapter.Id));
+        public Task<IEnumerable<TPage>> GetRange(Chapter chapter) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapter.Id));
     }
 }

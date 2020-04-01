@@ -18,7 +18,7 @@ namespace WeebReader.Web.Services
             _titleManager = titleManager;
         }
 
-        public async Task<bool> AddTitle(TTitle title, IEnumerable<string> tags, Stream cover)
+        public async Task<bool> AddTitle(TTitle title, IEnumerable<string> tags, Stream? cover)
         {
             if (!await _titleManager.Add(title, tags))
                 return false;
@@ -26,7 +26,9 @@ namespace WeebReader.Web.Services
             var directory = GetTitleFolder(title);
             
             directory.Create();
-            Utilities.WriteImage(directory, Utilities.ProcessImage(cover), "cover", true);
+
+            if (cover != null)
+                Utilities.WriteImage(directory, Utilities.ProcessImage(cover), "cover");
 
             return true;
         }
@@ -37,7 +39,7 @@ namespace WeebReader.Web.Services
                 return false;
 
             if (cover != null)
-                Utilities.WriteImage(GetTitleFolder(title), Utilities.ProcessImage(cover), "cover", true);
+                Utilities.WriteImage(GetTitleFolder(title), Utilities.ProcessImage(cover), "cover");
 
             return true;
         }

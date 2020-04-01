@@ -79,19 +79,19 @@
     </div>
     <div class="two fields">
         <div class="field">
-            <label>@Labels.Visibility</label>
-            <div class="ui toggle checkbox">
-                <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
-                <label>@Labels.MakeVisible</label>
-            </div>
-        </div>
-        <div class="field">
             <label>@Labels.Date</label>
             <div class="ui calendar">
                 <div class="ui input left icon">
                     <i class="calendar icon"></i>
                     <input type="text" name="releaseDate" placeholder="@Labels.ReleaseDate" asp-for="ReleaseDate"/>
                 </div>
+            </div>
+        </div>
+        <div class="field">
+            <label>@Labels.Visibility</label>
+            <div class="ui toggle checkbox">
+                <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
+                <label>@Labels.MakeVisible</label>
             </div>
         </div>
     </div>

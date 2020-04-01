@@ -90,6 +90,7 @@ namespace WeebReader.Data.Contexts.Abstract
             builder.Entity<Title>(typeBuilder =>
             {
                 typeBuilder.Property(title => title.Name).IsRequired().HasMaxLength(200);
+                typeBuilder.HasIndex(title => title.Name).IsUnique();
                 typeBuilder.Property(title => title.Author).IsRequired().HasMaxLength(50);
                 typeBuilder.Property(title => title.Artist).IsRequired().HasMaxLength(50);
                 typeBuilder.Property(title => title.Synopsis).IsRequired();

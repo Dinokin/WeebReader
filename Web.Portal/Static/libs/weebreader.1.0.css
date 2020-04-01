@@ -9,6 +9,12 @@
     text-overflow: ellipsis;
 }
 
+.add-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .background {
     background-image: url(/assets/background.png);
     background-repeat: no-repeat;

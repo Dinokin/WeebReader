@@ -9,14 +9,14 @@ using WeebReader.Data.Contexts;
 namespace WeebReader.Data.Contexts.Migrations
 {
     [DbContext(typeof(MariaDbContext))]
-    [Migration("20200323003354_Initial")]
-    partial class Initial
+    [Migration("20200328231249_intial")]
+    partial class intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
@@ -341,6 +341,9 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Titles");
 
                     b.HasDiscriminator<string>("TitleType").HasValue("Title");
@@ -368,19 +371,19 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("22b9d4f5-ea7b-423b-adfb-691d7aacbd87"),
+                            Id = new Guid("bc024453-6ebb-4da1-a206-17ea4b252a55"),
                             Type = (ushort)0,
                             Value = "WeebReader"
                         },
                         new
                         {
-                            Id = new Guid("8bf490f6-ce70-4c7d-8c56-e32900c3acb4"),
+                            Id = new Guid("3d690373-9ea5-48bb-94c1-050f3825b833"),
                             Type = (ushort)1,
                             Value = "We read weebs."
                         },
                         new
                         {
-                            Id = new Guid("32842582-86c0-4ad4-a45d-250302b3e15d"),
+                            Id = new Guid("1d105f2e-0b32-42dc-9fb5-d74cc1a81b12"),
                             Type = (ushort)2,
                             Value = "http://127.0.0.1:5000"
                         });

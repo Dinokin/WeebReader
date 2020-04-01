@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models;
 using WeebReader.Web.Models.BlogManager;
+using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -59,7 +59,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (await _postManager.Add(Mapper.Map(postModel)))
                 {
-                    ViewData["SuccessMessage"] = new[] {OtherMessages.PostAddedSuccessfully};
+                    TempData["SuccessMessage"] = new[] {OtherMessages.PostAddedSuccessfully};
                     
                     return new JsonResult(new
                     {
@@ -83,7 +83,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (await _postManager.GetById(postId) is var post && post == null)
             {
-                ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
+                TempData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
                 
                 return RedirectToAction("Index");
             }
@@ -102,7 +102,7 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 if (postModel.PostId == null || await _postManager.GetById(postModel.PostId.Value) is var post && post == null)
                 {
-                    ViewData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
+                    TempData["ErrorMessage"] = new[] {ValidationMessages.PostNotFound};
                 
                     return RedirectToAction("Index");
                 }
@@ -118,7 +118,7 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 if (await _postManager.Edit(post))
                 {
-                    ViewData["SuccessMessage"] = new[] {OtherMessages.PostUpdatedSuccessfully};
+                    TempData["SuccessMessage"] = new[] {OtherMessages.PostUpdatedSuccessfully};
                     
                     return new JsonResult(new
                     {
@@ -133,7 +133,7 @@ namespace WeebReader.Web.Portal.Controllers
             return new JsonResult(new
             {
                 success = false,
-                messages = new[] {OtherMessages.SomethingWrong}
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
         }
 

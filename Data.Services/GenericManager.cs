@@ -55,5 +55,12 @@ namespace WeebReader.Data.Services
 
             return await Context.SaveChangesAsync() > 0;
         }
+        
+        public virtual async Task<bool> DeleteRange(IEnumerable<TEntity> entities)
+        {
+            DbSet.RemoveRange(entities);
+
+            return await Context.SaveChangesAsync() > 0;
+        }
     }
 }

@@ -11,20 +11,29 @@ namespace WeebReader.Data.Services
     public class TitleManager<TTitle> : GenericManager<TTitle> where TTitle : Title
     { 
         public TitleManager(BaseContext context) : base(context) { }
+
+        public override Task<IEnumerable<TTitle>> GetRange(int skip, int take) => Task.FromResult<IEnumerable<TTitle>>(DbSet.OrderBy(title => title.Name).Skip(skip).Take(take));
         
-        public async Task<long> CountTitlesByTag(string tagName)
+        public async Task<long> Count(string tagName)
         {
             var tag = await Context.Tags.Include(tagJoint => tagJoint.TitleTag).SingleOrDefaultAsync(tagInfo => tagInfo.Name == tagName);
 
             return tag?.TitleTag.LongCount() ?? 0;
         }
-
-        public async Task<IEnumerable<TTitle>> GetTitlesByTag(Tag tag, int skip, int take)
+        
+        public async Task<IEnumerable<TTitle>> GetRange(Tag tag, int skip, int take)
         {
-            var targetTag = await Context.Tags.Include(tagJoint => tagJoint.TitleTag).SingleOrDefaultAsync(tagInfo => tagInfo.Id == tag.Id);
+            var targetTag = await Context.Tags.Include(entity => entity.TitleTag).SingleOrDefaultAsync(entity => entity == tag);
 
             return targetTag == null ? new TTitle[0] : targetTag.TitleTag.Join(DbSet, titleTag => titleTag.TitleId, title => title.Id, (titleTag, title) => title)
                 .OrderBy(title => title.Name).Skip(skip).Take(take);
+        }
+
+        public async Task<IEnumerable<Tag>> GetTags(TTitle title)
+        {
+            var targetTitle = await DbSet.Include(entity => entity.TitleTags).SingleOrDefaultAsync(entity => entity == title);
+
+            return targetTitle == null ? new Tag[0] : targetTitle.TitleTags.Join(Context.Tags, titleTag => titleTag.TagId, tag => tag.Id, (titleTag, tag) => tag);
         }
 
         public async Task<bool> Add(TTitle title, IEnumerable<string> tags)
@@ -40,8 +49,8 @@ namespace WeebReader.Data.Services
         {
             DbSet.Update(title);
             
-            if (Context.TitleTags.Where(titleTag => titleTag.TitleId == title.Id) is var titleTags && titleTags.Any())
-                Context.TitleTags.RemoveRange(title.TitleTags);
+            if (Context.TitleTags.Where(titleTag => titleTag.Title == title) is var titleTags && titleTags.Any())
+                Context.TitleTags.RemoveRange(Context.TitleTags.Where(titleTag => titleTag.Title == title));
             
             await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
 

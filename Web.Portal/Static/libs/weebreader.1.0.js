@@ -29,3 +29,9 @@ function addMessages(element, response) {
         list.append("<li>" + currentValue + "</li>")
     });
 }
+
+function animateProgressBar(element, event) {
+    element.progress({
+        percent: event.loaded / event.total * 100
+    });
+}

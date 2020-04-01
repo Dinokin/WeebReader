@@ -21,8 +21,6 @@ namespace WeebReader.Web.Portal
                     configurationBuilder.AddJsonFile($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.{context.HostingEnvironment.EnvironmentName}.json");
             });
             
-            builder.ConfigureKestrel((context, options) => options.Listen(IPAddress.Parse(context.Configuration.GetValue("Application:IP", IPAddress.Any.ToString())), context.Configuration.GetValue("Application:Port", 5000)));
-            
             builder.UseContentRoot(Utilities.CurrentDirectory.FullName);
             builder.UseWebRoot($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}Static");
             builder.UseStartup<Startup>();

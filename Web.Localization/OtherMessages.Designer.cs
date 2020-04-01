@@ -88,11 +88,56 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chapter added successfully..
+        /// </summary>
+        public static string ChapterAddedSuccessfully {
+            get {
+                return ResourceManager.GetString("ChapterAddedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chapter deleted successfully..
+        /// </summary>
+        public static string ChapterDeletedSuccessfully {
+            get {
+                return ResourceManager.GetString("ChapterDeletedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chapter updated successfully..
+        /// </summary>
+        public static string ChapterUpdatedSuccessfully {
+            get {
+                return ResourceManager.GetString("ChapterUpdatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure that you want to delete this chapter?.
+        /// </summary>
+        public static string ConfirmDeleteChapter {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Are you sure that you want to delete this post?.
         /// </summary>
         public static string ConfirmDeletePost {
             get {
                 return ResourceManager.GetString("ConfirmDeletePost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure that you want to delete this title?.
+        /// </summary>
+        public static string ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("ConfirmDeleteTitle", resourceCulture);
             }
         }
         
@@ -178,11 +223,29 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No chapter exist in the database for the specified title..
+        /// </summary>
+        public static string NoChapterExist {
+            get {
+                return ResourceManager.GetString("NoChapterExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No post exist in the database..
         /// </summary>
         public static string NoPostExist {
             get {
                 return ResourceManager.GetString("NoPostExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No title exist in the database..
+        /// </summary>
+        public static string NoTitleExist {
+            get {
+                return ResourceManager.GetString("NoTitleExist", resourceCulture);
             }
         }
         
@@ -246,6 +309,33 @@ namespace WeebReader.Web.Localization {
         public static string SomethingWrong {
             get {
                 return ResourceManager.GetString("SomethingWrong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title added successfully..
+        /// </summary>
+        public static string TitleAddedSuccessfully {
+            get {
+                return ResourceManager.GetString("TitleAddedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title deleted successfully..
+        /// </summary>
+        public static string TitleDeletedSuccessfully {
+            get {
+                return ResourceManager.GetString("TitleDeletedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title updated successfully..
+        /// </summary>
+        public static string TitleUpdatedSuccessfully {
+            get {
+                return ResourceManager.GetString("TitleUpdatedSuccessfully", resourceCulture);
             }
         }
         

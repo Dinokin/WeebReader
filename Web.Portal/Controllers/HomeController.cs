@@ -11,8 +11,8 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models;
 using WeebReader.Web.Models.Home;
+using WeebReader.Web.Models.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers

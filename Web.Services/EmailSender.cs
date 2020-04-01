@@ -27,9 +27,9 @@ namespace WeebReader.Web.Services
                     Text = content
                 };
 
-                string? server = await _parameterManager.GetValue(Parameter.Types.SmtpServer),
-                    user = await _parameterManager.GetValue(Parameter.Types.SmtpServerUser),
-                    password = await _parameterManager.GetValue(Parameter.Types.SmtpServerPassword);
+                string server = await _parameterManager.GetValue<string>(Parameter.Types.SmtpServer),
+                    user = await _parameterManager.GetValue<string>(Parameter.Types.SmtpServerUser),
+                    password = await _parameterManager.GetValue<string>(Parameter.Types.SmtpServerPassword);
                 var port = await _parameterManager.GetValue<int>(Parameter.Types.SmtpServerPort);
                     
                 using var client = new SmtpClient {ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true};
