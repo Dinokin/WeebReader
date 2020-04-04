@@ -199,9 +199,9 @@ namespace WeebReader.Web.Portal.Controllers
             
             foreach (var property in model.GetType().GetProperties().Where(property => Attribute.IsDefined(property, typeof(ParameterAttribute))))
             {
-                var attribute = (ParameterAttribute) property.GetCustomAttribute(typeof(ParameterAttribute));
+                var attribute = (ParameterAttribute) property.GetCustomAttribute(typeof(ParameterAttribute))!;
                 
-                resultList.Add(await _parametersManager.Save(attribute.ParameterType, property.GetValue(model).ToString()));
+                resultList.Add(await _parametersManager.Save(attribute.ParameterType, property.GetValue(model)?.ToString()));
             }
 
             return resultList.All(value => value) ? SaveResult.Success : resultList.All(value => !value) ? SaveResult.Error : SaveResult.Partial;

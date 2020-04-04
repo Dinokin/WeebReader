@@ -154,7 +154,7 @@ namespace WeebReader.Web.Models.Others
 
             foreach (var property in t.GetType().GetProperties().Where(property => Attribute.IsDefined(property, typeof(ParameterAttribute))))
             {
-                var attribute = (ParameterAttribute) property.GetCustomAttribute(typeof(ParameterAttribute));
+                var attribute = (ParameterAttribute) property.GetCustomAttribute(typeof(ParameterAttribute))!;
                 var parameter = parameters.SingleOrDefault(entity => entity.Type == attribute.ParameterType);
 
                 if (parameter == null)
