@@ -21,11 +21,11 @@ namespace WeebReader.Web.Portal.Controllers
     {
         private readonly BaseContext _context;
         private readonly EmailSender _emailSender;
-        private readonly ParameterManager _parameterManager;
+        private readonly ParametersManager _parameterManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
 
-        public HomeController(BaseContext context, EmailSender emailSender, ParameterManager parameterManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
+        public HomeController(BaseContext context, EmailSender emailSender, ParametersManager parameterManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
         {
             _context = context;
             _emailSender = emailSender;

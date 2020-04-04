@@ -72,12 +72,14 @@ namespace WeebReader.Web.Portal
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
                 });
 
+            services.AddHttpClient();
+            services.AddTransient<ReCaptchaValidator>();
             services.AddTransient<EmailSender>();
-            services.AddTransient<ParameterManager>();
-            services.AddTransient<PostManager>();
-            services.AddTransient<TitleManager<Title>>();
+            services.AddTransient<ParametersManager>();
+            services.AddTransient<PostsManager>();
+            services.AddTransient<TitlesManager<Title>>();
             services.AddTransient<ChapterManager<Chapter>>();
-            services.AddTransient<PageManager<Page>>();
+            services.AddTransient<PagesManager<Page>>();
             services.AddTransient<TitleArchiver<Title>>();
             services.AddTransient<ChapterArchiver<Chapter>>();
         }

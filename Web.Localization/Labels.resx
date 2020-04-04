@@ -51,8 +51,8 @@
     <data name="Users">
         <value>Users</value>
     </data>
-    <data name="Settings">
-        <value>Settings</value>
+    <data name="Parameters">
+        <value>Parameters</value>
     </data>
     <data name="ForgotPassword1">
         <value>Forgot Password</value>
@@ -281,5 +281,23 @@
     </data>
     <data name="EditChapter">
         <value>Edit Chapter</value>
+    </data>
+    <data name="General">
+        <value>General</value>
+    </data>
+    <data name="Contact">
+        <value>Contact</value>
+    </data>
+    <data name="SiteName">
+        <value>Site Name</value>
+    </data>
+    <data name="SiteAddress">
+        <value>Site Address</value>
+    </data>
+    <data name="SiteDescription">
+        <value>Site Description</value>
+    </data>
+    <data name="UpdateParameters">
+        <value>Update Parameters</value>
     </data>
 </root>

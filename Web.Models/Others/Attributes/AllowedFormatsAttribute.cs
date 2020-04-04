@@ -4,17 +4,17 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 
-namespace WeebReader.Web.Models.Others.Validation
+namespace WeebReader.Web.Models.Others.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter)]
-    public class AllowedFormats : ValidationAttribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class AllowedFormatsAttribute : ValidationAttribute
     {
         /// <summary>
         ///     List of comma separated file extensions to be tested against an <see cref="IFormFile"/>.
         /// </summary>
-        public string AllowedExtensions { get; set; }
+        public string AllowedExtensions { get; }
 
-        public AllowedFormats(string allowedExtensions) => AllowedExtensions = allowedExtensions;
+        public AllowedFormatsAttribute(string allowedExtensions) => AllowedExtensions = allowedExtensions;
 
         public override bool IsValid(object value)
         {

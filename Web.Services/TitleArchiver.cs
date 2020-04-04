@@ -10,9 +10,9 @@ namespace WeebReader.Web.Services
     public class TitleArchiver<TTitle> where TTitle : Title
     {
         private readonly IWebHostEnvironment _environment;
-        private readonly TitleManager<TTitle> _titleManager;
+        private readonly TitlesManager<TTitle> _titleManager;
 
-        public TitleArchiver(IWebHostEnvironment environment, TitleManager<TTitle> titleManager)
+        public TitleArchiver(IWebHostEnvironment environment, TitlesManager<TTitle> titleManager)
         {
             _environment = environment;
             _titleManager = titleManager;

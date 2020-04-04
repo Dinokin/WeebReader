@@ -21,10 +21,10 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Titles/")]
     public class TitlesManager : Controller
     {
-        private readonly TitleManager<Title> _titleManager;
+        private readonly TitlesManager<Title> _titleManager;
         private readonly TitleArchiver<Title> _titleArchiver;
 
-        public TitlesManager(TitleManager<Title> titleManager, TitleArchiver<Title> titleArchiver)
+        public TitlesManager(TitlesManager<Title> titleManager, TitleArchiver<Title> titleArchiver)
         {
             _titleManager = titleManager;
             _titleArchiver = titleArchiver;

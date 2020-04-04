@@ -126,4 +126,10 @@
     <data name="ChapterUpdatedSuccessfully">
         <value>Chapter updated successfully.</value>
     </data>
+    <data name="ParametersUpdatedSuccessfully">
+        <value>Parameters updated successfully.</value>
+    </data>
+    <data name="SomeParametersFailedToUpdate">
+        <value>Some parameters failed to update.</value>
+    </data>
 </root>

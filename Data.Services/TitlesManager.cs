@@ -8,9 +8,9 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    public class TitleManager<TTitle> : GenericManager<TTitle> where TTitle : Title
+    public class TitlesManager<TTitle> : GenericManager<TTitle> where TTitle : Title
     { 
-        public TitleManager(BaseContext context) : base(context) { }
+        public TitlesManager(BaseContext context) : base(context) { }
 
         public override Task<IEnumerable<TTitle>> GetRange(int skip, int take) => Task.FromResult<IEnumerable<TTitle>>(DbSet.OrderBy(title => title.Name).Skip(skip).Take(take));
         

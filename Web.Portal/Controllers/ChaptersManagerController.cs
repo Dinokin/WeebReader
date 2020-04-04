@@ -21,11 +21,11 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Titles/{titleId:guid}/Chapters")]
     public class ChaptersManagerController : Controller
     {
-        private readonly TitleManager<Title> _titleManager;
+        private readonly TitlesManager<Title> _titleManager;
         private readonly ChapterManager<Chapter> _chapterManager;
         private readonly ChapterArchiver<Chapter> _chapterArchiver;
 
-        public ChaptersManagerController(TitleManager<Title> titleManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver)
+        public ChaptersManagerController(TitlesManager<Title> titleManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver)
         {
             _titleManager = titleManager;
             _chapterManager = chapterManager;

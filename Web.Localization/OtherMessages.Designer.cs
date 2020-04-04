@@ -259,6 +259,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Parameters updated successfully..
+        /// </summary>
+        public static string ParametersUpdatedSuccessfully {
+            get {
+                return ResourceManager.GetString("ParametersUpdatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your password was changed successfully. You can now sign in using your new password..
         /// </summary>
         public static string PasswordChangedSuccessfully {
@@ -300,6 +309,15 @@ namespace WeebReader.Web.Localization {
         public static string PostUpdatedSuccessfully {
             get {
                 return ResourceManager.GetString("PostUpdatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some parameters failed to update..
+        /// </summary>
+        public static string SomeParametersFailedToUpdate {
+            get {
+                return ResourceManager.GetString("SomeParametersFailedToUpdate", resourceCulture);
             }
         }
         

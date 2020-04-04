@@ -15,9 +15,9 @@ namespace WeebReader.Web.Services
     {
         private readonly IWebHostEnvironment _environment;
         private readonly ChapterManager<TChapter> _chapterManager;
-        private readonly PageManager<Page> _pageManager;
+        private readonly PagesManager<Page> _pageManager;
 
-        public ChapterArchiver(IWebHostEnvironment environment, ChapterManager<TChapter> chapterManager, PageManager<Page> pageManager)
+        public ChapterArchiver(IWebHostEnvironment environment, ChapterManager<TChapter> chapterManager, PagesManager<Page> pageManager)
         {
             _environment = environment;
             _chapterManager = chapterManager;

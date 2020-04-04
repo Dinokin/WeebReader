@@ -16,7 +16,19 @@ namespace WeebReader.Data.Entities
             SmtpServerPort,
             SmtpServerUser,
             SmtpServerPassword,
-            BlogEnabled
+            ContactEmailEnabled,
+            ContactEmailRecaptchaEnabled,
+            ContactEmailRecaptchaClientKey,
+            ContactEmailRecaptchaServerKey,
+            ContactDiscordEnabled,
+            ContactDiscordLink,
+            ContactDiscordMessage,
+            PageBlogEnabled,
+            PageSupportUsEnabled,
+            PageSupportUsPatreonEnabled,
+            PageSupportUsPatreonMessage,
+            PageSupportUsKofiEnabled,
+            PageSupportUsKofiMessage
         }
         
         public Types Type { get; }

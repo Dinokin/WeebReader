@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Models.Others.Validation;
+using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.ChaptersManager
 {

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Web.Models.BlogManager;
 using WeebReader.Web.Models.ChaptersManager;
 using WeebReader.Web.Models.Home;
+using WeebReader.Web.Models.Others.Attributes;
 using WeebReader.Web.Models.TitlesManager;
 using WeebReader.Web.Models.UsersManager;
 
@@ -145,5 +147,23 @@ namespace WeebReader.Web.Models.Others
         public static ComicChapter Map(ComicChapterModel comicChapterModel) => comicChapterModel.ChapterId.HasValue ? 
             new ComicChapter(comicChapterModel.ChapterId.Value, comicChapterModel.Volume, comicChapterModel.Number, comicChapterModel.Name, comicChapterModel.ReleaseDate ?? DateTime.Now, comicChapterModel.Visible, comicChapterModel.TitleId) : 
             new ComicChapter(comicChapterModel.Volume, comicChapterModel.Number, comicChapterModel.Name, comicChapterModel.ReleaseDate ?? DateTime.Now, comicChapterModel.Visible, comicChapterModel.TitleId);
+
+        public static T Map<T>(IEnumerable<Parameter> parameters) where T : new()
+        {
+            var t = new T();
+
+            foreach (var property in t.GetType().GetProperties().Where(property => Attribute.IsDefined(property, typeof(ParameterAttribute))))
+            {
+                var attribute = (ParameterAttribute) property.GetCustomAttribute(typeof(ParameterAttribute));
+                var parameter = parameters.SingleOrDefault(entity => entity.Type == attribute.ParameterType);
+
+                if (parameter == null)
+                    continue;
+
+                property.SetValue(t, Convert.ChangeType(parameter.Value, property.PropertyType));
+            }
+
+            return t;
+        }
     }
 }

@@ -11,7 +11,7 @@
     $(() => {
         $(".ui.sidebar").sidebar({
         context: $(".bottom.segment")
-        }).sidebar("attach events", "#computer-toggler,#mobile-toggler");
+        }).sidebar("attach events", "#computer-toggler,#mobile-toggler").accordion();
         
         $(".message .close").on("click", function() {
             $(this).closest(".message").transition("fade");
@@ -64,7 +64,7 @@
     </div>
 </div>
 <div class="ui bottom attached segment pushable no-border no-border-radius no-margin-bottom">
-    <div class="ui inverted left vertical sidebar menu">
+    <div class="ui inverted left vertical sidebar accordion menu">
         @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
         {
             <a id="titles" class="item" href="@Url.Action("Index", "TitlesManager")">
@@ -85,10 +85,19 @@
                 <i class="left users icon"></i>
                 @Labels.Users
             </a>
-            <a id="settings" class="item">
-                <i class="left cogs icon"></i>
-                @Labels.Settings
-            </a>
+            <div class="item">
+                <a id="parameters" class="title">
+                    <i class="left cogs icon"></i>
+                    @Labels.Parameters
+                    <i class="dropdown icon"></i>
+                </a>
+                <div class="content">
+                    <a id="parameters-general" class="item" href="@Url.Action("General", "ParametersManager")">@Labels.General</a>
+                    <a id="parameters-email" class="item" href="@Url.Action("Email", "ParametersManager")">@Labels.Email</a>
+                    <a id="parameters-contact" class="item" href="@Url.Action("Contact", "ParametersManager")">@Labels.Contact</a>
+                    <a id="parameters-pages" class="item" href="@Url.Action("Pages", "ParametersManager")">@Labels.Pages</a>
+                </div>
+            </div>
         }
     </div>
     <div class="pusher">

@@ -1,9 +1,9 @@
 ﻿@inject IConfiguration Configuration
-@inject ParameterManager ParameterManager
+@inject ParametersManager ParameterManager
 
 @{
     var siteName = await ParameterManager.GetValue<string>(Parameter.Types.SiteName);
-    var siteDescription = await ParameterManager.GetValue<string>(Parameter.Types.SiteDescription);
+    var siteDescription = await ParameterManager.GetValue<string?>(Parameter.Types.SiteDescription);
     var overridesVersion = Configuration.GetValue<string>("Web:OverrideVersion");
 }
 
@@ -14,7 +14,10 @@
 
 <!-- Site Properties -->
 <title>@ViewData["Title"]@(ViewData["TitleSeparator"] ?? " - ")@siteName</title>
-<meta name="description" content="@siteDescription">
+@if (!string.IsNullOrWhiteSpace(siteDescription))
+{
+    <meta name="description" content="@siteDescription">
+}
 @if (Convert.ToBoolean(ViewData["AllowIndexing"]))
 {
     <meta name="robots" content="noindex, nofollow">

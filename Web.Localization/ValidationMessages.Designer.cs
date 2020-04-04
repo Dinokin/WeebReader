@@ -268,6 +268,33 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The current address used to access this site is required..
+        /// </summary>
+        public static string SiteAddressRequired {
+            get {
+                return ResourceManager.GetString("SiteAddressRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A name for this site is required..
+        /// </summary>
+        public static string SiteNameRequired {
+            get {
+                return ResourceManager.GetString("SiteNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application requires information about the SMTP server that it will be using to send emails through. e.g, Server Address, Username and password. .
+        /// </summary>
+        public static string SmtpServerInformationRequired {
+            get {
+                return ResourceManager.GetString("SmtpServerInformationRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The name of the artist must not surpass 50 characters..
         /// </summary>
         public static string TitleArtistMaxLength {

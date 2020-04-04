@@ -1,0 +1,67 @@
+﻿@model GeneralParametersModel
+
+@{
+    ViewData["Title"] = $"{Labels.General} - {Labels.Parameters}";
+}
+
+@section Headers
+{
+    <script>
+    $(() => {
+        let messageContainer = $(".form .message");
+        
+        $("#parameters-general").addClass("active");
+        
+        $(".form").form({
+        on: "blur",
+        fields: {
+            siteName: {
+                identifier  : "siteName",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.SiteNameRequired"
+                    }
+                ]
+            },
+            siteAddress: {
+                identifier  : "siteAddress",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.SiteAddressRequired"
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@Url.Action("General")",
+        serializeForm: true,
+        method: "PATCH",
+        onSuccess: () => location.reload(),
+        onFailure: response => addError(messageContainer, response)
+        });
+    });
+    </script>
+}
+
+<form class="ui form" novalidate>
+    <div class="ui message error"></div>
+    <div class="two fields">
+        <div class="field">
+            <label>@Labels.SiteName</label>
+            <input type="text" name="siteName" asp-for="SiteName"/>
+        </div>
+        <div class="field">
+            <label>@Labels.SiteAddress</label>
+            <input type="text" name="siteAddress" asp-for="SiteAddress"/>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.SiteDescription</label>
+        <input type="text" name="siteDescription" asp-for="SiteDescription"/>
+    </div>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">@Labels.UpdateParameters</div>
+    </div>
+</form>

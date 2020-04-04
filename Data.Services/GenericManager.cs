@@ -48,6 +48,13 @@ namespace WeebReader.Data.Services
 
             return await Context.SaveChangesAsync() > 0;
         }
+        
+        public virtual async Task<bool> EditRange(IEnumerable<TEntity> entities)
+        { 
+            DbSet.UpdateRange(entities);
+            
+            return await Context.SaveChangesAsync() > 0;
+        } 
 
         public virtual async Task<bool> Delete(TEntity entity)
         {

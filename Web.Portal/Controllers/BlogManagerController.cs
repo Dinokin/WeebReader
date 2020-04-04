@@ -18,9 +18,9 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Admin/Blog/")]
     public class BlogManagerController : Controller
     {
-        private readonly PostManager _postManager;
+        private readonly PostsManager _postManager;
 
-        public BlogManagerController(PostManager postManager) => _postManager = postManager;
+        public BlogManagerController(PostsManager postManager) => _postManager = postManager;
 
         [HttpGet("{page:int?}")]
         public async Task<IActionResult> Index(ushort page = 1)
