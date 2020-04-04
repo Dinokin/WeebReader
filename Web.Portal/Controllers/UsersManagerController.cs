@@ -70,7 +70,7 @@ namespace WeebReader.Web.Portal.Controllers
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Add(UserModel userModel)
         {
-            if (TryValidateModel(userModel))
+            if (ModelState.IsValid)
             {
                 if (await _userManager.FindByEmailAsync(userModel.Email) != null)
                     return new JsonResult(new
@@ -211,7 +211,7 @@ namespace WeebReader.Web.Portal.Controllers
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Edit(UserModel userModel)
         {
-            if (TryValidateModel(userModel))
+            if (ModelState.IsValid)
             {
                 if (userModel.UserId == null || await _userManager.FindByIdAsync(userModel.UserId.ToString()) is var user && user == null)
                     return new JsonResult(new
@@ -326,7 +326,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPatch("{action:slugify}")]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel changePasswordModel)
         {
-            if (TryValidateModel(changePasswordModel))
+            if (ModelState.IsValid)
             {
                 var result = await _userManager.ChangePasswordAsync(await _userManager.GetUserAsync(User), changePasswordModel.Password, changePasswordModel.NewPassword);
                 
@@ -350,7 +350,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPatch("{action:slugify}")]
         public async Task<IActionResult> ChangeEmail(EmailModel emailModel)
         {
-            if (TryValidateModel(emailModel))
+            if (ModelState.IsValid)
             {
                 if (await _userManager.FindByEmailAsync(emailModel.Email) is var candidate && candidate != null)
                     return new JsonResult(new

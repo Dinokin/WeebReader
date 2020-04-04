@@ -259,6 +259,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ReCaptcha requires a client key..
+        /// </summary>
+        public static string ReCaptchaClientKeyRequired {
+            get {
+                return ResourceManager.GetString("ReCaptchaClientKeyRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReCaptcha requires a server key..
+        /// </summary>
+        public static string ReCaptchaServerKeyRequired {
+            get {
+                return ResourceManager.GetString("ReCaptchaServerKeyRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A role must be defined..
         /// </summary>
         public static string RoleRequired {
@@ -286,11 +304,38 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The application requires information about the SMTP server that it will be using to send emails through. e.g, Server Address, Username and password. .
+        ///   Looks up a localized string similar to A password to authenticate with the SMTP server is required..
         /// </summary>
-        public static string SmtpServerInformationRequired {
+        public static string SmtpServerPasswordRequired {
             get {
-                return ResourceManager.GetString("SmtpServerInformationRequired", resourceCulture);
+                return ResourceManager.GetString("SmtpServerPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A port for the SMTP server is required..
+        /// </summary>
+        public static string SmtpServerPortRequired {
+            get {
+                return ResourceManager.GetString("SmtpServerPortRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An address to the SMTP server is required..
+        /// </summary>
+        public static string SmtpServerRequired {
+            get {
+                return ResourceManager.GetString("SmtpServerRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An user to authenticate with the SMTP server is required..
+        /// </summary>
+        public static string SmtpServerUserRequired {
+            get {
+                return ResourceManager.GetString("SmtpServerUserRequired", resourceCulture);
             }
         }
         

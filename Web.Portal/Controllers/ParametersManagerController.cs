@@ -33,136 +33,31 @@ namespace WeebReader.Web.Portal.Controllers
         public IActionResult General() => View(Mapper.Map<GeneralParametersModel>(_parametersManager.Entities));
         
         [HttpPatch("{action}")]
-        public async Task<IActionResult> General(GeneralParametersModel generalParametersModel)
-        {
-            if (TryValidateModel(generalParametersModel))
-            {
-                var result = await SaveParameters(generalParametersModel);
-
-                switch (result)
-                {
-                    case SaveResult.Success:
-                        TempData["SuccessMessage"] = new[] {OtherMessages.ParametersUpdatedSuccessfully};
-                    
-                        return new JsonResult(new
-                        {
-                            success = true
-                        });
-                    case SaveResult.Partial:
-                        TempData["ErrorMessage"] = new[] {OtherMessages.SomeParametersFailedToUpdate};
-
-                        return new JsonResult(new
-                        {
-                            success = true
-                        });
-                    default:
-                        ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
-                        break;
-                }
-            }
-            
-            return new JsonResult(new
-            {
-                success = false,
-                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
-            });
-        }
+        public async Task<IActionResult> General(GeneralParametersModel generalParametersModel) => await ProcessPatchRequest(generalParametersModel);
 
         [HttpGet("{action}")]
         public IActionResult Email() => View(Mapper.Map<EmailParametersModel>(_parametersManager.Entities));
-        
+
         [HttpPatch("{action}")]
-        public async Task<IActionResult> Email(EmailParametersModel emailParametersModel)
-        {
-            if (TryValidateModel(emailParametersModel))
-            {
-                if (emailParametersModel.EmailEnabled)
-                    if (string.IsNullOrWhiteSpace(emailParametersModel.SmtpServer) || emailParametersModel.SmtpServerPort == null || string.IsNullOrWhiteSpace(emailParametersModel.SmtpServerUser) || string.IsNullOrWhiteSpace(emailParametersModel.SmtpServerPassword))
-                        return new JsonResult(new
-                        {
-                            success = false,
-                            messages = new[] {ValidationMessages.SmtpServerInformationRequired}
-                        });
-                
-                var result = await SaveParameters(emailParametersModel);
-
-                switch (result)
-                {
-                    case SaveResult.Success:
-                        TempData["SuccessMessage"] = new[] {OtherMessages.ParametersUpdatedSuccessfully};
-                    
-                        return new JsonResult(new
-                        {
-                            success = true
-                        });
-                    case SaveResult.Partial:
-                        TempData["ErrorMessage"] = new[] {OtherMessages.SomeParametersFailedToUpdate};
-
-                        return new JsonResult(new
-                        {
-                            success = true
-                        });
-                    default:
-                        ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
-                        break;
-                }
-            }
-            
-            return new JsonResult(new
-            {
-                success = false,
-                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
-            });
-        }
+        public async Task<IActionResult> Email(EmailParametersModel emailParametersModel) => await ProcessPatchRequest(emailParametersModel);
 
         [HttpGet("{action}")]
         public IActionResult Contact() => View(Mapper.Map<ContactParametersModel>(_parametersManager.Entities));
-        
+
         [HttpPatch("{action}")]
-        public async Task<IActionResult> Contact(ContactParametersModel contactParametersModel)
-        {
-            if (TryValidateModel(contactParametersModel))
-            {
-                var result = await SaveParameters(contactParametersModel);
-
-                switch (result)
-                {
-                    case SaveResult.Success:
-                        TempData["SuccessMessage"] = new[] {OtherMessages.ParametersUpdatedSuccessfully};
-                    
-                        return new JsonResult(new
-                        {
-                            success = true
-                        });
-                    case SaveResult.Partial:
-                        TempData["ErrorMessage"] = new[] {OtherMessages.SomeParametersFailedToUpdate};
-
-                        return new JsonResult(new
-                        {
-                            success = true
-                        });
-                    default:
-                        ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
-                        break;
-                }
-            }
-            
-            return new JsonResult(new
-            {
-                success = false,
-                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
-            });
-        }
+        public async Task<IActionResult> Contact(ContactParametersModel contactParametersModel) => await ProcessPatchRequest(contactParametersModel);
 
         [HttpGet("{action}")]
         public IActionResult Pages() => View(Mapper.Map<PagesParametersModel>(_parametersManager.Entities));
-        
+
         [HttpPatch("{action}")]
-        public async Task<IActionResult> Pages(PagesParametersModel pagesParametersModel)
+        public async Task<IActionResult> Pages(PagesParametersModel pagesParametersModel) => await ProcessPatchRequest(pagesParametersModel);
+
+        private async Task<JsonResult> ProcessPatchRequest(object model)
         {
-            if (TryValidateModel(pagesParametersModel))
+            if (ModelState.IsValid)
             {
-                var result = await SaveParameters(pagesParametersModel);
+                var result = await SaveParameters(model);
 
                 switch (result)
                 {

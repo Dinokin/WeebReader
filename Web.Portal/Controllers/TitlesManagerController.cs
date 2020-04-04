@@ -56,7 +56,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("{action}")]
         public async Task<IActionResult> Add(ComicModel comicModel)
         {
-            if (TryValidateModel(comicModel))
+            if (ModelState.IsValid)
             {
                 if (await _titleManager.Entities.AnyAsync(entity => entity.Name == comicModel.Name))
                     return new JsonResult(new
@@ -110,7 +110,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPatch("{titleId:guid}")]
         public async Task<IActionResult> Edit(ComicModel comicModel)
         {
-            if (TryValidateModel(comicModel))
+            if (ModelState.IsValid)
             {
                 if (comicModel.TitleId == null || await _titleManager.GetById(comicModel.TitleId.Value) is var title && title == null)
                 {

@@ -48,7 +48,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("{action}")]
         public async Task<IActionResult> Add(PostModel postModel)
         {
-            if (TryValidateModel(postModel))
+            if (ModelState.IsValid)
             {
                 if (await _postManager.Entities.AnyAsync(entity => entity.Title == postModel.Title))
                     return new JsonResult(new
@@ -98,7 +98,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPatch("{postId:guid}")]
         public async Task<IActionResult> Edit(PostModel postModel)
         {
-            if (TryValidateModel(postModel))
+            if (ModelState.IsValid)
             {
                 if (postModel.PostId == null || await _postManager.GetById(postModel.PostId.Value) is var post && post == null)
                 {

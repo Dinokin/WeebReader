@@ -144,7 +144,22 @@
     <data name="SiteAddressRequired">
         <value>The current address used to access this site is required.</value>
     </data>
-    <data name="SmtpServerInformationRequired">
-        <value>The application requires information about the SMTP server that it will be using to send emails through. e.g, Server Address, Username and password. </value>
+    <data name="SmtpServerRequired">
+        <value>An address to the SMTP server is required.</value>
+    </data>
+    <data name="SmtpServerPortRequired">
+        <value>A port for the SMTP server is required.</value>
+    </data>
+    <data name="SmtpServerUserRequired">
+        <value>An user to authenticate with the SMTP server is required.</value>
+    </data>
+    <data name="SmtpServerPasswordRequired">
+        <value>A password to authenticate with the SMTP server is required.</value>
+    </data>
+    <data name="ReCaptchaClientKeyRequired">
+        <value>ReCaptcha requires a client key.</value>
+    </data>
+    <data name="ReCaptchaServerKeyRequired">
+        <value>ReCaptcha requires a server key.</value>
     </data>
 </root>

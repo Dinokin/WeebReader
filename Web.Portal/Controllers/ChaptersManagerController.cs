@@ -74,7 +74,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("{action}")]
         public async Task<IActionResult> Add(ComicChapterModel comicChapterModel)
         {
-            if (TryValidateModel(comicChapterModel))
+            if (ModelState.IsValid)
             {
                 if (await _titleManager.GetById(comicChapterModel.TitleId) is var title && title == null)
                 {
@@ -144,7 +144,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPatch("{chapterId:guid}")]
         public async Task<IActionResult> Edit(ComicChapterModel comicChapterModel)
         {
-            if (TryValidateModel(comicChapterModel))
+            if (ModelState.IsValid)
             {
                 if (comicChapterModel.ChapterId == null ||await _chapterManager.GetById(comicChapterModel.ChapterId.Value) is var chapter && chapter == null)
                 {

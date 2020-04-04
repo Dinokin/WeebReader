@@ -53,7 +53,7 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = new[] {ValidationMessages.CannotProceedAlreadyInstalled}
                 });
             
-            if (TryValidateModel(installerModel))
+            if (ModelState.IsValid)
             {
                 await using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -107,7 +107,7 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = new[] {OtherMessages.AlreadySignedIn}
                 });
             
-            if (TryValidateModel(signInModel))
+            if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(signInModel.Username, signInModel.Password, false, true);
 
@@ -170,7 +170,7 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = new[] {OtherMessages.AlreadySignedInChangePassword}
                 });
 
-            if (TryValidateModel(forgotPasswordModel))
+            if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(forgotPasswordModel.Email);
 
@@ -203,15 +203,17 @@ namespace WeebReader.Web.Portal.Controllers
         } 
         
         [HttpGet("Admin/{action:slugify}")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordModel resetPasswordModel)
+        public async Task<IActionResult> ResetPassword(Guid userId, string token)
         {
             if (_signInManager.IsSignedIn(User))
                 return RedirectToAction("YourProfile", "UsersManager");
-            
-            TryValidateModel(resetPasswordModel);
 
-            if (ModelState["Token"].ValidationState == ModelValidationState.Valid && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) != null)
-                return View(resetPasswordModel);
+            if (await _userManager.FindByIdAsync(userId.ToString()) != null && !string.IsNullOrWhiteSpace(token))
+                return View(new ResetPasswordModel
+                {
+                    UserId = userId,
+                    Token = token
+                });
 
             TempData["ErrorMessage"] = new[] {OtherMessages.PasswordResetInvalidData};
 
@@ -228,7 +230,7 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = new[] {OtherMessages.AlreadySignedInChangePassword}
                 });
 
-            if (TryValidateModel(resetPasswordModel) && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) is var user && user != null)
+            if (ModelState.IsValid && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) is var user && user != null)
             {
                 var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.NewPassword);
 
@@ -259,7 +261,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Admin/{action:slugify}")]
         public async Task<IActionResult> ChangeEmail(ChangeEmailModel changeEmailModel)
         {
-            if (TryValidateModel(changeEmailModel))
+            if (ModelState.IsValid)
             {
                 if (await _userManager.FindByEmailAsync(changeEmailModel.Email) is var candidate && candidate != null)
                     TempData["ErrorMessage"] = new[] {ValidationMessages.EmailAlreadyInUse};
