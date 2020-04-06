@@ -160,7 +160,7 @@ namespace WeebReader.Web.Models.Others
                 if (parameter == null)
                     continue;
 
-                property.SetValue(t, parameter.Value == null ? null : Convert.ChangeType(parameter.Value, property.PropertyType));
+                property.SetValue(t, parameter.Value == null ? null : Convert.ChangeType(parameter.Value, Nullable.GetUnderlyingType(property.PropertyType) is var underlyingType && underlyingType != null ? underlyingType : property.PropertyType));
             }
 
             return t;

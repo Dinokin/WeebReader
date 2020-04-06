@@ -232,6 +232,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Discord Notice.
+        /// </summary>
+        public static string ContactPageDiscordNotice {
+            get {
+                return ResourceManager.GetString("ContactPageDiscordNotice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Content.
         /// </summary>
         public static string Content {
@@ -264,6 +273,24 @@ namespace WeebReader.Web.Localization {
         public static string Date {
             get {
                 return ResourceManager.GetString("Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discord.
+        /// </summary>
+        public static string Discord {
+            get {
+                return ResourceManager.GetString("Discord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discord Server Address.
+        /// </summary>
+        public static string DiscordServerAddress {
+            get {
+                return ResourceManager.GetString("DiscordServerAddress", resourceCulture);
             }
         }
         
@@ -327,6 +354,15 @@ namespace WeebReader.Web.Localization {
         public static string EmailAddress {
             get {
                 return ResourceManager.GetString("EmailAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail contact.
+        /// </summary>
+        public static string EmailContact {
+            get {
+                return ResourceManager.GetString("EmailContact", resourceCulture);
             }
         }
         
@@ -606,6 +642,33 @@ namespace WeebReader.Web.Localization {
         public static string Posts {
             get {
                 return ResourceManager.GetString("Posts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReCaptcha.
+        /// </summary>
+        public static string ReCaptcha {
+            get {
+                return ResourceManager.GetString("ReCaptcha", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReCaptcha Client Key.
+        /// </summary>
+        public static string ReCaptchaClientKey {
+            get {
+                return ResourceManager.GetString("ReCaptchaClientKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReCaptcha Server Key.
+        /// </summary>
+        public static string ReCaptchaServerKey {
+            get {
+                return ResourceManager.GetString("ReCaptchaServerKey", resourceCulture);
             }
         }
         

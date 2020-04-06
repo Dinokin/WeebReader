@@ -321,4 +321,25 @@
     <data name="SiteEmail">
         <value>Site E-mail</value>
     </data>
+    <data name="EmailContact">
+        <value>E-mail contact</value>
+    </data>
+    <data name="ReCaptcha">
+        <value>ReCaptcha</value>
+    </data>
+    <data name="ReCaptchaClientKey">
+        <value>ReCaptcha Client Key</value>
+    </data>
+    <data name="ReCaptchaServerKey">
+        <value>ReCaptcha Server Key</value>
+    </data>
+    <data name="Discord">
+        <value>Discord</value>
+    </data>
+    <data name="DiscordServerAddress">
+        <value>Discord Server Address</value>
+    </data>
+    <data name="ContactPageDiscordNotice">
+        <value>Discord Notice</value>
+    </data>
 </root>
