@@ -9,7 +9,9 @@
     <script>
     $(() => {
         let messageContainer = $(".form .message");
-        
+
+        $("#parameters").addClass("active");
+        $("#parameters-content").addClass("active");
         $("#parameters-general").addClass("active");
         
         $(".form").form({
@@ -50,16 +52,16 @@
     <div class="two fields">
         <div class="field">
             <label>@Labels.SiteName</label>
-            <input type="text" name="siteName" asp-for="SiteName"/>
+            <input type="text" name="siteName" placeholder="@Labels.SiteName" asp-for="SiteName"/>
         </div>
         <div class="field">
             <label>@Labels.SiteAddress</label>
-            <input type="text" name="siteAddress" asp-for="SiteAddress"/>
+            <input type="text" name="siteAddress"  placeholder="@Labels.SiteAddress" asp-for="SiteAddress"/>
         </div>
     </div>
     <div class="field">
         <label>@Labels.SiteDescription</label>
-        <input type="text" name="siteDescription" asp-for="SiteDescription"/>
+        <input type="text" name="siteDescription"  placeholder="@Labels.SiteDescription" asp-for="SiteDescription"/>
     </div>
     <div class="field" style="overflow: auto">
         <div class="ui right floated black submit button" style="overflow: hidden">@Labels.UpdateParameters</div>

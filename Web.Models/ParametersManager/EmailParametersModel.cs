@@ -10,18 +10,23 @@ namespace WeebReader.Web.Models.ParametersManager
     {
         [Parameter(Parameter.Types.EmailEnabled)]
         public bool EmailEnabled { get; set; }
+        
+        [Parameter(Parameter.Types.SiteEmail)]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequiredSiteEmail")]
+        public string? SiteEmail { get; set; }
 
         [Parameter(Parameter.Types.SmtpServer)]
         public string? SmtpServer { get; set; }
         
         [Parameter(Parameter.Types.SmtpServerPort)]
+        [Range(0, ushort.MaxValue, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "SmtpServerPortOutOfRange")]
         public ushort? SmtpServerPort { get; set; }
 
         [Parameter(Parameter.Types.SmtpServerUser)]
-        public string? SmtpServerUser { get; set; }
+        public string? SmtpServerUser { get; set; } = string.Empty;
 
         [Parameter(Parameter.Types.SmtpServerPassword)]
-        public string? SmtpServerPassword { get; set; }
+        public string? SmtpServerPassword { get; set; } = string.Empty;
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -29,18 +34,15 @@ namespace WeebReader.Web.Models.ParametersManager
 
             if (!EmailEnabled)
                 return results;
+            
+            if (string.IsNullOrWhiteSpace(SiteEmail))
+                results.Add(new ValidationResult(ValidationMessages.SiteEmailRequired, new []{ nameof(SiteEmail) }));
 
             if (string.IsNullOrWhiteSpace(SmtpServer))
                 results.Add(new ValidationResult(ValidationMessages.SmtpServerRequired, new []{ nameof(SmtpServer) }));
 
-            if (SmtpServerPassword == null)
+            if (SmtpServerPort == null)
                 results.Add(new ValidationResult(ValidationMessages.SmtpServerPortRequired, new []{ nameof(SmtpServerPort) }));
-
-            if (string.IsNullOrWhiteSpace(SmtpServerUser))
-                results.Add(new ValidationResult(ValidationMessages.SmtpServerUserRequired, new []{ nameof(SmtpServerUser) }));
-
-            if (string.IsNullOrWhiteSpace(SmtpServerPassword))
-                results.Add(new ValidationResult(ValidationMessages.SmtpServerPasswordRequired, new []{ nameof(SmtpServerPassword) }));
 
             return results;
         }

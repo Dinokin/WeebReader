@@ -10,14 +10,55 @@
     $(() => {
         let messageContainer = $(".form .message");
         
+        $("#parameters").addClass("active");
+        $("#parameters-content").addClass("active");
         $("#parameters-email").addClass("active");
+        $(".checkbox").checkbox();
         
         $(".form").form({
         on: "blur",
         fields: {
+            siteEmail: {
+                identifier: "siteEmail",
+                depends: "emailEnabled",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.SiteEmailRequired"
+                    },
+                    {
+                        type: "email",
+                        prompt: "@ValidationMessages.ValidEmailRequiredSiteEmail"
+                    }
+                ]
+            },
+            smtpServer: {
+                identifier: "smtpServer",
+                depends: "emailEnabled",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.SmtpServerRequired"
+                    }
+                ]
+            },
+            smtpServerPort: {
+                identifier: "smtpServerPort",
+                depends: "emailEnabled",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.SmtpServerPortRequired"
+                    },
+                    {
+                        type: "integer[0,@ushort.MaxValue]",
+                        prompt: "@ValidationMessages.SmtpServerPortOutOfRange"
+                    }
+                ]
+            }
         }
         }).api({
-        url: "@Url.Action("General")",
+        url: "@Url.Action("Email")",
         serializeForm: true,
         method: "PATCH",
         onSuccess: () => location.reload(),
@@ -29,7 +70,37 @@
 
 <form class="ui form" novalidate>
     <div class="ui message error"></div>
-    
+    <div class="field">
+        <label>@Labels.EmailSender</label>
+        <div class="ui toggle checkbox">
+            <input class="hidden" type="checkbox" name="emailEnabled" asp-for="EmailEnabled"/>
+            <label>@Labels.Enable</label>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.SiteEmail</label>
+        <input type="email" name="siteEmail" placeholder="@Labels.SiteEmail" asp-for="SiteEmail"/>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>@Labels.SMTPServerAddress</label>
+            <input type="text" name="smtpServer" placeholder="@Labels.SMTPServerAddress" asp-for="SmtpServer"/>
+        </div>
+        <div class="field">
+            <label>@Labels.SMTPServerPort</label>
+            <input type="number" name="smtpServerPort" min="0" max="@ushort.MaxValue" placeholder="@Labels.SMTPServerPort" asp-for="SmtpServerPort"/>
+        </div>
+    </div>
+    <div class="two fields">
+        <div class="field">
+            <label>@Labels.SMTPServerUser</label>
+            <input type="text" name="smtpServerUser" placeholder="@Labels.SMTPServerUser" asp-for="SmtpServerUser"/>
+        </div>
+        <div class="field">
+            <label>@Labels.SMTPServerPassword</label>
+            <input type="text" name="smtpServerPassword" placeholder="@Labels.SMTPServerPassword" autocomplete="off" asp-for="SmtpServerPassword"/>
+        </div>
+    </div>
     <div class="field" style="overflow: auto">
         <div class="ui right floated black submit button" style="overflow: hidden">@Labels.UpdateParameters</div>
     </div>

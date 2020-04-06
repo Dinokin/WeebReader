@@ -13,13 +13,13 @@ namespace WeebReader.Web.Services
 
         public EmailSender(ParametersManager parameterManager) => _parameterManager = parameterManager;
 
-        public async Task<bool> SendEmail(string origin, string destination, string subject, string content)
+        public async Task<bool> SendEmail(string replyTo, string destination, string subject, string content)
         {
             if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(origin));
-                message.ReplyTo.Add(new MailboxAddress(origin));
+                message.From.Add(new MailboxAddress(await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail)));
+                message.ReplyTo.Add(new MailboxAddress(replyTo));
                 message.To.Add(new MailboxAddress(destination));
                 message.Subject = subject;
                 message.Body = new TextPart(TextFormat.Plain)

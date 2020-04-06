@@ -331,6 +331,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to E-mail Sender.
+        /// </summary>
+        public static string EmailSender {
+            get {
+                return ResourceManager.GetString("EmailSender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        public static string Enable {
+            get {
+                return ResourceManager.GetString("Enable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -718,11 +736,56 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Site E-mail.
+        /// </summary>
+        public static string SiteEmail {
+            get {
+                return ResourceManager.GetString("SiteEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Site Name.
         /// </summary>
         public static string SiteName {
             get {
                 return ResourceManager.GetString("SiteName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP Server Address.
+        /// </summary>
+        public static string SMTPServerAddress {
+            get {
+                return ResourceManager.GetString("SMTPServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP Server password.
+        /// </summary>
+        public static string SMTPServerPassword {
+            get {
+                return ResourceManager.GetString("SMTPServerPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP Server Port.
+        /// </summary>
+        public static string SMTPServerPort {
+            get {
+                return ResourceManager.GetString("SMTPServerPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP Server user.
+        /// </summary>
+        public static string SMTPServerUser {
+            get {
+                return ResourceManager.GetString("SMTPServerUser", resourceCulture);
             }
         }
         

@@ -9,6 +9,7 @@ namespace WeebReader.Web.Models.BlogManager
         public Guid? PostId { get; set; }
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveTitle")]
+        [StringLength(100, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostTitleMaxLength")]
         public string Title { get; set; } = string.Empty;
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PostMustHaveContent")]

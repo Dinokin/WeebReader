@@ -124,6 +124,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A link to a discord server is required..
+        /// </summary>
+        public static string DiscordLinkRequired {
+            get {
+                return ResourceManager.GetString("DiscordLinkRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The address to the discord server must be a valid URL..
+        /// </summary>
+        public static string DiscordLinkValidUrl {
+            get {
+                return ResourceManager.GetString("DiscordLinkValidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The requested e-mail is already in use..
         /// </summary>
         public static string EmailAlreadyInUse {
@@ -178,6 +196,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The address to the kofi must be a valid URL..
+        /// </summary>
+        public static string KofiLinkValidUrl {
+            get {
+                return ResourceManager.GetString("KofiLinkValidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A password must have at least 8 characters..
         /// </summary>
         public static string MinimumPasswordLength {
@@ -223,6 +250,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The address to the patreon page must be a valid URL..
+        /// </summary>
+        public static string PatreonLinkValidUrl {
+            get {
+                return ResourceManager.GetString("PatreonLinkValidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A post must have content..
         /// </summary>
         public static string PostMustHaveContent {
@@ -255,6 +291,15 @@ namespace WeebReader.Web.Localization {
         public static string PostNotFound {
             get {
                 return ResourceManager.GetString("PostNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The title of the post must not surpass 100 characters..
+        /// </summary>
+        public static string PostTitleMaxLength {
+            get {
+                return ResourceManager.GetString("PostTitleMaxLength", resourceCulture);
             }
         }
         
@@ -295,6 +340,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A e-mail address for this site is required..
+        /// </summary>
+        public static string SiteEmailRequired {
+            get {
+                return ResourceManager.GetString("SiteEmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A name for this site is required..
         /// </summary>
         public static string SiteNameRequired {
@@ -304,11 +358,11 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A password to authenticate with the SMTP server is required..
+        ///   Looks up a localized string similar to The SMTP server port must be a value between 0 and 65535..
         /// </summary>
-        public static string SmtpServerPasswordRequired {
+        public static string SmtpServerPortOutOfRange {
             get {
-                return ResourceManager.GetString("SmtpServerPasswordRequired", resourceCulture);
+                return ResourceManager.GetString("SmtpServerPortOutOfRange", resourceCulture);
             }
         }
         
@@ -327,15 +381,6 @@ namespace WeebReader.Web.Localization {
         public static string SmtpServerRequired {
             get {
                 return ResourceManager.GetString("SmtpServerRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An user to authenticate with the SMTP server is required..
-        /// </summary>
-        public static string SmtpServerUserRequired {
-            get {
-                return ResourceManager.GetString("SmtpServerUserRequired", resourceCulture);
             }
         }
         
@@ -489,6 +534,15 @@ namespace WeebReader.Web.Localization {
         public static string ValidEmailRequired {
             get {
                 return ResourceManager.GetString("ValidEmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid e-mail address is required to be used as an e-mail address for the site..
+        /// </summary>
+        public static string ValidEmailRequiredSiteEmail {
+            get {
+                return ResourceManager.GetString("ValidEmailRequiredSiteEmail", resourceCulture);
             }
         }
     }

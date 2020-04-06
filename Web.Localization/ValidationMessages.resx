@@ -150,16 +150,34 @@
     <data name="SmtpServerPortRequired">
         <value>A port for the SMTP server is required.</value>
     </data>
-    <data name="SmtpServerUserRequired">
-        <value>An user to authenticate with the SMTP server is required.</value>
-    </data>
-    <data name="SmtpServerPasswordRequired">
-        <value>A password to authenticate with the SMTP server is required.</value>
-    </data>
     <data name="ReCaptchaClientKeyRequired">
         <value>ReCaptcha requires a client key.</value>
     </data>
     <data name="ReCaptchaServerKeyRequired">
         <value>ReCaptcha requires a server key.</value>
+    </data>
+    <data name="DiscordLinkRequired">
+        <value>A link to a discord server is required.</value>
+    </data>
+    <data name="PostTitleMaxLength">
+        <value>The title of the post must not surpass 100 characters.</value>
+    </data>
+    <data name="SmtpServerPortOutOfRange">
+        <value>The SMTP server port must be a value between 0 and 65535.</value>
+    </data>
+    <data name="ValidEmailRequiredSiteEmail">
+        <value>A valid e-mail address is required to be used as an e-mail address for the site.</value>
+    </data>
+    <data name="DiscordLinkValidUrl">
+        <value>The address to the discord server must be a valid URL.</value>
+    </data>
+    <data name="PatreonLinkValidUrl">
+        <value>The address to the patreon page must be a valid URL.</value>
+    </data>
+    <data name="KofiLinkValidUrl">
+        <value>The address to the kofi must be a valid URL.</value>
+    </data>
+    <data name="SiteEmailRequired">
+        <value>A e-mail address for this site is required.</value>
     </data>
 </root>

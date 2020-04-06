@@ -26,8 +26,10 @@ namespace WeebReader.Data.Entities
             PageBlogEnabled,
             PageSupportUsEnabled,
             PageSupportUsPatreonEnabled,
+            PageSupportUsPatreonLink,
             PageSupportUsPatreonMessage,
             PageSupportUsKofiEnabled,
+            PageSupportUsKofiLink,
             PageSupportUsKofiMessage
         }
         

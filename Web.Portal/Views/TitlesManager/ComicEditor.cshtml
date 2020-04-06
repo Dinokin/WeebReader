@@ -9,6 +9,7 @@
         let messageContainer = $(".form .message");
         let progressBar = $(".indicating");
         
+        $("#titles").addClass("active");
         $(".checkbox").checkbox();
         $("#status").dropdown();
         $("#tags").dropdown({
@@ -20,14 +21,15 @@
         fields: {
             name: {
                 identifier: "name",
-                rules: [{
-                    type: "empty",
-                    prompt: "@ValidationMessages.TitleMustHaveName"
-                },
-                {
-                    type   : "maxLength[200]",
-                    prompt : "@ValidationMessages.TitleNameMaxLength"
-                }
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: "@ValidationMessages.TitleMustHaveName"
+                    },
+                    {
+                        type   : "maxLength[200]",
+                        prompt : "@ValidationMessages.TitleNameMaxLength"
+                    }
                 ]
             },
             originalName: {
@@ -47,10 +49,10 @@
                         prompt: "@ValidationMessages.TitleMustHaveAuthor"
                     },
                     {
-                        type   : "maxLength[50]",
-                        prompt : "@ValidationMessages.TitleAuthorMaxLength"
+                        type: "maxLength[50]",
+                        prompt: "@ValidationMessages.TitleAuthorMaxLength"
                     }
-                    ]
+                ]
             },
             artist: {
                 identifier: "artist",
@@ -60,10 +62,10 @@
                         prompt: "@ValidationMessages.TitleMustHaveArtist"
                     },
                     {
-                        type   : "maxLength[50]",
-                        prompt : "@ValidationMessages.TitleArtistMaxLength"
+                        type: "maxLength[50]",
+                        prompt: "@ValidationMessages.TitleArtistMaxLength"
                     }
-                    ]
+                ]
             }
         }
         }).api({
@@ -102,11 +104,11 @@
         <div class="two fields">
             <div class="field">
                 <label>@Labels.Name</label>
-                <input type="text" name="name" asp-for="Name"/>
+                <input type="text" name="name" placeholder="@Labels.Name" asp-for="Name"/>
             </div>
             <div class="field">
                 <label>@Labels.OriginalName</label>
-                <input type="text" name="originalName" asp-for="OriginalName"/>
+                <input type="text" name="originalName" placeholder="@Labels.OriginalName" asp-for="OriginalName"/>
             </div>
         </div>
     </div>
@@ -114,11 +116,11 @@
         <div class="two fields">
             <div class="field">
                 <label>@Labels.Author</label>
-                <input type="text" name="author" asp-for="Author"/>
+                <input type="text" name="author" placeholder="@Labels.Author" asp-for="Author"/>
             </div>
             <div class="field">
                 <label>@Labels.Artist</label>
-                <input type="text" name="artist" asp-for="Artist"/>
+                <input type="text" name="artist" placeholder="@Labels.Artist" asp-for="Artist"/>
             </div>
         </div>
     </div>
@@ -128,7 +130,7 @@
                 <label>@Labels.Tags</label>
                 <div id="tags" class="ui fluid multiple search selection dropdown">
                     <input name="tags" type="hidden" asp-for="Tags">
-                    <div class="default text"></div>
+                    <div class="default text">@Labels.Tags</div>
                 </div>
             </div>
             <div class="field">
@@ -149,7 +151,7 @@
     </div>
     <div class="field">
         <label>@Labels.Synopsis</label>
-        <textarea id="editor-area" name="synopsis" asp-for="Synopsis"></textarea>
+        <textarea id="editor-area" name="synopsis" placeholder="@Labels.Synopsis" asp-for="Synopsis"></textarea>
     </div>
     <div class="field">
         <div class="three fields">

@@ -300,4 +300,25 @@
     <data name="UpdateParameters">
         <value>Update Parameters</value>
     </data>
+    <data name="EmailSender">
+        <value>E-mail Sender</value>
+    </data>
+    <data name="Enable">
+        <value>Enable</value>
+    </data>
+    <data name="SMTPServerAddress">
+        <value>SMTP Server Address</value>
+    </data>
+    <data name="SMTPServerPort">
+        <value>SMTP Server Port</value>
+    </data>
+    <data name="SMTPServerUser">
+        <value>SMTP Server user</value>
+    </data>
+    <data name="SMTPServerPassword">
+        <value>SMTP Server password</value>
+    </data>
+    <data name="SiteEmail">
+        <value>Site E-mail</value>
+    </data>
 </root>

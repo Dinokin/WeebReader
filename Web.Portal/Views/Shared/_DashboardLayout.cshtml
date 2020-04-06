@@ -8,7 +8,7 @@
 <head>
     <partial name="_SharedHeaders"/>
     <script>
-    $(() => {
+    $(() => {        
         $(".ui.sidebar").sidebar({
         context: $(".bottom.segment")
         }).sidebar("attach events", "#computer-toggler,#mobile-toggler").accordion();
@@ -91,7 +91,7 @@
                     @Labels.Parameters
                     <i class="dropdown icon"></i>
                 </a>
-                <div class="content">
+                <div id="parameters-content" class="content">
                     <a id="parameters-general" class="item" href="@Url.Action("General", "ParametersManager")">@Labels.General</a>
                     <a id="parameters-email" class="item" href="@Url.Action("Email", "ParametersManager")">@Labels.Email</a>
                     <a id="parameters-contact" class="item" href="@Url.Action("Contact", "ParametersManager")">@Labels.Contact</a>

@@ -9,6 +9,8 @@
         let progressBar = $(".indicating");
         
         $(".checkbox").checkbox();
+        $("#titles").addClass("active");
+        
         $(".ui.calendar").calendar({
         ampm: false,
         formatter: {
@@ -39,10 +41,11 @@
         fields: {
             name: {
                 identifier: "name",
-                rules: [{
-                    type   : "maxLength[100]",
-                    prompt : "@ValidationMessages.ChapterNameMaxLength"
-                }
+                rules: [
+                    {
+                        type: "maxLength[100]",
+                        prompt: "@ValidationMessages.ChapterNameMaxLength"
+                    }
                 ]
             }
         }
@@ -82,17 +85,17 @@
         <div class="two fields">
             <div class="field">
                 <label>@Labels.Volume</label>
-                <input type="number" name="volume" asp-for="Volume"/>
+                <input type="number" name="volume" placeholder="@Labels.Volume" asp-for="Volume"/>
             </div>
             <div class="field">
                 <label>@Labels.Number</label>
-                <input type="number" step="0.1" name="number" asp-for="Number"/>
+                <input type="number" step="0.1" name="number" placeholder="@Labels.Number" asp-for="Number"/>
             </div>
         </div>
     </div>
     <div class="field">
         <label>@Labels.Name</label>
-        <input type="text" name="name" asp-for="Name"/>
+        <input type="text" name="name" placeholder="@Labels.Name" asp-for="Name"/>
     </div>
     <div class="field">
         <div class="three fields">

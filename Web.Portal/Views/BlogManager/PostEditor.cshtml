@@ -8,6 +8,8 @@
         let messageContainer = $(".form .message");
         
         $(".checkbox").checkbox();
+        $("#blog").addClass("active");
+        
         $(".ui.calendar").calendar({
         ampm: false,
         formatter: {
@@ -37,16 +39,20 @@
         on: "blur",
         fields: {
             title: {
-                identifier  : "title",
+                identifier: "title",
                 rules: [
                     {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.PostMustHaveTitle"
-                    }
+                        type: "empty",
+                        prompt: "@ValidationMessages.PostMustHaveTitle"
+                    },
+                    {
+                        type: "maxLength[100]",
+                        prompt: "@ValidationMessages.PostTitleMaxLength"
+                    }          
                 ]
             },
             content: {
-                identifier  : "content",
+                identifier: "content",
                 rules: [
                     {
                         type   : "empty",

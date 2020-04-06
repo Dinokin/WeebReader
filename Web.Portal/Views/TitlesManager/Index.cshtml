@@ -16,6 +16,8 @@
         let deletionModal = $("#deletion-modal");
         let creationModal = $("#creation-modal");
         
+        $("#titles").addClass("active");
+        
         creationModal.modal({
         onApprove: () => window.location.href = "@(Url.Action("Add"))" + "?type=" + creationType
         });

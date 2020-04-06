@@ -1,32 +1,54 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WeebReader.Data.Entities;
 using WeebReader.Web.Localization;
+using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.ParametersManager
 {
     public class ContactParametersModel : IValidatableObject
     {
-        public bool ContactEmailEnabled { get; set; }
-        
-        public bool ContactEmailRecaptchaEnabled { get; set; }
-        
-        public string ContactEmailRecaptchaClientKey { get; set; }
-        
-        public string ContactEmailRecaptchaServerKey { get; set; }
-        
+        [Parameter(Parameter.Types.ContactEmailEnabled)]
+        public bool EmailEnabled { get; set; }
+
+        [Parameter(Parameter.Types.ContactEmailRecaptchaEnabled)]
+        public bool RecaptchaEnabled { get; set; }
+
+        [Parameter(Parameter.Types.ContactEmailRecaptchaClientKey)]
+        public string? RecaptchaClientKey { get; set; }
+
+        [Parameter(Parameter.Types.ContactEmailRecaptchaServerKey)]
+        public string? RecaptchaServerKey { get; set; }
+
+        [Parameter(Parameter.Types.ContactDiscordEnabled)]
+        public bool ContactDiscordEnabled { get; set; }
+
+        [Parameter(Parameter.Types.ContactDiscordLink)]
+        [Url(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "DiscordLinkValidUrl")]
+        public string? DiscordLink { get; set; }
+
+        [Parameter(Parameter.Types.ContactDiscordMessage)]
+        public string? DiscordMessage { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 
-            if (!ContactEmailRecaptchaEnabled)
-                return results;
+            if (RecaptchaEnabled)
+            {
+                if (string.IsNullOrWhiteSpace(RecaptchaClientKey))
+                    results.Add(new ValidationResult(ValidationMessages.ReCaptchaClientKeyRequired, new[] {nameof(RecaptchaClientKey)}));
 
-            if (string.IsNullOrWhiteSpace(ContactEmailRecaptchaClientKey))
-                results.Add(new ValidationResult(ValidationMessages.ReCaptchaClientKeyRequired, new []{ nameof(ContactEmailRecaptchaClientKey) }));
+                if (string.IsNullOrWhiteSpace(RecaptchaServerKey))
+                    results.Add(new ValidationResult(ValidationMessages.ReCaptchaServerKeyRequired, new[] {nameof(RecaptchaServerKey)}));
+            }
 
-            if (string.IsNullOrWhiteSpace(ContactEmailRecaptchaServerKey))
-                results.Add(new ValidationResult(ValidationMessages.ReCaptchaServerKeyRequired, new []{ nameof(ContactEmailRecaptchaServerKey) }));
-
+            if (ContactDiscordEnabled)
+            {
+                if (string.IsNullOrWhiteSpace(DiscordLink))
+                    results.Add(new ValidationResult(ValidationMessages.DiscordLinkRequired, new[] {nameof(DiscordLink)}));
+            }
+            
             return results;
         }
     }
