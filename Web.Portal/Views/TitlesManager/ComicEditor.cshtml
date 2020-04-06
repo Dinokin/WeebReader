@@ -1,5 +1,9 @@
 ﻿@model ComicModel
 
+@{
+    ViewData["HeightPercent"] = 110;
+}
+
 @section Headers
 {
     <partial name="_TinyMCE"/>
@@ -151,7 +155,7 @@
     </div>
     <div class="field">
         <label>@Labels.Synopsis</label>
-        <textarea id="editor-area" name="synopsis" placeholder="@Labels.Synopsis" asp-for="Synopsis"></textarea>
+        <textarea name="synopsis" placeholder="@Labels.Synopsis" asp-for="Synopsis"></textarea>
     </div>
     <div class="field">
         <div class="three fields">

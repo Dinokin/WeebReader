@@ -180,4 +180,10 @@
     <data name="SiteEmailRequired">
         <value>A e-mail address for this site is required.</value>
     </data>
+    <data name="PatreonLinkRequired">
+        <value>An address to a Patreon page is required.</value>
+    </data>
+    <data name="KoFiLinkRequired">
+        <value>An address to a KoFi page is required.</value>
+    </data>
 </root>

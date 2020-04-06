@@ -27,8 +27,8 @@ namespace WeebReader.Web.Models.ParametersManager
         [Url(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "DiscordLinkValidUrl")]
         public string? DiscordLink { get; set; }
 
-        [Parameter(Parameter.Types.ContactDiscordMessage)]
-        public string? DiscordMessage { get; set; }
+        [Parameter(Parameter.Types.ContactDiscordNotice)]
+        public string? DiscordNotice { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

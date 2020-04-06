@@ -196,6 +196,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An address to a KoFi page is required..
+        /// </summary>
+        public static string KoFiLinkRequired {
+            get {
+                return ResourceManager.GetString("KoFiLinkRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The address to the kofi must be a valid URL..
         /// </summary>
         public static string KofiLinkValidUrl {
@@ -246,6 +255,15 @@ namespace WeebReader.Web.Localization {
         public static string PasswordsMustBeEqual {
             get {
                 return ResourceManager.GetString("PasswordsMustBeEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An address to a Patreon page is required..
+        /// </summary>
+        public static string PatreonLinkRequired {
+            get {
+                return ResourceManager.GetString("PatreonLinkRequired", resourceCulture);
             }
         }
         

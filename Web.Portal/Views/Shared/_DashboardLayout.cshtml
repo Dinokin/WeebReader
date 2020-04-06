@@ -1,6 +1,7 @@
 ﻿@{
     var successMessage = (IEnumerable<string>?) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>?) TempData["ErrorMessage"];
+    var height = Convert.ToInt32(ViewData["HeightPercent"]);
 }
 
 <!DOCTYPE html>
@@ -20,7 +21,7 @@
     </script>
     @await RenderSectionAsync("Headers", false)
 </head>
-<body>
+<body style="@(height > 100 ? $"height: {height}%;" : string.Empty)">
 <div class="ui computer only grid no-margin-top no-margin-bottom">
     <div class="ui top attached inverted menu no-border-radius">
         <a class="item" href="/">

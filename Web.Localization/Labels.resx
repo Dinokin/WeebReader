@@ -339,7 +339,25 @@
     <data name="DiscordServerAddress">
         <value>Discord Server Address</value>
     </data>
-    <data name="ContactPageDiscordNotice">
+    <data name="DiscordNotice">
         <value>Discord Notice</value>
+    </data>
+    <data name="Patreon">
+        <value>Patreon</value>
+    </data>
+    <data name="PatreonPageAddress">
+        <value>Patreon Page Address</value>
+    </data>
+    <data name="PatreonNotice">
+        <value>Patreon Notice</value>
+    </data>
+    <data name="KoFi">
+        <value>KoFi</value>
+    </data>
+    <data name="KofiPageAddress">
+        <value>KoFi Page Address</value>
+    </data>
+    <data name="KofiNotice">
+        <value>KoFi Notice</value>
     </data>
 </root>

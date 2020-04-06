@@ -4,10 +4,11 @@
 <script>
 tinymce.init({
 language: "@langCode",
-selector: "#editor-area",
+selector: "textarea",
 plugins: "autosave wordcount",
 toolbar: "restoredraft wordcount",
-height: 500
+height: 500,
+resize: false
 });
 </script>
 }
@@ -15,10 +16,11 @@ else
 {
 <script>
 tinymce.init({
-selector: "#editor-area",
+selector: "textarea",
 plugins: "autosave wordcount",
 toolbar: "restoredraft wordcount",
-height: 500
+height: 500,
+resize: false
 });
 </script>
 }

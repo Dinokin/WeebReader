@@ -22,15 +22,14 @@ namespace WeebReader.Data.Entities
             ContactEmailRecaptchaServerKey,
             ContactDiscordEnabled,
             ContactDiscordLink,
-            ContactDiscordMessage,
+            ContactDiscordNotice,
             PageBlogEnabled,
-            PageSupportUsEnabled,
             PageSupportUsPatreonEnabled,
             PageSupportUsPatreonLink,
-            PageSupportUsPatreonMessage,
+            PageSupportUsPatreonNotice,
             PageSupportUsKofiEnabled,
             PageSupportUsKofiLink,
-            PageSupportUsKofiMessage
+            PageSupportUsKofiNotice
         }
         
         public Types Type { get; }
