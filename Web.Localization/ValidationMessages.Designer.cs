@@ -61,6 +61,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The About Us page requires content..
+        /// </summary>
+        public static string AboutUsPageContentRequired {
+            get {
+                return ResourceManager.GetString("AboutUsPageContentRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installation cannot proceed because the application is already installed..
         /// </summary>
         public static string CannotProceedAlreadyInstalled {

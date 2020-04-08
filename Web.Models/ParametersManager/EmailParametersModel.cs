@@ -8,8 +8,8 @@ namespace WeebReader.Web.Models.ParametersManager
 {
     public class EmailParametersModel : IValidatableObject
     {
-        [Parameter(Parameter.Types.EmailEnabled)]
-        public bool EmailEnabled { get; set; }
+        [Parameter(Parameter.Types.EmailSenderEnabled)]
+        public bool EmailSenderEnabled { get; set; }
         
         [Parameter(Parameter.Types.SiteEmail)]
         [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequiredSiteEmail")]
@@ -32,7 +32,7 @@ namespace WeebReader.Web.Models.ParametersManager
         {
             var results = new List<ValidationResult>();
 
-            if (!EmailEnabled)
+            if (!EmailSenderEnabled)
                 return results;
             
             if (string.IsNullOrWhiteSpace(SiteEmail))

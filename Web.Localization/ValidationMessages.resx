@@ -186,4 +186,7 @@
     <data name="KoFiLinkRequired">
         <value>An address to a KoFi page is required.</value>
     </data>
+    <data name="AboutUsPageContentRequired">
+        <value>The About Us page requires content.</value>
+    </data>
 </root>

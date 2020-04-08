@@ -360,4 +360,16 @@
     <data name="KofiNotice">
         <value>KoFi Notice</value>
     </data>
+    <data name="AboutUs">
+        <value>About Us</value>
+    </data>
+    <data name="AboutUsPageContent">
+        <value>About Us Page Content</value>
+    </data>
+    <data name="ContactUs">
+        <value>Contact Us</value>
+    </data>
+    <data name="Vol">
+        <value>Vol.</value>
+    </data>
 </root>

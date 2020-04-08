@@ -13,7 +13,14 @@ namespace WeebReader.Data.Services
 
         public async Task<long> Count(Title title) => await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id);
 
-        public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take) => Task.FromResult<IEnumerable<TChapter>>(DbSet.Where(chapter => chapter.TitleId == title.Id)
-            .OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
+        public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take, bool getHidden = false)
+        {
+            if (getHidden)
+                return Task.FromResult<IEnumerable<TChapter>>(DbSet.Where(chapter => chapter.TitleId == title.Id)
+                    .OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
+            else
+                return Task.FromResult<IEnumerable<TChapter>>(DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible)
+                    .OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
+        }
     }
 }

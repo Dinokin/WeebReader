@@ -15,7 +15,7 @@ namespace WeebReader.Web.Services
 
         public async Task<bool> SendEmail(string replyTo, string destination, string subject, string content)
         {
-            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
+            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
             {
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail)));

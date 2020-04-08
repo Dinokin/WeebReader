@@ -21,7 +21,7 @@
     </script>
     @await RenderSectionAsync("Headers", false)
 </head>
-<body style="@(height > 100 ? $"height: {height}%;" : string.Empty)">
+<body style="@(height > 100 ? $"height: {height}%;" : null)">
 <div class="ui computer only grid no-margin-top no-margin-bottom">
     <div class="ui top attached inverted menu no-border-radius">
         <a class="item" href="/">

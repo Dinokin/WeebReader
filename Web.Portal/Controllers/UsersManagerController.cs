@@ -90,7 +90,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 
-                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
+                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
                 {
                     var userResult = string.IsNullOrWhiteSpace(userModel.Password) ? await _userManager.CreateAsync(user) : await _userManager.CreateAsync(user, userModel.Password);
 
@@ -361,7 +361,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
 
-                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
+                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
                 {
                     var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);

@@ -6,8 +6,6 @@
     var page = (ushort) ViewData["Page"];
     var totalPages = (decimal) ViewData["TotalPages"];
     var deletionRoute = (string) ViewData["DeletionRoute"];
-    TempData["ErrorMessage"] = await ParameterManager.GetValue<bool>(Parameter.Types.PageBlogEnabled) ? null :
-        TempData["ErrorMessage"] is IEnumerable<string> errors && errors.Any() ? errors.Append(OtherMessages.DisableFunctionality) : new[] {OtherMessages.DisableFunctionality};
 }
 
 @section Headers

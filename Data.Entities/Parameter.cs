@@ -11,7 +11,7 @@ namespace WeebReader.Data.Entities
             SiteDescription,
             SiteAddress,
             SiteEmail,
-            EmailEnabled,
+            EmailSenderEnabled,
             SmtpServer,
             SmtpServerPort,
             SmtpServerUser,
@@ -23,13 +23,13 @@ namespace WeebReader.Data.Entities
             ContactDiscordEnabled,
             ContactDiscordLink,
             ContactDiscordNotice,
-            PageBlogEnabled,
-            PageSupportUsPatreonEnabled,
-            PageSupportUsPatreonLink,
-            PageSupportUsPatreonNotice,
-            PageSupportUsKofiEnabled,
-            PageSupportUsKofiLink,
-            PageSupportUsKofiNotice
+            PageAboutUsContent,
+            PageAboutUsPatreonEnabled,
+            PageAboutUsPatreonLink,
+            PageAboutUsPatreonNotice,
+            PageAboutUsKofiEnabled,
+            PageAboutUsKofiLink,
+            PageAboutUsKofiNotice
         }
         
         public Types Type { get; }

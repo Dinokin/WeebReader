@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <!-- Site Properties -->
-<title>@ViewData["Title"]@(ViewData["TitleSeparator"] ?? " - ")@siteName</title>
+<title>@ViewData["Title"] - @siteName</title>
 @if (!string.IsNullOrWhiteSpace(siteDescription))
 {
     <meta name="description" content="@siteDescription">

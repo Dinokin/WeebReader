@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -7,12 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
+using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
+using WeebReader.Web.Models.ChaptersManager;
 using WeebReader.Web.Models.Home;
 using WeebReader.Web.Models.Others;
+using WeebReader.Web.Models.TitlesManager;
+using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
+using Parameter = WeebReader.Data.Entities.Parameter;
 
 namespace WeebReader.Web.Portal.Controllers
 { 
@@ -23,22 +29,67 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly ParametersManager _parameterManager;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
+        private readonly TitlesManager<Title> _titlesManager;
+        private readonly ChapterManager<Chapter> _chapterManager;
+        private readonly ChapterArchiver<Chapter> _chapterArchiver;
+        private readonly PagesManager<Page> _pagesManager;
 
-        public HomeController(BaseContext context, EmailSender emailSender, ParametersManager parameterManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager)
+        public HomeController(BaseContext context, EmailSender emailSender, ParametersManager parameterManager, UserManager<IdentityUser<Guid>> userManager, SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager)
         {
             _context = context;
             _emailSender = emailSender;
             _parameterManager = parameterManager;
             _userManager = userManager;
             _signInManager = signInManager;
+            _titlesManager = titlesManager;
+            _chapterManager = chapterManager;
+            _chapterArchiver = chapterArchiver;
+            _pagesManager = pagesManager;
         }
 
         [HttpGet("")]
-        public IActionResult Index()
-        {
-            throw new NotImplementedException();
-        }
+        public IActionResult Index() => View();
 
+        [HttpGet("{action}")]
+        public IActionResult Titles() => throw new NotImplementedException();
+        
+        [HttpGet("{action}/{titleId:Guid}/{page:int?}")]
+        public async Task<IActionResult> Titles(Guid titleId, ushort page = 1)
+        {
+            if (await _titlesManager.GetById(titleId) is var title && title == null)
+                return RedirectToAction("Titles");
+
+            if (!_signInManager.IsSignedIn(User) && !title.Visible)
+                return RedirectToAction("Titles");
+
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title) / (decimal) Constants.ItemsPerPage);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            var chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
+
+            ViewData["Page"] = page;
+            ViewData["TotalPages"] = totalPages;
+            
+            return View("Title", new Tuple<TitleModel, IEnumerable<ChapterModel>>(Mapper.Map(title, await _titlesManager.GetTags(title)), chapters));
+        }
+        
+        [HttpGet("{action}/{titleId:Guid}/{chapterId:Guid}")]
+        public async Task<IActionResult> Titles(Guid titleId, Guid chapterId, bool download = false)
+        {
+            if (await _titlesManager.GetById(titleId) is var title && title == null)
+                return RedirectToAction("Titles");
+            
+            if (await _chapterManager.GetById(chapterId) is var chapter && (chapter == null || chapter.TitleId != title.Id))
+                return RedirectToAction("Titles", new { titleId });
+
+            if (!_signInManager.IsSignedIn(User) && (!title.Visible || !chapter.Visible))
+                return RedirectToAction("Titles");
+
+            if (download)
+                return GetDownload(title, chapter);
+
+            return await GetReader(title, chapter);
+        }
+        
         [HttpGet("{action}")]
         public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index");
 
@@ -142,7 +193,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword()
         {
-            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled) || _signInManager.IsSignedIn(User))
+            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled) || _signInManager.IsSignedIn(User))
                 return RedirectToAction("Index");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
@@ -151,7 +202,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
-            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailEnabled))
+            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
             {
                 ModelState.AddModelError("FunctionalityDisabled", OtherMessages.DisableFunctionality);
 
@@ -285,6 +336,29 @@ namespace WeebReader.Web.Portal.Controllers
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : RedirectToAction("Index");
         }
         
+        private IActionResult GetDownload(Title title, Chapter chapter) => chapter switch
+        {
+            ComicChapter comicChapter => File(_chapterArchiver.GetChapterDownload(comicChapter)?.OpenRead(), "application/zip", $"{GetDownloadName(title, comicChapter)}.zip"),
+            _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
+        };
+        
+        private async Task<IActionResult> GetReader(Title title, Chapter chapter) => chapter switch
+        {
+            ComicChapter comicChapter => await GetComicReader((Comic) title, comicChapter),
+            _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
+        };
+
+        private async Task<IActionResult> GetComicReader(Comic comic, ComicChapter comicChapter)
+        {
+            var comicModel = Mapper.Map(comic, null);
+            var comicChapterModel = Mapper.Map(comicChapter);
+            var pages = (IEnumerable<ComicPage>) await _pagesManager.GetRange(comicChapter);
+
+            return View("ComicReader", new Tuple<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>(comicModel, comicChapterModel, pages));
+        }
+        
         private async Task<bool> AllowInstaller() => !await _userManager.Users.AnyAsync();
+        
+        private string GetDownloadName(Title title, Chapter chapter) => $"{title.Name} - {Labels.Chapter} {chapter.Number}";
     }
 }

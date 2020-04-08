@@ -6,7 +6,7 @@
     ViewData["Title"] = Labels.SignIn;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var emailEnable = await ParameterManager.GetValue<bool>(Parameter.Types.EmailEnabled);
+    var emailSenderEnabled = await ParameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
 }
 
 @section Headers
@@ -96,7 +96,7 @@
                 </div>
             }
         </form>
-        @if (emailEnable)
+        @if (emailSenderEnabled)
         {
             <div class="ui message">
                 @Labels.ForgotPassword2 <a href="@Url.Action("ForgotPassword")">@Labels.ResetIt</a>

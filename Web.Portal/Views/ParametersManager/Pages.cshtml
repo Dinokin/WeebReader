@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = $"{Labels.Pages} - {Labels.Parameters}";
-    ViewData["HeightPercent"] = 160;
+    ViewData["HeightPercent"] = 220;
 }
 
 @section Headers
@@ -20,6 +20,15 @@
         $(".form").on("submit", () => tinyMCE.triggerSave()).form({
         on: "blur",
         fields: {
+            aboutUsContent: {
+                identifier: "aboutUsContent",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.AboutUsPageContentRequired"
+                    }
+                ]
+            },
             patreonLink: {
                 identifier: "patreonLink",
                 depends: "patreonEnabled",
@@ -55,11 +64,8 @@
 <form class="ui form" novalidate>
     <div class="ui message error"></div>
     <div class="field">
-        <label>@Labels.Blog</label>
-        <div class="ui toggle checkbox">
-            <input class="hidden" type="checkbox" name="blogEnabled" asp-for="BlogEnabled"/>
-            <label>@Labels.Enable</label>
-        </div>
+        <label>@Labels.AboutUsPageContent</label>
+        <textarea name="aboutUsContent" placeholder="@Labels.AboutUsPageContent" asp-for="AboutUsContent"></textarea>
     </div>
     <div class="field">
         <label>@Labels.Patreon</label>
@@ -70,7 +76,7 @@
     </div>
     <div class="field">
         <label>@Labels.PatreonPageAddress</label>
-        <input type="text" name="patreonLink" placeholder="@Labels.DiscordServerAddress" asp-for="PatreonLink"/>
+        <input type="text" name="patreonLink" placeholder="@Labels.PatreonPageAddress" asp-for="PatreonLink"/>
     </div>
     <div class="field">
         <label>@Labels.PatreonNotice</label>

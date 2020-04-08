@@ -56,6 +56,12 @@ namespace WeebReader.Web.Services
             return true;
         }
 
+        public FileInfo? GetChapterDownload(Chapter chapter) => chapter switch
+        {
+            ComicChapter comicChapter => new FileInfo($"{GetChapterFolder(chapter)}/package.zip"),
+            _ => null
+        };
+
         private async Task<IEnumerable<FileInfo>> AddPages(TChapter chapter, ZipArchive pages, bool deleteOld = false)
         {
             if (deleteOld)
