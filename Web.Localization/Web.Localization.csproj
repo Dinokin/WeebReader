@@ -53,4 +53,8 @@
             <LastGenOutput>Labels.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Data.Entities\Data.Entities.csproj" />
+    </ItemGroup>
 </Project>

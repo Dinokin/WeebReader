@@ -11,14 +11,28 @@ namespace WeebReader.Data.Services
     public class TitlesManager<TTitle> : GenericManager<TTitle> where TTitle : Title
     { 
         public TitlesManager(BaseContext context) : base(context) { }
+        
+        public async Task<long> Count(bool includeHidden = false)
+        {
+            if (includeHidden)
+                return await base.Count();
 
-        public override Task<IEnumerable<TTitle>> GetRange(int skip, int take) => Task.FromResult<IEnumerable<TTitle>>(DbSet.OrderBy(title => title.Name).Skip(skip).Take(take));
+            return await DbSet.LongCountAsync(title => title.Visible);
+        }
         
         public async Task<long> Count(string tagName)
         {
             var tag = await Context.Tags.Include(tagJoint => tagJoint.TitleTag).SingleOrDefaultAsync(tagInfo => tagInfo.Name == tagName);
 
             return tag?.TitleTag.LongCount() ?? 0;
+        }
+        
+        public async Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden = false)
+        {
+            if (includeHidden)
+                return await base.GetRange(skip, take);
+
+            return DbSet.Where(title => title.Visible).Skip(skip).Take(take);
         }
         
         public async Task<IEnumerable<TTitle>> GetRange(Tag tag, int skip, int take)
@@ -28,7 +42,7 @@ namespace WeebReader.Data.Services
             return targetTag == null ? new TTitle[0] : targetTag.TitleTag.Join(DbSet, titleTag => titleTag.TitleId, title => title.Id, (titleTag, title) => title)
                 .OrderBy(title => title.Name).Skip(skip).Take(take);
         }
-
+        
         public async Task<IEnumerable<Tag>> GetTags(TTitle title)
         {
             var targetTitle = await DbSet.Include(entity => entity.TitleTags).SingleOrDefaultAsync(entity => entity == title);

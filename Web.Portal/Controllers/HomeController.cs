@@ -9,7 +9,9 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
+using WeebReader.Web.Models.Controllers.BlogManager;
 using WeebReader.Web.Models.Controllers.ChaptersManager;
+using WeebReader.Web.Models.Controllers.Home;
 using WeebReader.Web.Models.Controllers.TitlesManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
@@ -24,21 +26,49 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly ChapterManager<Chapter> _chapterManager;
         private readonly ChapterArchiver<Chapter> _chapterArchiver;
         private readonly PagesManager<Page> _pagesManager;
+        private readonly PostsManager _postsManager;
 
-        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager)
+        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager, PostsManager postsManager)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
             _chapterManager = chapterManager;
             _chapterArchiver = chapterArchiver;
             _pagesManager = pagesManager;
+            _postsManager = postsManager;
         }
 
         [HttpGet("")]
-        public IActionResult Index() => View();
-        
-        [HttpGet("{action}")]
-        public IActionResult Titles() => throw new NotImplementedException();
+        public async Task<IActionResult> Index()
+        {
+            var posts = (await _postsManager.GetRange(0, 5, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
+            var releases = (await _chapterManager.GetRange(0, 8, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var titles = releases.Select(async chapter => Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null)).Select(task => task.Result);
+
+            return View(new Tuple<IEnumerable<PostModel>, IEnumerable<Tuple<TitleModel, ChapterModel>>>(posts,
+                releases.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter)).Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate)));
+        }
+
+        [HttpGet("{action}/{page:int?}")]
+        public async Task<IActionResult> Titles(ushort page)
+        {
+            var totalPages = Math.Ceiling(await _titlesManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPage);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            var titles = (await _titlesManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, _signInManager.IsSignedIn(User)))
+                .OrderBy(title => title.Status).ThenBy(title => title.Name).Select(title => Mapper.Map(title, null));
+            
+            ViewData["Page"] = page;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(titles);
+        }
+
+        [HttpGet("{action:slugify}")]
+        public IActionResult AboutUs() => View();
+
+        public IActionResult ContactUs() => throw new NotImplementedException();
+
+        public IActionResult ContactUs(ContactModel contactModel) => throw new NotImplementedException();
 
         [HttpGet("{action}/{titleId:Guid}/{page:int?}")]
         public async Task<IActionResult> Title(Guid titleId, ushort page = 1)
@@ -49,7 +79,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
                 return RedirectToAction("Titles");
 
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title) / (decimal) Constants.ItemsPerPage);
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
             var chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
 

@@ -24,13 +24,13 @@
             <a class="item" href="/">
                 <img src="~/assets/logo.png" alt="Logo"/>
             </a>
-            <a class="item">
+            <a id="titles" class="item" href="@Url.Action("Titles", "Home")">
                 @Labels.Titles
             </a>
-            <a class="item">
+            <a id="about-us" class="item" href="@Url.Action("AboutUs", "Home")" >
                 @Labels.AboutUs
             </a>
-            <a class="item">
+            <a id="contact-us" class="item">
                 @Labels.ContactUs
             </a>
         </div>
@@ -49,13 +49,13 @@
             </div>
         </div>
         <div class="ui vertical borderless fluid menu @(lightMode ? "inverted" : null)" style="display: none">
-            <a class="item">
+            <a id="titles-mobile" class="item" href="@Url.Action("Titles", "Home")">
                 @Labels.Titles
             </a>
-            <a class="item">
+            <a id="about-us-mobile" class="item" href="@Url.Action("AboutUs", "Home")" >
                 @Labels.AboutUs
             </a>
-            <a class="item">
+            <a id="contact-us-mobile" class="item">
                 @Labels.ContactUs
             </a>
         </div>

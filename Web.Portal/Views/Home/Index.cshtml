@@ -1,3 +1,27 @@
-﻿@{
-    Layout = "_HomeLayout";
+﻿@model Tuple<IEnumerable<PostModel>, IEnumerable<Tuple<TitleModel, ChapterModel>>>
+
+@{
+    ViewData["Title"] = Labels.Home;
 }
+
+<div class="ui center aligned container">
+    <div class="ui four stackable cards">
+        @foreach (var (title, chapter) in Model.Item2)
+        {
+            <div class="ui raised card">
+                <div class="content">
+                    <div class="center aligned content"><a href="@Url.Action("Title", new { titleId = title.TitleId })"><img class="ui bordered image" src="/content/@title.TitleId/cover.png"></a></div>
+                    <h4 class="ui center aligned header line-clamp"><a href="@Url.Action("Title", new { titleId = title.TitleId })">@title.Name</a></h4>
+                    <div class="center aligned description">
+                        <p><i class="file outline icon"></i>@Labels.Chapter @chapter.Number</p>
+                        <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p>
+                    </div>
+                </div>
+                <a class="ui small black bottom attached button" href="@Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })">
+                    @Labels.Read
+                    <i class="angle double right icon"></i>
+                </a>
+            </div>
+        }
+    </div>
+</div>

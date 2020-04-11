@@ -8,6 +8,7 @@ using WeebReader.Data.Entities.Abstract;
 using WeebReader.Web.Models.Controllers.BlogManager;
 using WeebReader.Web.Models.Controllers.ChaptersManager;
 using WeebReader.Web.Models.Controllers.Home;
+using WeebReader.Web.Models.Controllers.Others;
 using WeebReader.Web.Models.Controllers.TitlesManager;
 using WeebReader.Web.Models.Controllers.UsersManager;
 using WeebReader.Web.Models.Others.Attributes;

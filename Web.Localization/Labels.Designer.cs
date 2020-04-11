@@ -151,11 +151,29 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Become Our Patreon.
+        /// </summary>
+        public static string BecomeOurPatreon {
+            get {
+                return ResourceManager.GetString("BecomeOurPatreon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Blog.
         /// </summary>
         public static string Blog {
             get {
                 return ResourceManager.GetString("Blog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buy Us A Coffee.
+        /// </summary>
+        public static string BuyUsACoffee {
+            get {
+                return ResourceManager.GetString("BuyUsACoffee", resourceCulture);
             }
         }
         
@@ -493,6 +511,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Home.
+        /// </summary>
+        public static string Home {
+            get {
+                return ResourceManager.GetString("Home", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Insert your e-mail.
         /// </summary>
         public static string InsertEmail {
@@ -759,6 +786,15 @@ namespace WeebReader.Web.Localization {
         public static string PreviousChapter {
             get {
                 return ResourceManager.GetString("PreviousChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read.
+        /// </summary>
+        public static string Read {
+            get {
+                return ResourceManager.GetString("Read", resourceCulture);
             }
         }
         
@@ -1110,6 +1146,15 @@ namespace WeebReader.Web.Localization {
         public static string Users {
             get {
                 return ResourceManager.GetString("Users", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Details.
+        /// </summary>
+        public static string ViewDetails {
+            get {
+                return ResourceManager.GetString("ViewDetails", resourceCulture);
             }
         }
         

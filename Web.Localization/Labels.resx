@@ -390,4 +390,19 @@
     <data name="Page">
         <value>Page</value>
     </data>
+    <data name="ViewDetails">
+        <value>View Details</value>
+    </data>
+    <data name="Home">
+        <value>Home</value>
+    </data>
+    <data name="Read">
+        <value>Read</value>
+    </data>
+    <data name="BecomeOurPatreon">
+        <value>Become Our Patreon</value>
+    </data>
+    <data name="BuyUsACoffee">
+        <value>Buy Us A Coffee</value>
+    </data>
 </root>

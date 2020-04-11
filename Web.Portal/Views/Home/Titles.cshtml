@@ -1,0 +1,64 @@
+﻿@model IEnumerable<TitleModel>
+
+@{
+    ViewData["Title"] = Labels.Titles; 
+    var page = (ushort) ViewData["Page"];
+    var totalPages = (decimal) ViewData["TotalPages"];
+}
+
+@section Headers
+{
+    <script>
+    $(() => $("#titles,#titles-mobile").addClass("active"));
+    </script>
+}
+
+<div class="ui center aligned container">
+    <div class="ui four stackable cards">
+        @foreach (var title in Model)
+        {
+            <div class="ui raised card">
+                <div class="content">
+                    <div class="center aligned content"><a href="@Url.Action("Title", new { titleId = title.TitleId })"><img class="ui bordered image" src="/content/@title.TitleId/cover.png"></a></div>
+                    <h4 class="ui center aligned header line-clamp"><a href="@Url.Action("Title", new { titleId = title.TitleId })">@title.Name</a></h4>
+                    <div class="center aligned description">
+                        <p>@Labels.Status: @TitleStatusTranslator.FromStatus(title.Status)</p>
+                    </div>
+                </div>
+                <a class="ui small black bottom attached button" href="@Url.Action("Title", new { titleId = title.TitleId })">
+                    @Labels.ViewDetails
+                </a>
+            </div>
+        }
+    </div>
+    @if (totalPages > 1)
+    {
+        <div class="ui segment">
+            <div class="ui three column grid">
+                <div class="left aligned column">
+                    <div class="ui basic mini buttons">
+                        <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { page = 1 })">
+                            <i class="angle double left icon"></i>
+                        </a>
+                        <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { page = page - 1 })">
+                            <i class="angle left icon"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="current-page" class="middle aligned center aligned column">
+                    @string.Format(Labels.XOfY, page, totalPages)
+                </div>
+                <div class="right aligned column">
+                    <div class="ui basic mini buttons">
+                        <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { page = page + 1 })">
+                            <i class="angle right icon"></i>
+                        </a>
+                        <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { page = totalPages })">
+                            <i class="angle double right icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

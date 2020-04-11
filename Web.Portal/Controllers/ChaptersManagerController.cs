@@ -42,7 +42,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return RedirectToAction("Index", "TitlesManager");
             }
             
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title) / (decimal) Constants.ItemsPerPage);
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title, true) / (decimal) Constants.ItemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Title"] = $"{Labels.Chapters} - {title.Name}";

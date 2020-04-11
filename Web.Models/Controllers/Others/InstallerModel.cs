@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.Controllers.Home
+namespace WeebReader.Web.Models.Controllers.Others
 {
     public class InstallerModel
     {

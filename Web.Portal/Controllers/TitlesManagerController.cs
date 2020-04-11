@@ -33,14 +33,14 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{page:int?}")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
-            var totalPages = Math.Ceiling(await _titleManager.Count() / (decimal) Constants.ItemsPerPage);
+            var totalPages = Math.Ceiling(await _titleManager.Count(true) / (decimal) Constants.ItemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _titleManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage)).Select(title => Mapper.Map(title, null)));
+            return View((await _titleManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, true)).Select(title => Mapper.Map(title, null)));
         }
         
         [HttpGet("{action}")]

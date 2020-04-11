@@ -25,6 +25,7 @@
         let chapterContainer = $("#chapter-container");
         let jumpButton = $("#jump-button");
         
+        $("#titles,#titles-mobile").addClass("active");
         $(".ui.dropdown").dropdown();
         
         $("#chapter-selector").dropdown({
@@ -223,7 +224,7 @@
                     <div class="menu">
                         @foreach (var chapter in chapters)
                         {
-                            <div class="item" data-value="@(chapter.ChapterId == Model.Item2.ChapterId ? "default" : $"{siteAddress}{Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })}")">@Labels.Chapter @chapter.Number</div>
+                            <div class="item" data-value="@(chapter.ChapterId == Model.Item2.ChapterId ? "default" : Url.Action("ChapterRead", new { chapterId = chapter.ChapterId }))">@Labels.Chapter @chapter.Number</div>
                         }
                     </div>
                 </div>

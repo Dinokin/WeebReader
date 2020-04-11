@@ -1,4 +1,8 @@
-﻿.ui.vertical.menu .item > i.icon.left {
+﻿footer {
+    padding: 1rem;
+}
+
+.ui.vertical.menu .item > i.icon.left {
     float: none;
     margin: 0 0.35714286em 0 0;
 }
@@ -15,11 +19,30 @@
     text-overflow: ellipsis;
 }
 
+.line-clamp {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .background {
     background-image: url(/assets/background.png);
     background-repeat: no-repeat;
     background-size: 100%;
     background-attachment: fixed;
+}
+
+.background.dark {
+    color: rgba(255,255,255,0.9);
+    background-image: none;
+    background-color: #1A1A1A;
+}
+
+.background.dark.light {
+    color: rgba(0,0,0,0.87);
+    background-color: #E6E6E6;
 }
 
 .no-margin-top {
@@ -36,6 +59,10 @@
 
 .no-margin-right {
     margin-right: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
 }
 
 .no-border {
@@ -60,25 +87,6 @@
 
 .max-width-450 {
     max-width: 450px;
-}
-
-footer {
-    padding: 1rem;
-}
-
-.background.dark {
-    color: rgba(255,255,255,0.9);
-    background-image: none;
-    background-color: #1A1A1A;
-}
-
-.background.dark.light {
-    color: rgba(0,0,0,0.87);
-    background-color: #E6E6E6;
-}
-
-.no-padding {
-    padding: 0 !important;
 }
 
 .mobile-menu {

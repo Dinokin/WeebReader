@@ -16,6 +16,9 @@
     <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover.png")"/>
     <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
     <meta property="og:site_name" content="@siteName"/>
+    <script>
+    $(() => $("#titles,#titles-mobile").addClass("active"));
+    </script>
 }
 
 <div class="ui container">
@@ -75,31 +78,34 @@
                     </div>
                 }
             </div>
-            <div class="ui three column grid">
-                <div class="left aligned column">
-                    <div class="ui basic mini buttons">
-                        <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = 1 })">
-                            <i class="angle double left icon"></i>
-                        </a>
-                        <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page - 1 })">
-                            <i class="angle left icon"></i>
-                        </a>
+            @if (totalPages >= 1)
+            {
+                <div class="ui three column grid">
+                    <div class="left aligned column">
+                        <div class="ui basic mini buttons">
+                            <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = 1 })">
+                                <i class="angle double left icon"></i>
+                            </a>
+                            <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page - 1 })">
+                                <i class="angle left icon"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div id="current-page" class="middle aligned center aligned column">
-                    @string.Format(Labels.XOfY, page, totalPages)
-                </div>
-                <div class="right aligned column">
-                    <div class="ui basic mini buttons">
-                        <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page + 1 })">
-                            <i class="angle right icon"></i>
-                        </a>
-                        <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = totalPages })">
-                            <i class="angle double right icon"></i>
-                        </a>
+                    <div id="current-page" class="middle aligned center aligned column">
+                        @string.Format(Labels.XOfY, page, totalPages)
                     </div>
-                </div>
-            </div>
+                    <div class="right aligned column">
+                        <div class="ui basic mini buttons">
+                            <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page + 1 })">
+                                <i class="angle right icon"></i>
+                            </a>
+                            <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = totalPages })">
+                                <i class="angle double right icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>   
+            }
         </div>
     </div>
 </div>
