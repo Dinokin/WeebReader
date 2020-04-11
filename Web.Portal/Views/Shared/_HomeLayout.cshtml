@@ -1,0 +1,87 @@
+﻿@inject ParametersManager ParametersManager
+
+@{
+    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
+    var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
+    var discordLink = await ParametersManager.GetValue<string?>(Parameter.Types.ContactDiscordLink);
+    var lightMode = ViewData["BodyClass"]?.ToString() != Constants.DarkModeClasses;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <partial name="_SharedHeaders"/>
+    <script>
+    $(() => {
+        $(".toggle").on("click", () => $(".mobile.only.grid .ui.vertical.menu").toggle(100));
+    });
+    </script>
+    @await RenderSectionAsync("Headers", false)
+</head>
+<body class="@(ViewData["BodyClass"] ?? "background")">
+<div class="ui computer only grid no-margin-top no-margin-bottom">
+    <div class="ui top attached menu @(lightMode ? "inverted" : null)">
+        <div class="ui container">
+            <a class="item" href="/">
+                <img src="~/assets/logo.png" alt="Logo"/>
+            </a>
+            <a class="item">
+                @Labels.Titles
+            </a>
+            <a class="item">
+                @Labels.AboutUs
+            </a>
+            <a class="item">
+                @Labels.ContactUs
+            </a>
+        </div>
+    </div>
+</div>
+<div class="ui tablet mobile only grid no-margin-top no-margin-bottom">
+    <div class="ui top attached menu mobile-menu @(lightMode ? "inverted" : null)">
+        <a class="item" href="/">
+            <img src="~/assets/logo.png" alt="Logo"/>
+        </a>
+        <div class="right menu">
+            <div class="item">
+                <button class="ui icon toggle @(lightMode ? "black" : null) button">
+                    <i class="icon bars"></i>
+                </button>
+            </div>
+        </div>
+        <div class="ui vertical borderless fluid menu @(lightMode ? "inverted" : null)" style="display: none">
+            <a class="item">
+                @Labels.Titles
+            </a>
+            <a class="item">
+                @Labels.AboutUs
+            </a>
+            <a class="item">
+                @Labels.ContactUs
+            </a>
+        </div>
+    </div>
+</div>
+<div class="ui fluid container">
+    <div class="ui hidden divider"></div>
+    @RenderBody()
+</div>
+<div class="ui center aligned container">
+    <footer>
+        <div class="ui label">
+            @if (discordEnabled)
+            {
+                <p>© @DateTime.Now.Year @siteName
+                    <a href="@discordLink">
+                        <img class="ui mini avatar image" src="~/assets/discord_a.png" alt="Discord Logo"/>
+                    </a>
+                </p>
+            }
+            else
+            {
+                <p>© @DateTime.Now.Year @siteName</p>
+            }
+        </div>
+    </footer>
+</div>
+</body>
+</html>

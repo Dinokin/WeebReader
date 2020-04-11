@@ -66,7 +66,7 @@ namespace WeebReader.Web.Services
         {
             if (deleteOld)
             {
-                await _pageManager.DeleteRange(await _pageManager.GetRange(chapter));
+                await _pageManager.DeleteRange(await _pageManager.GetAll(chapter));
 
                 GetChapterFolder(chapter).Delete(true);
             }

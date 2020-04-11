@@ -30,6 +30,14 @@
     margin-bottom: 0 !important;
 }
 
+.no-margin-left {
+    margin-left: 0 !important;
+}
+
+.no-margin-right {
+    margin-right: 0 !important;
+}
+
 .no-border {
     border: 0 !important;
 }
@@ -56,4 +64,32 @@
 
 footer {
     padding: 1rem;
+}
+
+.background.dark {
+    color: rgba(255,255,255,0.9);
+    background-image: none;
+    background-color: #1A1A1A;
+}
+
+.background.dark.light {
+    color: rgba(0,0,0,0.87);
+    background-color: #E6E6E6;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.mobile-menu {
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+#jump-button {
+    position: fixed;
+    bottom: 1rem;
+    right: 1.5rem;
+    z-index: 99;
+    opacity: 0.5;
 }

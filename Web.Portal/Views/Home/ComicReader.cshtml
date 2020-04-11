@@ -1,1 +1,278 @@
-﻿@model Tuple<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>
+﻿@inject ParametersManager ParametersManager
+@model Tuple<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>
+
+@{
+    ViewData["Title"] = $"{Labels.Chapter} {Model.Item2.Number} - {Model.Item1.Name}";
+    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
+    var siteAddress = await ParametersManager.GetValue<string>(Parameter.Types.SiteAddress);
+    var pages = Model.Item3.Select(page => $"/content/{Model.Item1.TitleId}/{Model.Item2.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
+    var longStrip = (bool) ViewData["LongStrip"];
+    var darkMode = (string?) ViewData["BodyClass"] != Constants.LightModeClasses;
+    var previousChapter = (Guid?) ViewData["PreviousChapter"];
+    var nextChapter = (Guid?) ViewData["NextChapter"];
+    var chapters = ((IEnumerable<ChapterModel>) ViewData["Chapters"]).ToArray();
+}
+
+@section Headers
+{
+    <meta property="og:title" content="@(Model.Item2.Volume != null && Model.Item2.Volume > 0 ? $"{Labels.Vol}{Model.Item2.Volume}" : null)@Labels.Ch @Model.Item2.Number - @Model.Item1.Name"/>
+    <meta property="og:url" content="@($"{siteAddress}{Url.Action("ChapterRead", new { chapterId = Model.Item2.ChapterId })}")"/>
+    <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover.png")"/>
+    <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
+    <meta property="og:site_name" content="@siteName"/>
+    <script>
+    $(() => {
+        let chapterContainer = $("#chapter-container");
+        let jumpButton = $("#jump-button");
+        
+        $(".ui.dropdown").dropdown();
+        
+        $("#chapter-selector").dropdown({
+        onChange: (value, text, element) => {
+            if (value !== "default") {
+                window.location.href = value;
+            }
+        }
+        });
+        
+        $(".options").popup({
+        popup: $("#popup"),
+        on: "click"
+        });
+        
+        $("#switch-view-mode").on("click", () => {
+            const cookieName = "@Html.Raw($"{Model.Item1.TitleId}_long_strip")";
+            
+            if (getCookie(cookieName) === "true") {
+                setCookie(cookieName, false, 3650);
+            } else {
+                setCookie(cookieName, true, 3650);
+            }
+            
+            location.reload();
+        });
+       
+        $("#switch-theme").on("click", () => {
+            if (getCookie("reader_theme") !== "light") {
+                setCookie("reader_theme", "light", 3650);
+            } else {
+                setCookie("reader_theme", "dark", 3650);
+            }
+            
+            location.reload();
+        });
+        
+        jumpButton.on("click", () => {
+            scrollToTop(chapterContainer);
+        });
+        
+        $(document).on("scroll", () => {
+            if ($(document).scrollTop() > 125) {
+                jumpButton.removeClass("deactivated");
+            } else {
+                jumpButton.addClass("deactivated");
+            }
+        });
+    });
+    </script>
+    @if (!longStrip)
+    {
+        <script>
+        $(() => {
+            let pages = @Html.Raw(JsonConvert.SerializeObject(pages));
+            let pageSelector = $("#page-selector");
+            let chapterContainer = $("#chapter-container");
+            let pageContainer = $("#page-container");
+            let page = $("#page");
+            let currentPage = 0;
+            let previousChapter = "@(previousChapter != null ? Url.Action("ChapterRead", new { chapterId = previousChapter }) : string.Empty)";
+            let nextChapter = "@(nextChapter != null ? Url.Action("ChapterRead", new { chapterId = nextChapter }) : string.Empty)";
+            
+            pageSelector.dropdown({
+            onChange: (value, text, element) => {
+                currentPage = Number(value);
+                setPage(value);
+                previousPagePreload();
+                nextPagePreload();
+            }
+            });
+            
+            chapterContainer.on("click", (event) => {            
+                let pageWidth = chapterContainer.innerWidth();
+                let pageOffset = chapterContainer.offset();
+                let clickLocation = event.pageX - pageOffset.left;
+            
+                if (pageWidth / 2 > clickLocation) {
+                    goPreviousPage();
+                } else {
+                    goNextPage();
+                }
+            });
+            
+            pageContainer.dimmer({
+            closable: false,
+            displayLoader: true
+            });
+            
+            page.on("load", () => pageContainer.dimmer("hide"));
+            
+            setPage();
+            
+            function setPage() {
+                pageContainer.dimmer("show");
+                page.attr("src", pages[currentPage]);
+                pageSelector.dropdown("set selected", [currentPage]);
+            }
+            
+            function goNextPage() {
+                if (currentPage + 1 >= pages.length) {
+                    if (nextChapter.length > 0) {
+                        window.location.href = nextChapter;
+                    } else {
+                        $("body").toast({
+                        class: "error",
+                        message: "@OtherMessages.NoNextChapter"
+                        });
+                    }
+                    
+                    return;
+                }
+
+                scrollToTop(pageContainer);
+                currentPage++;
+                setPage();
+                nextPagePreload();
+            }
+        
+            function goPreviousPage() {
+                if (currentPage - 1 < 0) {
+                    if (previousChapter.length > 0) {
+                        window.location.href = previousChapter;
+                    } else {
+                        $("body").toast({
+                        class: "error",
+                        message: "@OtherMessages.NoPreviousChapter"
+                        });
+                    }
+                    
+                    return;
+                }
+                
+                scrollToTop(pageContainer);
+                currentPage--;
+                setPage();
+                previousPagePreload();
+            }
+            
+            function nextPagePreload() {
+                for (let i = 1; i <= 2; i++) {
+                    if (currentPage + i < pages.length) {
+                        new Image().src = pages[currentPage + i];
+                    }
+                }
+            }
+            
+            function previousPagePreload() {
+                for (let i = 1; i <= 2; i++) {
+                    if (currentPage - i >= 0) {
+                        new Image().src = pages[currentPage - i];
+                    }
+                }
+            }            
+        });
+        </script>
+    }
+    else
+    {
+        <script>
+        $(() => {
+            $("#chapter-container").children().visibility({
+            type: "image",
+            transition: "fade in",
+            duration: 1000
+            });
+        });
+        </script>
+    }
+}
+<button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>
+<div class="ui container">
+    <div class="ui centered very relaxed grid no-margin-top no-margin-bottom">
+        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Title", new {titleId = Model.Item1.TitleId})">@Model.Item1.Name</a></div>
+        <div class="row no-padding">
+            <div class="ui secondary massive compact menu @(darkMode ? "inverted" : null)">
+                <a class="item @(previousChapter != null ? null : "disabled")" href="@(previousChapter != null ? Url.Action("ChapterRead", new {chapterId = previousChapter}) : null)">
+                    <i class="chevron left icon"></i>
+                    <i class="book open icon"></i>
+                </a>
+                <a class="options item">
+                    <i class="cog icon"></i>
+                </a>
+                <a class="item @(nextChapter != null ? null : "disabled")" href="@(nextChapter != null ? Url.Action("ChapterRead", new {chapterId = nextChapter}) : null)">
+                    <i class="book open icon"></i>
+                    <i class="chevron right icon"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 0;">
+            <div class="seven wide column @(!longStrip ? "right aligned" : "center aligned")">
+                <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown">
+                    <input type="hidden"/>
+                    <div class="text">@Labels.Chapter @Model.Item2.Number</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        @foreach (var chapter in chapters)
+                        {
+                            <div class="item" data-value="@(chapter.ChapterId == Model.Item2.ChapterId ? "default" : $"{siteAddress}{Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })}")">@Labels.Chapter @chapter.Number</div>
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (!longStrip)
+            {
+                <div class="six wide left aligned column">
+                    <div id="page-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown">
+                        <input type="hidden"/>
+                        <div class="text">@Labels.Page 1</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            @for (var i = 0; i < pages.Length; i++)
+                            {
+                                <div class="item" data-value="@i">@Labels.Page @(i+1)</div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="popup" class="ui popup bottom center hidden">
+    <div class="ui link list">
+        <a id="switch-view-mode" class="item">@Labels.SwitchViewMode</a>
+        <a id="switch-theme" class="item">@Labels.SwitchTheme</a>
+    </div>
+</div>
+<div id="chapter-container" class="ui center aligned fluid container">
+    @if (longStrip)
+    {
+        for (var i = 0; i < pages.Length; i++)
+        {
+            <img class="ui bordered image centered" src="/assets/placeholder_page.png" data-src="@pages[i]" alt="Page @(i + 1)"/>
+
+            if (!Model.Item1.LongStrip && i != pages.Length - 1)
+            {
+                <div class="ui hidden divider"></div>
+            }
+        }
+    }
+    else
+    {
+        <div id="page-container" class="ui dimmable" style="display: inline-block">
+            <div class="ui loader"></div>
+            <img id="page" class="ui bordered centered image"/>
+        </div>
+    }
+</div>

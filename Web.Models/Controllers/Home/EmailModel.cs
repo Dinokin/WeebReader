@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.Home
+namespace WeebReader.Web.Models.Controllers.Home
 {
     public class EmailModel
     {

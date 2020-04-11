@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.BlogManager
+namespace WeebReader.Web.Models.Controllers.BlogManager
 {
     public class PostModel
     {

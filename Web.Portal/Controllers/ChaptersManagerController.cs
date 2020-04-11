@@ -10,7 +10,7 @@ using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models.ChaptersManager;
+using WeebReader.Web.Models.Controllers.ChaptersManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;

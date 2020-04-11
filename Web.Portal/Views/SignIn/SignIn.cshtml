@@ -2,7 +2,6 @@
 @model SignInModel
 
 @{
-    Layout = "_SignInLayout";
     ViewData["Title"] = Labels.SignIn;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];

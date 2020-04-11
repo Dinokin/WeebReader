@@ -372,4 +372,22 @@
     <data name="Vol">
         <value>Vol.</value>
     </data>
+    <data name="PreviousChapter">
+        <value>Previous Chapter</value>
+    </data>
+    <data name="NextChapter">
+        <value>Next Chapter</value>
+    </data>
+    <data name="SwitchTheme">
+        <value>Switch Theme</value>
+    </data>
+    <data name="SwitchViewMode">
+        <value>Switch View Mode</value>
+    </data>
+    <data name="Ch">
+        <value>Ch.</value>
+    </data>
+    <data name="Page">
+        <value>Page</value>
+    </data>
 </root>

@@ -132,4 +132,10 @@
     <data name="SomeParametersFailedToUpdate">
         <value>Some parameters failed to update.</value>
     </data>
+    <data name="NoNextChapter">
+        <value>There's no next chapter.</value>
+    </data>
+    <data name="NoPreviousChapter">
+        <value>There's no previous chapter.</value>
+    </data>
 </root>

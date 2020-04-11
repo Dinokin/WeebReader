@@ -4,7 +4,7 @@ using WeebReader.Data.Entities;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Others.Attributes;
 
-namespace WeebReader.Web.Models.ParametersManager
+namespace WeebReader.Web.Models.Controllers.ParametersManager
 {
     public class EmailParametersModel : IValidatableObject
     {

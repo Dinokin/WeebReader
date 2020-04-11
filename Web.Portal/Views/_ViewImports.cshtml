@@ -1,17 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.Extensions.Configuration
+@using Newtonsoft.Json
 @using System.Text.RegularExpressions
 @using WeebReader.Data.Entities
 @using WeebReader.Data.Entities.Abstract
 @using WeebReader.Data.Services
+@using WeebReader.Web.Models.Controllers.BlogManager;
+@using WeebReader.Web.Models.Controllers.ChaptersManager;
+@using WeebReader.Web.Models.Controllers.Home;
+@using WeebReader.Web.Models.Controllers.ParametersManager;
+@using WeebReader.Web.Models.Controllers.TitlesManager;
+@using WeebReader.Web.Models.Controllers.UsersManager;
 @using WeebReader.Web.Localization
 @using WeebReader.Web.Localization.Utilities
-@using WeebReader.Web.Models.BlogManager
-@using WeebReader.Web.Models.ChaptersManager
-@using WeebReader.Web.Models.Home
-@using WeebReader.Web.Models.ParametersManager
-@using WeebReader.Web.Models.TitlesManager
-@using WeebReader.Web.Models.UsersManager
 @using WeebReader.Web.Portal
+@using WeebReader.Web.Portal.Others
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

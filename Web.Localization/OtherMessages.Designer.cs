@@ -232,11 +232,29 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There&apos;s no next chapter..
+        /// </summary>
+        public static string NoNextChapter {
+            get {
+                return ResourceManager.GetString("NoNextChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No post exist in the database..
         /// </summary>
         public static string NoPostExist {
             get {
                 return ResourceManager.GetString("NoPostExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There&apos;s no previous chapter..
+        /// </summary>
+        public static string NoPreviousChapter {
+            get {
+                return ResourceManager.GetString("NoPreviousChapter", resourceCulture);
             }
         }
         

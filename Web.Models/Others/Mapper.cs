@@ -5,12 +5,12 @@ using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
-using WeebReader.Web.Models.BlogManager;
-using WeebReader.Web.Models.ChaptersManager;
-using WeebReader.Web.Models.Home;
+using WeebReader.Web.Models.Controllers.BlogManager;
+using WeebReader.Web.Models.Controllers.ChaptersManager;
+using WeebReader.Web.Models.Controllers.Home;
+using WeebReader.Web.Models.Controllers.TitlesManager;
+using WeebReader.Web.Models.Controllers.UsersManager;
 using WeebReader.Web.Models.Others.Attributes;
-using WeebReader.Web.Models.TitlesManager;
-using WeebReader.Web.Models.UsersManager;
 
 namespace WeebReader.Web.Models.Others
 {

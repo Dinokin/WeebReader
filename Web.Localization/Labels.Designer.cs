@@ -169,6 +169,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ch..
+        /// </summary>
+        public static string Ch {
+            get {
+                return ResourceManager.GetString("Ch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change E-mail.
         /// </summary>
         public static string ChangeEmail {
@@ -610,6 +619,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Next Chapter.
+        /// </summary>
+        public static string NextChapter {
+            get {
+                return ResourceManager.GetString("NextChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string No {
@@ -660,6 +678,15 @@ namespace WeebReader.Web.Localization {
         public static string OriginalName {
             get {
                 return ResourceManager.GetString("OriginalName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        public static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
             }
         }
         
@@ -723,6 +750,15 @@ namespace WeebReader.Web.Localization {
         public static string Posts {
             get {
                 return ResourceManager.GetString("Posts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous Chapter.
+        /// </summary>
+        public static string PreviousChapter {
+            get {
+                return ResourceManager.GetString("PreviousChapter", resourceCulture);
             }
         }
         
@@ -948,6 +984,24 @@ namespace WeebReader.Web.Localization {
         public static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch Theme.
+        /// </summary>
+        public static string SwitchTheme {
+            get {
+                return ResourceManager.GetString("SwitchTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch View Mode.
+        /// </summary>
+        public static string SwitchViewMode {
+            get {
+                return ResourceManager.GetString("SwitchViewMode", resourceCulture);
             }
         }
         

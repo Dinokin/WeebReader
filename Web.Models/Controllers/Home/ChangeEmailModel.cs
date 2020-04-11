@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.Home
+namespace WeebReader.Web.Models.Controllers.Home
 {
-    public class ResetPasswordModel
+    public class ChangeEmailModel
     {
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UserIdRequired")]
         public Guid UserId { get; set; }
@@ -12,8 +12,8 @@ namespace WeebReader.Web.Models.Home
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "TokenRequired")]
         public string Token { get; set; } = string.Empty;
 
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "NewPasswordRequired")]
-        [MinLength(8, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumPasswordLength")]
-        public string NewPassword { get; set; } = string.Empty;
+        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "EmailRequired")]
+        [EmailAddress(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ValidEmailRequired")]
+        public string Email { get; set; } = string.Empty;
     }
 }

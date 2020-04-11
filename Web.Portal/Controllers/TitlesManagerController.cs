@@ -10,8 +10,8 @@ using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
+using WeebReader.Web.Models.Controllers.TitlesManager;
 using WeebReader.Web.Models.Others;
-using WeebReader.Web.Models.TitlesManager;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 

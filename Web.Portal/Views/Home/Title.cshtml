@@ -2,8 +2,7 @@
 @model Tuple<TitleModel, IEnumerable<ChapterModel>>
 
 @{
-    Layout = "_Layout";
-    ViewData["Title"] = $"{Model.Item1.Name} - {Labels.Titles}";
+    ViewData["Title"] = $"{Model.Item1.Name}";
     var page = (ushort) ViewData["Page"];
     var totalPages = (decimal) ViewData["TotalPages"];
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
@@ -13,90 +12,92 @@
 @section Headers
 {
     <meta property="og:title" content="@Model.Item1.Name"/>
-    <meta property="og:url" content="@($"{siteAddress}{Url.Action("Titles", new { titleId = Model.Item1.TitleId })}")"/>
+    <meta property="og:url" content="@($"{siteAddress}{Url.Action("Title", new { titleId = Model.Item1.TitleId })}")"/>
     <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover.png")"/>
     <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
     <meta property="og:site_name" content="@siteName"/>
 }
 
-<div class="ui raised segment">
-    <div class="ui hidden divider"></div>
-    <div class="image">
-        <img class="ui large bordered centered image" src="/content/@Model.Item1.TitleId/cover.png" alt="Series Cover"/>
-    </div>
-    <div class="ui hidden divider"></div>
-    <div class="content">
-        <h1 class="ui centered header">@Model.Item1.Name</h1>
-        @if (!string.IsNullOrWhiteSpace(Model.Item1.OriginalName))
-        {
-            <h5 class="ui centered header">@Model.Item1.OriginalName</h5>
-        }
-        <div class="ui center aligned container">
-            <p>@Labels.Author: @Model.Item1.Author</p>
-            <p>@Labels.Artist: @Model.Item1.Artist</p>
+<div class="ui container">
+    <div class="ui raised segment">
+        <div class="ui hidden divider"></div>
+        <div class="image">
+            <img class="ui large bordered centered image" src="/content/@Model.Item1.TitleId/cover.png" alt="Series Cover"/>
         </div>
         <div class="ui hidden divider"></div>
-        <div class="ui hidden divider"></div>
-        <div class="extra">
-            <h5>@Labels.Tags</h5>
-            @foreach (var tag in @Model.Item1.Tags.Split(","))
+        <div class="content">
+            <h1 class="ui centered header">@Model.Item1.Name</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Item1.OriginalName))
             {
-                <div class="ui label">@tag</div>
+                <h5 class="ui centered header">@Model.Item1.OriginalName</h5>
             }
-        </div>
-        <div class="ui hidden divider"></div>
-        <div class="description">
-            <h5>@Labels.Synopsis</h5>
-            @Html.Raw(Model.Item1.Synopsis)
+            <div class="ui center aligned container">
+                <p>@Labels.Author: @Model.Item1.Author</p>
+                <p>@Labels.Artist: @Model.Item1.Artist</p>
+            </div>
+            <div class="ui hidden divider"></div>
+            <div class="ui hidden divider"></div>
+            <div class="extra">
+                <h5>@Labels.Tags</h5>
+                @foreach (var tag in @Model.Item1.Tags.Split(","))
+                {
+                    <div class="ui label">@tag</div>
+                }
+            </div>
+            <div class="ui hidden divider"></div>
+            <div class="description">
+                <h5>@Labels.Synopsis</h5>
+                @Html.Raw(Model.Item1.Synopsis)
+            </div>
         </div>
     </div>
-</div>
-<div class="ui hidden divider"></div>
-<div class="ui raised segment">
-    <div class="ui top attached tabular menu">
-        <a class="item active" data-tab="chapters">
-            <h5>@Labels.Chapters</h5>
-        </a>
-    </div>
-    <div class="ui active bottom attached tab segment">
-        <div class="ui relaxed divided list">
-            @foreach (var chapter in Model.Item2)
-            {
-                <div class="item">
-                    <div class="content">
-                        <p class="header">
-                            <a href="@Url.Action("Titles", new { titleId = chapter.TitleId, chapterId = chapter.ChapterId, download = true })"><i class="download icon"></i></a>
-                            <a href="@Url.Action("Titles", new {titleId = chapter.TitleId, chapterId = chapter.ChapterId})">
-                                @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume}" : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)
-                            </a>
-                        </p>
+    <div class="ui hidden divider"></div>
+    <div class="ui raised segment">
+        <div class="ui top attached tabular menu">
+            <a class="item active" data-tab="chapters">
+                <h5>@Labels.Chapters</h5>
+            </a>
+        </div>
+        <div class="ui active bottom attached tab segment">
+            <div class="ui relaxed divided list">
+                @foreach (var chapter in Model.Item2)
+                {
+                    <div class="item">
+                        <div class="content">
+                            <p class="header add-ellipsis">
+                                <a href="@Url.Action("ChapterDownload", new { chapterId = chapter.ChapterId })"><i class="download icon"></i></a>
+                                <a href="@Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })">
+                                    @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume}" : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)
+                                </a>
+                            </p>
+                        </div>
+                        <div class="description"><p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p></div>
                     </div>
-                    <div class="description"><p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p></div>
-                </div>
-            }
-        </div>
-        <div class="ui three column grid">
-            <div class="left aligned column">
-                <div class="ui basic mini buttons">
-                    <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { titleId = Model.Item1.TitleId, page = 1 })">
-                        <i class="angle double left icon"></i>
-                    </a>
-                    <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { titleId = Model.Item1.TitleId, page = page - 1 })">
-                        <i class="angle left icon"></i>
-                    </a>
-                </div>
+                }
             </div>
-            <div id="current-page" class="middle aligned center aligned column">
-                @string.Format(Labels.XOfY, page, totalPages)
-            </div>
-            <div class="right aligned column">
-                <div class="ui basic mini buttons">
-                    <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { titleId = Model.Item1.TitleId, page = page + 1 })">
-                        <i class="angle right icon"></i>
-                    </a>
-                    <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Titles", new { titleId = Model.Item1.TitleId, page = totalPages })">
-                        <i class="angle double right icon"></i>
-                    </a>
+            <div class="ui three column grid">
+                <div class="left aligned column">
+                    <div class="ui basic mini buttons">
+                        <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = 1 })">
+                            <i class="angle double left icon"></i>
+                        </a>
+                        <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page - 1 })">
+                            <i class="angle left icon"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="current-page" class="middle aligned center aligned column">
+                    @string.Format(Labels.XOfY, page, totalPages)
+                </div>
+                <div class="right aligned column">
+                    <div class="ui basic mini buttons">
+                        <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page + 1 })">
+                            <i class="angle right icon"></i>
+                        </a>
+                        <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = totalPages })">
+                            <i class="angle double right icon"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

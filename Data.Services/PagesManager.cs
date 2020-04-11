@@ -13,6 +13,6 @@ namespace WeebReader.Data.Services
 
         public async Task<long> Count(Chapter chapter) => await DbSet.LongCountAsync(page => page.ChapterId == chapter.Id);
 
-        public Task<IEnumerable<TPage>> GetRange(Chapter chapter) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapter.Id));
+        public Task<IEnumerable<TPage>> GetAll(Chapter chapter) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapter.Id));
     }
 }

@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using WeebReader.Web.Localization;
 
-namespace WeebReader.Web.Models.ChaptersManager
+namespace WeebReader.Web.Models.Controllers.ChaptersManager
 {
     public class ChapterModel
     {

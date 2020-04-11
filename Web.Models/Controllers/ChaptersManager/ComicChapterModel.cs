@@ -2,7 +2,7 @@
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Others.Attributes;
 
-namespace WeebReader.Web.Models.ChaptersManager
+namespace WeebReader.Web.Models.Controllers.ChaptersManager
 {
     public class ComicChapterModel : ChapterModel
     {

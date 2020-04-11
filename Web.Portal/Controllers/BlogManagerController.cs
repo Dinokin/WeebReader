@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models.BlogManager;
+using WeebReader.Web.Models.Controllers.BlogManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
 

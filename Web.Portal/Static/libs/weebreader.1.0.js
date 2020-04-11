@@ -35,3 +35,19 @@ function animateProgressBar(element, event) {
         percent: event.loaded / event.total * 100
     });
 }
+
+function getCookie(name) {
+    let cookie = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+
+    return cookie ? cookie[2] : null;
+}
+
+function setCookie(name, value, days) {
+    let date = new Date;
+    date.setTime(date.getTime() + 24*60*60*1000*days);
+    document.cookie = name + "=" + value + ";path=/;expires=" + date.toDateString();
+}
+
+function scrollToTop(element) {
+    $(window).scrollTop($(element).offset().top);
+}

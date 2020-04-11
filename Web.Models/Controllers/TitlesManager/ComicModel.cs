@@ -1,4 +1,4 @@
-﻿namespace WeebReader.Web.Models.TitlesManager
+﻿namespace WeebReader.Web.Models.Controllers.TitlesManager
 {
     public class ComicModel : TitleModel
     {

@@ -5,7 +5,7 @@ using WeebReader.Data.Entities.Abstract;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Others.Attributes;
 
-namespace WeebReader.Web.Models.TitlesManager
+namespace WeebReader.Web.Models.Controllers.TitlesManager
 {
     public class TitleModel
     {

@@ -10,9 +10,9 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models.Home;
+using WeebReader.Web.Models.Controllers.Home;
+using WeebReader.Web.Models.Controllers.UsersManager;
 using WeebReader.Web.Models.Others;
-using WeebReader.Web.Models.UsersManager;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
@@ -368,7 +368,7 @@ namespace WeebReader.Web.Portal.Controllers
                     var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
-                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", "Home", new {userId = user.Id, email = emailModel.Email, token})}");
+                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail","SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
 
                     var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
@@ -413,7 +413,7 @@ namespace WeebReader.Web.Portal.Controllers
             var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
             var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
-            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "Home", new {userId = user.Id, token})}");
+            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token})}");
 
             return await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }
