@@ -151,7 +151,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Become Our Patreon.
+        ///   Looks up a localized string similar to Become our Patreon.
         /// </summary>
         public static string BecomeOurPatreon {
             get {
@@ -169,7 +169,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Buy Us A Coffee.
+        ///   Looks up a localized string similar to Buy us a coffee.
         /// </summary>
         public static string BuyUsACoffee {
             get {
@@ -282,6 +282,15 @@ namespace WeebReader.Web.Localization {
         public static string ContactUs {
             get {
                 return ResourceManager.GetString("ContactUs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contact us via e-mail.
+        /// </summary>
+        public static string ContactUsViaEmail {
+            get {
+                return ResourceManager.GetString("ContactUsViaEmail", resourceCulture);
             }
         }
         
@@ -610,6 +619,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Message.
+        /// </summary>
+        public static string Message {
+            get {
+                return ResourceManager.GetString("Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Moderator.
         /// </summary>
         public static string Moderator {
@@ -651,6 +669,15 @@ namespace WeebReader.Web.Localization {
         public static string NextChapter {
             get {
                 return ResourceManager.GetString("NextChapter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nickname.
+        /// </summary>
+        public static string Nickname {
+            get {
+                return ResourceManager.GetString("Nickname", resourceCulture);
             }
         }
         
@@ -903,6 +930,15 @@ namespace WeebReader.Web.Localization {
         public static string SelectTypeOfTitle {
             get {
                 return ResourceManager.GetString("SelectTypeOfTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send.
+        /// </summary>
+        public static string Send {
+            get {
+                return ResourceManager.GetString("Send", resourceCulture);
             }
         }
         

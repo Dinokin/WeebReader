@@ -138,4 +138,13 @@
     <data name="NoPreviousChapter">
         <value>There's no previous chapter.</value>
     </data>
+    <data name="MessageFrom">
+        <value>A message from {0}</value>
+    </data>
+    <data name="MessageSentSuccessfully">
+        <value>Your message has been sent. Our team will answer you as soon as possible.</value>
+    </data>
+    <data name="MessageCouldntBeSent">
+        <value>Your message couldn't be sent.</value>
+    </data>
 </root>

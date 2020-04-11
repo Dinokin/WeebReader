@@ -27,8 +27,10 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly ChapterArchiver<Chapter> _chapterArchiver;
         private readonly PagesManager<Page> _pagesManager;
         private readonly PostsManager _postsManager;
+        private readonly EmailSender _emailSender;
+        private readonly ParametersManager _parametersManager;
 
-        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager, PostsManager postsManager)
+        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
@@ -36,6 +38,8 @@ namespace WeebReader.Web.Portal.Controllers
             _chapterArchiver = chapterArchiver;
             _pagesManager = pagesManager;
             _postsManager = postsManager;
+            _emailSender = emailSender;
+            _parametersManager = parametersManager;
         }
 
         [HttpGet("")]
@@ -66,9 +70,33 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{action:slugify}")]
         public IActionResult AboutUs() => View();
 
-        public IActionResult ContactUs() => throw new NotImplementedException();
+        [HttpGet("{action:slugify}")]
+        public IActionResult ContactUs() => View();
 
-        public IActionResult ContactUs(ContactModel contactModel) => throw new NotImplementedException();
+        [HttpPost("{action:slugify}")]
+        public async Task<IActionResult> ContactUs(ContactModel contactModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Email))
+                {
+                    TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
+                    
+                    return new JsonResult(new
+                    {
+                        success = true
+                    });
+                }
+
+                ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
+            });
+        }
 
         [HttpGet("{action}/{titleId:Guid}/{page:int?}")]
         public async Task<IActionResult> Title(Guid titleId, ushort page = 1)

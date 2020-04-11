@@ -189,4 +189,13 @@
     <data name="AboutUsPageContentRequired">
         <value>The About Us page requires content.</value>
     </data>
+    <data name="NickNameRequired">
+        <value>A nickname is required. We need to know how to call you.</value>
+    </data>
+    <data name="MessageRequired">
+        <value>A message is required.</value>
+    </data>
+    <data name="ReCaptchaFailed">
+        <value>We could not validate your ReCaptcha token.</value>
+    </data>
 </root>

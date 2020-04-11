@@ -400,9 +400,21 @@
         <value>Read</value>
     </data>
     <data name="BecomeOurPatreon">
-        <value>Become Our Patreon</value>
+        <value>Become our Patreon</value>
     </data>
     <data name="BuyUsACoffee">
-        <value>Buy Us A Coffee</value>
+        <value>Buy us a coffee</value>
+    </data>
+    <data name="ContactUsViaEmail">
+        <value>Contact us via e-mail</value>
+    </data>
+    <data name="Nickname">
+        <value>Nickname</value>
+    </data>
+    <data name="Message">
+        <value>Message</value>
+    </data>
+    <data name="Send">
+        <value>Send</value>
     </data>
 </root>

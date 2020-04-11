@@ -223,6 +223,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A message is required..
+        /// </summary>
+        public static string MessageRequired {
+            get {
+                return ResourceManager.GetString("MessageRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A password must have at least 8 characters..
         /// </summary>
         public static string MinimumPasswordLength {
@@ -246,6 +255,15 @@ namespace WeebReader.Web.Localization {
         public static string NewPasswordRequired {
             get {
                 return ResourceManager.GetString("NewPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A nickname is required. We need to know how to call you..
+        /// </summary>
+        public static string NickNameRequired {
+            get {
+                return ResourceManager.GetString("NickNameRequired", resourceCulture);
             }
         }
         
@@ -336,6 +354,15 @@ namespace WeebReader.Web.Localization {
         public static string ReCaptchaClientKeyRequired {
             get {
                 return ResourceManager.GetString("ReCaptchaClientKeyRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We could not validate your ReCaptcha token..
+        /// </summary>
+        public static string ReCaptchaFailed {
+            get {
+                return ResourceManager.GetString("ReCaptchaFailed", resourceCulture);
             }
         }
         

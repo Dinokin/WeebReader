@@ -223,6 +223,33 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your message couldn&apos;t be sent..
+        /// </summary>
+        public static string MessageCouldntBeSent {
+            get {
+                return ResourceManager.GetString("MessageCouldntBeSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A message from {0}.
+        /// </summary>
+        public static string MessageFrom {
+            get {
+                return ResourceManager.GetString("MessageFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your message has been sent. Our team will answer you as soon as possible..
+        /// </summary>
+        public static string MessageSentSuccessfully {
+            get {
+                return ResourceManager.GetString("MessageSentSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No chapter exist in the database for the specified title..
         /// </summary>
         public static string NoChapterExist {
