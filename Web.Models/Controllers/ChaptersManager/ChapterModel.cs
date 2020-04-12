@@ -11,6 +11,7 @@ namespace WeebReader.Web.Models.Controllers.ChaptersManager
         public ushort? Volume { get; set; }
         
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ChapterMustHaveNumber")]
+        [Range(typeof(decimal), "0", "9999.9", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "ChapterNumberOutOfRange")]
         public decimal Number { get; set; }
         
         [StringLength(200, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "TitleNameMaxLength")]

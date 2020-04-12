@@ -52,7 +52,7 @@ namespace WeebReader.Data.Contexts
             builder.Entity<Chapter>(typeBuilder =>
             {
                 typeBuilder.Property(chapter => chapter.Volume).HasColumnType("SMALLINT UNSIGNED");
-                typeBuilder.Property(chapter => chapter.Number).HasColumnType("DECIMAL");
+                typeBuilder.Property(chapter => chapter.Number).HasColumnType("DECIMAL(5,1)");
                 typeBuilder.Property(chapter => chapter.ReleaseDate).HasColumnType("DATETIME");
                 typeBuilder.Property(chapter => chapter.Visible).HasColumnType("BOOLEAN");
             });

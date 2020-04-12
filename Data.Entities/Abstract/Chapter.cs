@@ -14,7 +14,7 @@ namespace WeebReader.Data.Entities.Abstract
         protected Chapter(ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId)
         {
             Volume = volume;
-            Number = number;
+            Number = number / 1.0000000000000000000000000000m;
             Name = name;
             ReleaseDate = releaseDate;
             Visible = visible;
@@ -24,7 +24,7 @@ namespace WeebReader.Data.Entities.Abstract
         protected Chapter(Guid id, ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId) : base(id)
         {
             Volume = volume;
-            Number = number;
+            Number = number / 1.0000000000000000000000000000m;
             Name = name;
             ReleaseDate = releaseDate;
             Visible = visible;

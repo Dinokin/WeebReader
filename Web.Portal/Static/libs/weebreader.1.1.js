@@ -32,7 +32,7 @@ function addMessages(element, response) {
 
 function animateProgressBar(element, event) {
     element.progress({
-        percent: event.loaded / event.total * 100
+        percent: Math.round(event.loaded / event.total * 100)
     });
 }
 

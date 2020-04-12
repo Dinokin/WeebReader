@@ -124,6 +124,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A chapter number must be between 0 and 9999.9.
+        /// </summary>
+        public static string ChapterNumberOutOfRange {
+            get {
+                return ResourceManager.GetString("ChapterNumberOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The current password is required..
         /// </summary>
         public static string CurrentPasswordRequired {

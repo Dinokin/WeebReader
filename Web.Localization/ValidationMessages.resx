@@ -198,4 +198,7 @@
     <data name="ReCaptchaFailed">
         <value>We could not validate your ReCaptcha token.</value>
     </data>
+    <data name="ChapterNumberOutOfRange">
+        <value>A chapter number must be between 0 and 9999.9</value>
+    </data>
 </root>

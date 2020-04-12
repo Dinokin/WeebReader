@@ -83,7 +83,7 @@
         @foreach (var chapter in Model)
         {
             <tr>
-                <td>@($"{Labels.Chapter} {chapter.Number}")</td>
+                <td>@(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)</td>
                 <td>@chapter.ReleaseDate?.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@(chapter.Visible ? Labels.Visible : Labels.Hidden)</td>
                 <td>

@@ -22,7 +22,7 @@
     <div class="ui huge top attached menu @(lightMode ? "inverted" : null)">
         <div class="ui container">
             <a class="item" href="/">
-                <img src="~/assets/logo.png" alt="Logo"/>
+                <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
             </a>
             <a id="titles" class="item" href="@Url.Action("Titles", "Home")">
                 @Labels.Titles
@@ -39,7 +39,7 @@
 <div class="ui tablet mobile only grid no-margin-top no-margin-bottom">
     <div class="ui huge top attached menu mobile-menu @(lightMode ? "inverted" : null)">
         <a class="item" href="/">
-            <img src="~/assets/logo.png" alt="Logo"/>
+                <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
         </a>
         <div class="right menu">
             <div class="item">
