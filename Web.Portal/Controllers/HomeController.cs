@@ -78,7 +78,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Email))
+                if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
                     

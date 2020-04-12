@@ -70,7 +70,7 @@
                             <p class="header add-ellipsis">
                                 <a href="@Url.Action("ChapterDownload", new { chapterId = chapter.ChapterId })"><i class="download icon"></i></a>
                                 <a href="@Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })">
-                                    @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume}" : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)
+                                    @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)
                                 </a>
                             </p>
                         </div>

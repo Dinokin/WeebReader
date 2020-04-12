@@ -3,6 +3,8 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace WeebReader.Web.Portal.Others
 {
@@ -24,5 +26,9 @@ namespace WeebReader.Web.Portal.Others
 
             return new X509Certificate2($"{CurrentDirectory}{Path.DirectorySeparatorChar}{certName}");
         }
+
+        public static string Encode(this string source) => source == null ? string.Empty : WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(source));
+
+        public static string Decode(this string source) => source == null ? string.Empty : Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(source));
     }
 }

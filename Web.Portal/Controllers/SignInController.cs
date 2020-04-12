@@ -9,6 +9,7 @@ using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Controllers.Home;
 using WeebReader.Web.Models.Controllers.SignIn;
+using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -82,7 +83,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword()
         {
-            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled) || _signInManager.IsSignedIn(User))
+            if (!await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
                 return RedirectToAction("Index","Home");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
@@ -91,7 +92,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpPost("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword(EmailModel forgotPasswordModel)
         {
-            if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
+            if (!await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
             {
                 ModelState.AddModelError("FunctionalityDisabled", OtherMessages.DisableFunctionality);
 
@@ -115,12 +116,11 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (user != null)
                 {
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).Encode();
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
                     var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
-
-                    var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token})}");
+                    var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token = "replace" }).Replace("replace", token)}");
 
                     await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.PasswordResetEmailSubject, siteName), message);
                 }
@@ -171,7 +171,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             if (ModelState.IsValid && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) is var user && user != null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.NewPassword);
+                var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token.Decode(), resetPasswordModel.NewPassword);
 
                 if (result.Succeeded)
                 {
@@ -210,7 +210,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (user != null)
                     {
-                        var result = await _userManager.ChangeEmailAsync(user, changeEmailModel.Email, changeEmailModel.Token);
+                        var result = await _userManager.ChangeEmailAsync(user, changeEmailModel.Email, changeEmailModel.Token.Decode());
 
                         if (result.Succeeded)
                             TempData["SuccessMessage"] = new[] {OtherMessages.EmailChangedSuccessfully};

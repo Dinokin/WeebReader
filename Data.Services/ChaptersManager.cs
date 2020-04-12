@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,14 +20,10 @@ namespace WeebReader.Data.Services
             return await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id && chapter.Visible);
         }
         
-        public async Task<IEnumerable<TChapter>> GetRange(int skip, int take, bool includeHidden = false)
-        {
-            if (includeHidden)
-                return await base.GetRange(skip, take);
+        public Task<IEnumerable<TChapter>> GetRange(int skip, int take, bool includeHidden = false) => Task.FromResult<IEnumerable<TChapter>>(includeHidden ?
+            DbSet.OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take) :
+            DbSet.Where(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
 
-            return DbSet.Where(chapter => chapter.Visible).Skip(skip).Take(take);
-        }
-        
         public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take, bool includeHidden = false)
         {
             if (includeHidden)

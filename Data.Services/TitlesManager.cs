@@ -27,14 +27,10 @@ namespace WeebReader.Data.Services
             return tag?.TitleTag.LongCount() ?? 0;
         }
         
-        public async Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden = false)
-        {
-            if (includeHidden)
-                return await base.GetRange(skip, take);
+        public Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden = false) => Task.FromResult<IEnumerable<TTitle>>(includeHidden ?
+            DbSet.OrderBy(title => title.Name).Skip(skip).Take(take) :
+            DbSet.Where(title => title.Visible).Skip(skip).Take(take));
 
-            return DbSet.Where(title => title.Visible).Skip(skip).Take(take);
-        }
-        
         public async Task<IEnumerable<TTitle>> GetRange(Tag tag, int skip, int take)
         {
             var targetTag = await Context.Tags.Include(entity => entity.TitleTag).SingleOrDefaultAsync(entity => entity == tag);

@@ -417,4 +417,10 @@
     <data name="Send">
         <value>Send</value>
     </data>
+    <data name="JoinOurDiscordCommunity">
+        <value>Join our discord community</value>
+    </data>
+    <data name="Pg">
+        <value>Pg.</value>
+    </data>
 </root>

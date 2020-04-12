@@ -9,7 +9,7 @@ namespace WeebReader.Web.Models.Controllers.ParametersManager
     public class PagesParametersModel : IValidatableObject
     {
         [Parameter(Parameter.Types.PageAboutUsContent)]
-        public string AboutUsContent { get; set; }
+        public string AboutUsContent { get; set; } = string.Empty;
 
         [Parameter(Parameter.Types.PageAboutUsPatreonEnabled)]
         public bool PatreonEnabled { get; set; }

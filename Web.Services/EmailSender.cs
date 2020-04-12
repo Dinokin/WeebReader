@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
-using MimeKit.Text;
 using WeebReader.Data.Services;
 using Parameter = WeebReader.Data.Entities.Parameter;
 
@@ -18,14 +17,15 @@ namespace WeebReader.Web.Services
             if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
             {
                 var message = new MimeMessage();
+                
                 message.From.Add(new MailboxAddress(await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail)));
                 message.ReplyTo.Add(new MailboxAddress(replyTo));
                 message.To.Add(new MailboxAddress(destination));
                 message.Subject = subject;
-                message.Body = new TextPart(TextFormat.Plain)
+                message.Body = new BodyBuilder
                 {
-                    Text = content
-                };
+                    HtmlBody = content
+                }.ToMessageBody();
 
                 string server = await _parameterManager.GetValue<string>(Parameter.Types.SmtpServer),
                     user = await _parameterManager.GetValue<string>(Parameter.Types.SmtpServerUser),

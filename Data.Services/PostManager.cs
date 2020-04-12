@@ -10,12 +10,8 @@ namespace WeebReader.Data.Services
     {
         public PostsManager(BaseContext context) : base(context) { }
 
-        public Task<IEnumerable<Post>> GetRange(int skip, int take, bool includeHidden = false)
-        {
-            if (includeHidden)
-                return Task.FromResult<IEnumerable<Post>>(DbSet.OrderByDescending(post => post.ReleaseDate).Skip(skip).Take(take));
-
-            return Task.FromResult<IEnumerable<Post>>(DbSet.Where(post => post.Visible).OrderByDescending(post => post.ReleaseDate).Skip(skip).Take(take));
-        }
+        public Task<IEnumerable<Post>> GetRange(int skip, int take, bool includeHidden = false) => Task.FromResult<IEnumerable<Post>>(includeHidden ?
+            DbSet.OrderByDescending(post => post.ReleaseDate).Skip(skip).Take(take) :
+            DbSet.Where(post => post.Visible).OrderByDescending(post => post.ReleaseDate).Skip(skip).Take(take));
     }
 }

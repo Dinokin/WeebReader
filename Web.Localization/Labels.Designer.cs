@@ -556,6 +556,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Join our discord community.
+        /// </summary>
+        public static string JoinOurDiscordCommunity {
+            get {
+                return ResourceManager.GetString("JoinOurDiscordCommunity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KoFi.
         /// </summary>
         public static string KoFi {
@@ -795,6 +804,15 @@ namespace WeebReader.Web.Localization {
         public static string PatreonPageAddress {
             get {
                 return ResourceManager.GetString("PatreonPageAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pg..
+        /// </summary>
+        public static string Pg {
+            get {
+                return ResourceManager.GetString("Pg", resourceCulture);
             }
         }
         

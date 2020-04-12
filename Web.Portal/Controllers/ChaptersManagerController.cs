@@ -50,7 +50,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId, chapterId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
 
-            return View((await _chapterManager.GetRange(title, Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage)).Select(Mapper.Map));
+            return View((await _chapterManager.GetRange(title, Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, true)).Select(Mapper.Map));
         }
         
         [HttpGet("{action}")]
@@ -72,6 +72,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
         
         [HttpPost("{action}")]
+        [RequestSizeLimit(104857600)]
         public async Task<IActionResult> Add(ComicChapterModel comicChapterModel)
         {
             if (ModelState.IsValid)
@@ -142,6 +143,7 @@ namespace WeebReader.Web.Portal.Controllers
 
         [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpPatch("{chapterId:guid}")]
+        [RequestSizeLimit(104857600)]
         public async Task<IActionResult> Edit(ComicChapterModel comicChapterModel)
         {
             if (ModelState.IsValid)

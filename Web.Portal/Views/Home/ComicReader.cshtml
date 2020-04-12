@@ -216,10 +216,10 @@
             </div>
         </div>
         <div class="row" style="padding-top: 0;">
-            <div class="seven wide column @(!longStrip ? "right aligned" : "center aligned")">
+            <div class="eight wide column @(!longStrip ? "right aligned" : "center aligned")">
                 <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown">
                     <input type="hidden"/>
-                    <div class="text">@Labels.Chapter @Model.Item2.Number</div>
+                    <div class="text">@Labels.Ch @Model.Item2.Number</div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         @foreach (var chapter in chapters)
@@ -231,15 +231,15 @@
             </div>
             @if (!longStrip)
             {
-                <div class="six wide left aligned column">
+                <div class="eight wide left aligned column">
                     <div id="page-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown">
                         <input type="hidden"/>
-                        <div class="text">@Labels.Page 1</div>
+                        <div class="text">@Labels.Pg 1</div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             @for (var i = 0; i < pages.Length; i++)
                             {
-                                <div class="item" data-value="@i">@Labels.Page @(i+1)</div>
+                                <div class="item" data-value="@i">@Labels.Pg @(i+1)</div>
 
                             }
                         </div>

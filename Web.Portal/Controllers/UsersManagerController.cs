@@ -42,7 +42,7 @@ namespace WeebReader.Web.Portal.Controllers
             var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
-            var users = _userManager.Users.Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
+            var users = _userManager.Users.OrderBy(user => user.UserName) .Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
                 .Select(Mapper.Map).ToArray();
             
             foreach (var user in users)
@@ -363,12 +363,12 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
                 {
-                    var token = await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email);
+                    var token = (await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email)).Encode();
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
                     var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
-                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail","SignIn", new {userId = user.Id, email = emailModel.Email, token})}");
+                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", new {userId = user.Id, email = emailModel.Email, token = "replace"}).Replace("replace", token)}");
 
                     var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
@@ -408,12 +408,12 @@ namespace WeebReader.Web.Portal.Controllers
 
         private async Task<bool> SendAccountCreationEmail(IdentityUser<Guid> user)
         {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).Encode();
             var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
             var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
             var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
-            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token})}");
+            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }).Replace("replace", token)}");
 
             return await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }

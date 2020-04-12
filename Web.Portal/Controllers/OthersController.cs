@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models.Controllers.Home;
 using WeebReader.Web.Models.Controllers.Others;
 using WeebReader.Web.Models.Others;
 
@@ -46,6 +45,7 @@ namespace WeebReader.Web.Portal.Controllers
                 await using var transaction = await _context.Database.BeginTransactionAsync();
 
                 var user = Mapper.Map(installerModel);
+                user.EmailConfirmed = true;
                 
                 var userResult = await _userManager.CreateAsync(user, installerModel.Password);
 

@@ -61,7 +61,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello {0},\nAn account was created at {1} using this e-mail.\nPlease go to the following URL to set-up your password. If you didn&apos;t request this account, you can ignore this e-mail.\n{2}.
+        ///   Looks up a localized string similar to &lt;p&gt;Hello {0},&lt;/p&gt;&lt;p&gt;An account was created at {1} using this e-mail.&lt;/p&gt;&lt;p&gt;Please click &lt;a href=&quot;{2}&quot;&gt;here&lt;/a&gt; to set-up your password. If you didn&apos;t request this account, you can ignore this e-mail.&lt;/p&gt;.
         /// </summary>
         public static string AccountCreationEmailBody {
             get {
@@ -79,7 +79,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello {0},\nAn e-mail change was requested at {1}.\nPlease go to the following URL to proceed with the change. If you changed your mind, you can safely ignore this e-mail.\n{2}.
+        ///   Looks up a localized string similar to &lt;p&gt;Hello {0},&lt;/p&gt;&lt;p&gt;An e-mail change was requested at {1}.&lt;/p&gt;&lt;p&gt;Please click &lt;a href=&quot;{2}&quot;&gt;here&lt;/a&gt; to proceed with the change. If you changed your mind, you can safely ignore this e-mail.&lt;/p&gt;.
         /// </summary>
         public static string ChangeEmailBody {
             get {
@@ -97,7 +97,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello {0},\nA password reset was requested at {1}.\nPlease go to the following URL to proceed with the reset. You can safely ignore this e-mail if you didn&apos;t request this.\n{2}.
+        ///   Looks up a localized string similar to &lt;p&gt;Hello {0},&lt;/p&gt;&lt;p&gt;A password reset was requested at {1}.&lt;/p&gt;&lt;p&gt;Please click &lt;a href=&quot;{2}&quot;&gt;here&lt;/a&gt; to proceed with the reset. You can safely ignore this e-mail if you didn&apos;t request this.&lt;/p&gt;.
         /// </summary>
         public static string PasswordResetEmailBody {
             get {

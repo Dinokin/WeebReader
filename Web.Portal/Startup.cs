@@ -43,6 +43,7 @@ namespace WeebReader.Web.Portal
                     options.Password.RequireUppercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedEmail = true;
                 })
                 .AddDefaultTokenProviders().AddEntityFrameworkStores<BaseContext>();
 
