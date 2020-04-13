@@ -41,8 +41,10 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 return RedirectToAction("Index", "TitlesManager");
             }
+
+            const ushort itemsPerPage = 50;
             
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title, true) / (decimal) Constants.ItemsPerPage);
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title, true) / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Title"] = $"{Labels.Chapters} - {title.Name}";
@@ -50,7 +52,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId, chapterId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
 
-            return View((await _chapterManager.GetRange(title, Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, true)).Select(Mapper.Map));
+            return View((await _chapterManager.GetRange(title, itemsPerPage * (page - 1), itemsPerPage, true)).Select(Mapper.Map));
         }
         
         [HttpGet("{action}")]

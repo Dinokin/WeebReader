@@ -3,8 +3,11 @@
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.Item2.Number} - {Model.Item1.Name}";
+    ViewData["DisqusIdentifier"] = $"chapter_{Model.Item2.ChapterId}";
+    ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.Item2.Number} - {Model.Item1.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var siteAddress = await ParametersManager.GetValue<string>(Parameter.Types.SiteAddress);
+    var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
     var pages = Model.Item3.Select(page => $"/content/{Model.Item1.TitleId}/{Model.Item2.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
     var darkMode = (string?) ViewData["BodyClass"] != Constants.LightModeClasses;
@@ -199,7 +202,7 @@
 <button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>
 <div class="ui container">
     <div class="ui centered very relaxed grid no-margin-top no-margin-bottom">
-        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Title", new {titleId = Model.Item1.TitleId})">@Model.Item1.Name</a></div>
+        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.Item1.TitleId})">@Model.Item1.Name</a></div>
         <div class="row no-padding">
             <div class="ui secondary massive compact menu @(darkMode ? "inverted" : null)">
                 <a class="item @(previousChapter != null ? null : "disabled")" href="@(previousChapter != null ? Url.Action("ChapterRead", new {chapterId = previousChapter}) : null)">
@@ -277,3 +280,10 @@
         </div>
     }
 </div>
+@if (disqusEnabled)
+{
+    <div class="ui hidden divider"></div>
+    <div class="ui container">
+        <partial name="_Disqus"/>
+    </div>
+}

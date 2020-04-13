@@ -285,9 +285,6 @@
     <data name="General">
         <value>General</value>
     </data>
-    <data name="Contact">
-        <value>Contact</value>
-    </data>
     <data name="SiteName">
         <value>Site Name</value>
     </data>
@@ -360,14 +357,14 @@
     <data name="KofiNotice">
         <value>KoFi Notice</value>
     </data>
-    <data name="AboutUs">
-        <value>About Us</value>
+    <data name="About">
+        <value>About</value>
     </data>
-    <data name="AboutUsPageContent">
-        <value>About Us Page Content</value>
+    <data name="AboutPageContent">
+        <value>About page content</value>
     </data>
-    <data name="ContactUs">
-        <value>Contact Us</value>
+    <data name="Contact">
+        <value>Contact</value>
     </data>
     <data name="Vol">
         <value>Vol.</value>
@@ -422,5 +419,14 @@
     </data>
     <data name="Pg">
         <value>Pg.</value>
+    </data>
+    <data name="Disqus">
+        <value>Disqus</value>
+    </data>
+    <data name="DisqusShortname">
+        <value>Disqus Shortname</value>
+    </data>
+    <data name="Comments">
+        <value>Comments</value>
     </data>
 </root>

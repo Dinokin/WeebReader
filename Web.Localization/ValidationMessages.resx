@@ -186,8 +186,8 @@
     <data name="KoFiLinkRequired">
         <value>An address to a KoFi page is required.</value>
     </data>
-    <data name="AboutUsPageContentRequired">
-        <value>The About Us page requires content.</value>
+    <data name="AboutPageContentRequired">
+        <value>The About page requires content.</value>
     </data>
     <data name="NickNameRequired">
         <value>A nickname is required. We need to know how to call you.</value>
@@ -200,5 +200,8 @@
     </data>
     <data name="ChapterNumberOutOfRange">
         <value>A chapter number must be between 0 and 9999.9</value>
+    </data>
+    <data name="DisqusShortnameRequired">
+        <value>A shortname for your Disqus forum is required.</value>
     </data>
 </root>

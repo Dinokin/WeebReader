@@ -45,20 +45,43 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var posts = (await _postsManager.GetRange(0, 5, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
-            var releases = (await _chapterManager.GetRange(0, 8, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
-            var titles = await Task.WhenAll(releases.Select(async chapter => Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null)));
+            var chapters = (await _chapterManager.GetRange(0, 8, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var titles = new List<TitleModel>();
 
-            return View(new Tuple<IEnumerable<PostModel>, IEnumerable<Tuple<TitleModel, ChapterModel>>>(posts,
-                releases.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter)).Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate)));
+            foreach (var chapter in chapters)
+                titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null));
+
+            return View(chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter)).Distinct(new ReleaseComparer())
+                .OrderByDescending(tuple => tuple.Item2.ReleaseDate));
+        }
+
+        [HttpGet("{action}/{page:int?}")]
+        public async Task<IActionResult> Blog(ushort page)
+        {
+            if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
+                return RedirectToAction("Index");
+            
+            const ushort itemsPerPage = 5;
+
+            var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            var posts = (await _postsManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map).OrderByDescending(post => post.ReleaseDate);
+
+            ViewData["Page"] = page;
+            ViewData["TotalPages"] = totalPages;
+
+            return View(posts);
+
         }
 
         [HttpGet("{action}/{page:int?}")]
         public async Task<IActionResult> Titles(ushort page)
         {
-            var totalPages = Math.Ceiling(await _titlesManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPage);
+            const ushort itemsPerPage = 16;
+            
+            var totalPages = Math.Ceiling(await _titlesManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var titles = (await _titlesManager.GetRange(Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, _signInManager.IsSignedIn(User)))
+            var titles = (await _titlesManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User)))
                 .OrderBy(title => title.Status).ThenBy(title => title.Name).Select(title => Mapper.Map(title, null));
             
             ViewData["Page"] = page;
@@ -67,25 +90,51 @@ namespace WeebReader.Web.Portal.Controllers
             return View(titles);
         }
 
-        [HttpGet("{action:slugify}")]
-        public IActionResult AboutUs() => View();
+        [HttpGet("{action}")]
+        public async Task<IActionResult> About()
+        {
+            var aboutEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
+            var kofiEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
+            var patreonEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
 
-        [HttpGet("{action:slugify}")]
-        public IActionResult ContactUs() => View();
+            if (aboutEnabled || kofiEnabled || patreonEnabled)
+                return View();
 
-        [HttpPost("{action:slugify}")]
-        public async Task<IActionResult> ContactUs(ContactModel contactModel)
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("{action}")]
+        public async Task<IActionResult> Contact()
+        {
+            var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
+            var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
+            var discordEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
+
+            if (emailSenderEnabled && emailContactEnabled || discordEnabled)
+                return View();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("{action}")]
+        public async Task<IActionResult> Contact(ContactModel contactModel)
         {
             if (ModelState.IsValid)
             {
-                if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
+                var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
+                var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
+                
+                if (emailSenderEnabled && emailContactEnabled)
                 {
-                    TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
-                    
-                    return new JsonResult(new
+                    if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
                     {
-                        success = true
-                    });
+                        TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
+
+                        return new JsonResult(new
+                        {
+                            success = true
+                        });
+                    }
                 }
 
                 ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
@@ -99,7 +148,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{action}/{titleId:Guid}/{page:int?}")]
-        public async Task<IActionResult> Title(Guid titleId, ushort page = 1)
+        public async Task<IActionResult> Titles(Guid titleId, ushort page = 1)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
                 return RedirectToAction("Titles");
@@ -107,9 +156,11 @@ namespace WeebReader.Web.Portal.Controllers
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
                 return RedirectToAction("Titles");
 
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPage);
+            const ushort itemsPerPage = 50;
+            
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPage * (page - 1), Constants.ItemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
+            var chapters = (await _chapterManager.GetRange(title, itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
@@ -117,7 +168,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View("Title", new Tuple<TitleModel, IEnumerable<ChapterModel>>(Mapper.Map(title, await _titlesManager.GetTags(title)), chapters));
         }
 
-        [HttpGet("Chapter/Read/{chapterId:Guid}")]
+        [HttpGet("Chapters/Read/{chapterId:Guid}")]
         public async Task<IActionResult> ChapterRead(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
@@ -143,7 +194,7 @@ namespace WeebReader.Web.Portal.Controllers
             return await GetReader(title, chapter);
         }
         
-        [HttpGet("Chapter/Download/{chapterId:Guid}")]
+        [HttpGet("Chapters/Download/{chapterId:Guid}")]
         public async Task<IActionResult> ChapterDownload(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
@@ -160,13 +211,13 @@ namespace WeebReader.Web.Portal.Controllers
         private IActionResult GetDownload(Title title, Chapter chapter) => chapter switch
         {
             ComicChapter comicChapter => File(_chapterArchiver.GetChapterDownload(comicChapter)?.OpenRead(), "application/zip", $"{GetDownloadName(title, comicChapter)}.zip"),
-            _ => RedirectToAction("Title", new { titleId = chapter.TitleId })
+            _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
         };
         
         private async Task<IActionResult> GetReader(Title title, Chapter chapter) => chapter switch
         {
             ComicChapter comicChapter => await GetComicReader((Comic) title, comicChapter),
-            _ => RedirectToAction("Title", new { titleId = chapter.TitleId })
+            _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
         };
 
         private async Task<IActionResult> GetComicReader(Comic comic, ComicChapter comicChapter)

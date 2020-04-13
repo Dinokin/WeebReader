@@ -23,13 +23,17 @@ namespace WeebReader.Data.Entities
             ContactDiscordEnabled,
             ContactDiscordLink,
             ContactDiscordNotice,
-            PageAboutUsContent,
-            PageAboutUsPatreonEnabled,
-            PageAboutUsPatreonLink,
-            PageAboutUsPatreonNotice,
-            PageAboutUsKofiEnabled,
-            PageAboutUsKofiLink,
-            PageAboutUsKofiNotice
+            PageAboutContent,
+            PageAboutPatreonEnabled,
+            PageAboutPatreonLink,
+            PageAboutPatreonNotice,
+            PageAboutKofiEnabled,
+            PageAboutKofiLink,
+            PageAboutKofiNotice,
+            PageAboutEnabled,
+            PageDisqusEnabled,
+            PageDisqusShortname,
+            PageBlogEnabled
         }
         
         public Types Type { get; }

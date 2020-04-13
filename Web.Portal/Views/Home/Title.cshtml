@@ -3,21 +3,27 @@
 
 @{
     ViewData["Title"] = $"{Model.Item1.Name}";
-    var page = (ushort) ViewData["Page"];
-    var totalPages = (decimal) ViewData["TotalPages"];
+    ViewData["SegmentedPaginator"] = false;
+    ViewData["PaginatorButtonSize"] = "mini";
+    ViewData["DisqusIdentifier"] = $"title_{Model.Item1.TitleId}";
+    ViewData["DisqusTitle"] = Model.Item1.Name;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var siteAddress = await ParametersManager.GetValue<string>(Parameter.Types.SiteAddress);
+    var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
 }
 
 @section Headers
 {
     <meta property="og:title" content="@Model.Item1.Name"/>
-    <meta property="og:url" content="@($"{siteAddress}{Url.Action("Title", new { titleId = Model.Item1.TitleId })}")"/>
+    <meta property="og:url" content="@($"{siteAddress}{Url.Action("Titles", new { titleId = Model.Item1.TitleId })}")"/>
     <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover.png")"/>
     <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
     <meta property="og:site_name" content="@siteName"/>
     <script>
-    $(() => $("#titles,#titles-mobile").addClass("active"));
+    $(() => {
+        $("#titles,#titles-mobile").addClass("active");
+        $(".tabular.menu .item").tab();
+    });
     </script>
 }
 
@@ -60,8 +66,14 @@
             <a class="item active" data-tab="chapters">
                 <h5>@Labels.Chapters</h5>
             </a>
+            @if (disqusEnabled)
+            {
+                <a class="item" data-tab="comments">
+                    <h5>@Labels.Comments</h5>
+                </a>   
+            }
         </div>
-        <div class="ui active bottom attached tab segment">
+        <div class="ui active bottom attached tab segment" data-tab="chapters">
             <div class="ui relaxed divided list">
                 @foreach (var chapter in Model.Item2)
                 {
@@ -78,34 +90,13 @@
                     </div>
                 }
             </div>
-            @if (totalPages >= 1)
-            {
-                <div class="ui three column grid">
-                    <div class="left aligned column">
-                        <div class="ui basic mini buttons">
-                            <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = 1 })">
-                                <i class="angle double left icon"></i>
-                            </a>
-                            <a class="ui icon button @(page <= 1 ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page - 1 })">
-                                <i class="angle left icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div id="current-page" class="middle aligned center aligned column">
-                        @string.Format(Labels.XOfY, page, totalPages)
-                    </div>
-                    <div class="right aligned column">
-                        <div class="ui basic mini buttons">
-                            <a id="next-page" class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = page + 1 })">
-                                <i class="angle right icon"></i>
-                            </a>
-                            <a class="ui basic icon button @(page >= totalPages ? "disabled" : string.Empty)" href="@Url.Action("Title", new { titleId = Model.Item1.TitleId, page = totalPages })">
-                                <i class="angle double right icon"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>   
-            }
+            <partial name="_Paginator"/>
         </div>
+        @if (disqusEnabled)
+        {
+            <div class="ui bottom attached tab segment" data-tab="comments">
+                <partial name="_Disqus"/>
+            </div>   
+        }
     </div>
 </div>

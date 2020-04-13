@@ -61,11 +61,11 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The About Us page requires content..
+        ///   Looks up a localized string similar to The About page requires content..
         /// </summary>
-        public static string AboutUsPageContentRequired {
+        public static string AboutPageContentRequired {
             get {
-                return ResourceManager.GetString("AboutUsPageContentRequired", resourceCulture);
+                return ResourceManager.GetString("AboutPageContentRequired", resourceCulture);
             }
         }
         
@@ -156,6 +156,15 @@ namespace WeebReader.Web.Localization {
         public static string DiscordLinkValidUrl {
             get {
                 return ResourceManager.GetString("DiscordLinkValidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A shortname for your Disqus forum is required..
+        /// </summary>
+        public static string DisqusShortnameRequired {
+            get {
+                return ResourceManager.GetString("DisqusShortnameRequired", resourceCulture);
             }
         }
         

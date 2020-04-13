@@ -61,20 +61,20 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About Us.
+        ///   Looks up a localized string similar to About.
         /// </summary>
-        public static string AboutUs {
+        public static string About {
             get {
-                return ResourceManager.GetString("AboutUs", resourceCulture);
+                return ResourceManager.GetString("About", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to About Us Page Content.
+        ///   Looks up a localized string similar to About page content.
         /// </summary>
-        public static string AboutUsPageContent {
+        public static string AboutPageContent {
             get {
-                return ResourceManager.GetString("AboutUsPageContent", resourceCulture);
+                return ResourceManager.GetString("AboutPageContent", resourceCulture);
             }
         }
         
@@ -250,6 +250,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Comments.
+        /// </summary>
+        public static string Comments {
+            get {
+                return ResourceManager.GetString("Comments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
         public static string Completed {
@@ -273,15 +282,6 @@ namespace WeebReader.Web.Localization {
         public static string Contact {
             get {
                 return ResourceManager.GetString("Contact", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Contact Us.
-        /// </summary>
-        public static string ContactUs {
-            get {
-                return ResourceManager.GetString("ContactUs", resourceCulture);
             }
         }
         
@@ -354,6 +354,24 @@ namespace WeebReader.Web.Localization {
         public static string DiscordServerAddress {
             get {
                 return ResourceManager.GetString("DiscordServerAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disqus.
+        /// </summary>
+        public static string Disqus {
+            get {
+                return ResourceManager.GetString("Disqus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disqus Shortname.
+        /// </summary>
+        public static string DisqusShortname {
+            get {
+                return ResourceManager.GetString("DisqusShortname", resourceCulture);
             }
         }
         

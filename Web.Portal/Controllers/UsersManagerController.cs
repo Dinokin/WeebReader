@@ -39,10 +39,12 @@ namespace WeebReader.Web.Portal.Controllers
         [Authorize(Roles = RoleTranslator.Administrator)]
         public async Task<IActionResult> Index(ushort page = 1)
         {
-            var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPage);
+            const ushort itemsPerPage = 25;
+            
+            var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
-            var users = _userManager.Users.OrderBy(user => user.UserName) .Skip(Constants.ItemsPerPage * (page - 1)).Take(Constants.ItemsPerPage)
+            var users = _userManager.Users.OrderBy(user => user.UserName).Skip(itemsPerPage * (page - 1)).Take(itemsPerPage)
                 .Select(Mapper.Map).ToArray();
             
             foreach (var user in users)

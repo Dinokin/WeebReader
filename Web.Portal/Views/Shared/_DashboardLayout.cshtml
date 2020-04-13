@@ -1,7 +1,6 @@
 ﻿@{
     var successMessage = (IEnumerable<string>?) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>?) TempData["ErrorMessage"];
-    var height = Convert.ToInt32(ViewData["HeightPercent"]);
 }
 
 <!DOCTYPE html>
@@ -10,9 +9,7 @@
     <partial name="_SharedHeaders"/>
     <script>
     $(() => {        
-        $(".ui.sidebar").sidebar({
-        context: $(".bottom.segment")
-        }).sidebar("attach events", "#computer-toggler,#mobile-toggler").accordion();
+        $(".ui.sidebar").sidebar("attach events", "#toggler").accordion();
         
         $(".message .close").on("click", function() {
             $(this).closest(".message").transition("fade");
@@ -21,110 +18,87 @@
     </script>
     @await RenderSectionAsync("Headers", false)
 </head>
-<body style="@(height > 100 ? $"height: {height}%;" : null)">
-<div class="ui computer only grid no-margin-top no-margin-bottom">
-    <div class="ui top attached inverted menu">
-        <a class="item" href="/">
-            <img src="~/assets/logo_l.png" alt="Logo"/>
+<body>
+<div class="ui inverted left vertical sidebar accordion menu">
+    @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+    {
+        <a id="titles" class="item" href="@Url.Action("Index", "TitlesManager")">
+            <i class="left book icon"></i>
+            @Labels.Titles
+        </a>   
+    }
+    @if (User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+    {
+        <a id="blog" class="item" href="@Url.Action("Index", "BlogManager")">
+            <i class="left newspaper icon"></i>
+            @Labels.Blog
         </a>
-        @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
-        {
-            <a id="computer-toggler" class="item">
-                <i class="sidebar icon"></i>
-                @Labels.Menu
-            </a>   
-        }
-        <div class="right menu">
-            <a id="your-profile-computer" class="item" href="@Url.Action("YourProfile", "UsersManager")">
-                <i class="user icon"></i>
-                @Labels.YourProfile
+    }
+    @if (User.IsInRole(RoleTranslator.Administrator))
+    {
+        <a id="users" class="item" href="@Url.Action("Index", "UsersManager")">
+            <i class="left users icon"></i>
+            @Labels.Users
+        </a>
+        <div class="item">
+            <a id="parameters" class="title">
+                <i class="left cogs icon"></i>
+                @Labels.Parameters
+                <i class="dropdown icon"></i>
             </a>
-            <a class="item" href="@Url.Action("SignOut", "SignIn")">
-                <i class="sign out alternate icon"></i>
-                @Labels.SignOut
-            </a>
+            <div id="parameters-content" class="content">
+                <a id="parameters-general" class="item" href="@Url.Action("General", "ParametersManager")">@Labels.General</a>
+                <a id="parameters-email" class="item" href="@Url.Action("Email", "ParametersManager")">@Labels.Email</a>
+                <a id="parameters-contact" class="item" href="@Url.Action("Contact", "ParametersManager")">@Labels.Contact</a>
+                <a id="parameters-pages" class="item" href="@Url.Action("Pages", "ParametersManager")">@Labels.Pages</a>
+            </div>
         </div>
-    </div>
+    }
 </div>
-<div class="ui mobile tablet only grid no-margin-top no-margin-bottom">
-    <div class="ui top attached inverted icon menu no-border-radius">
-        <a class="item" href="/">
-            <img src="~/assets/logo_l.png" alt="Logo"/>
-        </a>
-        <a id="mobile-toggler" class="item">
+<div class="ui top fixed inverted menu">
+    <a class="item" href="/">
+        <img src="~/assets/logo_l.png" alt="Logo"/>
+    </a>
+    @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+    {
+        <a id="toggler" class="item">
             <i class="sidebar icon"></i>
+            @Labels.Menu
+        </a>   
+    }
+    <div class="right menu">
+        <a id="your-profile" class="item" href="@Url.Action("YourProfile", "UsersManager")">
+            <i class="user icon"></i>
         </a>
-        <div class="right menu">
-            <a id="your-profile-mobile" class="item" href="@Url.Action("YourProfile", "UsersManager")">
-                <i class="user icon"></i>
-            </a>
-            <a class="item" href="@Url.Action("SignOut", "SignIn")">
-                <i class="sign out alternate icon"></i>
-            </a>
-        </div>
+        <a class="item" href="@Url.Action("SignOut", "SignIn")">
+            <i class="sign out alternate icon"></i>
+        </a>
     </div>
 </div>
-<div class="ui bottom attached segment pushable no-border no-border-radius no-margin-bottom">
-    <div class="ui inverted left vertical sidebar accordion menu">
-        @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
-        {
-            <a id="titles" class="item" href="@Url.Action("Index", "TitlesManager")">
-                <i class="left book icon"></i>
-                @Labels.Titles
-            </a>   
-        }
-        @if (User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
-        {
-            <a id="blog" class="item" href="@Url.Action("Index", "BlogManager")">
-                <i class="left newspaper icon"></i>
-                @Labels.Blog
-            </a>
-        }
-        @if (User.IsInRole(RoleTranslator.Administrator))
-        {
-            <a id="users" class="item" href="@Url.Action("Index", "UsersManager")">
-                <i class="left users icon"></i>
-                @Labels.Users
-            </a>
-            <div class="item">
-                <a id="parameters" class="title">
-                    <i class="left cogs icon"></i>
-                    @Labels.Parameters
-                    <i class="dropdown icon"></i>
-                </a>
-                <div id="parameters-content" class="content">
-                    <a id="parameters-general" class="item" href="@Url.Action("General", "ParametersManager")">@Labels.General</a>
-                    <a id="parameters-email" class="item" href="@Url.Action("Email", "ParametersManager")">@Labels.Email</a>
-                    <a id="parameters-contact" class="item" href="@Url.Action("Contact", "ParametersManager")">@Labels.Contact</a>
-                    <a id="parameters-pages" class="item" href="@Url.Action("Pages", "ParametersManager")">@Labels.Pages</a>
+<div class="pusher">
+    <div class="ui hidden section divider"></div>
+    <div class="ui hidden section divider"></div>
+    <div class="ui container" style="margin-bottom: 5rem">
+        @await RenderSectionAsync("TopRightSlot", false)
+        <h2 class="ui dividing header">
+            <div class="add-ellipsis">@ViewData["Title"]</div>
+        </h2>
+        <div class="ui @(successMessage == null && errorMessage == null ? "hidden" : string.Empty) message @(successMessage == null ? "error" : "success")">
+            <i class="close icon"></i>
+            @if (successMessage != null || errorMessage != null)
+            {
+                <div class="header">
+                    @(successMessage != null ? Labels.Success : Labels.Error)
                 </div>
-            </div>
-        }
-    </div>
-    <div class="pusher">
-        <div class="ui hidden section divider"></div>
-        <div class="ui container" style="margin-bottom: 5rem">
-            @await RenderSectionAsync("TopRightSlot", false)
-            <h2 class="ui dividing header">
-                <div class="add-ellipsis">@ViewData["Title"]</div>
-            </h2>
-            <div class="ui @(successMessage == null && errorMessage == null ? "hidden" : string.Empty) message @(successMessage == null ? "error" : "success")">
-                <i class="close icon"></i>
-                @if (successMessage != null || errorMessage != null)
-                {
-                    <div class="header">
-                        @(successMessage != null ? Labels.Success : Labels.Error)
-                    </div>
-                    <ul class="list">
-                        @foreach (var item in successMessage! ?? errorMessage!)
-                        {
-                            <li>@item</li>
-                        }
-                    </ul>
-                }
-            </div>
-            @RenderBody()
+                <ul class="list">
+                    @foreach (var item in successMessage! ?? errorMessage!)
+                    {
+                        <li>@item</li>
+                    }
+                </ul>
+            }
         </div>
+        @RenderBody()
     </div>
 </div>
 </body>

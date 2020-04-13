@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = $"{Labels.Pages} - {Labels.Parameters}";
-    ViewData["HeightPercent"] = 210;
 }
 
 @section Headers
@@ -20,12 +19,13 @@
         $(".form").on("submit", () => tinyMCE.triggerSave()).form({
         on: "blur",
         fields: {
-            aboutUsContent: {
-                identifier: "aboutUsContent",
+            aboutContent: {
+                identifier: "aboutContent",
+                depends: "aboutEnabled",
                 rules: [
                     {
                         type   : "empty",
-                        prompt : "@ValidationMessages.AboutUsPageContentRequired"
+                        prompt : "@ValidationMessages.AboutPageContentRequired"
                     }
                 ]
             },
@@ -48,6 +48,16 @@
                         prompt : "@ValidationMessages.KoFiLinkRequired"
                     }
                 ]
+            },
+            disqusShortname: {
+                identifier: "disqusShortname",
+                depends: "disqusEnabled",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : "@ValidationMessages.DisqusShortnameRequired"
+                    }
+                ]
             }
         }
         }).api({
@@ -62,10 +72,24 @@
 }
 
 <form class="ui form" novalidate>
+    <div class="field">
+        <label>@Labels.Blog</label>
+        <div class="ui toggle checkbox">
+            <input class="hidden" type="checkbox" name="blogEnabled" asp-for="BlogEnabled"/>
+            <label>@Labels.Enable</label>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.About</label>
+        <div class="ui toggle checkbox">
+            <input class="hidden" type="checkbox" name="aboutEnabled" asp-for="AboutEnabled"/>
+            <label>@Labels.Enable</label>
+        </div>
+    </div>
     <div class="ui message error"></div>
     <div class="field">
-        <label>@Labels.AboutUsPageContent</label>
-        <textarea name="aboutUsContent" placeholder="@Labels.AboutUsPageContent" asp-for="AboutUsContent"></textarea>
+        <label>@Labels.AboutPageContent</label>
+        <textarea name="aboutContent" placeholder="@Labels.AboutPageContent" asp-for="AboutContent"></textarea>
     </div>
     <div class="field">
         <label>@Labels.Patreon</label>
@@ -96,6 +120,17 @@
     <div class="field">
         <label>@Labels.KofiNotice</label>
         <textarea name="kofiNotice" placeholder="@Labels.KofiNotice" asp-for="KofiNotice"></textarea>
+    </div>
+    <div class="field">
+        <label>@Labels.Disqus</label>
+        <div class="ui toggle checkbox">
+            <input class="hidden" type="checkbox" name="disqusEnabled" asp-for="DisqusEnabled"/>
+            <label>@Labels.Enable</label>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.Disqus</label>
+        <input type="text" name="disqusShortname" placeholder="@Labels.DisqusShortname" asp-for="DisqusShortname"/>
     </div>
     <div class="field" style="overflow: auto">
         <div class="ui right floated black submit button" style="overflow: hidden">@Labels.UpdateParameters</div>

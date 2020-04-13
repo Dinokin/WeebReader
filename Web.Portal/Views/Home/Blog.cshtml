@@ -1,0 +1,28 @@
+﻿@model IEnumerable<PostModel>
+
+@{
+    ViewData["Title"] = Labels.Blog;
+    ViewData["SegmentedPaginator"] = true;
+    ViewData["PaginatorButtonSize"] = "mini";
+}
+
+@section Headers
+{
+    <script>
+    $(() => $("#blog,#blog-mobile").addClass("active"));
+    </script>
+}
+
+<div class="ui container">
+    @foreach (var post in Model)
+    {
+        <div class="ui raised segment">
+            <div class="content">
+                <h4 class="ui header add-ellipsis">@post.Title</h4>
+                <p><i class="calendar alternate outline icon"></i>@post.ReleaseDate?.ToString("yyyy-MM-dd")</p>
+                @Html.Raw(post.Content)
+            </div>
+        </div>
+    }
+    <partial name="_Paginator"/>
+</div>

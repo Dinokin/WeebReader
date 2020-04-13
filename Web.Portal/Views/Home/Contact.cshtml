@@ -2,7 +2,7 @@
 @model ContactModel
 
 @{
-    ViewData["Title"] = Labels.ContactUs;
+    ViewData["Title"] = Labels.Contact;
     var successMessage = (IEnumerable<string>?) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>?) TempData["ErrorMessage"];
     var emailSenderEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
@@ -19,7 +19,7 @@
     $(() =>{
         let messageContainer = $(".form .message");
         
-        $("#contact-us,#contact-us-mobile").addClass("active");
+        $("#contact,#contact-mobile").addClass("active");
         $(".form").on("submit", () => tinyMCE.triggerSave()).form({
         on: "blur",
         fields: {
@@ -56,7 +56,7 @@
             }
         }
         }).api({
-        url: "@Url.Action("ContactUs")",
+        url: "@Url.Action("Contact")",
         serializeForm: true,
         method: "POST",
         onSuccess: () => window.location.reload(),
