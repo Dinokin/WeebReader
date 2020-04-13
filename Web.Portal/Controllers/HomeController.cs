@@ -47,7 +47,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             var posts = (await _postsManager.GetRange(0, 5, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
             var releases = (await _chapterManager.GetRange(0, 8, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
-            var titles = releases.Select(async chapter => Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null)).Select(task => task.Result);
+            var titles = await Task.WhenAll(releases.Select(async chapter => Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null)));
 
             return View(new Tuple<IEnumerable<PostModel>, IEnumerable<Tuple<TitleModel, ChapterModel>>>(posts,
                 releases.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter)).Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate)));
