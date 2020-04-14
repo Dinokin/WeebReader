@@ -2,7 +2,7 @@
 using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 
-namespace WeebReader.Web.Services
+namespace WeebReader.Web.Services.Others
 {
     internal static class Utilities
     {
