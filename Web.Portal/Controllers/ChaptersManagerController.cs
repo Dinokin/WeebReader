@@ -12,7 +12,6 @@ using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.ChaptersManager;
 using WeebReader.Web.Models.Others;
-using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers

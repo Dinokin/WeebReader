@@ -62,8 +62,8 @@ namespace WeebReader.Web.Portal
                 options.ReturnUrlParameter = "returnUrl";
             });
             
-            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Utilities.CurrentDirectory}{Path.DirectorySeparatorChar}Keys"))
-                .ProtectKeysWithCertificate(Utilities.GetCertificate());
+            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Others.Utilities.GetCertificate()}{Path.DirectorySeparatorChar}Keys"))
+                .ProtectKeysWithCertificate(Others.Utilities.GetCertificate());
 
             services.AddControllersWithViews()
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false)

@@ -9,7 +9,6 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Models.Controllers.BlogManager;
 using WeebReader.Web.Models.Controllers.ChaptersManager;
 using WeebReader.Web.Models.Controllers.Home;
 using WeebReader.Web.Models.Controllers.TitlesManager;
