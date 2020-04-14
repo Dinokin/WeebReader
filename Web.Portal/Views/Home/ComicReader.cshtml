@@ -25,7 +25,6 @@
     <meta property="og:site_name" content="@siteName"/>
     <script>
     $(() => {
-        let chapterContainer = $("#chapter-container");
         let jumpButton = $("#jump-button");
         
         $("#titles,#titles-mobile").addClass("active");
@@ -67,7 +66,7 @@
         });
         
         jumpButton.on("click", () => {
-            scrollToTop(chapterContainer);
+            scrollToTop($(".options"));
         });
         
         $(document).on("scroll", () => {

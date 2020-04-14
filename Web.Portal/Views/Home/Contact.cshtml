@@ -10,6 +10,8 @@
     var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
     var discordLink = await ParametersManager.GetValue<string?>(Parameter.Types.ContactDiscordLink);
     var discordNotice = await ParametersManager.GetValue<string?>(Parameter.Types.ContactDiscordNotice);
+    var reCaptchaEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
+    var reCaptchaClientKey = await ParametersManager.GetValue<string?>(Parameter.Types.ContactEmailRecaptchaClientKey);
 }
 
 @section Headers
@@ -64,6 +66,15 @@
         });
     });
     </script>
+    @if (reCaptchaEnabled)
+    {
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script>
+        function recaptcha_callback(token) {
+            $("input[name=\"reCaptchaResponse\"]").val(token);
+        }
+        </script>
+    }
 }
 
 <div class="ui container">
@@ -111,6 +122,13 @@
                     <label>@Labels.Message</label>
                     <textarea name="message" placeholder="@Labels.Message" asp-for="Message"></textarea>
                 </div>
+                @if (reCaptchaEnabled)
+                {
+                    <input type="hidden" name="reCaptchaResponse" asp-for="ReCaptchaResponse"/>
+                    <div class="field">
+                        <div class="g-recaptcha" data-sitekey="@reCaptchaClientKey" data-callback="recaptcha_callback"></div>
+                    </div>   
+                }
                 <div class="field" style="overflow: auto">
                     <div class="ui right floated black submit button" style="overflow: hidden">@Labels.Send</div>
                 </div>

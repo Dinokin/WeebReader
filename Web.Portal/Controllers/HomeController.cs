@@ -29,8 +29,9 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly PostsManager _postsManager;
         private readonly EmailSender _emailSender;
         private readonly ParametersManager _parametersManager;
+        private readonly ReCaptchaValidator _reCaptchaValidator;
 
-        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager)
+        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
@@ -40,6 +41,7 @@ namespace WeebReader.Web.Portal.Controllers
             _postsManager = postsManager;
             _emailSender = emailSender;
             _parametersManager = parametersManager;
+            _reCaptchaValidator = reCaptchaValidator;
         }
 
         [HttpGet("")]
@@ -126,17 +128,24 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 if (emailSenderEnabled && emailContactEnabled)
                 {
-                    if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
+                    var reCaptchaEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
+
+                    if (!reCaptchaEnabled || await _reCaptchaValidator.Validate(contactModel.ReCaptchaResponse, null))
                     {
-                        TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
-
-                        return new JsonResult(new
+                        if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
                         {
-                            success = true
-                        });
-                    }
-                }
+                            TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
 
+                            return new JsonResult(new
+                            {
+                                success = true
+                            });
+                        }
+                    }
+                    else
+                        ModelState.AddModelError("CouldNotVerifyRobot", OtherMessages.CouldntVerifyRobot);
+                } 
+                
                 ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
             }
             

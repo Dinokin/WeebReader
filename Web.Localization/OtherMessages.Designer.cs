@@ -187,6 +187,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We couldn&apos;t verify that you&apos;re not a robot..
+        /// </summary>
+        public static string CouldntVerifyRobot {
+            get {
+                return ResourceManager.GetString("CouldntVerifyRobot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This functionality is disabled, please contact an administrator..
         /// </summary>
         public static string DisableFunctionality {

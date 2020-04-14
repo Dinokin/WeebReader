@@ -54,7 +54,7 @@
         </div>
     </div>
 </div>
-<div class="ui tablet mobile only grid">
+<div class="ui tablet mobile only grid" style="margin-top: -1rem">
     <div class="ui top fixed large borderless menu mobile-menu @(lightMode ? "inverted" : null)">
         <a class="item" href="/">
             <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
@@ -66,7 +66,7 @@
                 </button>
             </div>
         </div>
-        <div class="ui vertical borderless fluid menu @(lightMode ? "inverted" : null)" style="display: none">
+        <div class="ui vertical secondary fluid menu @(lightMode ? "inverted" : null)" style="display: none">
             <a id="titles-mobile" class="item menu-item" href="@Url.Action("Titles", "Home")">
                 @Labels.Titles
             </a>

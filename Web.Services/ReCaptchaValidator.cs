@@ -64,7 +64,7 @@ namespace WeebReader.Web.Services
             if (await _parameterManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled))
             {
                 var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(Parameter.Types.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
-                var content = new StringContent(JsonConvert.SerializeObject(reCaptchaRequest), Encoding.UTF8, "application/json");
+                var content = new FormUrlEncodedContent(Encode(reCaptchaRequest));
                 var httpResponse = await _httpClientFactory.CreateClient().PostAsync(PostAddress, content);
 
                 if (httpResponse.IsSuccessStatusCode)
@@ -78,6 +78,18 @@ namespace WeebReader.Web.Services
             }
 
             return true;
+        }
+
+        private static IEnumerable<KeyValuePair<string,string>> Encode(ReCaptchaRequest request)
+        {
+            var result = new List<KeyValuePair<string,string>>();
+            result.Add(new KeyValuePair<string, string>(nameof(request.Secret).ToLower(), request.Secret));
+            result.Add(new KeyValuePair<string, string>(nameof(request.Response).ToLower(), request.Response));
+
+            if (request.RemoteIp != null) 
+                result.Add(new KeyValuePair<string, string>(nameof(request.RemoteIp).ToLower(), request.RemoteIp));
+
+            return result;
         }
     }
 }

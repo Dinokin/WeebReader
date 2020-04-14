@@ -147,4 +147,7 @@
     <data name="MessageCouldntBeSent">
         <value>Your message couldn't be sent.</value>
     </data>
+    <data name="CouldntVerifyRobot">
+        <value>We couldn't verify that you're not a robot.</value>
+    </data>
 </root>
