@@ -30,7 +30,7 @@
             <a class="item" href="/">
                 <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
             </a>
-            <a id="titles" class="item menu-item" href="@Url.Action("Titles", "Home")">
+            <a id="titles" class="item menu-item" href="@Url.Action("Titles", "Home", new { titleId = string.Empty})">
                 @Labels.Titles
             </a>
             @if (blogEnabled)

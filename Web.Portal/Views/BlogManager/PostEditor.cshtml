@@ -95,8 +95,8 @@
         </div>
         <div class="field">
             <label>@Labels.Visibility</label>
-            <div class="ui toggle checkbox">
-                <input class="hidden" type="checkbox" name="visible" asp-for="Visible"/>
+            <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
+                <input class="hidden" type="checkbox" name="visible" checked="@(Model == null ? "checked" : null)" asp-for="Visible"/>
                 <label>@Labels.MakeVisible</label>
             </div>
         </div>

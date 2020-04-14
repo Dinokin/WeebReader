@@ -142,9 +142,9 @@
                     return;
                 }
 
-                scrollToTop(pageContainer);
                 currentPage++;
                 setPage();
+                scrollToTop($(".options"));
                 nextPagePreload();
             }
         
@@ -162,9 +162,9 @@
                     return;
                 }
                 
-                scrollToTop(pageContainer);
                 currentPage--;
                 setPage();
+                scrollToTop($(".options"));
                 previousPagePreload();
             }
             

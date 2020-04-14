@@ -46,7 +46,7 @@
             </div>
             <div class="ui hidden divider"></div>
             <div class="ui hidden divider"></div>
-            <div class="extra">
+            <div class="ui labels">
                 <h5>@Labels.Tags</h5>
                 @foreach (var tag in @Model.Item1.Tags.Split(","))
                 {
@@ -63,13 +63,13 @@
     <div class="ui hidden divider"></div>
     <div class="ui raised segment">
         <div class="ui top attached tabular menu">
-            <a class="item active" data-tab="chapters">
-                <h5>@Labels.Chapters</h5>
+            <a class="item menu-item active" data-tab="chapters">
+                @Labels.Chapters
             </a>
             @if (disqusEnabled)
             {
-                <a class="item" data-tab="comments">
-                    <h5>@Labels.Comments</h5>
+                <a class="item menu-item" data-tab="comments">
+                    @Labels.Comments
                 </a>   
             }
         </div>
