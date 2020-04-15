@@ -547,15 +547,6 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Insert your e-mail.
-        /// </summary>
-        public static string InsertEmail {
-            get {
-                return ResourceManager.GetString("InsertEmail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Install.
         /// </summary>
         public static string Install {
@@ -615,15 +606,6 @@ namespace WeebReader.Web.Localization {
         public static string LangCode {
             get {
                 return ResourceManager.GetString("LangCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Links.
-        /// </summary>
-        public static string Links {
-            get {
-                return ResourceManager.GetString("Links", resourceCulture);
             }
         }
         
@@ -691,15 +673,6 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Next Chapter.
-        /// </summary>
-        public static string NextChapter {
-            get {
-                return ResourceManager.GetString("NextChapter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Nickname.
         /// </summary>
         public static string Nickname {
@@ -759,15 +732,6 @@ namespace WeebReader.Web.Localization {
         public static string OriginalName {
             get {
                 return ResourceManager.GetString("OriginalName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Page.
-        /// </summary>
-        public static string Page {
-            get {
-                return ResourceManager.GetString("Page", resourceCulture);
             }
         }
         
@@ -840,15 +804,6 @@ namespace WeebReader.Web.Localization {
         public static string Posts {
             get {
                 return ResourceManager.GetString("Posts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Previous Chapter.
-        /// </summary>
-        public static string PreviousChapter {
-            get {
-                return ResourceManager.GetString("PreviousChapter", resourceCulture);
             }
         }
         
@@ -993,15 +948,6 @@ namespace WeebReader.Web.Localization {
         public static string SignInToAccount {
             get {
                 return ResourceManager.GetString("SignInToAccount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sign out.
-        /// </summary>
-        public static string SignOut {
-            get {
-                return ResourceManager.GetString("SignOut", resourceCulture);
             }
         }
         

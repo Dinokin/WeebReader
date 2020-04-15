@@ -133,15 +133,6 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The current password is required..
-        /// </summary>
-        public static string CurrentPasswordRequired {
-            get {
-                return ResourceManager.GetString("CurrentPasswordRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A link to a discord server is required..
         /// </summary>
         public static string DiscordLinkRequired {
@@ -372,15 +363,6 @@ namespace WeebReader.Web.Localization {
         public static string ReCaptchaClientKeyRequired {
             get {
                 return ResourceManager.GetString("ReCaptchaClientKeyRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to We could not validate your ReCaptcha token..
-        /// </summary>
-        public static string ReCaptchaFailed {
-            get {
-                return ResourceManager.GetString("ReCaptchaFailed", resourceCulture);
             }
         }
         

@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="ui vertical secondary fluid menu @(lightMode ? "inverted" : null)" style="display: none">
-            <a id="titles-mobile" class="item menu-item" href="@Url.Action("Titles", "Home")">
+            <a id="titles-mobile" class="item menu-item" href="@Url.Action("Titles", "Home", new { titleId = string.Empty})">
                 @Labels.Titles
             </a>
             @if (blogEnabled)

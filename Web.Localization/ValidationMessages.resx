@@ -45,9 +45,6 @@
     <data name="PasswordRequired">
         <value>A password required.</value>
     </data>
-    <data name="CurrentPasswordRequired">
-        <value>The current password is required.</value>
-    </data>
     <data name="RoleRequired">
         <value>A role must be defined.</value>
     </data>
@@ -194,9 +191,6 @@
     </data>
     <data name="MessageRequired">
         <value>A message is required.</value>
-    </data>
-    <data name="ReCaptchaFailed">
-        <value>We could not validate your ReCaptcha token.</value>
     </data>
     <data name="ChapterNumberOutOfRange">
         <value>A chapter number must be between 0 and 9999.9</value>

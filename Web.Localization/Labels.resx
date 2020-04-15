@@ -33,9 +33,6 @@
     <data name="Menu">
         <value>Menu</value>
     </data>
-    <data name="SignOut">
-        <value>Sign out</value>
-    </data>
     <data name="Titles">
         <value>Titles</value>
     </data>
@@ -45,9 +42,6 @@
     <data name="Resources">
         <value>Resources</value>
     </data>
-    <data name="Links">
-        <value>Links</value>
-    </data>
     <data name="Users">
         <value>Users</value>
     </data>
@@ -56,9 +50,6 @@
     </data>
     <data name="ForgotPassword1">
         <value>Forgot Password</value>
-    </data>
-    <data name="InsertEmail">
-        <value>Insert your e-mail</value>
     </data>
     <data name="EmailAddress">
         <value>E-mail Address</value>
@@ -369,12 +360,6 @@
     <data name="Vol">
         <value>Vol.</value>
     </data>
-    <data name="PreviousChapter">
-        <value>Previous Chapter</value>
-    </data>
-    <data name="NextChapter">
-        <value>Next Chapter</value>
-    </data>
     <data name="SwitchTheme">
         <value>Switch Theme</value>
     </data>
@@ -383,9 +368,6 @@
     </data>
     <data name="Ch">
         <value>Ch.</value>
-    </data>
-    <data name="Page">
-        <value>Page</value>
     </data>
     <data name="ViewDetails">
         <value>View Details</value>

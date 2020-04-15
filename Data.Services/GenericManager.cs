@@ -15,7 +15,7 @@ namespace WeebReader.Data.Services
         
         public IQueryable<TEntity> Entities { get; }
 
-        public GenericManager(BaseContext context)
+        protected GenericManager(BaseContext context)
         {
             Context = context;
             DbSet = (DbSet<TEntity>) typeof(BaseContext).GetProperties().Single(info => info.PropertyType == typeof(DbSet<TEntity>)).GetValue(Context)!;
@@ -25,9 +25,7 @@ namespace WeebReader.Data.Services
         public virtual async Task<long> Count() => await DbSet.LongCountAsync();
 
         public virtual async Task<TEntity> GetById(Guid id) => await DbSet.SingleOrDefaultAsync(entity => entity.Id == id);
-
-        public virtual Task<IEnumerable<TEntity>> GetRange(int skip, int take) => Task.FromResult<IEnumerable<TEntity>>(DbSet.Skip(skip).Take(take));
-
+        
         public virtual async Task<bool> Add(TEntity entity)
         {
             await DbSet.AddAsync(entity);
@@ -48,13 +46,6 @@ namespace WeebReader.Data.Services
 
             return await Context.SaveChangesAsync() > 0;
         }
-        
-        public virtual async Task<bool> EditRange(IEnumerable<TEntity> entities)
-        { 
-            DbSet.UpdateRange(entities);
-            
-            return await Context.SaveChangesAsync() > 0;
-        } 
 
         public virtual async Task<bool> Delete(TEntity entity)
         {
