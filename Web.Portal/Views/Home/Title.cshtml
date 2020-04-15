@@ -16,7 +16,7 @@
 {
     <meta property="og:title" content="@Model.Item1.Name"/>
     <meta property="og:url" content="@($"{siteAddress}{Url.Action("Titles", new { titleId = Model.Item1.TitleId })}")"/>
-    <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover.png")"/>
+    <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
     <meta property="og:site_name" content="@siteName"/>
     <script>
