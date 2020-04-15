@@ -34,10 +34,12 @@ namespace WeebReader.Web.Services.Others
             return imageCollection;
         }
 
-        internal static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename, bool disposeImage = true)
+        internal static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename, bool useJpg = false, bool disposeImage = true)
         {
             var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}.png");
-            image.Write(file, image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24);
+            var format = useJpg ? image.Format = MagickFormat.Jpg : image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24;
+
+            image.Write(file, format);
 
             if (disposeImage) 
                 image.Dispose();

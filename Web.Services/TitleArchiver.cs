@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
@@ -29,7 +30,7 @@ namespace WeebReader.Web.Services
             directory.Create();
 
             if (cover != null)
-                Utilities.WriteImage(directory, Utilities.ProcessImage(cover), "cover");
+                GenerateCover(title, cover);
 
             return true;
         }
@@ -40,8 +41,8 @@ namespace WeebReader.Web.Services
                 return false;
 
             if (cover != null)
-                Utilities.WriteImage(GetTitleFolder(title), Utilities.ProcessImage(cover), "cover");
-
+                GenerateCover(title, cover);
+            
             return true;
         }
 
@@ -56,5 +57,14 @@ namespace WeebReader.Web.Services
         }
 
         private DirectoryInfo GetTitleFolder(TTitle title) => new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}");
+
+        private void GenerateCover(TTitle title, Stream cover)
+        {
+            var image = Utilities.ProcessImage(cover);
+            Utilities.WriteImage(GetTitleFolder(title), image, "cover");
+            
+            image.Resize(new Percentage(50));
+            Utilities.WriteImage(GetTitleFolder(title), image, "cover_thumb", true);
+        }
     }
 }

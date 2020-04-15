@@ -19,7 +19,7 @@
         {
             <div class="ui raised card">
                 <div class="content">
-                    <div class="center aligned content"><a href="@Url.Action("Titles", new { titleId = title.TitleId })"><img class="ui bordered image" src="/content/@title.TitleId/cover.png"></a></div>
+                    <div class="center aligned content"><a href="@Url.Action("Titles", new { titleId = title.TitleId })"><img class="ui bordered image" src="/content/@title.TitleId/cover_thumb.jpg"></a></div>
                     <h4 class="ui center aligned header line-clamp min-height-2r"><a href="@Url.Action("Titles", new { titleId = title.TitleId })">@title.Name</a></h4>
                     <div class="center aligned description">
                         <p>@Labels.Status: @TitleStatusTranslator.FromStatus(title.Status)</p>
