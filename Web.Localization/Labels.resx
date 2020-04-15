@@ -372,9 +372,6 @@
     <data name="ViewDetails">
         <value>View Details</value>
     </data>
-    <data name="Home">
-        <value>Home</value>
-    </data>
     <data name="Read">
         <value>Read</value>
     </data>
@@ -410,5 +407,8 @@
     </data>
     <data name="Comments">
         <value>Comments</value>
+    </data>
+    <data name="LatestReleases">
+        <value>Latest Releases</value>
     </data>
 </root>

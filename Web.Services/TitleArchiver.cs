@@ -61,7 +61,7 @@ namespace WeebReader.Web.Services
         private void GenerateCover(TTitle title, Stream cover)
         {
             var image = Utilities.ProcessImage(cover);
-            Utilities.WriteImage(GetTitleFolder(title), image, "cover");
+            Utilities.WriteImage(GetTitleFolder(title), image, "cover", false, false);
             
             image.Resize(new Percentage(50));
             Utilities.WriteImage(GetTitleFolder(title), image, "cover_thumb", true);

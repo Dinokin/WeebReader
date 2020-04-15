@@ -538,15 +538,6 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Home.
-        /// </summary>
-        public static string Home {
-            get {
-                return ResourceManager.GetString("Home", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Install.
         /// </summary>
         public static string Install {
@@ -606,6 +597,15 @@ namespace WeebReader.Web.Localization {
         public static string LangCode {
             get {
                 return ResourceManager.GetString("LangCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Releases.
+        /// </summary>
+        public static string LatestReleases {
+            get {
+                return ResourceManager.GetString("LatestReleases", resourceCulture);
             }
         }
         

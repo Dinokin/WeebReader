@@ -62,7 +62,7 @@ namespace WeebReader.Web.Portal
                 options.ReturnUrlParameter = "returnUrl";
             });
             
-            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Others.Utilities.GetCertificate()}{Path.DirectorySeparatorChar}Keys"))
+            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Utilities.Common.Directory.CurrentDirectory}{Path.DirectorySeparatorChar}Keys"))
                 .ProtectKeysWithCertificate(Others.Utilities.GetCertificate());
 
             services.AddControllersWithViews()

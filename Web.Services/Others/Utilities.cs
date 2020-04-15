@@ -36,8 +36,8 @@ namespace WeebReader.Web.Services.Others
 
         internal static FileInfo WriteImage(DirectoryInfo folder, MagickImage image, string filename, bool useJpg = false, bool disposeImage = true)
         {
-            var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}.png");
             var format = useJpg ? image.Format = MagickFormat.Jpg : image.ColorType == ColorType.Grayscale ? MagickFormat.Png8 : MagickFormat.Png24;
+            var file = new FileInfo($"{folder}{Path.DirectorySeparatorChar}{filename}.{(useJpg ? "jpg" : "png")}");
 
             image.Write(file, format);
 
