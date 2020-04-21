@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Models.Controllers.Home;
 using WeebReader.Web.Models.Controllers.SignIn;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
@@ -116,7 +115,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (user != null)
                 {
-                    var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).Encode();
+                    var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).EncodeToBase64();
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
                     var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
@@ -171,7 +170,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             if (ModelState.IsValid && await _userManager.FindByIdAsync(resetPasswordModel.UserId.ToString()) is var user && user != null)
             {
-                var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token.Decode(), resetPasswordModel.NewPassword);
+                var result = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token.DecodeFromBase64(), resetPasswordModel.NewPassword);
 
                 if (result.Succeeded)
                 {
@@ -210,7 +209,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (user != null)
                     {
-                        var result = await _userManager.ChangeEmailAsync(user, changeEmailModel.Email, changeEmailModel.Token.Decode());
+                        var result = await _userManager.ChangeEmailAsync(user, changeEmailModel.Email, changeEmailModel.Token.DecodeFromBase64());
 
                         if (result.Succeeded)
                             TempData["SuccessMessage"] = new[] {OtherMessages.EmailChangedSuccessfully};

@@ -10,7 +10,7 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
-using WeebReader.Web.Models.Controllers.Home;
+using WeebReader.Web.Models.Controllers.SignIn;
 using WeebReader.Web.Models.Controllers.UsersManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
@@ -365,7 +365,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
                 {
-                    var token = (await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email)).Encode();
+                    var token = (await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email)).EncodeToBase64();
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
                     var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
@@ -410,7 +410,7 @@ namespace WeebReader.Web.Portal.Controllers
 
         private async Task<bool> SendAccountCreationEmail(IdentityUser<Guid> user)
         {
-            var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).Encode();
+            var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).EncodeToBase64();
             var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
             var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
             var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);

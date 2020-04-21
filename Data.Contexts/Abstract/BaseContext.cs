@@ -156,9 +156,9 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.HasIndex(setting => setting.Type).IsUnique();
 
                 typeBuilder.HasData(
-                    new Parameter(Guid.NewGuid(), Parameter.Types.SiteName, "WeebReader"), 
-                    new Parameter(Guid.NewGuid(), Parameter.Types.SiteDescription, "We read weebs."),
-                    new Parameter(Guid.NewGuid(), Parameter.Types.SiteAddress, "http://127.0.0.1:5000"));
+                    new Parameter(Guid.Parse("b2f7adc5-9090-417c-bbc1-805071fc7a81"), Parameter.Types.SiteName, "WeebReader"), 
+                    new Parameter(Guid.Parse("27c51234-bf33-40de-86db-1941c8622a73"), Parameter.Types.SiteDescription, "We read weebs."),
+                    new Parameter(Guid.Parse("24d0dbb4-386c-4e80-880d-72ac606c748e"), Parameter.Types.SiteAddress, "http://127.0.0.1:5000"));
             });
         }
     }

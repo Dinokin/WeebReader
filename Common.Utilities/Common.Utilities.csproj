@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <AssemblyName>WeebReader.Utilities.Common</AssemblyName>
-        <RootNamespace>WeebReader.Utilities.Common</RootNamespace>
+        <AssemblyName>WeebReader.Common.Utilities</AssemblyName>
+        <RootNamespace>WeebReader.Common.Utilities</RootNamespace>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <AssemblyVersion>1.0.0</AssemblyVersion>

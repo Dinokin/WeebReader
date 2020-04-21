@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WeebReader.Common.Utilities;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities.Abstract;
@@ -62,8 +63,8 @@ namespace WeebReader.Web.Portal
                 options.ReturnUrlParameter = "returnUrl";
             });
             
-            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Utilities.Common.Directory.CurrentDirectory}{Path.DirectorySeparatorChar}Keys"))
-                .ProtectKeysWithCertificate(Others.Utilities.GetCertificate());
+            services.AddDataProtection().PersistKeysToFileSystem(Directory.CreateDirectory($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}Keys"))
+                .ProtectKeysWithCertificate(Security.GetCertificate());
 
             services.AddControllersWithViews()
                 .AddViewOptions(options => options.HtmlHelperOptions.ClientValidationEnabled = false)

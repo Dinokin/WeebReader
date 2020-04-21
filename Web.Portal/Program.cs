@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Directory = WeebReader.Utilities.Common.Directory;
+using WeebReader.Common.Utilities;
 
 namespace WeebReader.Web.Portal
 {
@@ -14,14 +14,14 @@ namespace WeebReader.Web.Portal
             builder.ConfigureAppConfiguration((context, configurationBuilder) =>
             {
                 configurationBuilder.AddEnvironmentVariables();
-                configurationBuilder.AddJsonFile($"{Directory.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.json");
+                configurationBuilder.AddJsonFile($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.json");
 
                 if (!context.HostingEnvironment.IsProduction())
-                    configurationBuilder.AddJsonFile($"{Directory.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.{context.HostingEnvironment.EnvironmentName}.json");
+                    configurationBuilder.AddJsonFile($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.{context.HostingEnvironment.EnvironmentName}.json");
             });
             
-            builder.UseContentRoot(Directory.CurrentDirectory.FullName);
-            builder.UseWebRoot($"{Directory.CurrentDirectory}{Path.DirectorySeparatorChar}Static");
+            builder.UseContentRoot(Location.CurrentDirectory.FullName);
+            builder.UseWebRoot($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}Static");
             builder.UseStartup<Startup>();
         }).Build().RunAsync();
     }
