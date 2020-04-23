@@ -17,7 +17,7 @@
 
 @section Headers
 {
-    <meta property="og:title" content="@(Model.Item2.Volume != null && Model.Item2.Volume > 0 ? $"{Labels.Vol}{Model.Item2.Volume}" : null)@Labels.Ch @Model.Item2.Number - @Model.Item1.Name"/>
+    <meta property="og:title" content="@(Model.Item2.Volume != null && Model.Item2.Volume > 0 ? $"{Labels.Vol}{Model.Item2.Volume} " : null)@Labels.Ch @Model.Item2.Number - @Model.Item1.Name"/>
     <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.Item2.ChapterId }, Context.Request.Scheme)"/>
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.Item1.Synopsis.RemoveHtmlTags()"/>
