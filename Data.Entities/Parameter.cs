@@ -9,7 +9,6 @@ namespace WeebReader.Data.Entities
         {
             SiteName = 0,
             SiteDescription = 1,
-            SiteAddress = 2,
             SiteEmail = 3,
             EmailSenderEnabled = 4,
             SmtpServer = 5,

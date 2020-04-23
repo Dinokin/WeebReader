@@ -13,9 +13,5 @@ namespace WeebReader.Web.Models.Controllers.ParametersManager
         
         [Parameter(Parameter.Types.SiteDescription)]
         public string? SiteDescription { get; set; }
-
-        [Parameter(Parameter.Types.SiteAddress)]
-        [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "SiteAddressRequired")]
-        public string SiteAddress { get; set; } = string.Empty;
     }
 }

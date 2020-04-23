@@ -15,7 +15,7 @@ namespace WeebReader.Data.Services
         
         public IQueryable<TEntity> Entities { get; }
 
-        protected GenericManager(BaseContext context)
+        public GenericManager(BaseContext context)
         {
             Context = context;
             DbSet = (DbSet<TEntity>) typeof(BaseContext).GetProperties().Single(info => info.PropertyType == typeof(DbSet<TEntity>)).GetValue(Context)!;

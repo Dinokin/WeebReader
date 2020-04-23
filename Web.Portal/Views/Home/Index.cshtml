@@ -1,8 +1,15 @@
-﻿@model IEnumerable<Tuple<TitleModel, ChapterModel>>
+﻿@inject ParametersManager ParametersManager
+@model IEnumerable<Tuple<TitleModel, ChapterModel>>
 
 @{
     ViewData["Title"] = Labels.LatestReleases;
     ViewData["ShowInSearch"] = true;
+    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
+}
+
+@section Headers
+{
+    <link rel="alternate" type="application/rss+xml" title="@($"{siteName} RSS")" href="@Url.Action("IndexRss", "Home")"/>
 }
 
 <div class="ui center aligned container">
@@ -11,16 +18,16 @@
         {
             <div class="ui raised card">
                 <div class="content">
-                    <div class="center aligned content"><a href="@Url.Action("Titles", new { titleId = title.TitleId })"><img class="ui bordered image" src="/content/@title.TitleId/cover_thumb.jpg"></a></div>
+                    <div class="center aligned content"><a href="@Url.Action("ReadChapter", new { chapterId = chapter.ChapterId })"><img class="ui bordered image" src="/content/@title.TitleId/cover_thumb.jpg"></a></div>
                     <h4 class="ui center aligned header line-clamp min-height-2r"><a href="@Url.Action("Titles", new { titleId = title.TitleId })">@title.Name</a></h4>
                     <div class="center aligned description">
                         <p><i class="file outline icon"></i>@Labels.Chapter @chapter.Number</p>
                         <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p>
                     </div>
                 </div>
-                <a class="ui small black bottom attached button" href="@Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })">
+                <a class="ui small black bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.ChapterId })">
                     @Labels.Read
-                    <i class="angle double right icon"></i>
+                    <i class="angle double right fitted icon"></i>
                 </a>
             </div>
         }

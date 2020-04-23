@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
 
@@ -6,7 +7,35 @@ namespace WeebReader.Web.Services.Others
 {
     internal static class Utilities
     {
-        internal static DirectoryInfo GetContentFolder(IWebHostEnvironment environment) => new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");
+        internal static DirectoryInfo GetContentFolder(IWebHostEnvironment environment)
+        {
+            var folder = new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");
+
+            if (!folder.Exists)
+                folder.Create();
+
+            return folder;
+        }
+
+        internal static DirectoryInfo GetTitleFolder(IWebHostEnvironment environment, Guid titleId)
+        {
+            var folder = new DirectoryInfo($"{GetContentFolder(environment)}{Path.DirectorySeparatorChar}{titleId}");
+
+            if (!folder.Exists)
+                folder.Create();
+
+            return folder;
+        }
+        
+        internal static DirectoryInfo GetChapterFolder(IWebHostEnvironment environment, Guid titleId, Guid chapterId)
+        {
+            var folder = new DirectoryInfo($"{GetTitleFolder(environment, titleId)}{Path.DirectorySeparatorChar}{chapterId}");
+
+            if (!folder.Exists)
+                folder.Create();
+
+            return folder;
+        }
         
         internal static MagickImage ProcessImage(Stream image, bool disposeStream = true)
         {

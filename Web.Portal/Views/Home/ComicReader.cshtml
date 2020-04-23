@@ -6,7 +6,6 @@
     ViewData["DisqusIdentifier"] = $"chapter_{Model.Item2.ChapterId}";
     ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.Item2.Number} - {Model.Item1.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
-    var siteAddress = await ParametersManager.GetValue<string>(Parameter.Types.SiteAddress);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
     var pages = Model.Item3.Select(page => $"/content/{Model.Item1.TitleId}/{Model.Item2.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
@@ -19,9 +18,9 @@
 @section Headers
 {
     <meta property="og:title" content="@(Model.Item2.Volume != null && Model.Item2.Volume > 0 ? $"{Labels.Vol}{Model.Item2.Volume}" : null)@Labels.Ch @Model.Item2.Number - @Model.Item1.Name"/>
-    <meta property="og:url" content="@($"{siteAddress}{Url.Action("ChapterRead", new { chapterId = Model.Item2.ChapterId })}")"/>
-    <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
-    <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
+    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.Item2.ChapterId }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:description" content="@Model.Item1.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <script>
     $(() => {
@@ -38,7 +37,7 @@
         }
         });
         
-        $(".options").popup({
+        $("#options").popup({
         popup: $("#popup"),
         on: "click"
         });
@@ -66,7 +65,7 @@
         });
         
         jumpButton.on("click", () => {
-            scrollToTop($(".options"));
+            scrollToTop($("#chapter-container"));
         });
         
         $(document).on("scroll", () => {
@@ -88,8 +87,8 @@
             let pageContainer = $("#page-container");
             let page = $("#page");
             let currentPage = 0;
-            let previousChapter = "@(previousChapter != null ? Url.Action("ChapterRead", new { chapterId = previousChapter }) : string.Empty)";
-            let nextChapter = "@(nextChapter != null ? Url.Action("ChapterRead", new { chapterId = nextChapter }) : string.Empty)";
+            let previousChapter = "@(previousChapter != null ? Url.Action("ReadChapter", new { chapterId = previousChapter }) : string.Empty)";
+            let nextChapter = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)";
             
             pageSelector.dropdown({
             onChange: (value, text, element) => {
@@ -143,7 +142,7 @@
 
                 currentPage++;
                 setPage();
-                scrollToTop($(".options"));
+                scrollToTop(chapterContainer);
                 nextPagePreload();
             }
         
@@ -163,7 +162,7 @@
                 
                 currentPage--;
                 setPage();
-                scrollToTop($(".options"));
+                scrollToTop(chapterContainer);
                 previousPagePreload();
             }
             
@@ -202,52 +201,36 @@
 <div class="ui container">
     <div class="ui centered grid no-margin-top no-margin-bottom">
         <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.Item1.TitleId})">@Model.Item1.Name</a></div>
-        <div class="row no-padding">
-            <div class="ui secondary massive compact menu @(darkMode ? "inverted" : null)">
-                <a class="item @(previousChapter != null ? null : "disabled")" href="@(previousChapter != null ? Url.Action("ChapterRead", new {chapterId = previousChapter}) : null)">
-                    <i class="chevron left icon"></i>
-                    <i class="book open icon"></i>
-                </a>
-                <a class="options item">
-                    <i class="cog icon"></i>
-                </a>
-                <a class="item @(nextChapter != null ? null : "disabled")" href="@(nextChapter != null ? Url.Action("ChapterRead", new {chapterId = nextChapter}) : null)">
-                    <i class="book open icon"></i>
-                    <i class="chevron right icon"></i>
-                </a>
-            </div>
-        </div>
-        <div class="row" style="padding-top: 0;">
-            <div class="eight wide column @(!longStrip ? "right aligned" : "center aligned")">
-                <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown">
-                    <input type="hidden"/>
-                    <div class="text">@Labels.Ch @Model.Item2.Number</div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                        @foreach (var chapter in chapters)
-                        {
-                            <div class="item" data-value="@(chapter.ChapterId == Model.Item2.ChapterId ? "default" : Url.Action("ChapterRead", new { chapterId = chapter.ChapterId }))">@Labels.Chapter @chapter.Number</div>
-                        }
-                    </div>
+        <div class="row">
+            <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
+                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.Item2.ChapterId})"/>
+                <div class="text">@Labels.Ch @Model.Item2.Number</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    @foreach (var chapter in chapters)
+                    {
+                        <div class="item" data-value="@Url.Action("ReadChapter", new {chapterId = chapter.ChapterId})">@Labels.Chapter @chapter.Number</div>
+                    }
                 </div>
             </div>
             @if (!longStrip)
             {
-                <div class="eight wide left aligned column">
-                    <div id="page-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown">
-                        <input type="hidden"/>
-                        <div class="text">@Labels.Pg 1</div>
-                        <i class="dropdown icon"></i>
-                        <div class="menu">
-                            @for (var i = 0; i < pages.Length; i++)
-                            {
-                                <div class="item" data-value="@i">@Labels.Pg @(i+1)</div>
+                <div id="page-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
+                    <input type="hidden"/>
+                    <div class="text">@Labels.Pg 1</div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        @for (var i = 0; i < pages.Length; i++)
+                        {
+                            <div class="item" data-value="@i">@Labels.Pg @(i + 1)</div>
 
-                            }
-                        </div>
+                        }
                     </div>
                 </div>
             }
+            <div id="options" class="clickable">
+                <i class="eye outline @(darkMode ? "inverted" : "black") icon"></i>
+            </div>
         </div>
     </div>
 </div>
@@ -273,11 +256,25 @@
     }
     else
     {
-        <div id="page-container" class="ui dimmable" style="display: inline-block">
+        <div id="page-container" class="ui dimmable clickable" style="display: inline-block">
             <div class="ui loader"></div>
             <img id="page" class="ui bordered centered image"/>
         </div>
     }
+</div>
+<div class="ui container">
+    <div class="ui secondary massive menu @(darkMode ? "inverted" : null)">
+        <a class="item @(previousChapter != null ? null : "disabled")" href="@(previousChapter != null ? Url.Action("ReadChapter", new {chapterId = previousChapter}) : null)">
+            <i class="chevron left icon"></i>
+            <i class="book open icon"></i>
+        </a>
+        <div class="right menu">
+            <a class="item @(nextChapter != null ? null : "disabled")" href="@(nextChapter != null ? Url.Action("ReadChapter", new {chapterId = nextChapter}) : null)">
+                <i class="book open icon"></i>
+                <i class="chevron right icon"></i>
+            </a>
+        </div>
+    </div>
 </div>
 @if (disqusEnabled)
 {

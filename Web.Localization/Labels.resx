@@ -279,9 +279,6 @@
     <data name="SiteName">
         <value>Site Name</value>
     </data>
-    <data name="SiteAddress">
-        <value>Site Address</value>
-    </data>
     <data name="SiteDescription">
         <value>Site Description</value>
     </data>
@@ -410,5 +407,8 @@
     </data>
     <data name="LatestReleases">
         <value>Latest Releases</value>
+    </data>
+    <data name="NoChapterAvailable">
+        <value>This title doesn't have any chapter available.</value>
     </data>
 </root>

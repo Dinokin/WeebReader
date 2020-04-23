@@ -117,9 +117,8 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).EncodeToBase64();
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
-                    var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
-                    var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", new {userId = user.Id, token = "replace" }).Replace("replace", token)}");
+                    var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token));
 
                     await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.PasswordResetEmailSubject, siteName), message);
                 }

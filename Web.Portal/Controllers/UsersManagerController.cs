@@ -319,7 +319,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> YourProfile()
         {
             var user = await _userManager.GetUserAsync(User);
-            var model = Mapper.Map(await _userManager.GetUserAsync(User));
+            var model = Mapper.Map(user);
             model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
 
             return View(model);
@@ -367,10 +367,9 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     var token = (await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email)).EncodeToBase64();
                     var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
-                    var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
                     var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
-                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ChangeEmail", new {userId = user.Id, email = emailModel.Email, token = "replace"}).Replace("replace", token)}");
+                    var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, Url.Action("ChangeEmail", "UsersManager", new {userId = user.Id, email = emailModel.Email, token = "replace"}, Request.Scheme).Replace("replace", token));
 
                     var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
@@ -412,10 +411,9 @@ namespace WeebReader.Web.Portal.Controllers
         {
             var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).EncodeToBase64();
             var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
-            var siteAddress = await _parameterManager.GetValue<string>(Parameter.Types.SiteAddress);
             var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
 
-            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, $"{siteAddress}{Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }).Replace("replace", token)}");
+            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token));
 
             return await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }

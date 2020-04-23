@@ -25,15 +25,6 @@
                         prompt : "@ValidationMessages.SiteNameRequired"
                     }
                 ]
-            },
-            siteAddress: {
-                identifier  : "siteAddress",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.SiteAddressRequired"
-                    }
-                ]
             }
         }
         }).api({
@@ -49,15 +40,9 @@
 
 <form class="ui form" novalidate>
     <div class="ui message error"></div>
-    <div class="two fields">
-        <div class="field">
-            <label>@Labels.SiteName</label>
-            <input type="text" name="siteName" placeholder="@Labels.SiteName" asp-for="SiteName"/>
-        </div>
-        <div class="field">
-            <label>@Labels.SiteAddress</label>
-            <input type="text" name="siteAddress"  placeholder="@Labels.SiteAddress" asp-for="SiteAddress"/>
-        </div>
+    <div class="field">
+        <label>@Labels.SiteName</label>
+        <input type="text" name="siteName" placeholder="@Labels.SiteName" asp-for="SiteName"/>
     </div>
     <div class="field">
         <label>@Labels.SiteDescription</label>

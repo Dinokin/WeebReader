@@ -385,15 +385,6 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The current address used to access this site is required..
-        /// </summary>
-        public static string SiteAddressRequired {
-            get {
-                return ResourceManager.GetString("SiteAddressRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A e-mail address for this site is required..
         /// </summary>
         public static string SiteEmailRequired {

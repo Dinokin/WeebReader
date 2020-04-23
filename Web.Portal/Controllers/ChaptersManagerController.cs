@@ -219,7 +219,7 @@ namespace WeebReader.Web.Portal.Controllers
         
         private IActionResult GetEditor(Title title) => title switch
         {
-            Comic _ => View("ComicChapterEditor", new ComicChapterModel()),
+            Comic _ => View("ComicChapterEditor", null),
             _ => RedirectToAction("Index")
         };
         

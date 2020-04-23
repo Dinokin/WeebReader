@@ -24,8 +24,8 @@
     @await RenderSectionAsync("Headers", false)
 </head>
 <body class="@(ViewData["BodyClass"] ?? "background")">
-<div class="ui computer only grid">
-    <div class="ui top fixed large borderless menu @(lightMode ? "inverted" : null)">
+<div class="ui computer only grid no-margin">
+    <div class="ui top attached large borderless menu @(lightMode ? "inverted" : null) no-margin-left no-margin-right no-border-radius">
         <div class="ui container">
             <a class="item" href="/">
                 <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
@@ -54,8 +54,8 @@
         </div>
     </div>
 </div>
-<div class="ui tablet mobile only grid" style="margin-top: -1rem">
-    <div class="ui top fixed large borderless menu mobile-menu @(lightMode ? "inverted" : null)">
+<div class="ui tablet mobile only grid no-margin">
+    <div class="ui top attached large borderless menu mobile-menu @(lightMode ? "inverted" : null) no-margin-left no-margin-right  no-border-radius">
         <a class="item" href="/">
             <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
         </a>
@@ -91,27 +91,23 @@
         </div>
     </div>
 </div>
+<div class="ui hidden divider"></div>
 <div class="ui fluid container">
-    <div class="ui hidden section divider"></div>
-    <div class="ui hidden section divider"></div>
-    <div class="ui hidden section divider"></div>
     @RenderBody()
 </div>
 <div class="ui center aligned container">
     <footer>
-        <div class="ui label">
+        <div class="ui large label">
+            © @DateTime.Now.Year @siteName
             @if (discordEnabled)
             {
-                <p>© @DateTime.Now.Year @siteName
-                    <a href="@discordLink">
-                        <img class="ui mini avatar image" src="~/assets/discord_a.png" alt="Discord Logo"/>
-                    </a>
-                </p>
+                <a href="@discordLink">
+                    <i class="discord big grey icon"></i>
+                </a>
             }
-            else
-            {
-                <p>© @DateTime.Now.Year @siteName</p>
-            }
+            <a href="@Url.Action("IndexRss", "Home")">
+                <i class="rss big grey fitted icon"></i>
+            </a>
         </div>
     </footer>
 </div>

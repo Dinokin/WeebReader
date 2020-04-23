@@ -24,10 +24,6 @@ namespace WeebReader.Web.Services
         {
             if (!await _titleManager.Add(title, tags))
                 return false;
-                
-            var directory = GetTitleFolder(title);
-            
-            directory.Create();
 
             if (cover != null)
                 GenerateCover(title, cover);
@@ -51,20 +47,18 @@ namespace WeebReader.Web.Services
             if (!await _titleManager.Delete(title))
                 return false;
             
-            GetTitleFolder(title).Delete(true);
+            Utilities.GetTitleFolder(_environment, title.Id).Delete(true);
 
             return true;
         }
 
-        private DirectoryInfo GetTitleFolder(TTitle title) => new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{title.Id}");
-
         private void GenerateCover(TTitle title, Stream cover)
         {
             var image = Utilities.ProcessImage(cover);
-            Utilities.WriteImage(GetTitleFolder(title), image, "cover", false, false);
+            Utilities.WriteImage(Utilities.GetTitleFolder(_environment, title.Id), image, "cover", false, false);
             
-            image.Resize(new Percentage(50));
-            Utilities.WriteImage(GetTitleFolder(title), image, "cover_thumb", true);
+            image.Resize(new Percentage(350d / image.Width * 100));
+            Utilities.WriteImage(Utilities.GetTitleFolder(_environment, title.Id), image, "cover_thumb", true);
         }
     }
 }

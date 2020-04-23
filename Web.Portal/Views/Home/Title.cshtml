@@ -8,17 +8,17 @@
     ViewData["DisqusIdentifier"] = $"title_{Model.Item1.TitleId}";
     ViewData["DisqusTitle"] = Model.Item1.Name;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
-    var siteAddress = await ParametersManager.GetValue<string>(Parameter.Types.SiteAddress);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
 }
 
 @section Headers
 {
     <meta property="og:title" content="@Model.Item1.Name"/>
-    <meta property="og:url" content="@($"{siteAddress}{Url.Action("Titles", new { titleId = Model.Item1.TitleId })}")"/>
-    <meta property="og:image" content="@($"{siteAddress}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
-    <meta property="og:description" content="@Regex.Replace(Model.Item1.Synopsis, "<.*?>", string.Empty)"/>
+    <meta property="og:url" content="@Url.Action("Titles", "Home", new { titleId = Model.Item1.TitleId }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:description" content="@Model.Item1.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
+    <link rel="alternate" type="application/rss+xml" title="@($"{Model.Item1.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.Item1.TitleId})"/>
     <script>
     $(() => {
         $("#titles,#titles-mobile").addClass("active");
@@ -30,8 +30,11 @@
 <div class="ui container">
     <div class="ui raised segment">
         <div class="ui hidden divider"></div>
-        <div class="image">
-            <img class="ui large bordered centered image" src="/content/@Model.Item1.TitleId/cover.png" alt="Series Cover"/>
+        <div class="ui large bordered centered fluid image">
+            <a class="ui bottom right attached large label" href="@Url.Action("TitlesRss", new {titleId = Model.Item1.TitleId})">
+                <i class="rss fitted icon"></i>
+            </a>
+            <img src="/content/@Model.Item1.TitleId/cover.png" alt="Series Cover"/>
         </div>
         <div class="ui hidden divider"></div>
         <div class="content">
@@ -74,23 +77,31 @@
             }
         </div>
         <div class="ui active bottom attached tab segment" data-tab="chapters">
-            <div class="ui relaxed divided list">
-                @foreach (var chapter in Model.Item2)
-                {
-                    <div class="item">
-                        <div class="content">
-                            <p class="header add-ellipsis">
-                                <a href="@Url.Action("ChapterDownload", new { chapterId = chapter.ChapterId })"><i class="download icon"></i></a>
-                                <a href="@Url.Action("ChapterRead", new { chapterId = chapter.ChapterId })">
-                                    @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)
-                                </a>
-                            </p>
+            @if(Model.Item2.Any())
+            {
+                <div class="ui relaxed divided list">
+                    @foreach (var chapter in Model.Item2)
+                    {
+                        <div class="item">
+                            <div class="content">
+                                <p class="header add-ellipsis">
+                                    <a href="@Url.Action("DownloadChapter", new {chapterId = chapter.ChapterId})"><i class="download icon"></i></a>
+                                    <a href="@Url.Action("ReadChapter", new {chapterId = chapter.ChapterId})">
+                                        @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}" : null)
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="description">
+                                <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p></div>
                         </div>
-                        <div class="description"><p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p></div>
-                    </div>
-                }
-            </div>
-            <partial name="_Paginator"/>
+                    }
+                </div>
+                <partial name="_Paginator"/>
+            }
+            else
+            {
+                <h3 class="ui centered header">@Labels.NoChapterAvailable</h3>
+            }
         </div>
         @if (disqusEnabled)
         {

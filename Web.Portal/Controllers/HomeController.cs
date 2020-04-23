@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.ServiceModel.Syndication;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -52,8 +56,45 @@ namespace WeebReader.Web.Portal.Controllers
             foreach (var chapter in chapters)
                 titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null));
 
-            return View(chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter)).Distinct(new ReleaseComparer())
-                .OrderByDescending(tuple => tuple.Item2.ReleaseDate));
+            return View(chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
+                .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate));
+        }
+
+        [HttpGet("RSS")]
+        public async Task<IActionResult> IndexRss()
+        {
+            var chapters = (await _chapterManager.GetRange(0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var titles = new List<TitleModel>();
+
+            foreach (var chapter in chapters)
+                titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId), null));
+            
+            var feedItems = chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
+                .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate).Select(tuple =>
+                {
+                    var title = $"{tuple.Item1.Name} - {Labels.Chapter} {tuple.Item2.Number}";
+                    var description = tuple.Item1.Synopsis.RemoveHtmlTags();
+                    var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = tuple.Item2.ChapterId}, Request.Scheme));
+                    var feedItem = new SyndicationItem(title, description, url)
+                    {
+                        Id = tuple.Item2.ChapterId.ToString(),
+                        PublishDate = tuple.Item2.ReleaseDate ?? DateTime.Now
+                    };
+
+                    return feedItem;
+                });
+            
+            
+            var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
+            var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.LatestReleases} - {siteName}", new Uri(Url.Action("Index", "Home", null, Request.Scheme)), feedItems)
+            {
+                BaseUri = new Uri(Url.Action("IndexRss", "Home", null, Request.Scheme)),
+                ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/assets/icon.png"),
+                LastUpdatedTime = DateTimeOffset.Now,
+                TimeToLive = TimeSpan.FromMinutes(1)
+            };
+
+            return await GetRssFeed(feed);
         }
 
         [HttpGet("{action}/{page:int?}")]
@@ -176,8 +217,45 @@ namespace WeebReader.Web.Portal.Controllers
             return View("Title", new Tuple<TitleModel, IEnumerable<ChapterModel>>(Mapper.Map(title, await _titlesManager.GetTags(title)), chapters));
         }
 
+        [HttpGet("Titles/{titleId:Guid}/rss")]
+        public async Task<IActionResult> TitlesRss(Guid titleId)
+        {
+            if (await _titlesManager.GetById(titleId) is var title && title == null)
+                return RedirectToAction("IndexRss");
+
+            if (!_signInManager.IsSignedIn(User) && !title.Visible)
+                return RedirectToAction("IndexRss");
+            
+            var titleModel = Mapper.Map(title, null);
+            var chapters = (await _chapterManager.GetRange(0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var feedItems = chapters.OrderByDescending(chapter => chapter.ReleaseDate).Select(chapter =>
+                {
+                    var itemTitle = $"{titleModel.Name} - {Labels.Chapter} {chapter.Number}";
+                    var description = titleModel.Synopsis.RemoveHtmlTags();
+                    var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = chapter.ChapterId}, Request.Scheme));
+                    var feedItem = new SyndicationItem(itemTitle, description, url)
+                    {
+                        Id = chapter.ChapterId.ToString(),
+                        PublishDate = chapter.ReleaseDate ?? DateTime.Now
+                    };
+
+                    return feedItem;
+                });
+            
+            var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
+            var feed = new SyndicationFeed($"{titleModel.Name} RSS", $"{titleModel.Name} - {siteName}", new Uri(Url.Action("Titles", "Home", new {titleId = titleModel.TitleId}, Request.Scheme)), feedItems)
+            {
+                BaseUri = new Uri(Url.Action("TitlesRss", "Home", new {titleId = titleModel.TitleId}, Request.Scheme)),
+                ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{titleModel.TitleId}/cover_thumb.jpg"),
+                LastUpdatedTime = DateTimeOffset.Now,
+                TimeToLive = TimeSpan.FromMinutes(1)
+            };
+
+            return await GetRssFeed(feed);
+        }
+
         [HttpGet("Chapters/Read/{chapterId:Guid}")]
-        public async Task<IActionResult> ChapterRead(Guid chapterId)
+        public async Task<IActionResult> ReadChapter(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
                 return RedirectToAction("Titles");
@@ -203,7 +281,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
         
         [HttpGet("Chapters/Download/{chapterId:Guid}")]
-        public async Task<IActionResult> ChapterDownload(Guid chapterId)
+        public async Task<IActionResult> DownloadChapter(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
                 return RedirectToAction("Titles");
@@ -242,6 +320,17 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["LongStrip"] = Convert.ToBoolean(value) || comic.LongStrip;
             
             return View("ComicReader", new Tuple<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>(comicModel, comicChapterModel, pages));
+        }
+
+        private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
+        {
+            var stream = new MemoryStream();
+            using var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings {Encoding = Encoding.UTF8, NewLineHandling = NewLineHandling.Entitize, Indent = true, Async = true});
+            new Rss20FeedFormatter(feed, false).WriteTo(xmlWriter);
+            await xmlWriter.FlushAsync();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream, "application/rss+xml; charset=utf-8");
         }
         
         private static string GetDownloadName(Title title, Chapter chapter) => $"{title.Name} - {Labels.Chapter} {chapter.Number}";

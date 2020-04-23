@@ -182,7 +182,7 @@ namespace WeebReader.Web.Portal.Controllers
 
         private IActionResult GetEditor(string type, Title? title, IEnumerable<Tag>? tags) => type switch
         {
-            "comic" => View("ComicEditor", title == null ? new ComicModel() : Mapper.Map((Comic) title, tags)),
+            "comic" => View("ComicEditor", title == null ? null : Mapper.Map((Comic) title, tags)),
             _ => RedirectToAction("Index")
         };
 

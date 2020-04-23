@@ -113,5 +113,10 @@
     bottom: 1rem;
     right: 1.5rem;
     z-index: 99;
-    opacity: 0.5;
+    opacity: 0.4;
+    background-color: teal;
+}
+
+.clickable {
+    cursor: pointer;
 }

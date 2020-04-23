@@ -52,14 +52,14 @@ namespace WeebReader.Web.Services
             if (!await _chapterManager.Delete(chapter))
                 return false;
 
-            GetChapterFolder(chapter).Delete(true);
+            Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id).Delete(true);
 
             return true;
         }
 
         public FileInfo? GetChapterDownload(Chapter chapter) => chapter switch
         {
-            ComicChapter comicChapter => new FileInfo($"{GetChapterFolder(chapter)}/package.zip"),
+            ComicChapter comicChapter => new FileInfo($"{Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id)}/package.zip"),
             _ => null
         };
 
@@ -69,7 +69,7 @@ namespace WeebReader.Web.Services
             {
                 await _pageManager.DeleteRange(await _pageManager.GetAll(chapter));
 
-                GetChapterFolder(chapter).Delete(true);
+                Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id).Delete(true);
             }
 
             return chapter switch
@@ -81,11 +81,11 @@ namespace WeebReader.Web.Services
 
         private async Task<IEnumerable<FileInfo>> AddComicPages(ComicChapter chapter, ZipArchive pages)
         {
-            var location = GetChapterFolder(chapter);
+            var location = Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id);
             var entries = pages.Entries.ToArray().Where(entry => ValidateExtension(entry.Name)).OrderBy(entry => entry.Name).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
-            var zipFile = new FileInfo($"{GetChapterFolder(chapter)}/package.zip");
+            var zipFile = new FileInfo($"{location}/package.zip");
 
             if (!location.Exists)
                 location.Create();
@@ -107,10 +107,6 @@ namespace WeebReader.Web.Services
             
             return files;
         }
-
-        private DirectoryInfo GetTitleFolder(Chapter chapter) => new DirectoryInfo($"{Utilities.GetContentFolder(_environment)}{Path.DirectorySeparatorChar}{chapter.TitleId}");
-
-        private DirectoryInfo GetChapterFolder(Chapter chapter) => new DirectoryInfo($"{GetTitleFolder(chapter)}{Path.DirectorySeparatorChar}{chapter.Id}");
 
         private static bool ValidateExtension(string fileName) => Path.GetExtension(fileName).ToLower() == ".png" || Path.GetExtension(fileName).ToLower() == ".jpg" || Path.GetExtension(fileName).ToLower() == ".jpeg" || Path.GetExtension(fileName).ToLower() == ".gif";
 

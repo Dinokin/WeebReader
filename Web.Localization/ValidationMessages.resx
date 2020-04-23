@@ -138,9 +138,6 @@
     <data name="SiteNameRequired">
         <value>A name for this site is required.</value>
     </data>
-    <data name="SiteAddressRequired">
-        <value>The current address used to access this site is required.</value>
-    </data>
     <data name="SmtpServerRequired">
         <value>An address to the SMTP server is required.</value>
     </data>

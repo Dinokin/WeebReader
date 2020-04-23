@@ -691,6 +691,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This title doesn&apos;t have any chapter available..
+        /// </summary>
+        public static string NoChapterAvailable {
+            get {
+                return ResourceManager.GetString("NoChapterAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
         public static string None {
@@ -948,15 +957,6 @@ namespace WeebReader.Web.Localization {
         public static string SignInToAccount {
             get {
                 return ResourceManager.GetString("SignInToAccount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Site Address.
-        /// </summary>
-        public static string SiteAddress {
-            get {
-                return ResourceManager.GetString("SiteAddress", resourceCulture);
             }
         }
         
