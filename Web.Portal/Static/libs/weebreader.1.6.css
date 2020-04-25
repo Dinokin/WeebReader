@@ -98,9 +98,8 @@
     flex-wrap: wrap;
 }
 
-.min-height-2r {
-    min-height: 2.5rem;
-    max-height: 2.5rem;
+.height-limiter-2-7rem {
+    height: 2.7rem;
 }
 
 .menu-item {
