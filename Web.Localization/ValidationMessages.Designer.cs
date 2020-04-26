@@ -232,6 +232,33 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The link to the previous chapters can only have up to 500 characters..
+        /// </summary>
+        public static string MaxPreviousChaptersLinkSize {
+            get {
+                return ResourceManager.GetString("MaxPreviousChaptersLinkSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A tag can only contain up to 50 characters..
+        /// </summary>
+        public static string MaxTagSize {
+            get {
+                return ResourceManager.GetString("MaxTagSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An username can only have up to 50 characters..
+        /// </summary>
+        public static string MaxUsernameLength {
+            get {
+                return ResourceManager.GetString("MaxUsernameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A message is required..
         /// </summary>
         public static string MessageRequired {
@@ -543,6 +570,15 @@ namespace WeebReader.Web.Localization {
         public static string UsernameAlreadyInUse {
             get {
                 return ResourceManager.GetString("UsernameAlreadyInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An Username must contain between 3 and 50 characters..
+        /// </summary>
+        public static string UsernameBetweenMinAndMaxSize {
+            get {
+                return ResourceManager.GetString("UsernameBetweenMinAndMaxSize", resourceCulture);
             }
         }
         

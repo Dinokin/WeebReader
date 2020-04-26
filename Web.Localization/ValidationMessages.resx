@@ -195,4 +195,16 @@
     <data name="DisqusShortnameRequired">
         <value>A shortname for your Disqus forum is required.</value>
     </data>
+    <data name="MaxUsernameLength">
+        <value>An username can only have up to 50 characters.</value>
+    </data>
+    <data name="MaxPreviousChaptersLinkSize">
+        <value>The link to the previous chapters can only have up to 500 characters.</value>
+    </data>
+    <data name="MaxTagSize">
+        <value>A tag can only contain up to 50 characters.</value>
+    </data>
+    <data name="UsernameBetweenMinAndMaxSize">
+        <value>An Username must contain between 3 and 50 characters.</value>
+    </data>
 </root>

@@ -31,23 +31,25 @@ namespace WeebReader.Data.Services
             return targetTitle == null ? new Tag[0] : targetTitle.TitleTags.Join(Context.Tags, titleTag => titleTag.TagId, tag => tag.Id, (titleTag, tag) => tag);
         }
 
-        public async Task<bool> Add(TTitle title, IEnumerable<string> tags)
+        public async Task<bool> Add(TTitle title, IEnumerable<string>? tags = null)
         {
             await DbSet.AddAsync(title);
-            
-            await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
+
+            if (tags != null)
+                await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
 
             return await Context.SaveChangesAsync() > 0;
         }
         
-        public async Task<bool> Edit(TTitle title, IEnumerable<string> tags)
+        public async Task<bool> Edit(TTitle title, IEnumerable<string>? tags = null)
         {
             DbSet.Update(title);
             
             if (Context.TitleTags.Where(titleTag => titleTag.Title == title) is var titleTags && titleTags.Any())
                 Context.TitleTags.RemoveRange(Context.TitleTags.Where(titleTag => titleTag.Title == title));
-            
-            await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
+
+            if (tags != null)
+                await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
 
             return await Context.SaveChangesAsync() > 0;
         }

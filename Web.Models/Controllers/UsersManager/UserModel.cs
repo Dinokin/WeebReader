@@ -9,7 +9,7 @@ namespace WeebReader.Web.Models.Controllers.UsersManager
         public Guid? UserId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UsernameRequired")]
-        [MinLength(3, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumUsernameLength")]
+        [StringLength(50, MinimumLength = 3, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "UsernameBetweenMinAndMaxSize")]
         public string Username { get; set; } = string.Empty;
 
         [MinLength(8, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MinimumPasswordLength")]

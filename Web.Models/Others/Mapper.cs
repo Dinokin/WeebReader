@@ -63,7 +63,7 @@ namespace WeebReader.Web.Models.Others
             user.Email = userModel.Email;
         }
 
-        public static TitleModel Map(Title title, IEnumerable<Tag>? tags) => new TitleModel
+        public static TitleModel Map(Title title, IEnumerable<Tag>? tags = null) => new TitleModel
         {
             TitleId = title.Id,
             Name = title.Name,
@@ -73,7 +73,8 @@ namespace WeebReader.Web.Models.Others
             Synopsis = title.Synopsis,
             Status = title.Status,
             Visible = title.Visible,
-            Tags = tags == null ? string.Empty : string.Join(",", tags.Select(tag => tag.Name))
+            Tags = tags == null ? null : string.Join(",", tags.Select(tag => tag.Name)),
+            PreviousChapterLink = title.PreviousChapterLink
         };
 
         private static void Map(TitleModel titleModel, ref Title title)
@@ -85,9 +86,10 @@ namespace WeebReader.Web.Models.Others
             title.Synopsis = titleModel.Synopsis;
             title.Status = titleModel.Status;
             title.Visible = titleModel.Visible;
+            title.PreviousChapterLink = titleModel.PreviousChapterLink;
         }
         
-        public static ComicModel Map(Comic comic, IEnumerable<Tag>? tags) => new ComicModel
+        public static ComicModel Map(Comic comic, IEnumerable<Tag>? tags = null) => new ComicModel
         {
             TitleId = comic.Id,
             Name = comic.Name,
@@ -98,12 +100,13 @@ namespace WeebReader.Web.Models.Others
             Status = comic.Status,
             Visible = comic.Visible,
             LongStrip = comic.LongStrip,
-            Tags = tags == null ? string.Empty : string.Join(",", tags.Select(tag => tag.Name))
+            Tags = tags == null ? null : string.Join(",", tags.Select(tag => tag.Name)),
+            PreviousChapterLink = comic.PreviousChapterLink
         };
         
         public static Comic Map(ComicModel comicModel) => comicModel.TitleId.HasValue ? 
-            new Comic(comicModel.TitleId.Value, comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Visible, comicModel.LongStrip) : 
-            new Comic(comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Visible, comicModel.LongStrip);
+            new Comic(comicModel.TitleId.Value, comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Visible, comicModel.LongStrip, comicModel.PreviousChapterLink) : 
+            new Comic(comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Visible, comicModel.LongStrip, comicModel.PreviousChapterLink);
 
         public static void Map(ComicModel comicModel, ref Comic comic)
         {

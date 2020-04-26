@@ -28,8 +28,8 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<IdentityUser<Guid>>(typeBuilder =>
             {
-                typeBuilder.Property(user => user.UserName).HasMaxLength(25);
-                typeBuilder.Property(user => user.NormalizedUserName).HasMaxLength(25);
+                typeBuilder.Property(user => user.UserName).HasMaxLength(50);
+                typeBuilder.Property(user => user.NormalizedUserName).HasMaxLength(50);
                 typeBuilder.Property(user => user.Email).HasMaxLength(320);
                 typeBuilder.Property(user => user.NormalizedEmail).HasMaxLength(320);
                 typeBuilder.ToTable("Users");
@@ -37,8 +37,8 @@ namespace WeebReader.Data.Contexts.Abstract
             
             builder.Entity<IdentityRole<Guid>>(typeBuilder =>
             {
-                typeBuilder.Property(role => role.Name).HasMaxLength(25);
-                typeBuilder.Property(role => role.NormalizedName).HasMaxLength(25);
+                typeBuilder.Property(role => role.Name).HasMaxLength(50);
+                typeBuilder.Property(role => role.NormalizedName).HasMaxLength(50);
                 typeBuilder.ToTable("Roles");
 
                 typeBuilder.HasData(new IdentityRole<Guid>
@@ -64,8 +64,8 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<IdentityUserClaim<Guid>>(typeBuilder =>
             {
-                typeBuilder.Property(role => role.ClaimType).HasMaxLength(25);
-                typeBuilder.Property(role => role.ClaimValue).HasMaxLength(25);
+                typeBuilder.Property(role => role.ClaimType).HasMaxLength(50);
+                typeBuilder.Property(role => role.ClaimValue).HasMaxLength(50);
                 typeBuilder.ToTable("UserClaims");
             });
             
@@ -96,6 +96,7 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(title => title.Synopsis).IsRequired();
                 typeBuilder.Property(title => title.Status).IsRequired();
                 typeBuilder.Property(title => title.Visible).IsRequired();
+                typeBuilder.Property(title => title.PreviousChapterLink).HasMaxLength(500);
                 typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title!).HasForeignKey(titleTag => titleTag.TitleId);
                 typeBuilder.HasDiscriminator<string>("TitleType").HasValue<Comic>("Comic");
             });
@@ -134,7 +135,7 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<Tag>(typeBuilder =>
             {
-                typeBuilder.Property(tag => tag.Name).IsRequired().HasMaxLength(20);
+                typeBuilder.Property(tag => tag.Name).IsRequired().HasMaxLength(50);
                 typeBuilder.HasIndex(tag => tag.Name).IsUnique();
                 typeBuilder.HasMany(tag => tag.TitleTag).WithOne(titleTag => titleTag.Tag!).HasForeignKey(titleTag => titleTag.TagId);
             });

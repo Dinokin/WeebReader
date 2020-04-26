@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Web.Localization;
@@ -7,7 +9,7 @@ using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.Controllers.TitlesManager
 {
-    public class TitleModel
+    public class TitleModel : IValidatableObject
     {
         public Guid? TitleId { get; set; }
 
@@ -32,9 +34,22 @@ namespace WeebReader.Web.Models.Controllers.TitlesManager
         
         public bool Visible { get; set; }
 
-        public string Tags { get; set; } = string.Empty;
+        public string? Tags { get; set; }
         
         [AllowedFormats(".png,.jpg,.jpeg", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "InvalidCoverFormat")]
         public IFormFile? Cover { get; set; }
+        
+        [StringLength(500, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MaxPreviousChaptersLinkSize")]
+        public string? PreviousChapterLink { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (!string.IsNullOrWhiteSpace(Tags) && Tags.Split(",").Any(tag => tag.Length > 50))
+                results.Add(new ValidationResult(ValidationMessages.MaxTagSize, new[] {nameof(Tags)}));
+
+            return results;
+        }
     }
 }

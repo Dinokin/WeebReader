@@ -49,14 +49,17 @@
             </div>
             <div class="ui hidden divider"></div>
             <div class="ui hidden divider"></div>
-            <div class="ui labels">
-                <h5>@Labels.Tags</h5>
-                @foreach (var tag in @Model.Item1.Tags.Split(","))
-                {
-                    <div class="ui label">@tag</div>
-                }
-            </div>
-            <div class="ui hidden divider"></div>
+            @if (!string.IsNullOrWhiteSpace(Model.Item1.Tags))
+            {
+                <div class="ui labels">
+                    <h5>@Labels.Tags</h5>
+                    @foreach (var tag in Model.Item1.Tags.Split(","))
+                    {
+                        <div class="ui label">@tag</div>
+                    }
+                </div>
+                <div class="ui hidden divider"></div>   
+            }
             <div class="description">
                 <h5>@Labels.Synopsis</h5>
                 @Html.Raw(Model.Item1.Synopsis)

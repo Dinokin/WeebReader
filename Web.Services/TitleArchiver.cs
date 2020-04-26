@@ -20,7 +20,7 @@ namespace WeebReader.Web.Services
             _titleManager = titleManager;
         }
 
-        public async Task<bool> AddTitle(TTitle title, IEnumerable<string> tags, Stream? cover)
+        public async Task<bool> AddTitle(TTitle title, IEnumerable<string>? tags = null, Stream? cover = null)
         {
             if (!await _titleManager.Add(title, tags))
                 return false;
@@ -31,7 +31,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        public async Task<bool> EditTitle(TTitle title, IEnumerable<string> tags, Stream? cover)
+        public async Task<bool> EditTitle(TTitle title, IEnumerable<string>? tags = null, Stream? cover = null)
         {
             if (!await _titleManager.Edit(title, tags))
                 return false;

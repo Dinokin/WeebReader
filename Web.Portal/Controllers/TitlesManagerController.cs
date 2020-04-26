@@ -41,7 +41,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _titleManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, true)).Select(title => Mapper.Map(title, null)));
+            return View((await _titleManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, true)).Select(title => Mapper.Map(title)));
         }
         
         [HttpGet("{action}")]
@@ -68,7 +68,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 await using var coverStream = comicModel.Cover?.OpenReadStream();
 
-                if (await _titleArchiver.AddTitle(Mapper.Map(comicModel), comicModel.Tags.Split(","), coverStream))
+                if (await _titleArchiver.AddTitle(Mapper.Map(comicModel), comicModel.Tags?.Split(","), coverStream))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleAddedSuccessfully};
                     
@@ -131,7 +131,7 @@ namespace WeebReader.Web.Portal.Controllers
                 Mapper.Map(comicModel, ref comic);
                 await using var coverStream = comicModel.Cover?.OpenReadStream();
 
-                if (await _titleArchiver.EditTitle(comic, comicModel.Tags.Split(","), coverStream))
+                if (await _titleArchiver.EditTitle(comic, comicModel.Tags?.Split(","), coverStream))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleUpdatedSuccessfully};
                     
