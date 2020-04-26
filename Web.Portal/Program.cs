@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,8 +21,21 @@ namespace WeebReader.Web.Portal
                 if (!context.HostingEnvironment.IsProduction())
                     configurationBuilder.AddJsonFile($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.{context.HostingEnvironment.EnvironmentName}.json");
             });
-            
-            builder.UseContentRoot(Location.CurrentDirectory.FullName);
+
+            builder.ConfigureKestrel((context, options) =>
+            {
+                options.Listen(IPAddress.Parse(context.Configuration.GetValue<string>("Application:IpAddress")), context.Configuration.GetValue<int>("Application:HttpPort"));
+
+                if (context.Configuration.GetValue<bool>("Web:UseHttps"))
+                {
+                    options.Listen(IPAddress.Parse(context.Configuration.GetValue<string>("Application:IpAddress")), context.Configuration.GetValue<int>("Application:HttpsPort"), listenOptions =>
+                    {
+                        listenOptions.UseHttps(Security.GetCertificate());
+                    });
+                }
+            });
+
+            builder.UseContentRoot($"{Location.CurrentDirectory}");
             builder.UseWebRoot($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}Static");
             builder.UseStartup<Startup>();
         }).Build().RunAsync();

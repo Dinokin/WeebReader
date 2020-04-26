@@ -102,7 +102,10 @@ namespace WeebReader.Web.Portal
                 options.SupportedCultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
                 options.SupportedUICultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
             });
-            
+
+            if (_configuration.GetValue<bool>("Web:UseHttps"))
+                application.UseHttpsRedirection();
+
             application.UseStaticFiles();
             application.UseRouting();
             application.UseAuthentication();
