@@ -3,15 +3,15 @@
 
 @{
     ViewData["Title"] = Labels.Contact;
-    var successMessage = (IEnumerable<string>?) TempData["SuccessMessage"];
-    var errorMessage = (IEnumerable<string>?) TempData["ErrorMessage"];
+    var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
+    var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
     var emailSenderEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
     var emailContactEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
     var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
-    var discordLink = await ParametersManager.GetValue<string?>(Parameter.Types.ContactDiscordLink);
-    var discordNotice = await ParametersManager.GetValue<string?>(Parameter.Types.ContactDiscordNotice);
+    var discordLink = await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink);
+    var discordNotice = await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordNotice);
     var reCaptchaEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
-    var reCaptchaClientKey = await ParametersManager.GetValue<string?>(Parameter.Types.ContactEmailRecaptchaClientKey);
+    var reCaptchaClientKey = await ParametersManager.GetValue<string>(Parameter.Types.ContactEmailRecaptchaClientKey);
 }
 
 @section Headers
@@ -62,7 +62,8 @@
         serializeForm: true,
         method: "POST",
         onSuccess: () => window.location.reload(),
-        onFailure: response => addError(messageContainer, response)
+        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
         });
     });
     </script>

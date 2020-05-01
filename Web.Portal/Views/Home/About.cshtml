@@ -4,11 +4,11 @@
     ViewData["Title"] = Labels.About;
     var content = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutContent);
     var patreonEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
-    var patreonLink = await ParametersManager.GetValue<string?>(Parameter.Types.PageAboutPatreonLink);
-    var patreonNotice = await ParametersManager.GetValue<string?>(Parameter.Types.PageAboutPatreonNotice);
+    var patreonLink = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonLink);
+    var patreonNotice = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonNotice);
     var kofiEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
-    var kofiLink = await ParametersManager.GetValue<string?>(Parameter.Types.PageAboutKofiLink);
-    var kofiNotice = await ParametersManager.GetValue<string?>(Parameter.Types.PageAboutKofiNotice);
+    var kofiLink = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiLink);
+    var kofiNotice = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiNotice);
     var aboutEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
 }
 

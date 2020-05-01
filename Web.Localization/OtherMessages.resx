@@ -150,4 +150,7 @@
     <data name="CouldntVerifyRobot">
         <value>We couldn't verify that you're not a robot.</value>
     </data>
+    <data name="RequestFailed">
+        <value>Something wrong happened. Please try again or contact an administrator.</value>
+    </data>
 </root>

@@ -65,7 +65,8 @@
         serializeForm: true,
         method: "PATCH",
         onSuccess: () => location.reload(),
-        onFailure: response => addError(messageContainer, response)
+        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
         });
     });
     </script>

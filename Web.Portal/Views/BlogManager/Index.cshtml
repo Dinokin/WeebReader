@@ -14,6 +14,7 @@
     $(() => {
         let deletionTarget;
         let deletionModal = $(".modal");
+        let messageContainer = $(".message");
         
         $("#blog").addClass("active");
                 
@@ -26,7 +27,8 @@
             url: "@deletionRoute" + deletionTarget,
             method: "DELETE",
             onSuccess: () => location.reload(),
-            onFailure: response => addError($(".message"), response)
+            onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+            onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
             })
         }
         });

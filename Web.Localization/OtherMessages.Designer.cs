@@ -367,6 +367,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something wrong happened. Please try again or contact an administrator..
+        /// </summary>
+        public static string RequestFailed {
+            get {
+                return ResourceManager.GetString("RequestFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Some parameters failed to update..
         /// </summary>
         public static string SomeParametersFailedToUpdate {

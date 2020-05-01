@@ -9,7 +9,7 @@
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
     var pages = Model.Item3.Select(page => $"/content/{Model.Item1.TitleId}/{Model.Item2.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
-    var darkMode = (string?) ViewData["BodyClass"] != Constants.LightModeClasses;
+    var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];
     var chapters = ((IEnumerable<ChapterModel>) ViewData["Chapters"]).ToArray();
@@ -22,6 +22,7 @@
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.Item1.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
+    <!--suppress JSIncompatibleTypesComparison -->
     <script>
     $(() => {
         let jumpButton = $("#jump-button");
@@ -30,7 +31,7 @@
         $(".ui.dropdown").dropdown();
         
         $("#chapter-selector").dropdown({
-        onChange: (value, text, element) => {
+        onChange: (value) => {
             if (value !== "default") {
                 window.location.href = value;
             }
@@ -91,7 +92,7 @@
             let nextChapter = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)";
             
             pageSelector.dropdown({
-            onChange: (value, text, element) => {
+            onChange: (value) => {
                 currentPage = Number(value);
                 setPage(value);
                 previousPagePreload();

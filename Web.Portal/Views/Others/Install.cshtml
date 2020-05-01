@@ -73,7 +73,8 @@
         serializeForm: true,
         method: "POST",
         onSuccess: response => window.location.href = response.destination,
-        onFailure: response => addError(messageContainer, response)
+        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
         });
     });
     </script>
@@ -82,7 +83,7 @@
 <div class="ui middle aligned center aligned grid height-100">
     <div class="column max-width-450">
         <h2 class="ui image header margin-top-minus-100">
-            <img class="image margin-top-minus-100" src="~/assets/logo.png" alt="Logo">
+            <img class="image margin-top-minus-100" src="~/assets/logo_l.png">
             <div class="content">
                 @Labels.InstallWeebReader
             </div>

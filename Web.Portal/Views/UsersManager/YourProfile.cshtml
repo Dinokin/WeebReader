@@ -62,7 +62,8 @@
             addSuccess(changePasswordMessage, response); 
             changePasswordForm.form("reset");
         },
-        onFailure: response => addError(changePasswordMessage, response)
+        onFailure: response => Array.isArray(response.messages) ? addError(changePasswordMessage, response) : addError(changePasswordMessage, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+        onError: () => addError(changePasswordMessage, buildFakeResponse(["@OtherMessages.RequestFailed"]))
         });
                 
         changeEmailForm.form({
@@ -99,7 +100,8 @@
             addSuccess(changeEmailMessage, response);
             changeEmailForm.form("reset");
         },
-        onFailure: response => addError(changeEmailMessage, response)
+        onFailure: response => Array.isArray(response.messages) ? addError(changeEmailMessage, response) : addError(changeEmailMessage, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+        onError: () => addError(changeEmailMessage, buildFakeResponse(["@OtherMessages.RequestFailed"]))
         });
     });
     </script>

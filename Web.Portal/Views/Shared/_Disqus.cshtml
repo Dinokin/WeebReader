@@ -2,7 +2,7 @@
 
 @{
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
-    var disqusShortname = await ParametersManager.GetValue<string?>(Parameter.Types.PageDisqusShortname);
+    var disqusShortname = await ParametersManager.GetValue<string>(Parameter.Types.PageDisqusShortname);
     var pageUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
 }
 
@@ -17,9 +17,9 @@
     };
     
     (function() {
-        var d = document, s = d.createElement('script');
-        s.src = 'https://@(disqusShortname).disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
+        var d = document, s = d.createElement("script");
+        s.src = "https://@(disqusShortname).disqus.com/embed.js";
+        s.setAttribute("data-timestamp", +new Date());
         (d.head || d.body).appendChild(s);
     })();
     </script>                   

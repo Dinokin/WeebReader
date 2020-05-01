@@ -3,7 +3,7 @@
 @{
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
-    var discordLink = await ParametersManager.GetValue<string?>(Parameter.Types.ContactDiscordLink);
+    var discordLink = await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink);
     var blogEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled);
     var aboutEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
     var kofiEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);

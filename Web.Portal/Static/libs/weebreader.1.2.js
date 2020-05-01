@@ -1,6 +1,6 @@
 $.fn.api.settings.successTest = (response) => response.success;
 
-$(function () {
+$(() => {
     $(".form").on("keypress", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -50,4 +50,11 @@ function setCookie(name, value, days) {
 
 function scrollToTop(element) {
     $(window).scrollTop($(element).offset().top);
+}
+
+function buildFakeResponse(messages) {
+    return {
+        success: false,
+        messages: messages
+    };
 }
