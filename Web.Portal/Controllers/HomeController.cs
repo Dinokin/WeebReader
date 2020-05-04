@@ -227,7 +227,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return RedirectToAction("IndexRss");
             
             var titleModel = Mapper.Map(title);
-            var chapters = (await _chapterManager.GetRange(0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var chapters = (await _chapterManager.GetRange(title, 0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
             var feedItems = chapters.OrderByDescending(chapter => chapter.ReleaseDate).Select(chapter =>
                 {
                     var itemTitle = $"{titleModel.Name} - {Labels.Chapter} {chapter.Number}";
