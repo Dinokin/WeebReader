@@ -254,7 +254,7 @@ namespace WeebReader.Web.Portal.Controllers
             return await GetRssFeed(feed);
         }
 
-        [HttpGet("Chapters/Read/{chapterId:Guid}")]
+        [HttpGet("Chapters/{chapterId:Guid}/Read")]
         public async Task<IActionResult> ReadChapter(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
@@ -280,7 +280,7 @@ namespace WeebReader.Web.Portal.Controllers
             return await GetReader(title, chapter);
         }
         
-        [HttpGet("Chapters/Download/{chapterId:Guid}")]
+        [HttpGet("Chapters/{chapterId:Guid}/Download")]
         public async Task<IActionResult> DownloadChapter(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
