@@ -15,25 +15,8 @@
         $(".ui.calendar").calendar({
         ampm: false,
         formatter: {
-            date: (date) => {
-                if (!date)
-                    return "";
-                
-                let year = date.getFullYear();
-                let month = date.getMonth() + 1;
-                let day = date.getDate();
-                
-                return `${year}-${month <= 9 ? `0${month}` : month}-${day <= 9 ? `0${day}` : day}`;
-            },
-            time: (date) => {
-                if (!date)
-                    return "";
-                
-                let hour = date.getHours();
-                let minutes = date.getMinutes();
-                
-                return `${hour <= 9 ? `0${hour}` : hour}:${minutes <= 9 ? `0${minutes}` : minutes}`;
-            } 
+            date: (date) => getDate(date),
+            time: (date) => getTime(date)
         }
         });
         

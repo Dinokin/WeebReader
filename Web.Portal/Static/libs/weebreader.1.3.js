@@ -37,7 +37,7 @@ function animateProgressBar(element, event) {
 }
 
 function getCookie(name) {
-    let cookie = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    let cookie = document.cookie.match(`(^|;) ?${name}=([^;]*)(;|$)`);
 
     return cookie ? cookie[2] : null;
 }
@@ -57,4 +57,25 @@ function buildFakeResponse(messages) {
         success: false,
         messages: messages
     };
+}
+
+function getDate(date) {
+    if (!date)
+        return "";
+
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+
+    return `${year}-${month <= 9 ? `0${month}` : month}-${day <= 9 ? `0${day}` : day}`;
+}
+
+function getTime(date) {
+    if (!date)
+        return "";
+
+    let hour = date.getHours();
+    let minutes = date.getMinutes();
+
+    return `${hour <= 9 ? `0${hour}` : hour}:${minutes <= 9 ? `0${minutes}` : minutes}`;
 }
