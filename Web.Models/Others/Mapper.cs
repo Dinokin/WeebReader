@@ -74,7 +74,7 @@ namespace WeebReader.Web.Models.Others
             Status = title.Status,
             Visible = title.Visible,
             Tags = tags == null ? null : string.Join(",", tags.Select(tag => tag.Name)),
-            PreviousChapterLink = title.PreviousChapterLink
+            PreviousChapterLink = title.PreviousChaptersLink
         };
 
         private static void Map(TitleModel titleModel, ref Title title)
@@ -86,7 +86,7 @@ namespace WeebReader.Web.Models.Others
             title.Synopsis = titleModel.Synopsis;
             title.Status = titleModel.Status;
             title.Visible = titleModel.Visible;
-            title.PreviousChapterLink = titleModel.PreviousChapterLink;
+            title.PreviousChaptersLink = titleModel.PreviousChapterLink;
         }
         
         public static ComicModel Map(Comic comic, IEnumerable<Tag>? tags = null) => new ComicModel
@@ -101,7 +101,7 @@ namespace WeebReader.Web.Models.Others
             Visible = comic.Visible,
             LongStrip = comic.LongStrip,
             Tags = tags == null ? null : string.Join(",", tags.Select(tag => tag.Name)),
-            PreviousChapterLink = comic.PreviousChapterLink
+            PreviousChapterLink = comic.PreviousChaptersLink
         };
         
         public static Comic Map(ComicModel comicModel) => comicModel.TitleId.HasValue ? 

@@ -9,14 +9,14 @@ namespace WeebReader.Data.Entities
         public bool LongStrip { get; set; }
         public IEnumerable<ComicChapter> Chapters { get; } = new List<ComicChapter>();
 
-        public Comic(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, bool longStrip, string? previousChapterLink = null)
-            : base(name, originalName, author, artist, synopsis, status, visible, previousChapterLink)
+        public Comic(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, bool longStrip, string? previousChaptersLink = null)
+            : base(name, originalName, author, artist, synopsis, status, visible, previousChaptersLink)
         {
             LongStrip = longStrip;
         }
 
-        public Comic(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, bool longStrip, string? previousChapterLink = null)
-            : base(id, name, originalName, author, artist, synopsis, status, visible, previousChapterLink)
+        public Comic(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, bool longStrip, string? previousChaptersLink = null)
+            : base(id, name, originalName, author, artist, synopsis, status, visible, previousChaptersLink)
         {
             LongStrip = longStrip;
         }
