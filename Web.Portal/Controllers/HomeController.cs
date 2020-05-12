@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -98,7 +98,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{action}/{page:int?}")]
-        public async Task<IActionResult> Blog(ushort page)
+        public async Task<IActionResult> Blog(ushort page = 1)
         {
             if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
                 return RedirectToAction("Index");
@@ -117,7 +117,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{action}/{page:int?}")]
-        public async Task<IActionResult> Titles(ushort page)
+        public async Task<IActionResult> Titles(ushort page = 1)
         {
             const ushort itemsPerPage = 16;
             
