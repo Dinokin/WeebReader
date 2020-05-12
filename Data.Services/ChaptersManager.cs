@@ -12,6 +12,14 @@ namespace WeebReader.Data.Services
     {
         public ChapterManager(BaseContext context) : base(context) { }
 
+        public async Task<long> Count(bool includeHidden = false)
+        {
+            if (includeHidden)
+                return await base.Count();
+            
+            return await DbSet.LongCountAsync(chapter => chapter.Visible);
+        }
+        
         public async Task<long> Count(Title title, bool includeHidden = false)
         {
             if (includeHidden)
