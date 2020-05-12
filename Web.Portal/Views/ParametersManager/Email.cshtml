@@ -9,13 +9,21 @@
     <script>
     $(() => {
         let messageContainer = $(".form .message");
+        let form = $(".form");
         
         $("#parameters").addClass("active");
         $("#parameters-content").addClass("active");
         $("#parameters-email").addClass("active");
         $(".checkbox").checkbox();
         
-        $(".form").form({
+        form.on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                return false;
+            }
+        });
+        
+        form.form({
         on: "blur",
         fields: {
             siteEmail: {

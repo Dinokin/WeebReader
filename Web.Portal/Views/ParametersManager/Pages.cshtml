@@ -9,6 +9,7 @@
     <partial name="_TinyMCE"/>
     <script>
     $(() => {
+        let form = $(".form");
         let messageContainer = $(".form .message");
         
         $("#parameters").addClass("active");
@@ -16,7 +17,14 @@
         $("#parameters-pages").addClass("active");
         $(".checkbox").checkbox();
         
-        $(".form").on("submit", () => tinyMCE.triggerSave()).form({
+        form.on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                return false;
+            }
+        });
+        
+        form.on("submit", () => tinyMCE.triggerSave()).form({
         on: "blur",
         fields: {
             aboutContent: {

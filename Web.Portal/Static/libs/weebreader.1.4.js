@@ -1,15 +1,5 @@
 $.fn.api.settings.successTest = (response) => response.success;
 
-$(() => {
-    $(".form").on("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            
-            return false;
-        }
-    });
-});
-
 function addError(element, response) {
     element.removeClass("success hidden");
     element.addClass("error");

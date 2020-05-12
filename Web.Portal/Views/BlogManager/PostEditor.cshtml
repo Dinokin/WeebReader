@@ -6,6 +6,7 @@
     <script>
     $(() => {
         let messageContainer = $(".form .message");
+        let form = $(".form");
         
         $(".checkbox").checkbox();
         $("#blog").addClass("active");
@@ -18,7 +19,14 @@
         }
         });
         
-        $(".form").on("submit", () => tinyMCE.triggerSave()).form({
+        form.on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                return false;
+            }
+        });
+        
+        form.on("submit", () => tinyMCE.triggerSave()).form({
         on: "blur",
         fields: {
             title: {
