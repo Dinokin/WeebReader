@@ -217,7 +217,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View("Title", new Tuple<TitleModel, IEnumerable<ChapterModel>>(Mapper.Map(title, await _titlesManager.GetTags(title)), chapters));
         }
 
-        [HttpGet("Titles/{titleId:Guid}/rss")]
+        [HttpGet("Titles/{titleId:Guid}/RSS")]
         public async Task<IActionResult> TitlesRss(Guid titleId)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
@@ -229,18 +229,18 @@ namespace WeebReader.Web.Portal.Controllers
             var titleModel = Mapper.Map(title);
             var chapters = (await _chapterManager.GetRange(title, 0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
             var feedItems = chapters.OrderByDescending(chapter => chapter.ReleaseDate).Select(chapter =>
+            {
+                var itemTitle = $"{titleModel.Name} - {Labels.Chapter} {chapter.Number}";
+                var description = titleModel.Synopsis.RemoveHtmlTags();
+                var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = chapter.ChapterId}, Request.Scheme));
+                var feedItem = new SyndicationItem(itemTitle, description, url)
                 {
-                    var itemTitle = $"{titleModel.Name} - {Labels.Chapter} {chapter.Number}";
-                    var description = titleModel.Synopsis.RemoveHtmlTags();
-                    var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = chapter.ChapterId}, Request.Scheme));
-                    var feedItem = new SyndicationItem(itemTitle, description, url)
-                    {
-                        Id = chapter.ChapterId.ToString(),
-                        PublishDate = chapter.ReleaseDate ?? DateTime.Now
-                    };
+                    Id = chapter.ChapterId.ToString(),
+                    PublishDate = chapter.ReleaseDate ?? DateTime.Now
+                };
 
-                    return feedItem;
-                });
+                return feedItem;
+            });
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
             var feed = new SyndicationFeed($"{titleModel.Name} RSS", $"{titleModel.Name} - {siteName}", new Uri(Url.Action("Titles", "Home", new {titleId = titleModel.TitleId}, Request.Scheme)), feedItems)
