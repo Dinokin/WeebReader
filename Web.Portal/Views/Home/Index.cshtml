@@ -10,10 +10,64 @@
 @section Headers
 {
     <link rel="alternate" type="application/rss+xml" title="@($"{siteName} RSS")" href="@Url.Action("IndexRss", "Home")"/>
+    <script>
+    $(() => {
+        let cardContainer = $("#card-container");
+        let loader = $("#loader");
+        let page = @ViewData["Page"];
+        let totalPages = @ViewData["TotalPages"];
+        
+        cardContainer.visibility({
+        once: false,
+        observeChanges: true,
+        onBottomVisible: () => loadData()
+        });
+        
+        function loadData() {
+            if (page < totalPages) {
+                page++;
+                
+                cardContainer.api({
+                url: `@Url.Action("IndexJson")/${page}`,
+                method: "GET",
+                on: "now",
+                onRequest: () => {
+                    loader.removeClass("disabled");
+                    loader.addClass("active");
+                },
+                onComplete: () => {
+                    loader.removeClass("active");
+                    loader.addClass("disabled");
+                },
+                onSuccess: (response) => {
+                    generateCards(response.releases);
+                }
+                });
+            }
+        }
+        
+        function generateCards(releaseList) {
+            releaseList.forEach(currentValue => {
+                cardContainer.append(
+                    "<div class=\"ui raised card\">" +
+                    "<div class=\"content\">" +
+                    `<div class="center aligned content"><a href="${currentValue.chapterAddress}"><img class="ui bordered image" src="/content/${currentValue.titleId}/cover_thumb.jpg"></a></div>` +
+                    `<h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="${currentValue.titleAddress}">${currentValue.titleName}</a></h4>` +
+                    "<div class=\"center aligned description\">" +
+                    `<p><i class="file outline icon"></i>@Labels.Chapter ${currentValue.chapterNumber}</p>` +
+                    `<p><i class=\"calendar alternate outline icon\"></i>${getDate(new Date(currentValue.chapterDate))}</p>` +
+                    "</div></div>" +
+                    `<a class="ui small black bottom attached button" href="${currentValue.chapterAddress}">@Labels.Read<i class="angle double right fitted icon"></i></a>` +
+                    "</div>"
+                )
+            });
+        }
+    });
+    </script>
 }
 
 <div class="ui center aligned container">
-    <div class="ui four stackable cards">
+    <div id="card-container" class="ui four stackable cards">
         @foreach (var (title, chapter) in Model)
         {
             <div class="ui raised card">
@@ -32,4 +86,6 @@
             </div>
         }
     </div>
+    <div class="ui hidden divider"></div>
+    <div id="loader" class="ui disabled centered large elastic inline loader"></div>
 </div>

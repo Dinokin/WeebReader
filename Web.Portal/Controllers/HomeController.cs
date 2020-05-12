@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +21,7 @@ using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
-{ 
+{
     public class HomeController : Controller
     {
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
@@ -34,7 +34,8 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly ParametersManager _parametersManager;
         private readonly ReCaptchaValidator _reCaptchaValidator;
 
-        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
+        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager,
+            PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
@@ -50,14 +51,52 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var chapters = (await _chapterManager.GetRange(0, 8, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            const ushort itemsPerPage = 8;
+
+            var chapters = (await _chapterManager.GetRange(0, itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
             var titles = new List<TitleModel>();
 
             foreach (var chapter in chapters)
                 titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId)));
 
+            ViewData["Page"] = 1;
+            ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            
             return View(chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
                 .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate));
+        }
+
+        [HttpGet("JSON/{page:int?}")]
+        public async Task<IActionResult> IndexJson(ushort page = 1)
+        {
+            const ushort itemsPerPage = 8;
+            
+            var totalPages = Math.Ceiling(await _chapterManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            
+            var chapters = (await _chapterManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var titles = new List<TitleModel>();
+
+            foreach (var chapter in chapters)
+                titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId)));
+            
+            return new JsonResult(new
+            {
+                success = true,
+                page,
+                totalPages,
+                releases = chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
+                    .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate).Select(tuple => new
+                    {
+                        titleId = tuple.Item1.TitleId,
+                        chapterId = tuple.Item2.ChapterId,
+                        titleName = tuple.Item1.Name,
+                        chapterNumber = tuple.Item2.Number,
+                        chapterDate = tuple.Item2.ReleaseDate,
+                        titleAddress = Url.Action("Titles", new {titleId = tuple.Item1.TitleId}),
+                        chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.Item2.ChapterId})
+                    })
+            });
         }
 
         [HttpGet("RSS")]
