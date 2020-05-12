@@ -20,10 +20,10 @@ namespace WeebReader.Data.Entities.Abstract
         public string? Synopsis { get; set; }
         public Statuses Status { get; set; }
         public bool Visible { get; set; }
-        public string? PreviousChapterLink { get; set; }
+        public string? PreviousChaptersLink { get; set; }
         public IEnumerable<TitleTag> TitleTags { get; } = new List<TitleTag>();
 
-        protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, string? previousChapterLink = null)
+        protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, string? previousChaptersLink = null)
         {
             Name = name;
             OriginalName = originalName;
@@ -32,10 +32,10 @@ namespace WeebReader.Data.Entities.Abstract
             Synopsis = synopsis;
             Status = status;
             Visible = visible;
-            PreviousChapterLink = previousChapterLink;
+            PreviousChaptersLink = previousChaptersLink;
         }
 
-        protected Title(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, string? previousChapterLink = null) : base(id)
+        protected Title(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, string? previousChaptersLink = null) : base(id)
         {
             Name = name;
             OriginalName = originalName;
@@ -44,7 +44,7 @@ namespace WeebReader.Data.Entities.Abstract
             Synopsis = synopsis;
             Status = status;
             Visible = visible;
-            PreviousChapterLink = previousChapterLink;
+            PreviousChaptersLink = previousChaptersLink;
         }
     }
 }
