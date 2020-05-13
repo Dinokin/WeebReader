@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
@@ -34,14 +33,14 @@ namespace WeebReader.Web.Portal.Controllers
         {
             const ushort itemsPerPage = 25;
 
-            var totalPages = Math.Ceiling(await _titleManager.Count(true) / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await _titleManager.Count() / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _titleManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, true)).Select(title => Mapper.Map(title)));
+            return View((await _titleManager.GetRange(itemsPerPage * (page - 1), itemsPerPage)).Select(title => Mapper.Map(title)));
         }
         
         [HttpGet("{action}")]
@@ -59,7 +58,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _titleManager.Entities.AnyAsync(entity => entity.Name == comicModel.Name))
+                if ((await _titleManager.GetAll()).Any(entity => entity.Name == comicModel.Name))
                     return new JsonResult(new
                     {
                         success = false,
@@ -120,7 +119,7 @@ namespace WeebReader.Web.Portal.Controllers
                     return RedirectToAction("Index");
                 }
                 
-                if (await _titleManager.Entities.AnyAsync(entity => entity.Name == comicModel.Name && title != entity))
+                if ((await _titleManager.GetAll()).Any(entity => entity.Name == comicModel.Name && title != entity))
                     return new JsonResult(new
                     {
                         success = false,

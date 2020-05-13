@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
@@ -43,7 +42,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             const ushort itemsPerPage = 50;
             
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title, true) / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title) / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Title"] = $"{Labels.Chapters} - {title.Name}";
@@ -51,7 +50,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId, chapterId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
 
-            return View((await _chapterManager.GetRange(title, itemsPerPage * (page - 1), itemsPerPage, true)).Select(Mapper.Map));
+            return View((await _chapterManager.GetRange(title, itemsPerPage * (page - 1), itemsPerPage)).Select(Mapper.Map));
         }
         
         [HttpGet("{action}")]
@@ -85,7 +84,7 @@ namespace WeebReader.Web.Portal.Controllers
                     return RedirectToAction("Index", "TitlesManager");
                 }
                 
-                if (await _chapterManager.Entities.AnyAsync(entity => entity.TitleId == title.Id && entity.Number == comicChapterModel.Number))
+                if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == title.Id && entity.Number == comicChapterModel.Number))
                     return new JsonResult(new
                     {
                         success = false,
@@ -156,7 +155,7 @@ namespace WeebReader.Web.Portal.Controllers
                     return RedirectToAction("Index", new { titleId = comicChapterModel.TitleId });
                 }
                 
-                if (await _chapterManager.Entities.AnyAsync(entity => entity.TitleId == chapter.TitleId && entity.Number == comicChapterModel.Number && entity != chapter))
+                if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == chapter.TitleId && entity.Number == comicChapterModel.Number && entity != chapter))
                     return new JsonResult(new
                     {
                         success = false,

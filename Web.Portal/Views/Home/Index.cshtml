@@ -1,4 +1,4 @@
-@inject ParametersManager ParametersManager
+﻿@inject ParametersManager ParametersManager
 @model IEnumerable<Tuple<TitleModel, ChapterModel>>
 
 @{
@@ -55,7 +55,7 @@
                     `<h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="${currentValue.titleAddress}">${currentValue.titleName}</a></h4>` +
                     "<div class=\"center aligned description\">" +
                     `<p><i class="file outline icon"></i>@Labels.Chapter ${currentValue.chapterNumber}</p>` +
-                    `<p><i class=\"calendar alternate outline icon\"></i>${getDate(new Date(currentValue.chapterDate))}</p>` +
+                    `<p><i class=\"calendar alternate outline icon\"></i>${getDate(new Date(currentValue.releaseDate))}</p>` +
                     "</div></div>" +
                     `<a class="ui small black bottom attached button" href="${currentValue.chapterAddress}">@Labels.Read<i class="angle double right fitted icon"></i></a>` +
                     "</div>"

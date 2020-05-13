@@ -11,18 +11,22 @@ namespace WeebReader.Data.Services
     public class TitlesManager<TTitle> : GenericManager<TTitle> where TTitle : Title
     { 
         public TitlesManager(BaseContext context) : base(context) { }
-        
-        public async Task<long> Count(bool includeHidden = false)
-        {
-            if (includeHidden)
-                return await base.Count();
 
-            return await DbSet.LongCountAsync(title => title.Visible);
-        }
+        public async Task<long> Count(bool includeHidden) => includeHidden
+            ? await base.Count()
+            : await DbSet.LongCountAsync(title => title.Visible);
 
-        public Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden = false) => Task.FromResult<IEnumerable<TTitle>>(includeHidden ?
-            DbSet.OrderBy(title => title.Name).Skip(skip).Take(take) :
-            DbSet.Where(title => title.Visible).Skip(skip).Take(take));
+        public override async Task<IEnumerable<TTitle>> GetRange(int skip, int take) => await GetRange(skip, take, true);
+
+        public Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
+            ? DbSet.OrderBy(title => title.Name).Skip(skip).Take(take)
+            : DbSet.Where(title => title.Visible).OrderBy(title => title.Name).Skip(skip).Take(take));
+
+        public override async Task<IEnumerable<TTitle>> GetAll() => await GetAll(true);
+
+        public Task<IEnumerable<TTitle>> GetAll(bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
+            ? DbSet.OrderBy(title => title.Name)
+            : DbSet.Where(title => title.Visible).OrderBy(title => title.Name));
 
         public async Task<IEnumerable<Tag>> GetTags(TTitle title)
         {

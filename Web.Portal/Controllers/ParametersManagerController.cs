@@ -30,25 +30,25 @@ namespace WeebReader.Web.Portal.Controllers
         public ParametersManagerController(ParametersManager parametersManager) => _parametersManager = parametersManager;
 
         [HttpGet("{action}")]
-        public IActionResult General() => View(Mapper.Map<GeneralParametersModel>(_parametersManager.Entities));
+        public async Task<IActionResult> General() => View(Mapper.Map<GeneralParametersModel>(await _parametersManager.GetAll()));
         
         [HttpPatch("{action}")]
         public async Task<IActionResult> General(GeneralParametersModel generalParametersModel) => await ProcessPatchRequest(generalParametersModel);
 
         [HttpGet("{action}")]
-        public IActionResult Email() => View(Mapper.Map<EmailParametersModel>(_parametersManager.Entities));
+        public async Task<IActionResult> Email() => View(Mapper.Map<EmailParametersModel>(await _parametersManager.GetAll()));
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Email(EmailParametersModel emailParametersModel) => await ProcessPatchRequest(emailParametersModel);
 
         [HttpGet("{action}")]
-        public IActionResult Contact() => View(Mapper.Map<ContactParametersModel>(_parametersManager.Entities));
+        public async Task<IActionResult> Contact() => View(Mapper.Map<ContactParametersModel>(await _parametersManager.GetAll()));
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Contact(ContactParametersModel contactParametersModel) => await ProcessPatchRequest(contactParametersModel);
 
         [HttpGet("{action}")]
-        public IActionResult Pages() => View(Mapper.Map<PagesParametersModel>(_parametersManager.Entities));
+        public async Task<IActionResult> Pages() => View(Mapper.Map<PagesParametersModel>(await _parametersManager.GetAll()));
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Pages(PagesParametersModel pagesParametersModel) => await ProcessPatchRequest(pagesParametersModel);

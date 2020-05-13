@@ -53,17 +53,10 @@ namespace WeebReader.Web.Portal.Controllers
         {
             const ushort itemsPerPage = 8;
 
-            var chapters = (await _chapterManager.GetRange(0, itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
-            var titles = new List<TitleModel>();
-
-            foreach (var chapter in chapters)
-                titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId)));
-
             ViewData["Page"] = 1;
-            ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            ViewData["TotalPages"] = Math.Ceiling(await CountReleases() / (decimal) itemsPerPage);
             
-            return View(chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
-                .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate));
+            return View((await GetReleases(0, itemsPerPage)).Select(tuple => new Tuple<TitleModel, ChapterModel>(Mapper.Map(tuple.title), Mapper.Map(tuple.chapter))));
         }
 
         [HttpGet("JSON/{page:int?}")]
@@ -71,57 +64,43 @@ namespace WeebReader.Web.Portal.Controllers
         {
             const ushort itemsPerPage = 8;
             
-            var totalPages = Math.Ceiling(await _chapterManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await CountReleases() / (decimal) itemsPerPage);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            
-            var chapters = (await _chapterManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
-            var titles = new List<TitleModel>();
 
-            foreach (var chapter in chapters)
-                titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId)));
-            
             return new JsonResult(new
             {
                 success = true,
                 page,
                 totalPages,
-                releases = chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
-                    .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate).Select(tuple => new
-                    {
-                        titleId = tuple.Item1.TitleId,
-                        chapterId = tuple.Item2.ChapterId,
-                        titleName = tuple.Item1.Name,
-                        chapterNumber = tuple.Item2.Number,
-                        chapterDate = tuple.Item2.ReleaseDate,
-                        titleAddress = Url.Action("Titles", new {titleId = tuple.Item1.TitleId}),
-                        chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.Item2.ChapterId})
-                    })
+                releases = (await GetReleases(itemsPerPage * (page - 1), itemsPerPage)).Select(tuple => new
+                {
+                    titleId = tuple.title.Id,
+                    chapterId = tuple.chapter.Id,
+                    titleName = tuple.title.Name,
+                    chapterNumber = tuple.chapter.Number,
+                    releaseDate = tuple.chapter.ReleaseDate,
+                    titleAddress = Url.Action("Titles", new {titleId = tuple.title.Id}),
+                    chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.chapter.Id})
+                })
             });
         }
 
         [HttpGet("RSS")]
         public async Task<IActionResult> IndexRss()
         {
-            var chapters = (await _chapterManager.GetRange(0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
-            var titles = new List<TitleModel>();
-
-            foreach (var chapter in chapters)
-                titles.Add(Mapper.Map(await _titlesManager.GetById(chapter.TitleId)));
-            
-            var feedItems = chapters.Join(titles, chapter => chapter.TitleId, title => title.TitleId, (chapter, title) => new Tuple<TitleModel, ChapterModel>(title, chapter))
-                .Distinct(new ReleaseComparer()).OrderByDescending(tuple => tuple.Item2.ReleaseDate).Select(tuple =>
+            var feedItems = (await GetReleases(0, 8)).Select(tuple =>
+            {
+                var title = $"{tuple.title.Name} - {Labels.Chapter} {tuple.chapter.Number}";
+                var description = tuple.title.Synopsis.RemoveHtmlTags();
+                var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = tuple.chapter.Id}, Request.Scheme));
+                var feedItem = new SyndicationItem(title, description, url)
                 {
-                    var title = $"{tuple.Item1.Name} - {Labels.Chapter} {tuple.Item2.Number}";
-                    var description = tuple.Item1.Synopsis.RemoveHtmlTags();
-                    var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = tuple.Item2.ChapterId}, Request.Scheme));
-                    var feedItem = new SyndicationItem(title, description, url)
-                    {
-                        Id = tuple.Item2.ChapterId.ToString(),
-                        PublishDate = tuple.Item2.ReleaseDate ?? DateTime.Now
-                    };
+                    Id = tuple.chapter.Id.ToString(),
+                    PublishDate = tuple.chapter.ReleaseDate
+                };
 
-                    return feedItem;
-                });
+                return feedItem;
+            });
             
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
@@ -153,22 +132,6 @@ namespace WeebReader.Web.Portal.Controllers
 
             return View(posts);
 
-        }
-
-        [HttpGet("{action}/{page:int?}")]
-        public async Task<IActionResult> Titles(ushort page = 1)
-        {
-            const ushort itemsPerPage = 16;
-            
-            var totalPages = Math.Ceiling(await _titlesManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var titles = (await _titlesManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User)))
-                .OrderBy(title => title.Status).ThenBy(title => title.Name).Select(title => Mapper.Map(title));
-            
-            ViewData["Page"] = page;
-            ViewData["TotalPages"] = totalPages;
-
-            return View(titles);
         }
 
         [HttpGet("{action}")]
@@ -234,6 +197,9 @@ namespace WeebReader.Web.Portal.Controllers
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
             });
         }
+        
+        [HttpGet("{action}/{page:int?}")]
+        public async Task<IActionResult> Titles() => View((await _titlesManager.GetAll(_signInManager.IsSignedIn(User))).OrderBy(title => title.Status).ThenBy(title => title.Name).Select(title => Mapper.Map(title)));
 
         [HttpGet("{action}/{titleId:Guid}/{page:int?}")]
         public async Task<IActionResult> Titles(Guid titleId, ushort page = 1)
@@ -370,6 +336,33 @@ namespace WeebReader.Web.Portal.Controllers
             stream.Seek(0, SeekOrigin.Begin);
 
             return File(stream, "application/rss+xml; charset=utf-8");
+        }
+
+        private async Task<long> CountReleases()
+        {
+            var includeHidden = _signInManager.IsSignedIn(User);
+            var titles = (await _titlesManager.GetAll(includeHidden)).AsQueryable();
+            var chapters = (await _chapterManager.GetAll(includeHidden)).AsQueryable();
+
+            return includeHidden
+                ? titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter})
+                    .OrderByDescending(tuple => tuple.chapter.ReleaseDate).LongCount()
+                : titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).Where(tuple => tuple.title.Visible && tuple.chapter.Visible)
+                    .OrderByDescending(tuple => tuple.chapter.ReleaseDate).LongCount();
+        }
+        
+        private async Task<IEnumerable<(Title title, Chapter chapter)>> GetReleases(int skip, int take)
+        {
+            var includeHidden = _signInManager.IsSignedIn(User);
+            var titles = (await _titlesManager.GetAll(includeHidden)).AsQueryable();
+            var chapters = (await _chapterManager.GetAll(includeHidden)).AsQueryable();
+
+            var releases = includeHidden
+                ? titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take)
+                : titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).Where(tuple => tuple.title.Visible && tuple.chapter.Visible)
+                    .OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take);
+
+            return releases.Select(tuple => ValueTuple.Create(tuple.title, tuple.chapter));
         }
         
         private static string GetDownloadName(Title title, Chapter chapter) => $"{title.Name} - {Labels.Chapter} {chapter.Number}";
