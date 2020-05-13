@@ -198,7 +198,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
         
-        [HttpGet("{action}/{page:int?}")]
+        [HttpGet("{action}")]
         public async Task<IActionResult> Titles() => View((await _titlesManager.GetAll(_signInManager.IsSignedIn(User))).OrderBy(title => title.Status).ThenBy(title => title.Name).Select(title => Mapper.Map(title)));
 
         [HttpGet("{action}/{titleId:Guid}/{page:int?}")]
