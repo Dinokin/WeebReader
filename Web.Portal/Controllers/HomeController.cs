@@ -51,20 +51,16 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            const ushort itemsPerPage = 8;
-
             ViewData["Page"] = 1;
-            ViewData["TotalPages"] = Math.Ceiling(await CountReleases() / (decimal) itemsPerPage);
+            ViewData["TotalPages"] = Math.Ceiling(await CountReleases() / (decimal) Constants.ItemsPerPageReleases);
             
-            return View((await GetReleases(0, itemsPerPage)).Select(tuple => new Tuple<TitleModel, ChapterModel>(Mapper.Map(tuple.title), Mapper.Map(tuple.chapter))));
+            return View((await GetReleases(0, Constants.ItemsPerPageReleases)).Select(tuple => new Tuple<TitleModel, ChapterModel>(Mapper.Map(tuple.title), Mapper.Map(tuple.chapter))));
         }
 
         [HttpGet("JSON/{page:int?}")]
         public async Task<IActionResult> IndexJson(ushort page = 1)
         {
-            const ushort itemsPerPage = 8;
-            
-            var totalPages = Math.Ceiling(await CountReleases() / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await CountReleases() / (decimal) Constants.ItemsPerPageReleases);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             return new JsonResult(new
@@ -72,7 +68,7 @@ namespace WeebReader.Web.Portal.Controllers
                 success = true,
                 page,
                 totalPages,
-                releases = (await GetReleases(itemsPerPage * (page - 1), itemsPerPage)).Select(tuple => new
+                releases = (await GetReleases(Constants.ItemsPerPageReleases * (page - 1), Constants.ItemsPerPageReleases)).Select(tuple => new
                 {
                     titleId = tuple.title.Id,
                     chapterId = tuple.chapter.Id,
@@ -88,7 +84,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("RSS")]
         public async Task<IActionResult> IndexRss()
         {
-            var feedItems = (await GetReleases(0, 8)).Select(tuple =>
+            var feedItems = (await GetReleases(0, Constants.ItemsPerPageReleasesRss)).Select(tuple =>
             {
                 var title = $"{tuple.title.Name} - {Labels.Chapter} {tuple.chapter.Number}";
                 var description = tuple.title.Synopsis.RemoveHtmlTags();
@@ -101,7 +97,6 @@ namespace WeebReader.Web.Portal.Controllers
 
                 return feedItem;
             });
-            
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
             var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.LatestReleases} - {siteName}", new Uri(Url.Action("Index", "Home", null, Request.Scheme)), feedItems)
@@ -121,11 +116,9 @@ namespace WeebReader.Web.Portal.Controllers
             if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
                 return RedirectToAction("Index");
             
-            const ushort itemsPerPage = 5;
-
-            var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageBlog);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var posts = (await _postsManager.GetRange(itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map).OrderByDescending(post => post.ReleaseDate);
+            var posts = (await _postsManager.GetRange(Constants.ItemsPerPageBlog * (page - 1), Constants.ItemsPerPageBlog, _signInManager.IsSignedIn(User))).Select(Mapper.Map).OrderByDescending(post => post.ReleaseDate);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
@@ -209,12 +202,10 @@ namespace WeebReader.Web.Portal.Controllers
 
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
                 return RedirectToAction("Titles");
-
-            const ushort itemsPerPage = 50;
             
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapter);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var chapters = (await _chapterManager.GetRange(title, itemsPerPage * (page - 1), itemsPerPage, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
+            var chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPageChapter * (page - 1), Constants.ItemsPerPageChapter, _signInManager.IsSignedIn(User))).Select(Mapper.Map);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
@@ -232,7 +223,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return RedirectToAction("IndexRss");
             
             var titleModel = Mapper.Map(title);
-            var chapters = (await _chapterManager.GetRange(title, 0, 25, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
+            var chapters = (await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapterRss, _signInManager.IsSignedIn(User))).Select(Mapper.Map).ToArray();
             var feedItems = chapters.OrderByDescending(chapter => chapter.ReleaseDate).Select(chapter =>
             {
                 var itemTitle = $"{titleModel.Name} - {Labels.Chapter} {chapter.Number}";

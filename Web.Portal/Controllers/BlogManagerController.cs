@@ -8,6 +8,7 @@ using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.BlogManager;
 using WeebReader.Web.Models.Others;
+using WeebReader.Web.Portal.Others;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -23,16 +24,14 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{page:int?}")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
-            const ushort itemsPerPage = 25;
-            
-            var totalPages = Math.Ceiling(await _postManager.Count() / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await _postManager.Count() / (decimal) Constants.ItemsPerPageBlogAdmin);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {postId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _postManager.GetRange(itemsPerPage * (page - 1), itemsPerPage)).Select(Mapper.Map));
+            return View((await _postManager.GetRange(Constants.ItemsPerPageBlogAdmin * (page - 1), Constants.ItemsPerPageBlogAdmin)).Select(Mapper.Map));
         }
 
         [HttpGet("{action}")]

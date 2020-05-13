@@ -11,6 +11,7 @@ using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.TitlesManager;
 using WeebReader.Web.Models.Others;
+using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
@@ -31,16 +32,14 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{page:int?}")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
-            const ushort itemsPerPage = 25;
-
-            var totalPages = Math.Ceiling(await _titleManager.Count() / (decimal) itemsPerPage);
+            var totalPages = Math.Ceiling(await _titleManager.Count() / (decimal) Constants.ItemsPerPageTitleAdmin);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _titleManager.GetRange(itemsPerPage * (page - 1), itemsPerPage)).Select(title => Mapper.Map(title)));
+            return View((await _titleManager.GetRange(Constants.ItemsPerPageTitleAdmin * (page - 1), Constants.ItemsPerPageTitleAdmin)).Select(title => Mapper.Map(title)));
         }
         
         [HttpGet("{action}")]
