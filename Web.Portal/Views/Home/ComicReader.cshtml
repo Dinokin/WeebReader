@@ -1,13 +1,13 @@
 ﻿@inject ParametersManager ParametersManager
-@model Tuple<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>
+@model (ComicModel comic, ComicChapterModel chapter, IEnumerable<ComicPage> pages)
 
 @{
-    ViewData["Title"] = $"{Labels.Chapter} {Model.Item2.Number} - {Model.Item1.Name}";
-    ViewData["DisqusIdentifier"] = $"chapter_{Model.Item2.ChapterId}";
-    ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.Item2.Number} - {Model.Item1.Name}";
+    ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
+    ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.ChapterId}";
+    ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
-    var pages = Model.Item3.Select(page => $"/content/{Model.Item1.TitleId}/{Model.Item2.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
+    var pages = Model.pages.Select(page => $"/content/{Model.comic.TitleId}/{Model.chapter.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
@@ -17,10 +17,10 @@
 
 @section Headers
 {
-    <meta property="og:title" content="@(Model.Item2.Volume != null && Model.Item2.Volume > 0 ? $"{Labels.Vol}{Model.Item2.Volume} " : null)@Labels.Ch @Model.Item2.Number - @Model.Item1.Name"/>
-    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.Item2.ChapterId }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
-    <meta property="og:description" content="@Model.Item1.Synopsis.RemoveHtmlTags()"/>
+    <meta property="og:title" content="@(Model.chapter.Volume != null && Model.chapter.Volume > 0 ? $"{Labels.Vol}{Model.chapter.Volume} " : null)@Labels.Ch @Model.chapter.Number - @Model.comic.Name"/>
+    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.ChapterId }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:description" content="@Model.comic.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <!--suppress JSIncompatibleTypesComparison -->
     <script>
@@ -44,7 +44,7 @@
         });
         
         $("#switch-view-mode").on("click", () => {
-            const cookieName = "@Html.Raw($"{Model.Item1.TitleId}_long_strip")";
+            const cookieName = "@Html.Raw($"{Model.comic.TitleId}_long_strip")";
             
             if (getCookie(cookieName) === "true") {
                 setCookie(cookieName, false, 3650);
@@ -201,11 +201,11 @@
 <button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>
 <div class="ui container">
     <div class="ui centered grid no-margin-top no-margin-bottom">
-        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.Item1.TitleId})">@Model.Item1.Name</a></div>
+        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.comic.TitleId})">@Model.comic.Name</a></div>
         <div class="row">
             <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
-                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.Item2.ChapterId})"/>
-                <div class="text">@Labels.Ch @Model.Item2.Number</div>
+                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.ChapterId})"/>
+                <div class="text">@Labels.Ch @Model.chapter.Number</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
                     @foreach (var chapter in chapters)
@@ -249,7 +249,7 @@
         {
             <img class="ui bordered image centered" src="/assets/placeholder_page.png" data-src="@pages[i]" alt="Page @(i + 1)"/>
 
-            if (!Model.Item1.LongStrip && i != pages.Length - 1)
+            if (!Model.comic.LongStrip && i != pages.Length - 1)
             {
                 <div class="ui hidden divider"></div>
             }

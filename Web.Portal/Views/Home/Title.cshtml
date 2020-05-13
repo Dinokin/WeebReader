@@ -1,28 +1,77 @@
 ﻿@inject ParametersManager ParametersManager
-@model Tuple<TitleModel, IEnumerable<ChapterModel>>
+@model (TitleModel title, IEnumerable<ChapterModel> chapters)
 
 @{
-    ViewData["Title"] = $"{Model.Item1.Name}";
+    ViewData["Title"] = $"{Model.title.Name}";
     ViewData["SegmentedPaginator"] = false;
     ViewData["PaginatorButtonSize"] = "mini";
-    ViewData["DisqusIdentifier"] = $"title_{Model.Item1.TitleId}";
-    ViewData["DisqusTitle"] = Model.Item1.Name;
+    ViewData["DisqusIdentifier"] = $"title_{Model.title.TitleId}";
+    ViewData["DisqusTitle"] = Model.title.Name;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
 }
 
 @section Headers
 {
-    <meta property="og:title" content="@Model.Item1.Name"/>
-    <meta property="og:url" content="@Url.Action("Titles", "Home", new { titleId = Model.Item1.TitleId }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Item1.TitleId}/cover_thumb.jpg")"/>
-    <meta property="og:description" content="@Model.Item1.Synopsis.RemoveHtmlTags()"/>
+    <meta property="og:title" content="@Model.title.Name"/>
+    <meta property="og:url" content="@Url.Action("Titles", "Home", new { titleId = Model.title.TitleId }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.title.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:description" content="@Model.title.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
-    <link rel="alternate" type="application/rss+xml" title="@($"{Model.Item1.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.Item1.TitleId})"/>
+    <link rel="alternate" type="application/rss+xml" title="@($"{Model.title.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.title.TitleId})"/>
     <script>
     $(() => {
+        let chapterContainer = $("#chapters");
+        let loader = $("#loader");
+        let page = @ViewData["Page"];
+        let totalPages = @ViewData["TotalPages"];
+        
         $("#titles,#titles-mobile").addClass("active");
         $(".tabular.menu .item").tab();
+        
+        chapterContainer.visibility({
+        once: false,
+        continuous: true,
+        observeChanges: true,
+        onBottomVisible: () => loadData()
+        });
+        
+        function loadData() {
+            if (page < totalPages) {
+                page++;
+                
+                chapterContainer.api({
+                url: "@Url.Action("Titles", new {titleId = Model.title.TitleId, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
+                method: "GET",
+                on: "now",
+                onRequest: () => {
+                    loader.removeClass("disabled");
+                    loader.addClass("active");
+                },
+                onComplete: () => {
+                    loader.removeClass("active");
+                    loader.addClass("disabled");
+                },
+                onSuccess: (response) => {
+                    generateItems(response.chapters);
+                }
+                });
+            }
+        }
+        
+        function generateItems(chapterList) {
+            chapterList.forEach(currentValue => {
+                chapterContainer.append(
+                    "<div class=\"item\"><div class=\"content\"><p class=\"header add-ellipsis\">" +
+                    `<a href="${currentValue.downloadAddress}"><i class="download icon"></i></a>` +
+                    `<a href="${currentValue.readAddress}">` +
+                    `${currentValue.volume != null && currentValue.volume > 0 ? `@Labels.Vol${currentValue.volume} ` : ""}@Labels.Chapter ${currentValue.number}${!isNullOrWhiteSpace(currentValue.name) ? `: ${currentValue.name}` : ""}` +
+                    "</a></p></div>" +
+                    "<div class=\"description\">" +
+                    `<p><i class="calendar alternate outline icon"></i>${getDate(new Date(currentValue.releaseDate))}</p></div></div>`
+                    );
+            });
+        }
     });
     </script>
 }
@@ -31,29 +80,29 @@
     <div class="ui raised segment">
         <div class="ui hidden divider"></div>
         <div class="ui large bordered centered fluid image">
-            <a class="ui bottom right attached large label" href="@Url.Action("TitlesRss", new {titleId = Model.Item1.TitleId})">
+            <a class="ui bottom right attached large label" href="@Url.Action("TitlesRss", new {titleId = Model.title.TitleId})">
                 <i class="rss fitted icon"></i>
             </a>
-            <img src="/content/@Model.Item1.TitleId/cover.png" alt="Series Cover"/>
+            <img src="/content/@Model.title.TitleId/cover.png" alt="Series Cover"/>
         </div>
         <div class="ui hidden divider"></div>
         <div class="content">
-            <h1 class="ui centered header">@Model.Item1.Name</h1>
-            @if (!string.IsNullOrWhiteSpace(Model.Item1.OriginalName))
+            <h1 class="ui centered header">@Model.title.Name</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.title.OriginalName))
             {
-                <h5 class="ui centered header">@Model.Item1.OriginalName</h5>
+                <h5 class="ui centered header">@Model.title.OriginalName</h5>
             }
             <div class="ui center aligned container">
-                <p>@Labels.Author: @Model.Item1.Author</p>
-                <p>@Labels.Artist: @Model.Item1.Artist</p>
+                <p>@Labels.Author: @Model.title.Author</p>
+                <p>@Labels.Artist: @Model.title.Artist</p>
             </div>
             <div class="ui hidden divider"></div>
             <div class="ui hidden divider"></div>
-            @if (!string.IsNullOrWhiteSpace(Model.Item1.Tags))
+            @if (!string.IsNullOrWhiteSpace(Model.title.Tags))
             {
                 <div class="ui labels">
                     <h5>@Labels.Tags</h5>
-                    @foreach (var tag in Model.Item1.Tags.Split(","))
+                    @foreach (var tag in Model.title.Tags.Split(","))
                     {
                         <div class="ui label">@tag</div>
                     }
@@ -62,7 +111,7 @@
             }
             <div class="description">
                 <h5>@Labels.Synopsis</h5>
-                @Html.Raw(Model.Item1.Synopsis)
+                @Html.Raw(Model.title.Synopsis)
             </div>
         </div>
     </div>
@@ -80,10 +129,10 @@
             }
         </div>
         <div class="ui active bottom attached tab segment" data-tab="chapters">
-            @if(Model.Item2.Any())
+            @if(Model.chapters.Any())
             {
-                <div class="ui relaxed divided list">
-                    @foreach (var chapter in Model.Item2)
+                <div id="chapters" class="ui relaxed divided list">
+                    @foreach (var chapter in Model.chapters)
                     {
                         <div class="item">
                             <div class="content">
@@ -99,7 +148,7 @@
                         </div>
                     }
                 </div>
-                <partial name="_Paginator"/>
+                <div id="loader" class="ui centered large elastic inline primary loader"></div>
             }
             else
             {

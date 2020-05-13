@@ -11,8 +11,8 @@
         public const ushort ItemsPerPageUserAdmin = 25;
         public const ushort ItemsPerPageReleases = 8;
         public const ushort ItemsPerPageReleasesRss = 16;
-        public const ushort ItemsPerPageBlog = 8;
-        public const ushort ItemsPerPageChapter = 25;
-        public const ushort ItemsPerPageChapterRss = 16;
+        public const ushort ItemsPerPagePosts = 8;
+        public const ushort ItemsPerPageChapters = 25;
+        public const ushort ItemsPerPageChaptersRss = 16;
     }
 }

@@ -1,5 +1,5 @@
 ﻿@inject ParametersManager ParametersManager
-@model IEnumerable<Tuple<TitleModel, ChapterModel>>
+@model IEnumerable<(TitleModel title, ChapterModel chapter)>
 
 @{
     ViewData["Title"] = Labels.LatestReleases;
@@ -19,6 +19,7 @@
         
         cardContainer.visibility({
         once: false,
+        continuous: true,
         observeChanges: true,
         onBottomVisible: () => loadData()
         });
@@ -28,7 +29,7 @@
                 page++;
                 
                 cardContainer.api({
-                url: `@Url.Action("IndexJson")/${page}`,
+                url: "@Url.Action("Index", new {page = 0})".replace("/0", `/${page}`),
                 method: "GET",
                 on: "now",
                 onRequest: () => {
@@ -49,8 +50,7 @@
         function generateCards(releaseList) {
             releaseList.forEach(currentValue => {
                 cardContainer.append(
-                    "<div class=\"ui raised card\">" +
-                    "<div class=\"content\">" +
+                    "<div class=\"ui raised card\"><div class=\"content\">" +
                     `<div class="center aligned content"><a href="${currentValue.chapterAddress}"><img class="ui bordered image" src="/content/${currentValue.titleId}/cover_thumb.jpg"></a></div>` +
                     `<h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="${currentValue.titleAddress}">${currentValue.titleName}</a></h4>` +
                     "<div class=\"center aligned description\">" +

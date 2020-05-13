@@ -35,7 +35,7 @@ function getCookie(name) {
 function setCookie(name, value, days) {
     let date = new Date;
     date.setTime(date.getTime() + 24*60*60*1000*days);
-    document.cookie = name + "=" + value + ";path=/;expires=" + date.toDateString();
+    document.cookie = `${name}=${value};path=/;expires=${date.toDateString()}`;
 }
 
 function scrollToTop(element) {
@@ -68,4 +68,8 @@ function getTime(date) {
     let minutes = date.getMinutes();
 
     return `${hour <= 9 ? `0${hour}` : hour}:${minutes <= 9 ? `0${minutes}` : minutes}`;
+}
+
+function isNullOrWhiteSpace(string) {
+    return string === null || string.match(/^\s*$/) !== null;
 }
