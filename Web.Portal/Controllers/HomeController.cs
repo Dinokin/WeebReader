@@ -226,7 +226,7 @@ namespace WeebReader.Web.Portal.Controllers
                 success = true,
                 page,
                 totalPages,
-                chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPageReleases * (page - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))).Select(chapter => new
+                chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPageChapters * (page - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))).Select(chapter => new
                 {
                     id = chapter.Id,
                     volume = chapter.Volume,
