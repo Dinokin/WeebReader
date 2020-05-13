@@ -25,6 +25,7 @@
         let loader = $("#loader");
         let page = @ViewData["Page"];
         let totalPages = @ViewData["TotalPages"];
+        let loading = false;
         
         $("#titles,#titles-mobile").addClass("active");
         $(".tabular.menu .item").tab();
@@ -37,25 +38,31 @@
         });
         
         function loadData() {
-            if (page < totalPages) {
-                page++;
+            if (!loading) {
+                loading = true;
                 
-                chapterContainer.api({
-                url: "@Url.Action("Titles", new {titleId = Model.title.TitleId, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
-                method: "GET",
-                on: "now",
-                onRequest: () => {
-                    loader.removeClass("disabled");
-                    loader.addClass("active");
-                },
-                onComplete: () => {
-                    loader.removeClass("active");
-                    loader.addClass("disabled");
-                },
-                onSuccess: (response) => {
-                    generateItems(response.chapters);
-                }
-                });
+                if (page < totalPages) {
+                    page++;
+                             
+                    chapterContainer.api({
+                    url: "@Url.Action("Titles", new {titleId = Model.title.TitleId, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
+                    method: "GET",
+                    on: "now",
+                    onRequest: () => {
+                        loader.removeClass("disabled");
+                        loader.addClass("active");
+                        },
+                        onComplete: () => {
+                        loader.removeClass("active");
+                        loader.addClass("disabled");
+                        },
+                        onSuccess: (response) => {
+                        generateItems(response.chapters);
+                    }
+                    });
+                }   
+                
+                loading = false;
             }
         }
         
@@ -148,7 +155,7 @@
                         </div>
                     }
                 </div>
-                <div id="loader" class="ui centered large elastic inline primary loader"></div>
+                <div id="loader" class="ui centered large elastic inline loader"></div>
             }
             else
             {
