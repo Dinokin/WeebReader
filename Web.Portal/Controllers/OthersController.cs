@@ -44,7 +44,7 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 await using var transaction = await _context.Database.BeginTransactionAsync();
 
-                var user = Mapper.Map(installerModel);
+                var user = Mapper.MapToEntity(installerModel);
                 user.EmailConfirmed = true;
                 
                 var userResult = await _userManager.CreateAsync(user, installerModel.Password);

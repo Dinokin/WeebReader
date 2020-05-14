@@ -31,7 +31,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {postId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _postManager.GetRange(Constants.ItemsPerPageBlogAdmin * (page - 1), Constants.ItemsPerPageBlogAdmin)).Select(Mapper.Map));
+            return View((await _postManager.GetRange(Constants.ItemsPerPageBlogAdmin * (page - 1), Constants.ItemsPerPageBlogAdmin)).Select(Mapper.MapToModel));
         }
 
         [HttpGet("{action}")]
@@ -56,7 +56,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
                     });
 
-                if (await _postManager.Add(Mapper.Map(postModel)))
+                if (await _postManager.Add(Mapper.MapToEntity(postModel)))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.PostAddedSuccessfully};
                     
@@ -91,7 +91,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["ActionRoute"] = Url.Action("Edit", new {postId});
             ViewData["Method"] = "PATCH";
 
-            return View("PostEditor", Mapper.Map(post));
+            return View("PostEditor", Mapper.MapToModel(post));
         }
 
         [HttpPatch("{postId:guid}")]
@@ -113,7 +113,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
                     });
 
-                Mapper.Map(postModel, ref post);
+                Mapper.MapEditModelToEntity(postModel, ref post);
                 
                 if (await _postManager.Edit(post))
                 {

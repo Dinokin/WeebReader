@@ -49,7 +49,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId, chapterId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
 
-            return View((await _chapterManager.GetRange(title, Constants.ItemsPerPageChapterAdmin * (page - 1), Constants.ItemsPerPageChapterAdmin)).Select(Mapper.Map));
+            return View((await _chapterManager.GetRange(title, Constants.ItemsPerPageChapterAdmin * (page - 1), Constants.ItemsPerPageChapterAdmin)).Select(Mapper.MapToModel));
         }
         
         [HttpGet("{action}")]
@@ -100,7 +100,7 @@ namespace WeebReader.Web.Portal.Controllers
                 await using var pagesStream = comicChapterModel.Pages.OpenReadStream();
                 using var pagesZip = new ZipArchive(pagesStream);
 
-                if (await _chapterArchiver.AddChapter(Mapper.Map(comicChapterModel), pagesZip))
+                if (await _chapterArchiver.AddChapter(Mapper.MapToEntity(comicChapterModel), pagesZip))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.ChapterAddedSuccessfully};
                     
@@ -164,7 +164,7 @@ namespace WeebReader.Web.Portal.Controllers
                 await using var pagesStream = comicChapterModel.Pages?.OpenReadStream();
                 using var pagesZip = pagesStream == null ? null : new ZipArchive(pagesStream);
 
-                Mapper.Map(comicChapterModel, ref chapter);
+                Mapper.MapEditModelToEntity(comicChapterModel, ref chapter);
 
                 if (await _chapterArchiver.EditChapter(chapter, pagesZip))
                 {
@@ -217,13 +217,15 @@ namespace WeebReader.Web.Portal.Controllers
         
         private IActionResult GetEditor(Title title) => title switch
         {
-            Comic _ => View("ComicChapterEditor", null),
+            Comic _ => View("ComicChapterEditor"),
+            Novel _ => View("NovelChapterEditor"),
             _ => RedirectToAction("Index")
         };
         
         private IActionResult GetEditor(Chapter chapter) => chapter switch
         {
-            ComicChapter comicChapter => View("ComicChapterEditor", Mapper.Map(comicChapter)),
+            ComicChapter comicChapter => View("ComicChapterEditor", (ComicChapterModel) Mapper.MapToModel(comicChapter)),
+            NovelChapter novelChapter => View("NovelChapterEditor", (NovelChapterModel) Mapper.MapToModel(novelChapter)),
             _ => RedirectToAction("Index")
         };
     }

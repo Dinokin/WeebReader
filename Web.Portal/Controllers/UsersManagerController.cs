@@ -43,7 +43,7 @@ namespace WeebReader.Web.Portal.Controllers
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
             var users = _userManager.Users.OrderBy(user => user.UserName).Skip(Constants.ItemsPerPageUserAdmin * (page - 1)).Take(Constants.ItemsPerPageUserAdmin)
-                .Select(Mapper.Map).ToArray();
+                .Select(Mapper.MapToModel).ToArray();
             
             foreach (var user in users)
                 user.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault());
@@ -86,7 +86,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.UsernameAlreadyInUse}
                     });
 
-                var user = Mapper.Map(userModel);
+                var user = Mapper.MapToEntity(userModel);
 
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 
@@ -201,7 +201,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["ActionRoute"] = Url.Action("Edit", new {userId});
             ViewData["Method"] = "PATCH";
 
-            var model = Mapper.Map(user);
+            var model = Mapper.MapToModel(user);
             model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
 
             return View("UserEditor", model);
@@ -234,7 +234,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.UserUpdateIsLastAdministrator}
                     });
 
-                Mapper.Map(userModel, ref user);
+                Mapper.MapEditModelToEntity(userModel, ref user);
                 user.EmailConfirmed = true;
                 
                 if (!string.IsNullOrWhiteSpace(userModel.Password))
@@ -317,7 +317,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> YourProfile()
         {
             var user = await _userManager.GetUserAsync(User);
-            var model = Mapper.Map(user);
+            var model = Mapper.MapToModel(user);
             model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
 
             return View(model);

@@ -39,7 +39,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {titleId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _titleManager.GetRange(Constants.ItemsPerPageTitleAdmin * (page - 1), Constants.ItemsPerPageTitleAdmin)).Select(title => Mapper.Map(title)));
+            return View((await _titleManager.GetRange(Constants.ItemsPerPageTitleAdmin * (page - 1), Constants.ItemsPerPageTitleAdmin)).Select(title => Mapper.MapToModel(title)));
         }
         
         [HttpGet("{action}")]
@@ -49,24 +49,24 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["ActionRoute"] = Url.Action("Add");
             ViewData["Method"] = "POST";
 
-            return GetEditor(type, null, null);
+            return GetEditor(type);
         }
         
         [HttpPost("{action}")]
-        public async Task<IActionResult> Add(ComicModel comicModel)
+        public async Task<IActionResult> Add(TitleModel titleModel)
         {
             if (ModelState.IsValid)
             {
-                if ((await _titleManager.GetAll()).Any(entity => entity.Name == comicModel.Name))
+                if ((await _titleManager.GetAll()).Any(entity => entity.Name == titleModel.Name))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.TitleNameAlreadyExist} 
                     });
 
-                await using var coverStream = comicModel.Cover?.OpenReadStream();
+                await using var coverStream = titleModel.Cover?.OpenReadStream();
 
-                if (await _titleArchiver.AddTitle(Mapper.Map(comicModel), comicModel.Tags?.Split(","), coverStream))
+                if (await _titleArchiver.AddTitle(Mapper.MapToEntity(titleModel, string.Empty), titleModel.Tags?.Split(","), coverStream))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleAddedSuccessfully};
                     
@@ -125,11 +125,10 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.TitleNameAlreadyExist} 
                     });
                 
-                var comic = (Comic) title;
-                Mapper.Map(comicModel, ref comic);
+                Mapper.MapEditModelToEntity(comicModel, ref title);
                 await using var coverStream = comicModel.Cover?.OpenReadStream();
 
-                if (await _titleArchiver.EditTitle(comic, comicModel.Tags?.Split(","), coverStream))
+                if (await _titleArchiver.EditTitle(title, comicModel.Tags?.Split(","), coverStream))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleUpdatedSuccessfully};
                     
@@ -178,15 +177,17 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        private IActionResult GetEditor(string type, Title? title, IEnumerable<Tag>? tags) => type switch
+        private IActionResult GetEditor(string type) => type switch
         {
-            "comic" => View("ComicEditor", title == null ? null : Mapper.Map((Comic) title, tags)),
+            "comic" => View("ComicEditor"),
+            "novel" => View("TitleEditor"),
             _ => RedirectToAction("Index")
         };
 
-        private IActionResult GetEditor(Title title, IEnumerable<Tag>? tags) => title switch
+        private IActionResult GetEditor(Title title, IEnumerable<Tag>? tags = null) => title switch
         {
-            Comic comic => View("ComicEditor", Mapper.Map(comic, tags)),
+            Comic comic => View("ComicEditor", (ComicModel) Mapper.MapToModel(comic, tags)),
+            Novel novel => View("TitleEditor", Mapper.MapToModel(novel, tags)),
             _ => RedirectToAction("Index")
         };
     }
