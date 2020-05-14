@@ -16,7 +16,6 @@
         let loader = $("#loader");
         let page = @ViewData["Page"];
         let totalPages = @ViewData["TotalPages"];
-        let loading = false;
         
         cardContainer.visibility({
         once: false,
@@ -26,31 +25,25 @@
         });
         
         function loadData() {
-            if (!loading) {
-                loading = true;
+            if (page < totalPages) {
+                page++;
                 
-                if (page < totalPages) {
-                    page++;
-                             
-                    cardContainer.api({
-                    url: "@Url.Action("Index", new {page = 0})".replace("/0", `/${page}`),
-                    method: "GET",
-                    on: "now",
-                    onRequest: () => {
-                        loader.removeClass("disabled");
-                        loader.addClass("active");
-                        },
-                        onComplete: () => {
-                        loader.removeClass("active");
-                        loader.addClass("disabled");
-                        },
-                        onSuccess: (response) => {
-                        generateCards(response.releases);
-                    }
-                    });
+                cardContainer.api({
+                url: "@Url.Action("Index", new {page = 0})".replace("/0", `/${page}`),
+                method: "GET",
+                on: "now",
+                onRequest: () => {
+                    loader.removeClass("disabled");
+                    loader.addClass("active");
+                },
+                onComplete: () => {
+                    loader.removeClass("active");
+                    loader.addClass("disabled");
+                },
+                onSuccess: (response) => {
+                    generateCards(response.releases);
                 }
-                
-                loading = false;
+                });
             }
         }
         
@@ -94,5 +87,5 @@
         }
     </div>
     <div class="ui hidden divider"></div>
-    <div id="loader" class="ui disabled centered large elastic inline loader"></div>
+    <div id="loader" class="ui disabled centered large elastic inline primary loader"></div>
 </div>
