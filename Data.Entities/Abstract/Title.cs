@@ -21,7 +21,7 @@ namespace WeebReader.Data.Entities.Abstract
         public Statuses Status { get; set; }
         public bool Visible { get; set; }
         public string? PreviousChaptersLink { get; set; }
-        public IEnumerable<TitleTag> TitleTags { get; } = new List<TitleTag>();
+        public IEnumerable<TitleTag>? TitleTags { get; set; }
 
         protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, string? previousChaptersLink = null)
         {

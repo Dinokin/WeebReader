@@ -62,6 +62,8 @@ namespace WeebReader.Data.Contexts
             builder.Entity<Comic>(typeBuilder => typeBuilder.Property(comic => comic.LongStrip).HasColumnType("BOOLEAN"));
 
             builder.Entity<ComicPage>(typeBuilder => typeBuilder.Property(page => page.Number).HasColumnType("SMALLINT UNSIGNED"));
+
+            builder.Entity<NovelChapter>(typeBuilder => typeBuilder.Property(chapter => chapter.Content).HasColumnType("TEXT"));
             
             builder.Entity<Post>(typeBuilder =>
             {

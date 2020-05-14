@@ -15,6 +15,8 @@ namespace WeebReader.Data.Contexts.Abstract
         public DbSet<Comic> Comics { get; set; } = null!;
         public DbSet<ComicChapter> ComicChapters { get; set; } = null!;
         public DbSet<ComicPage> ComicPages { get; set; } = null!;
+        public DbSet<Novel> Novels { get; set; } = null!;
+        public DbSet<NovelChapter> NovelChapters { get; set; } = null!;
         public DbSet<Tag> Tags { get; set; } = null!;
         public DbSet<TitleTag> TitleTags { get; set; } = null!;
         public DbSet<Post> Posts { get; set; } = null!;
@@ -98,7 +100,7 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(title => title.Visible).IsRequired();
                 typeBuilder.Property(title => title.PreviousChaptersLink).HasMaxLength(500);
                 typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title!).HasForeignKey(titleTag => titleTag.TitleId);
-                typeBuilder.HasDiscriminator<string>("TitleType").HasValue<Comic>("Comic");
+                typeBuilder.HasDiscriminator<string>("TitleType").HasValue<Comic>("Comic").HasValue<Novel>("Novel");
             });
             
             builder.Entity<Chapter>(typeBuilder =>
@@ -109,7 +111,7 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(chapter => chapter.Visible).IsRequired();
                 typeBuilder.Property(chapter => chapter.TitleId).IsRequired();
                 typeBuilder.HasIndex(chapter => new {chapter.Number, chapter.TitleId}).IsUnique();
-                typeBuilder.HasDiscriminator<string>("ChapterType").HasValue<ComicChapter>("Comic");
+                typeBuilder.HasDiscriminator<string>("ChapterType").HasValue<ComicChapter>("Comic").HasValue<NovelChapter>("Novel");
             });
             
             builder.Entity<Page>(typeBuilder =>
@@ -122,7 +124,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(comic => comic.LongStrip);
 
-                typeBuilder.HasMany(comic => comic.Chapters).WithOne(comic => comic.Title!).HasForeignKey(chapter => chapter.TitleId);
+                typeBuilder.HasMany(comic => comic.Chapters).WithOne(chapter => chapter.Title!).HasForeignKey(chapter => chapter.TitleId);
             });
             
             builder.Entity<ComicChapter>(typeBuilder => typeBuilder.HasMany(chapter => chapter.Pages).WithOne(page => page.Chapter!).HasForeignKey(page => page.ChapterId));
@@ -132,6 +134,10 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(page => page.Number).IsRequired();
                 typeBuilder.HasIndex(page => new {page.Number, page.ChapterId}).IsUnique();
             });
+
+            builder.Entity<Novel>(typeBuilder => typeBuilder.HasMany(novel => novel.Chapters).WithOne(chapter => chapter.Title!).HasForeignKey(chapter => chapter.TitleId));
+
+            builder.Entity<NovelChapter>(typeBuilder => typeBuilder.Property(chapter => chapter.Content).IsRequired());
 
             builder.Entity<Tag>(typeBuilder =>
             {

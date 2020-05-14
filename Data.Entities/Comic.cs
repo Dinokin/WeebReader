@@ -7,7 +7,7 @@ namespace WeebReader.Data.Entities
     public class Comic : Title
     {
         public bool LongStrip { get; set; }
-        public IEnumerable<ComicChapter> Chapters { get; } = new List<ComicChapter>();
+        public IEnumerable<ComicChapter>? Chapters { get; set; }
 
         public Comic(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool visible, bool longStrip, string? previousChaptersLink = null)
             : base(name, originalName, author, artist, synopsis, status, visible, previousChaptersLink)
