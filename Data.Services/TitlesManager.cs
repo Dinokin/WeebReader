@@ -37,7 +37,8 @@ namespace WeebReader.Data.Services
 
         public async Task<bool> Add(TTitle title, IEnumerable<string>? tags = null)
         {
-            await DbSet.AddAsync(title);
+            if (!await base.Add(title))
+                return false;
 
             if (tags != null)
                 await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
@@ -47,7 +48,8 @@ namespace WeebReader.Data.Services
         
         public async Task<bool> Edit(TTitle title, IEnumerable<string>? tags = null)
         {
-            DbSet.Update(title);
+            if (!await base.Edit(title))
+                return false;
             
             if (Context.TitleTags.Where(titleTag => titleTag.Title == title) is var titleTags && titleTags.Any())
                 Context.TitleTags.RemoveRange(Context.TitleTags.Where(titleTag => titleTag.Title == title));
