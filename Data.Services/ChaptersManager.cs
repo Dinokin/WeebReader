@@ -16,7 +16,7 @@ namespace WeebReader.Data.Services
             ? await base.Count()
             : await DbSet.LongCountAsync(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now);
 
-        public async Task<long> Count(Title title, bool includeHidden = false) => includeHidden
+        public async Task<long> Count(Title title, bool includeHidden = true) => includeHidden
             ? await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id)
             : await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id && chapter.Visible && chapter.ReleaseDate <= DateTime.Now);
 
@@ -26,7 +26,7 @@ namespace WeebReader.Data.Services
             ? DbSet.OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take)
             : DbSet.Where(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take));
 
-        public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take, bool includeHidden = false) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
+        public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take, bool includeHidden = true) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
             ? DbSet.Where(chapter => chapter.TitleId == title.Id).OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take)
             : DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
 
@@ -36,7 +36,7 @@ namespace WeebReader.Data.Services
             ? DbSet.OrderByDescending(chapter => chapter.ReleaseDate)
             : DbSet.Where(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.ReleaseDate));
         
-        public Task<IEnumerable<TChapter>> GetAll(Title title, bool includeHidden = false) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
+        public Task<IEnumerable<TChapter>> GetAll(Title title, bool includeHidden = true) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
             ? DbSet.Where(chapter => chapter.TitleId == title.Id).OrderByDescending(chapter => chapter.Number)
             : DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible).OrderByDescending(chapter => chapter.Number));
     }
