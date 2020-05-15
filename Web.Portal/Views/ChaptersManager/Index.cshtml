@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ChapterModel>
+﻿@model IEnumerable<Chapter>
 
 @{
     ViewData["SegmentedPaginator"] = false;
@@ -86,12 +86,12 @@
         {
             <tr>
                 <td>@(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}": null)</td>
-                <td>@chapter.ReleaseDate?.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@chapter.ReleaseDate.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@(chapter.Visible ? Labels.Visible : Labels.Hidden)</td>
                 <td>
                     <div class="ui mini buttons">
-                        <a class="ui icon primary button" href="@Url.Action("Edit", new {titleId = chapter.TitleId, chapterId = chapter.ChapterId})"><i class="pen icon"></i></a>
-                        <a class="ui icon negative button" chapter-id="@chapter.ChapterId"><i class="trash icon"></i></a>
+                        <a class="ui icon primary button" href="@Url.Action("Edit", new {titleId = chapter.TitleId, chapterId = chapter.Id})"><i class="pen icon"></i></a>
+                        <a class="ui icon negative button" chapter-id="@chapter.Id"><i class="trash icon"></i></a>
                     </div>
                 </td>
             </tr>

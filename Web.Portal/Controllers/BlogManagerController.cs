@@ -31,7 +31,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["TotalPages"] = totalPages;
             ViewData["DeletionRoute"] = Url.Action("Delete", new {postId = Guid.Empty}).Replace(Guid.Empty.ToString(), string.Empty);
             
-            return View((await _postManager.GetRange(Constants.ItemsPerPageBlogAdmin * (page - 1), Constants.ItemsPerPageBlogAdmin)).Select(Mapper.MapToModel));
+            return View((await _postManager.GetRange(Constants.ItemsPerPageBlogAdmin * (page - 1), Constants.ItemsPerPageBlogAdmin)));
         }
 
         [HttpGet("{action}")]

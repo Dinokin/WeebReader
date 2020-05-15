@@ -1,5 +1,5 @@
 ﻿@inject ParametersManager ParameterManager
-@model IEnumerable<PostModel>
+@model IEnumerable<Post>
 
 @{
     ViewData["Title"] = Labels.Posts;
@@ -88,12 +88,12 @@
         {
             <tr>
                 <td>@post.Title</td>
-                <td>@post.ReleaseDate?.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@post.ReleaseDate.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>@(post.Visible ? Labels.Visible : Labels.Hidden)</td>
                 <td>
                     <div class="ui mini buttons">
-                        <a class="ui icon primary button" href="@Url.Action("Edit", new {postId = post.PostId})"><i class="pen icon"></i></a>
-                        <a class="ui icon negative button" post-id="@post.PostId"><i class="trash icon"></i></a>
+                        <a class="ui icon primary button" href="@Url.Action("Edit", new {postId = post.Id})"><i class="pen icon"></i></a>
+                        <a class="ui icon negative button" post-id="@post.Id"><i class="trash icon"></i></a>
                     </div>
                 </td>
             </tr>

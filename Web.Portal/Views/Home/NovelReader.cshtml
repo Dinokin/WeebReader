@@ -1,9 +1,9 @@
 ﻿@inject ParametersManager ParametersManager
-@model (TitleModel novel, NovelChapterModel chapter)
+@model (Novel novel, NovelChapter chapter)
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.novel.Name}";
-    ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.ChapterId}";
+    ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.Id}";
     ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.novel.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
@@ -16,8 +16,8 @@
 @section Headers
 {
     <meta property="og:title" content="@(Model.chapter.Volume != null && Model.chapter.Volume > 0 ? $"{Labels.Vol}{Model.chapter.Volume} " : null)@Labels.Ch @Model.chapter.Number - @Model.novel.Name"/>
-    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.ChapterId }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.novel.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.Id }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.novel.Id}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.novel.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <!--suppress JSIncompatibleTypesComparison -->
@@ -68,10 +68,10 @@
 <button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>
 <div class="ui container">
     <div class="ui centered grid no-margin-top no-margin-bottom">
-        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.novel.TitleId})">@Model.novel.Name</a></div>
+        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.novel.Id})">@Model.novel.Name</a></div>
         <div class="row">
             <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
-                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.ChapterId})"/>
+                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.Id})"/>
                 <div class="text">@Labels.Ch @Model.chapter.Number</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">

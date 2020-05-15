@@ -1,13 +1,13 @@
 ﻿@inject ParametersManager ParametersManager
-@model (ComicModel comic, ComicChapterModel chapter, IEnumerable<ComicPage> pages)
+@model (Comic comic, ComicChapter chapter, IEnumerable<ComicPage> pages)
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
-    ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.ChapterId}";
+    ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.Id}";
     ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
-    var pages = Model.pages.Select(page => $"/content/{Model.comic.TitleId}/{Model.chapter.ChapterId}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
+    var pages = Model.pages.Select(page => $"/content/{Model.comic.Id}/{Model.chapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
@@ -18,8 +18,8 @@
 @section Headers
 {
     <meta property="og:title" content="@(Model.chapter.Volume != null && Model.chapter.Volume > 0 ? $"{Labels.Vol}{Model.chapter.Volume} " : null)@Labels.Ch @Model.chapter.Number - @Model.comic.Name"/>
-    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.ChapterId }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.Id }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.Id}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.comic.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <!--suppress JSIncompatibleTypesComparison -->
@@ -44,7 +44,7 @@
         });
         
         $("#switch-view-mode").on("click", () => {
-            const cookieName = "@Html.Raw($"{Model.comic.TitleId}_long_strip")";
+            const cookieName = "@Html.Raw($"{Model.comic.Id}_long_strip")";
             
             if (getCookie(cookieName) === "true") {
                 setCookie(cookieName, false, 3650);
@@ -201,10 +201,10 @@
 <button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>
 <div class="ui container">
     <div class="ui centered grid no-margin-top no-margin-bottom">
-        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.comic.TitleId})">@Model.comic.Name</a></div>
+        <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.comic.Id})">@Model.comic.Name</a></div>
         <div class="row">
             <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
-                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.ChapterId})"/>
+                <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.Id})"/>
                 <div class="text">@Labels.Ch @Model.chapter.Number</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">

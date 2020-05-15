@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TitleModel>
+﻿@model IEnumerable<Title>
 
 @{
     ViewData["Title"] = Labels.Titles;
@@ -128,13 +128,13 @@
         @foreach (var title in Model)
         {
             <tr>
-                <td><a href="@Url.Action("Index", "ChaptersManager", new {titleId = title.TitleId})">@title.Name</a></td>
+                <td><a href="@Url.Action("Index", "ChaptersManager", new {titleId = title.Id})">@title.Name</a></td>
                 <td>@title.Status</td>
                 <td>@(title.Visible ? Labels.Visible : Labels.Hidden)</td>
                 <td>
                     <div class="ui mini buttons">
-                        <a class="ui icon primary button" href="@Url.Action("Edit", new {titleId = title.TitleId})"><i class="pen icon"></i></a>
-                        <a class="ui icon negative button" title-id="@title.TitleId"><i class="trash icon"></i></a>
+                        <a class="ui icon primary button" href="@Url.Action("Edit", new {titleId = title.Id})"><i class="pen icon"></i></a>
+                        <a class="ui icon negative button" title-id="@title.Id"><i class="trash icon"></i></a>
                     </div>
                 </td>
             </tr>

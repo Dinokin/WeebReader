@@ -1,10 +1,8 @@
 ﻿@inject ParametersManager ParametersManager
-@model (TitleModel title, IEnumerable<ChapterModel> chapters)
+@model (TitleModel title, IEnumerable<Chapter> chapters)
 
 @{
     ViewData["Title"] = $"{Model.title.Name}";
-    ViewData["SegmentedPaginator"] = false;
-    ViewData["PaginatorButtonSize"] = "mini";
     ViewData["DisqusIdentifier"] = $"title_{Model.title.TitleId}";
     ViewData["DisqusTitle"] = Model.title.Name;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
@@ -136,14 +134,14 @@
                         <div class="item">
                             <div class="content">
                                 <p class="header add-ellipsis">
-                                    <a href="@Url.Action("DownloadChapter", new {chapterId = chapter.ChapterId})"><i class="download icon"></i></a>
-                                    <a href="@Url.Action("ReadChapter", new {chapterId = chapter.ChapterId})">
+                                    <a href="@Url.Action("DownloadChapter", new {chapterId = chapter.Id})"><i class="download icon"></i></a>
+                                    <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
                                         @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}" : null)
                                     </a>
                                 </p>
                             </div>
                             <div class="description">
-                                <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p></div>
+                                <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p></div>
                         </div>
                     }
                 </div>

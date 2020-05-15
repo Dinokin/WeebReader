@@ -1,9 +1,7 @@
-﻿@model IEnumerable<TitleModel>
+﻿@model IEnumerable<Title>
 
 @{
-    ViewData["Title"] = Labels.Titles; 
-    ViewData["SegmentedPaginator"] = true;
-    ViewData["PaginatorButtonSize"] = "mini";
+    ViewData["Title"] = Labels.Titles;
 }
 
 @section Headers
@@ -19,13 +17,13 @@
         {
             <div class="ui raised card">
                 <div class="content">
-                    <div class="center aligned content"><a href="@Url.Action("Titles", new { titleId = title.TitleId })"><img class="ui bordered image" src="/content/@title.TitleId/cover_thumb.jpg"></a></div>
-                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new { titleId = title.TitleId })">@title.Name</a></h4>
+                    <div class="center aligned content"><a href="@Url.Action("Titles", new { titleId = title.Id })"><img class="ui bordered image" src="/content/@title.Id/cover_thumb.jpg"></a></div>
+                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new { titleId = title.Id })">@title.Name</a></h4>
                     <div class="center aligned description">
                         <p>@Labels.Status: @TitleStatusTranslator.FromStatus(title.Status)</p>
                     </div>
                 </div>
-                <a class="ui small black bottom attached button" href="@Url.Action("Titles", new { titleId = title.TitleId })">
+                <a class="ui small black bottom attached button" href="@Url.Action("Titles", new { titleId = title.Id })">
                     @Labels.ViewDetails
                 </a>
             </div>

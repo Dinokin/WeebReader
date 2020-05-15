@@ -1,5 +1,5 @@
 ﻿@inject ParametersManager ParametersManager
-@model IEnumerable<(TitleModel title, ChapterModel chapter)>
+@model IEnumerable<(Title title, Chapter chapter)>
 
 @{
     ViewData["Title"] = Labels.LatestReleases;
@@ -71,14 +71,14 @@
         {
             <div class="ui raised card">
                 <div class="content">
-                    <div class="center aligned content"><a href="@Url.Action("ReadChapter", new { chapterId = chapter.ChapterId })"><img class="ui bordered image" src="/content/@title.TitleId/cover_thumb.jpg"></a></div>
-                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new { titleId = title.TitleId })">@title.Name</a></h4>
+                    <div class="center aligned content"><a href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })"><img class="ui bordered image" src="/content/@title.Id/cover_thumb.jpg"></a></div>
+                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new { titleId = title.Id })">@title.Name</a></h4>
                     <div class="center aligned description">
                         <p><i class="file outline icon"></i>@Labels.Chapter @chapter.Number</p>
-                        <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate?.ToString("yyyy-MM-dd")</p>
+                        <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p>
                     </div>
                 </div>
-                <a class="ui small black bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.ChapterId })">
+                <a class="ui small black bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })">
                     @Labels.Read
                     <i class="angle double right fitted icon"></i>
                 </a>

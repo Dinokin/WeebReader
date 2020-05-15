@@ -54,7 +54,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["Page"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await CountReleases() / (decimal) Constants.ItemsPerPageReleases);
             
-            return View((await GetReleases(0, Constants.ItemsPerPageReleases)).Select(tuple => ValueTuple.Create(Mapper.MapToModel(tuple.title), Mapper.MapToModel(tuple.chapter))));
+            return View(await GetReleases(0, Constants.ItemsPerPageReleases));
         }
 
         [HttpGet("JSON/{page:int}")]
@@ -118,13 +118,12 @@ namespace WeebReader.Web.Portal.Controllers
             
             var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
             page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var posts = (await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User))).Select(Mapper.MapToModel).OrderByDescending(post => post.ReleaseDate);
+            var posts = await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User));
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
 
             return View(posts);
-
         }
 
         [HttpGet("{action}")]
@@ -192,7 +191,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
         
         [HttpGet("{action}")]
-        public async Task<IActionResult> Titles() => View((await _titlesManager.GetAll(_signInManager.IsSignedIn(User))).OrderBy(title => title.Status).ThenBy(title => title.Name).Select(title => Mapper.MapToModel(title)));
+        public async Task<IActionResult> Titles() => View((await _titlesManager.GetAll(_signInManager.IsSignedIn(User))).OrderBy(title => title.Status).ThenBy(title => title.Name));
 
         [HttpGet("{action}/{titleId:Guid}")]
         public async Task<IActionResult> Titles(Guid titleId)
@@ -206,7 +205,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["Page"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
             
-            return View("Title", ValueTuple.Create(Mapper.MapToModel(title, await _titlesManager.GetTags(title)), (await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))).Select(Mapper.MapToModel)));
+            return View("Title", ValueTuple.Create(Mapper.MapToModel(title, await _titlesManager.GetTags(title)), await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))));
         }
 
         [HttpGet("{action}/{titleId:Guid}/JSON/{page:int}")]
@@ -331,8 +330,6 @@ namespace WeebReader.Web.Portal.Controllers
 
         private async Task<IActionResult> GetComicReader(Comic comic, ComicChapter comicChapter)
         {
-            var comicModel = (ComicModel) Mapper.MapToModel(comic);
-            var comicChapterModel = (ComicChapterModel) Mapper.MapToModel(comicChapter);
             var pages = (await _pagesManager.GetAll(comicChapter)).Select(page => (ComicPage) page).OrderBy(page => page.Number);
 
             Request.Cookies.TryGetValue($"{comic.Id}_long_strip", out var value);
@@ -342,10 +339,10 @@ namespace WeebReader.Web.Portal.Controllers
 
             ViewData["LongStrip"] = Convert.ToBoolean(value) || comic.LongStrip;
             
-            return View("ComicReader", ValueTuple.Create<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>(comicModel, comicChapterModel, pages));
+            return View("ComicReader", ValueTuple.Create<Comic, ComicChapter, IEnumerable<ComicPage>>(comic, comicChapter, pages));
         }
 
-        private Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => Task.FromResult<IActionResult>(View("NovelReader", ValueTuple.Create(Mapper.MapToModel(novel), (NovelChapterModel) Mapper.MapToModel(novelChapter))));
+        private Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => Task.FromResult<IActionResult>(View("NovelReader", ValueTuple.Create(novel, novelChapter)));
 
         private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
         {
