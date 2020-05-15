@@ -1,1 +1,106 @@
 ﻿@model NovelChapterModel
+
+@section Headers
+{
+    <partial name="_TinyMCE"/>
+    <script>
+    $(() => {
+        let form = $(".form");
+        let messageContainer = $(".form .message");
+        
+        $(".checkbox").checkbox();
+        $("#titles").addClass("active");
+        
+        $(".ui.calendar").calendar({
+        ampm: false,
+        formatter: {
+            date: (date) => getDate(date),
+            time: (date) => getTime(date)
+        }
+        });
+        
+        form.on("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                return false;
+            }
+        });
+        
+        form.on("submit", () => tinyMCE.triggerSave()).form({
+        on: "blur",
+        fields: {
+            name: {
+                identifier: "name",
+                rules: [
+                    {
+                        type: "maxLength[100]",
+                        prompt: "@ValidationMessages.ChapterNameMaxLength"
+                    }
+                ]
+            }
+        }
+        }).api({
+        url: "@ViewData["ActionRoute"]",
+        method: "@ViewData["Method"]",
+        processData: false,
+        contentType: false,
+        beforeSend: (settings) => {
+            settings.data = new FormData(form.get(0));
+            
+            return settings;
+        },
+        onSuccess: (response) => window.location.href = response.destination,
+        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
+        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
+        });
+    });
+    </script>
+}
+
+<form class="ui form" novalidate>
+    <input type="hidden" name="chapterId" asp-for="ChapterId"/>
+    <div class="ui message error"></div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>@Labels.Volume</label>
+                <input type="number" name="volume" placeholder="@Labels.Volume" asp-for="Volume"/>
+            </div>
+            <div class="field">
+                <label>@Labels.Number</label>
+                <input type="number" min="0" max="9999.9" step="0.1" name="number" placeholder="@Labels.Number" asp-for="Number"/>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.Name</label>
+        <input type="text" name="name" placeholder="@Labels.Name" asp-for="Name"/>
+    </div>
+    <div class="field">
+        <div class="two fields">
+            <div class="field">
+                <label>@Labels.Date</label>
+                <div class="ui calendar">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input type="text" name="releaseDate" placeholder="@Labels.ReleaseDate" asp-for="ReleaseDate"/>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>@Labels.Visibility</label>
+                <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
+                    <input class="hidden" type="checkbox" name="visible" checked="@(Model == null ? "checked" : null)" asp-for="Visible"/>
+                    <label>@Labels.MakeVisible</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.Content</label>
+        <textarea name="content" placeholder="@Labels.Content" asp-for="Content"></textarea>
+    </div>
+    <div class="field" style="overflow: auto">
+        <div class="ui right floated black submit button" style="overflow: hidden">@ViewData["Function"]</div>
+    </div>
+</form>

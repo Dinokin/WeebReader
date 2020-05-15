@@ -325,6 +325,7 @@ namespace WeebReader.Web.Portal.Controllers
         private async Task<IActionResult> GetReader(Title title, Chapter chapter) => chapter switch
         {
             ComicChapter comicChapter => await GetComicReader((Comic) title, comicChapter),
+            NovelChapter novelChapter => await GetNovelReader((Novel) title, novelChapter),
             _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
         };
 
@@ -343,6 +344,8 @@ namespace WeebReader.Web.Portal.Controllers
             
             return View("ComicReader", ValueTuple.Create<ComicModel, ComicChapterModel, IEnumerable<ComicPage>>(comicModel, comicChapterModel, pages));
         }
+
+        private Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => Task.FromResult<IActionResult>(View("NovelReader", ValueTuple.Create(Mapper.MapToModel(novel), (NovelChapterModel) Mapper.MapToModel(novelChapter))));
 
         private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
         {
