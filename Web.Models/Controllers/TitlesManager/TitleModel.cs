@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.Controllers.TitlesManager
 {
+    [ModelBinder(BinderType = typeof(TitleModelBinder))]
     public class TitleModel : IValidatableObject
     {
         public Guid? TitleId { get; set; }

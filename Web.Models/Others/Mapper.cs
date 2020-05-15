@@ -157,16 +157,7 @@ namespace WeebReader.Web.Models.Others
                 TitleId = novelChapter.TitleId,
                 Content = novelChapter.Content
             },
-            _ => new ChapterModel
-            {
-                ChapterId = chapter.Id,
-                Volume = chapter.Volume,
-                Number = chapter.Number,
-                Name = chapter.Name,
-                ReleaseDate = chapter.ReleaseDate,
-                Visible = chapter.Visible,
-                TitleId = chapter.TitleId
-            }
+            _ => throw new ArgumentException()
         };
 
         public static Chapter MapToEntity(ChapterModel chapterModel) => chapterModel switch

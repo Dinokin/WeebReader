@@ -1,9 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using WeebReader.Web.Localization;
+using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.Controllers.ChaptersManager
 {
+    [ModelBinder(BinderType = typeof(ChapterModelBinder))]
     public class ChapterModel
     {
         public Guid? ChapterId { get; set; }

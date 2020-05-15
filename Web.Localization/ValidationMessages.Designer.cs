@@ -79,6 +79,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A chapter must have content..
+        /// </summary>
+        public static string ChapterMustHaveContent {
+            get {
+                return ResourceManager.GetString("ChapterMustHaveContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A chapter must have a number..
         /// </summary>
         public static string ChapterMustHaveNumber {
@@ -498,6 +507,15 @@ namespace WeebReader.Web.Localization {
         public static string TitleMustHaveName {
             get {
                 return ResourceManager.GetString("TitleMustHaveName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A title must have a type..
+        /// </summary>
+        public static string TitleMustHaveType {
+            get {
+                return ResourceManager.GetString("TitleMustHaveType", resourceCulture);
             }
         }
         

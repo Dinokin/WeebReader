@@ -72,36 +72,42 @@ namespace WeebReader.Web.Portal.Controllers
         
         [HttpPost("{action}")]
         [RequestSizeLimit(104857600)]
-        public async Task<IActionResult> Add(ComicChapterModel comicChapterModel)
+        public async Task<IActionResult> Add(ChapterModel chapterModel)
         {
             if (ModelState.IsValid)
             {
-                if (await _titleManager.GetById(comicChapterModel.TitleId) is var title && title == null)
-                {
-                    TempData["ErrorMessage"] = new[] {ValidationMessages.TitleNotFound};
+                if (await _titleManager.GetById(chapterModel.TitleId) is var title && title == null)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {ValidationMessages.TitleNotFound} 
+                    });
                 
-                    return RedirectToAction("Index", "TitlesManager");
-                }
-                
-                if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == title.Id && entity.Number == comicChapterModel.Number))
+                if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == title.Id && entity.Number == chapterModel.Number))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.ChapterNumberAlreadyExist} 
                     });
 
-                if (comicChapterModel.Pages == null)
-                    return new JsonResult(new
-                    {
-                        success = false,
-                        messages = new[] {ValidationMessages.ChapterMustHavePages} 
-                    });
+                ZipArchive? pagesZip = null;
 
-                await using var pagesStream = comicChapterModel.Pages.OpenReadStream();
-                using var pagesZip = new ZipArchive(pagesStream);
-
-                if (await _chapterArchiver.AddChapter(Mapper.MapToEntity(comicChapterModel), pagesZip))
+                if (chapterModel is ComicChapterModel comicChapterModel)
                 {
+                    if (comicChapterModel.Pages == null)
+                        return new JsonResult(new
+                        {
+                            success = false,
+                            messages = new[] {ValidationMessages.ChapterMustHavePages} 
+                        });
+                    
+                    var pagesStream = comicChapterModel.Pages.OpenReadStream();
+                    pagesZip = new ZipArchive(pagesStream);
+                }
+                
+                if (await _chapterArchiver.AddChapter(Mapper.MapToEntity(chapterModel), pagesZip))
+                {
+                    pagesZip?.Dispose();
                     TempData["SuccessMessage"] = new[] {OtherMessages.ChapterAddedSuccessfully};
                     
                     return new JsonResult(new
@@ -110,7 +116,8 @@ namespace WeebReader.Web.Portal.Controllers
                         destination = Url.Action("Index", new {titleId = title.Id})
                     });
                 }
-
+                
+                pagesZip?.Dispose();
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
@@ -143,28 +150,33 @@ namespace WeebReader.Web.Portal.Controllers
         [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpPatch("{chapterId:guid}")]
         [RequestSizeLimit(104857600)]
-        public async Task<IActionResult> Edit(ComicChapterModel comicChapterModel)
+        public async Task<IActionResult> Edit(ChapterModel chapterModel)
         {
             if (ModelState.IsValid)
             {
-                if (comicChapterModel.ChapterId == null ||await _chapterManager.GetById(comicChapterModel.ChapterId.Value) is var chapter && chapter == null)
-                {
-                    TempData["ErrorMessage"] = new[] {ValidationMessages.ChapterNotFound};
+                if (chapterModel.ChapterId == null ||await _chapterManager.GetById(chapterModel.ChapterId.Value) is var chapter && chapter == null)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {ValidationMessages.ChapterNotFound} 
+                    });
                 
-                    return RedirectToAction("Index", new { titleId = comicChapterModel.TitleId });
-                }
-                
-                if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == chapter.TitleId && entity.Number == comicChapterModel.Number && entity != chapter))
+                if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == chapter.TitleId && entity.Number == chapterModel.Number && entity != chapter))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.ChapterNumberAlreadyExist} 
                     });
                 
-                await using var pagesStream = comicChapterModel.Pages?.OpenReadStream();
-                using var pagesZip = pagesStream == null ? null : new ZipArchive(pagesStream);
+                ZipArchive? pagesZip = null;
 
-                Mapper.MapEditModelToEntity(comicChapterModel, ref chapter);
+                if (chapterModel is ComicChapterModel comicChapterModel)
+                {
+                    var pagesStream = comicChapterModel.Pages?.OpenReadStream();
+                    pagesZip = pagesStream == null ? null : new ZipArchive(pagesStream);
+                }
+                
+                Mapper.MapEditModelToEntity(chapterModel, ref chapter);
 
                 if (await _chapterArchiver.EditChapter(chapter, pagesZip))
                 {
@@ -173,7 +185,7 @@ namespace WeebReader.Web.Portal.Controllers
                     return new JsonResult(new
                     {
                         success = true,
-                        destination = Url.Action("Index", new {titleId = comicChapterModel.TitleId})
+                        destination = Url.Action("Index", new {titleId = chapterModel.TitleId})
                     });
                 }
 

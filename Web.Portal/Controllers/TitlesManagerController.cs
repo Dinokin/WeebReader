@@ -46,14 +46,14 @@ namespace WeebReader.Web.Portal.Controllers
         public IActionResult Add(string type)
         {
             ViewData["Title"] = Labels.AddTitle;
-            ViewData["ActionRoute"] = Url.Action("Add");
+            ViewData["ActionRoute"] = Url.Action("Add", new {type});
             ViewData["Method"] = "POST";
 
             return GetEditor(type);
         }
         
         [HttpPost("{action}")]
-        public async Task<IActionResult> Add(TitleModel titleModel)
+        public async Task<IActionResult> Add(TitleModel titleModel, string type)
         {
             if (ModelState.IsValid)
             {
@@ -65,8 +65,8 @@ namespace WeebReader.Web.Portal.Controllers
                     });
 
                 await using var coverStream = titleModel.Cover?.OpenReadStream();
-
-                if (await _titleArchiver.AddTitle(Mapper.MapToEntity(titleModel, string.Empty), titleModel.Tags?.Split(","), coverStream))
+                
+                if (await _titleArchiver.AddTitle(Mapper.MapToEntity(titleModel, type), titleModel.Tags?.Split(","), coverStream))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleAddedSuccessfully};
                     
@@ -107,28 +107,28 @@ namespace WeebReader.Web.Portal.Controllers
         
         [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpPatch("{titleId:guid}")]
-        public async Task<IActionResult> Edit(ComicModel comicModel)
+        public async Task<IActionResult> Edit(TitleModel titleModel)
         {
             if (ModelState.IsValid)
             {
-                if (comicModel.TitleId == null || await _titleManager.GetById(comicModel.TitleId.Value) is var title && title == null)
-                {
-                    TempData["ErrorMessage"] = new[] {ValidationMessages.TitleNotFound};
+                if (titleModel.TitleId == null || await _titleManager.GetById(titleModel.TitleId.Value) is var title && title == null)
+                    return new JsonResult(new
+                    {
+                        success = false,
+                        messages = new[] {ValidationMessages.TitleNotFound} 
+                    });
                 
-                    return RedirectToAction("Index");
-                }
-                
-                if ((await _titleManager.GetAll()).Any(entity => entity.Name == comicModel.Name && title != entity))
+                if ((await _titleManager.GetAll()).Any(entity => entity.Name == titleModel.Name && title != entity))
                     return new JsonResult(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.TitleNameAlreadyExist} 
                     });
                 
-                Mapper.MapEditModelToEntity(comicModel, ref title);
-                await using var coverStream = comicModel.Cover?.OpenReadStream();
+                Mapper.MapEditModelToEntity(titleModel, ref title);
+                await using var coverStream = titleModel.Cover?.OpenReadStream();
 
-                if (await _titleArchiver.EditTitle(title, comicModel.Tags?.Split(","), coverStream))
+                if (await _titleArchiver.EditTitle(title, titleModel.Tags?.Split(","), coverStream))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleUpdatedSuccessfully};
                     

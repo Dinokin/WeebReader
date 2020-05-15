@@ -318,6 +318,7 @@ namespace WeebReader.Web.Portal.Controllers
         private IActionResult GetDownload(Title title, Chapter chapter) => chapter switch
         {
             ComicChapter comicChapter => File(_chapterArchiver.GetChapterDownload(comicChapter)?.OpenRead(), "application/zip", $"{GetDownloadName(title, comicChapter)}.zip"),
+            NovelChapter novelChapter => File(_chapterArchiver.GetChapterDownload(novelChapter)?.OpenRead(), "application/pdf", $"{GetDownloadName(title, novelChapter)}.pdf"),
             _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
         };
         

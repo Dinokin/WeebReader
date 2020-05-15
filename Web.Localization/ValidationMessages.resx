@@ -207,4 +207,10 @@
     <data name="UsernameBetweenMinAndMaxSize">
         <value>An Username must contain between 3 and 50 characters.</value>
     </data>
+    <data name="ChapterMustHaveContent">
+        <value>A chapter must have content.</value>
+    </data>
+    <data name="TitleMustHaveType">
+        <value>A title must have a type.</value>
+    </data>
 </root>

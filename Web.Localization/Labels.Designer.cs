@@ -709,6 +709,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Novel.
+        /// </summary>
+        public static string Novel {
+            get {
+                return ResourceManager.GetString("Novel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number.
         /// </summary>
         public static string Number {

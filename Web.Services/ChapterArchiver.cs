@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using iText.Html2pdf;
 using Microsoft.AspNetCore.Hosting;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
@@ -29,9 +30,8 @@ namespace WeebReader.Web.Services
         {
             if (!await _chapterManager.Add(chapter))
                 return false;
-
-            if (pages != null)
-                await AddPages(chapter, pages);
+            
+            await ProcessContent(chapter, pages);
 
             return true;
         }
@@ -39,10 +39,9 @@ namespace WeebReader.Web.Services
         public async Task<bool> EditChapter(TChapter chapter, ZipArchive? pages)
         {
             if (!await _chapterManager.Edit(chapter))
-                return false;
-
-            if (pages != null)
-                await AddPages(chapter, pages, true);
+                return false; 
+            
+            await ProcessContent(chapter, pages, pages != null);
 
             return true;
         }
@@ -59,11 +58,12 @@ namespace WeebReader.Web.Services
 
         public FileInfo? GetChapterDownload(Chapter chapter) => chapter switch
         {
-            ComicChapter comicChapter => new FileInfo($"{Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id)}/package.zip"),
-            _ => null
+            ComicChapter _ => new FileInfo($"{Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id)}/package.zip"),
+            NovelChapter _ => new FileInfo($"{Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id)}/chapter.pdf"),
+            _ => throw new ArgumentException()
         };
 
-        private async Task<IEnumerable<FileInfo>> AddPages(TChapter chapter, ZipArchive pages, bool deleteOld = false)
+        private async Task ProcessContent(TChapter chapter, ZipArchive? pages, bool deleteOld = false)
         {
             if (deleteOld)
             {
@@ -72,16 +72,22 @@ namespace WeebReader.Web.Services
                 Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id).Delete(true);
             }
 
-            return chapter switch
+            switch (chapter)
             {
-                ComicChapter comic => await AddComicPages(comic, pages),
-                _ => new FileInfo[0]
-            };
+                case ComicChapter comicChapter when pages != null:
+                    await AddComicPages(comicChapter, pages);
+                    return;
+                case NovelChapter novelChapter:
+                    await BuildPdf(novelChapter);
+                    return;
+                default:
+                    return;
+            }
         }
 
-        private async Task<IEnumerable<FileInfo>> AddComicPages(ComicChapter chapter, ZipArchive pages)
+        private async Task AddComicPages(ComicChapter comicChapter, ZipArchive pages)
         {
-            var location = Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id);
+            var location = Utilities.GetChapterFolder(_environment, comicChapter.TitleId, comicChapter.Id);
             var entries = pages.Entries.ToArray().Where(entry => ValidateExtension(entry.Name)).OrderBy(entry => entry.Name).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
@@ -93,7 +99,7 @@ namespace WeebReader.Web.Services
             if (zipFile.Exists)
                 zipFile.Delete();
 
-            comicPages.AddRange(entries.Select((entry, i) => new ComicPage(IsAnimated(entry.Name), chapter.Id, Convert.ToUInt16(i))));
+            comicPages.AddRange(entries.Select((entry, i) => new ComicPage(IsAnimated(entry.Name), comicChapter.Id, Convert.ToUInt16(i))));
             await _pageManager.AddRange(comicPages);
 
             files.AddRange(comicPages.Select(page => page.Animated ? 
@@ -104,8 +110,21 @@ namespace WeebReader.Web.Services
 
             for (var i = 0; i < files.Count; i++)
                 zipArchive.CreateEntryFromFile($"{files[i]}", $"{i}{files[i].Extension}");
+        }
+
+        private Task BuildPdf(NovelChapter novelChapter)
+        {
+            var location = Utilities.GetChapterFolder(_environment, novelChapter.TitleId, novelChapter.Id);
+            var pdfFile = new FileInfo($"{location}/chapter.pdf");
             
-            return files;
+            if (!location.Exists)
+                location.Create();
+
+            if (pdfFile.Exists)
+                pdfFile.Delete();
+
+            HtmlConverter.ConvertToPdf(novelChapter.Content, pdfFile.Create());
+            return Task.CompletedTask;
         }
 
         private static bool ValidateExtension(string fileName) => Path.GetExtension(fileName).ToLower() == ".png" || Path.GetExtension(fileName).ToLower() == ".jpg" || Path.GetExtension(fileName).ToLower() == ".jpeg" || Path.GetExtension(fileName).ToLower() == ".gif";
