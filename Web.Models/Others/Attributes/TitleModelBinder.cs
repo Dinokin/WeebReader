@@ -10,7 +10,7 @@ namespace WeebReader.Web.Models.Others.Attributes
     {
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
-            var model = bindingContext.ValueProvider.GetValue(nameof(ComicModel.LongStrip)) != null ? new ComicModel() : new TitleModel();
+            var model = bindingContext.HttpContext.Request.Form.ContainsKey(nameof(ComicModel.LongStrip)) ? new ComicModel() : new TitleModel();
 
             foreach (var (key, value) in bindingContext.HttpContext.Request.Form)
             {

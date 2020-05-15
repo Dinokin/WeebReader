@@ -11,8 +11,8 @@ namespace WeebReader.Web.Models.Others.Attributes
         public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             ChapterModel model;
-
-            if (bindingContext.ValueProvider.GetValue(nameof(ComicChapterModel.Pages)) != null)
+            
+            if (bindingContext.HttpContext.Request.Form.Files.GetFile(nameof(ComicChapterModel.Pages)) != null)
             {
                 var comicChapterModel = new ComicChapterModel
                 {
@@ -20,10 +20,10 @@ namespace WeebReader.Web.Models.Others.Attributes
                 };
                 model = comicChapterModel;
             }
-            else if (bindingContext.ValueProvider.GetValue(nameof(NovelChapterModel.Content)) != null)
+            else if (bindingContext.HttpContext.Request.Form.ContainsKey(nameof(NovelChapterModel.Content)))
                 model = new NovelChapterModel();
             else
-                throw new ArgumentException();
+                model = new ChapterModel();
 
             model.TitleId = Guid.Parse(bindingContext.ValueProvider.GetValue(nameof(ChapterModel.TitleId)).FirstValue);
             
