@@ -97,7 +97,7 @@
 </div>
 <div class="ui center aligned container">
     <footer>
-        <div class="ui large @(lightMode ? "inverted" : null) label">
+        <div class="ui large @(ViewData["BodyClass"] == null ? null : lightMode ? "inverted" : null) label">
             © @DateTime.Now.Year @siteName
             @if (discordEnabled)
             {
