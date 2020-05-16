@@ -107,86 +107,6 @@ namespace WeebReader.Web.Portal.Controllers
 
             return await GetRssFeed(feed);
         }
-
-        [HttpGet("{action}/{page:int?}")]
-        public async Task<IActionResult> Blog(ushort page = 1)
-        {
-            if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
-                return RedirectToAction("Index");
-            
-            var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-            var posts = await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User));
-
-            ViewData["Page"] = page;
-            ViewData["TotalPages"] = totalPages;
-
-            return View(posts);
-        }
-
-        [HttpGet("{action}")]
-        public async Task<IActionResult> About()
-        {
-            var aboutEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
-            var kofiEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
-            var patreonEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
-
-            if (aboutEnabled || kofiEnabled || patreonEnabled)
-                return View();
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet("{action}")]
-        public async Task<IActionResult> Contact()
-        {
-            var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
-            var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
-            var discordEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
-
-            if (emailSenderEnabled && emailContactEnabled || discordEnabled)
-                return View();
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost("{action}")]
-        public async Task<IActionResult> Contact(ContactModel contactModel)
-        {
-            if (ModelState.IsValid)
-            {
-                var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
-                var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
-                
-                if (emailSenderEnabled && emailContactEnabled)
-                {
-                    var reCaptchaEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
-
-                    if (!reCaptchaEnabled || await _reCaptchaValidator.Validate(contactModel.ReCaptchaResponse!, null))
-                    {
-                        if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
-                        {
-                            TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
-
-                            return new JsonResult(new
-                            {
-                                success = true
-                            });
-                        }
-                    }
-                    else
-                        ModelState.AddModelError("CouldNotVerifyRobot", OtherMessages.CouldntVerifyRobot);
-                } 
-                
-                ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
-            }
-            
-            return new JsonResult(new
-            {
-                success = false,
-                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
-            });
-        }
         
         [HttpGet("{action}")]
         public async Task<IActionResult> Titles() => View((await _titlesManager.GetAll(_signInManager.IsSignedIn(User))).OrderBy(title => title.Status).ThenBy(title => title.Name));
@@ -270,6 +190,102 @@ namespace WeebReader.Web.Portal.Controllers
             };
 
             return await GetRssFeed(feed);
+        }
+
+        [HttpGet("{action}")]
+        public async Task<IActionResult> Blog()
+        {
+            if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
+                return RedirectToAction("Index");
+
+            ViewData["Page"] = 1;
+            ViewData["TotalPages"] = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
+
+            return View(await _postsManager.GetRange(0, Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
+        }
+
+        [HttpGet("{action}/JSON/{page:int}")]
+        public async Task<IActionResult> Blog(ushort page)
+        {
+            var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
+            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+
+            return new JsonResult(new
+            {
+                success = true,
+                page,
+                totalPages,
+                posts = (await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User))).Select(post => new
+                {
+                    title = post.Title,
+                    content = post.Content,
+                    releaseDate = post.ReleaseDate
+                })
+            });
+        }
+
+        [HttpGet("{action}")]
+        public async Task<IActionResult> About()
+        {
+            var aboutEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
+            var kofiEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
+            var patreonEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
+
+            if (aboutEnabled || kofiEnabled || patreonEnabled)
+                return View();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet("{action}")]
+        public async Task<IActionResult> Contact()
+        {
+            var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
+            var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
+            var discordEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
+
+            if (emailSenderEnabled && emailContactEnabled || discordEnabled)
+                return View();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("{action}")]
+        public async Task<IActionResult> Contact(ContactModel contactModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
+                var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
+                
+                if (emailSenderEnabled && emailContactEnabled)
+                {
+                    var reCaptchaEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
+
+                    if (!reCaptchaEnabled || await _reCaptchaValidator.Validate(contactModel.ReCaptchaResponse!, null))
+                    {
+                        if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
+                        {
+                            TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
+
+                            return new JsonResult(new
+                            {
+                                success = true
+                            });
+                        }
+                    }
+                    else
+                        ModelState.AddModelError("CouldNotVerifyRobot", OtherMessages.CouldntVerifyRobot);
+                } 
+                
+                ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
+            }
+            
+            return new JsonResult(new
+            {
+                success = false,
+                messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
+            });
         }
 
         [HttpGet("Chapters/{chapterId:Guid}/Read")]
