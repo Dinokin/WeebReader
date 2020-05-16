@@ -97,16 +97,16 @@
 </div>
 <div class="ui center aligned container">
     <footer>
-        <div class="ui large label">
+        <div class="ui large @(lightMode ? "inverted" : null) label">
             © @DateTime.Now.Year @siteName
             @if (discordEnabled)
             {
                 <a href="@discordLink">
-                    <i class="discord big grey icon"></i>
+                    <i class="discord big icon"></i>
                 </a>
             }
             <a href="@Url.Action("IndexRss", "Home")">
-                <i class="rss big grey fitted icon"></i>
+                <i class="rss big fitted icon"></i>
             </a>
         </div>
     </footer>
