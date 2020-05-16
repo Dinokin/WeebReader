@@ -213,4 +213,7 @@
     <data name="TitleMustHaveType">
         <value>A title must have a type.</value>
     </data>
+    <data name="PreviousChaptersLinkValidUrl">
+        <value>The address to the previous chapters must be a valid URL.</value>
+    </data>
 </root>

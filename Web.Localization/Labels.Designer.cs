@@ -826,6 +826,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Previous Chapters.
+        /// </summary>
+        public static string PreviousChapters {
+            get {
+                return ResourceManager.GetString("PreviousChapters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous Chapters Link.
+        /// </summary>
+        public static string PreviousChaptersLink {
+            get {
+                return ResourceManager.GetString("PreviousChaptersLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read.
         /// </summary>
         public static string Read {

@@ -19,58 +19,69 @@
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.title.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.title.TitleId})"/>
     <script>
     $(() => {
-        let chapterContainer = $("#chapters");
-        let loader = $("#loader");
-        let page = @ViewData["Page"];
-        let totalPages = @ViewData["TotalPages"];
-        
         $("#titles,#titles-mobile").addClass("active");
         $(".tabular.menu .item").tab();
-        
-        chapterContainer.visibility({
-        once: false,
-        observeChanges: true,
-        onBottomVisible: () => loadData()
-        });
-        
-        function loadData() {
-            if (page < totalPages) {
-                page++;
-                
-                chapterContainer.api({
-                url: "@Url.Action("Titles", new {titleId = Model.title.TitleId, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
-                method: "GET",
-                on: "now",
-                onRequest: () => {
-                    loader.removeClass("disabled");
-                    loader.addClass("active");
-                },
-                onComplete: () => {
-                    loader.removeClass("active");
-                    loader.addClass("disabled");
-                },
-                onSuccess: (response) => {
-                    generateItems(response.chapters);
-                }
-                });
-            }
-        }
-        
-        function generateItems(chapterList) {
-            chapterList.forEach(currentValue => {
-                chapterContainer.append(
-                    "<div class=\"item\"><div class=\"content\"><p class=\"header add-ellipsis\">" +
-                    `<a href="${currentValue.downloadAddress}"><i class="download icon"></i></a>` +
-                    `<a href="${currentValue.readAddress}">` +
-                    `${currentValue.volume != null && currentValue.volume > 0 ? `@Labels.Vol${currentValue.volume} ` : ""}@Labels.Chapter ${currentValue.number}${!isNullOrWhiteSpace(currentValue.name) ? `: ${currentValue.name}` : ""}` +
-                    "</a></p></div>" +
-                    "<div class=\"description\">" +
-                    `<p><i class="calendar alternate outline icon"></i>${getDate(new Date(currentValue.releaseDate))}</p></div></div>`
-                    );
-            });
-        }
     });
     </script>
+    @if (Model.chapters.Any())
+    {
+        <script>
+        $(() => {
+            let chapterContainer = $("#chapters");
+            let loader = $("#loader");
+            let page = @ViewData["Page"];
+            let totalPages = @ViewData["TotalPages"];
+            
+            chapterContainer.visibility({
+            once: false,
+            observeChanges: true,
+            onBottomVisible: () => loadData()
+            });
+            
+            function loadData() {
+                if (page < totalPages) {
+                    page++;
+                    
+                    chapterContainer.api({
+                    url: "@Url.Action("Titles", new {titleId = Model.title.TitleId, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
+                    method: "GET",
+                    on: "now",
+                    onRequest: () => {
+                        loader.removeClass("disabled");
+                        loader.addClass("active");
+                    },
+                    onComplete: () => {
+                        loader.removeClass("active");
+                        loader.addClass("disabled");
+                    },
+                    onSuccess: (response) => {
+                        generateItems(response.chapters);
+                    }
+                    });
+                }
+                else
+                {
+                    $("#previous-chapters").removeClass("deactivated");
+                }
+            }
+            
+            function generateItems(chapterList) {
+                chapterList.forEach(currentValue => {
+                    chapterContainer.append(
+                        "<div class=\"item\"><div class=\"content\"><p class=\"header add-ellipsis\">" +
+                        `<a href="${currentValue.downloadAddress}"><i class="download icon"></i></a>` +
+                        `<a href="${currentValue.readAddress}">` +
+                        `${currentValue.volume != null && currentValue.volume > 0 ? `@Labels.Vol${currentValue.volume} ` : ""}@Labels.Chapter ${currentValue.number}${!isNullOrWhiteSpace(currentValue.name) ? `: ${currentValue.name}` : ""}` +
+                        "</a></p></div>" +
+                        "<div class=\"description\">" +
+                        `<p><i class="calendar alternate outline icon"></i>${getDate(new Date(currentValue.releaseDate))}</p>` +
+                        "</div></div>"
+                        );
+                });
+            }
+        });
+        </script>
+    }
 }
 
 <div class="ui container">
@@ -146,6 +157,10 @@
                     }
                 </div>
                 <div id="loader" class="ui centered large elastic inline loader"></div>
+                @if (!string.IsNullOrWhiteSpace(Model.title.PreviousChapterLink))
+                {
+                    <a id="previous-chapters" class="ui fluid grey button deactivated" href="@Model.title.PreviousChapterLink">@Labels.PreviousChapters <i class="external alternate icon"></i></a>
+                }
             }
             else
             {

@@ -74,6 +74,20 @@
                         prompt: "@ValidationMessages.TitleArtistMaxLength"
                     }
                 ]
+            },
+            previousChaptersLink: {
+                identifier: "previousChaptersLink",
+                optional: true,
+                rules: [
+                    {
+                        type: "maxLength[500]",
+                        prompt: "@ValidationMessages.MaxPreviousChaptersLinkSize"
+                    },
+                    {
+                        type: "url",
+                        prompt: "@ValidationMessages.PreviousChaptersLinkValidUrl"
+                    }
+                ]
             }
         }
         }).api({
@@ -138,6 +152,10 @@
                 <input type="text" name="artist" placeholder="@Labels.Artist" asp-for="Artist"/>
             </div>
         </div>
+    </div>
+    <div class="field">
+        <label>@Labels.PreviousChaptersLink</label>
+        <input type="text" name="previousChaptersLink" placeholder="@Labels.PreviousChaptersLink" asp-for="PreviousChapterLink"/>
     </div>
     <div class="field">
         <div class="two fields">

@@ -394,6 +394,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The address to the previous chapters must be a valid URL..
+        /// </summary>
+        public static string PreviousChaptersLinkValidUrl {
+            get {
+                return ResourceManager.GetString("PreviousChaptersLinkValidUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ReCaptcha requires a client key..
         /// </summary>
         public static string ReCaptchaClientKeyRequired {

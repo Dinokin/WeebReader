@@ -414,4 +414,10 @@
     <data name="Novel">
         <value>Novel</value>
     </data>
+    <data name="PreviousChapters">
+        <value>Previous Chapters</value>
+    </data>
+    <data name="PreviousChaptersLink">
+        <value>Previous Chapters Link</value>
+    </data>
 </root>

@@ -41,6 +41,7 @@ namespace WeebReader.Web.Models.Controllers.TitlesManager
         [AllowedFormats(".png,.jpg,.jpeg", ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "InvalidCoverFormat")]
         public IFormFile? Cover { get; set; }
         
+        [Url(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PreviousChaptersLinkValidUrl")]
         [StringLength(500, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MaxPreviousChaptersLinkSize")]
         public string? PreviousChapterLink { get; set; }
 
