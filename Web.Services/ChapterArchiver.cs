@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using HtmlAgilityPack;
 using iText.Html2pdf;
 using Microsoft.AspNetCore.Hosting;
 using WeebReader.Data.Entities;
@@ -75,20 +77,20 @@ namespace WeebReader.Web.Services
             switch (chapter)
             {
                 case ComicChapter comicChapter when pages != null:
-                    await AddComicPages(comicChapter, pages);
+                    await ProcessComicChapter(comicChapter, pages);
                     return;
                 case NovelChapter novelChapter:
-                    await BuildPdf(novelChapter);
+                    await ProcessNovelChapter(novelChapter);
                     return;
                 default:
                     return;
             }
         }
 
-        private async Task AddComicPages(ComicChapter comicChapter, ZipArchive pages)
+        private async Task ProcessComicChapter(ComicChapter comicChapter, ZipArchive pages)
         {
             var location = Utilities.GetChapterFolder(_environment, comicChapter.TitleId, comicChapter.Id);
-            var entries = pages.Entries.ToArray().Where(entry => ValidateExtension(entry.Name)).OrderBy(entry => entry.Name).ToArray();
+            var entries = pages.Entries.ToArray().Where(entry => ValidateExtension(entry.Name, false)).OrderBy(entry => entry.Name).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
             var zipFile = new FileInfo($"{location}/package.zip");
@@ -99,7 +101,7 @@ namespace WeebReader.Web.Services
             if (zipFile.Exists)
                 zipFile.Delete();
 
-            comicPages.AddRange(entries.Select((entry, i) => new ComicPage(IsAnimated(entry.Name), comicChapter.Id, Convert.ToUInt16(i))));
+            comicPages.AddRange(entries.Select((entry, i) => new ComicPage(IsAnimated(entry.Name, false), comicChapter.Id, Convert.ToUInt16(i))));
             await _pageManager.AddRange(comicPages);
 
             files.AddRange(comicPages.Select(page => page.Animated ? 
@@ -112,23 +114,61 @@ namespace WeebReader.Web.Services
                 zipArchive.CreateEntryFromFile($"{files[i]}", $"{i}{files[i].Extension}");
         }
 
-        private Task BuildPdf(NovelChapter novelChapter)
+        private async Task ProcessNovelChapter(NovelChapter novelChapter)
         {
             var location = Utilities.GetChapterFolder(_environment, novelChapter.TitleId, novelChapter.Id);
             var pdfFile = new FileInfo($"{location}/chapter.pdf");
-            
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(novelChapter.Content);
+            var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img").ToArray();
+
+            foreach (var node in imageNodes)
+            {
+                var src = node.GetAttributeValue("src", string.Empty);
+
+                if (ValidateExtension(src, true))
+                    node.Remove();
+            }
+
             if (!location.Exists)
                 location.Create();
 
             if (pdfFile.Exists)
                 pdfFile.Delete();
 
-            HtmlConverter.ConvertToPdf(novelChapter.Content, pdfFile.Create());
-            return Task.CompletedTask;
+            HtmlConverter.ConvertToPdf(htmlDocument.DocumentNode.OuterHtml, pdfFile.Create());
+            
+            imageNodes = htmlDocument.DocumentNode.SelectNodes("//img").ToArray();
+            var base64Images = imageNodes.Select(node => node.GetAttributeValue("src", string.Empty)).ToArray();
+            var pages = base64Images.Select(base64Image => new NovelPage(IsAnimated(base64Image, true), novelChapter.Id)).ToArray();
+
+            await _pageManager.AddRange(pages);
+
+            Parallel.For(0, base64Images.Length, i =>
+            {
+                var stream = new MemoryStream(Convert.FromBase64String(base64Images[i].Substring(base64Images[i].IndexOf(',') + 1)));
+
+                if (pages[i].Animated)
+                    Utilities.WriteAnimation(location, Utilities.ProcessAnimation(stream), pages[i].Id.ToString());
+                else
+                    Utilities.WriteImage(location, Utilities.ProcessImage(stream), pages[i].Id.ToString());
+            });
+
+            for (var i = 0; i < imageNodes.Length; i++)
+                imageNodes[i].SetAttributeValue("src", $"/content/{novelChapter.TitleId}/{novelChapter.Id}/{pages[i].Id}{(pages[i].Animated ? ".gif" : ".png")}");
+            
+            novelChapter.Content = htmlDocument.DocumentNode.OuterHtml;
+            await _chapterManager.Edit((TChapter) (Chapter) novelChapter);
         }
 
-        private static bool ValidateExtension(string fileName) => Path.GetExtension(fileName).ToLower() == ".png" || Path.GetExtension(fileName).ToLower() == ".jpg" || Path.GetExtension(fileName).ToLower() == ".jpeg" || Path.GetExtension(fileName).ToLower() == ".gif";
+        private static bool ValidateExtension(string content, bool base64)
+        {
+            if (base64)
+                return Regex.IsMatch(content, "^data:image/(png|jpg|jpeg|gif);base64,.*");
 
-        private static bool IsAnimated(string fileName) => Path.GetExtension(fileName).ToLower() == ".gif";
+            return Path.GetExtension(content).ToLower() == ".png" || Path.GetExtension(content).ToLower() == ".jpg" || Path.GetExtension(content).ToLower() == ".jpeg" || Path.GetExtension(content).ToLower() == ".gif";
+        }
+
+        private static bool IsAnimated(string content, bool base64) => base64 ? Regex.Match(content, "^data:image/(png|jpg|jpeg|gif);base64,.*").Value == "gif" : Path.GetExtension(content).ToLower() == ".gif";
     }
 }

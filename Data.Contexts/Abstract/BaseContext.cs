@@ -137,7 +137,11 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<Novel>(typeBuilder => typeBuilder.HasMany(novel => novel.Chapters).WithOne(chapter => chapter.Title!).HasForeignKey(chapter => chapter.TitleId));
 
-            builder.Entity<NovelChapter>(typeBuilder => typeBuilder.Property(chapter => chapter.Content).IsRequired());
+            builder.Entity<NovelChapter>(typeBuilder =>
+            {
+                typeBuilder.Property(chapter => chapter.Content).IsRequired();
+                typeBuilder.HasMany(chapter => chapter.Pages).WithOne(page => page.Chapter!).HasForeignKey(page => page.ChapterId);
+            });
 
             builder.Entity<Tag>(typeBuilder =>
             {
