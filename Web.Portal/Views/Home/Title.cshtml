@@ -157,9 +157,9 @@
                     }
                 </div>
                 <div id="loader" class="ui centered large elastic inline loader"></div>
-                @if (!string.IsNullOrWhiteSpace(Model.title.PreviousChapterLink))
+                @if (!string.IsNullOrWhiteSpace(Model.title.PreviousChaptersLink))
                 {
-                    <a id="previous-chapters" class="ui fluid grey button deactivated" href="@Model.title.PreviousChapterLink">@Labels.PreviousChapters <i class="external alternate icon"></i></a>
+                    <a id="previous-chapters" class="ui fluid grey button deactivated" href="@Model.title.PreviousChaptersLink">@Labels.PreviousChapters <i class="external alternate icon"></i></a>
                 }
             }
             else

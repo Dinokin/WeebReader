@@ -43,7 +43,7 @@ namespace WeebReader.Web.Models.Controllers.TitlesManager
         
         [Url(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PreviousChaptersLinkValidUrl")]
         [StringLength(500, ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "MaxPreviousChaptersLinkSize")]
-        public string? PreviousChapterLink { get; set; }
+        public string? PreviousChaptersLink { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
