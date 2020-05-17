@@ -126,7 +126,7 @@ namespace WeebReader.Web.Services
             {
                 var src = node.GetAttributeValue("src", string.Empty);
 
-                if (ValidateExtension(src, true))
+                if (!ValidateExtension(src, true))
                     node.Remove();
             }
 
