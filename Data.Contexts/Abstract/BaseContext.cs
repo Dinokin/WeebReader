@@ -118,6 +118,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(page => page.Animated).IsRequired();
                 typeBuilder.Property(page => page.ChapterId).IsRequired();
+                typeBuilder.HasDiscriminator<string>("PageType").HasValue<ComicPage>("Comic").HasValue<NovelPage>("Novel");
             });
 
             builder.Entity<Comic>(typeBuilder =>
