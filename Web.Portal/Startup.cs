@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Pomelo.EntityFrameworkCore.MySql.Storage;
 using WeebReader.Common.Utilities;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
@@ -32,7 +34,7 @@ namespace WeebReader.Web.Portal
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BaseContext, MariaDbContext>(builder => builder.UseMySql(_configuration.GetConnectionString("MariaDb")));
+            services.AddDbContext<BaseContext, MariaDbContext>(builder => builder.UseMySql(_configuration.GetConnectionString("MariaDb"), optionsBuilder => optionsBuilder.ServerVersion(ServerVersion.Default.Version, ServerType.MariaDb)));
 
             services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
                 {
