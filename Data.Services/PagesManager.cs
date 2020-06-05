@@ -11,5 +11,12 @@ namespace WeebReader.Data.Services
         public PagesManager(BaseContext context) : base(context) { }
         
         public Task<IEnumerable<TPage>> GetAll(Chapter chapter) => Task.FromResult<IEnumerable<TPage>>(DbSet.Where(page => page.ChapterId == chapter.Id));
+
+        public async Task<bool> DeleteRange(Chapter chapter)
+        {
+            DbSet.RemoveRange(DbSet.Where(page => page.ChapterId == chapter.Id));
+            
+            return await Context.SaveChangesAsync() > 0;
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace WeebReader.Web.Services
                 return false;
             }
             
-            await ProcessContent(chapter, pages, pages != null);
+            await ProcessContent(chapter, pages);
             await transaction.CommitAsync();
 
             return true;
@@ -82,19 +82,22 @@ namespace WeebReader.Web.Services
             _ => throw new ArgumentException()
         };
 
-        private async Task ProcessContent(TChapter chapter, ZipArchive? pages, bool deleteOld = false)
+        private async Task ProcessContent(TChapter chapter, ZipArchive? pages)
         {
-            if (deleteOld)
-            {
-                await _pageManager.DeleteRange(await _pageManager.GetAll(chapter));
-
-                Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id).Delete(true);
-            }
-
             switch (chapter)
             {
                 case ComicChapter comicChapter when pages != null:
+                    var chapterFolder = Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id);
+                    var oldFiles = new List<FileInfo>();
+
+                    if (chapterFolder.Exists)
+                    {
+                        oldFiles.AddRange(chapterFolder.GetFiles().Where(file => HasValidExtension(file.Name, false)));
+                        await _pageManager.DeleteRange(chapter);
+                    }
+
                     await ProcessComicChapter(comicChapter, pages);
+                    Parallel.ForEach(oldFiles, file => file.Delete());
                     return;
                 case NovelChapter novelChapter:
                     await ProcessNovelChapter(novelChapter);
@@ -107,7 +110,7 @@ namespace WeebReader.Web.Services
         private async Task ProcessComicChapter(ComicChapter comicChapter, ZipArchive pages)
         {
             var location = Utilities.GetChapterFolder(_environment, comicChapter.TitleId, comicChapter.Id);
-            var entries = pages.Entries.Where(entry => ValidateExtension(entry.Name, false)).OrderBy(entry => entry.Name).ToArray();
+            var entries = pages.Entries.Where(entry => HasValidExtension(entry.Name, false)).OrderBy(entry => entry.Name).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
             var zipFile = new FileInfo($"{location}/package.zip");
@@ -143,7 +146,7 @@ namespace WeebReader.Web.Services
             {
                 var src = node.GetAttributeValue("src", string.Empty);
 
-                if (!ValidateExtension(src, true))
+                if (!HasValidExtension(src, true))
                     node.Remove();
             }
 
@@ -178,7 +181,7 @@ namespace WeebReader.Web.Services
             await _chapterManager.Edit((TChapter) (Chapter) novelChapter);
         }
 
-        private static bool ValidateExtension(string content, bool base64)
+        private static bool HasValidExtension(string content, bool base64)
         {
             if (base64)
                 return Regex.IsMatch(content, "^data:image/(png|jpg|jpeg|gif);base64,.*");
