@@ -18,9 +18,9 @@ namespace WeebReader.Web.Services
             {
                 var message = new MimeMessage();
                 
-                message.From.Add(new MailboxAddress(await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail)));
-                message.ReplyTo.Add(new MailboxAddress(replyTo));
-                message.To.Add(new MailboxAddress(destination));
+                message.From.Add(MailboxAddress.Parse(await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail)));
+                message.ReplyTo.Add(MailboxAddress.Parse(replyTo));
+                message.To.Add(MailboxAddress.Parse(destination));
                 message.Subject = subject;
                 message.Body = new BodyBuilder
                 {
