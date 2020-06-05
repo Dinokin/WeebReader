@@ -11,10 +11,6 @@ namespace WeebReader.Data.Services
     public class ChapterManager<TChapter> : GenericManager<TChapter> where TChapter : Chapter
     {
         public ChapterManager(BaseContext context) : base(context) { }
-        
-        public async Task<long> Count(bool includeHidden) => includeHidden
-            ? await base.Count()
-            : await DbSet.LongCountAsync(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now);
 
         public async Task<long> Count(Title title, bool includeHidden = true) => includeHidden
             ? await DbSet.LongCountAsync(chapter => chapter.TitleId == title.Id)
