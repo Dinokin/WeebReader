@@ -196,6 +196,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Google Analytics tracking code is required..
+        /// </summary>
+        public static string GoogleAnalyticsCodeRequired {
+            get {
+                return ResourceManager.GetString("GoogleAnalyticsCodeRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The format used for the cover page is not supported. Please use PNG or JPG/JPEG..
         /// </summary>
         public static string InvalidCoverFormat {
@@ -210,6 +219,15 @@ namespace WeebReader.Web.Localization {
         public static string InvalidCredentials {
             get {
                 return ResourceManager.GetString("InvalidCredentials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Google Analytics code inserted..
+        /// </summary>
+        public static string InvalidGoogleAnalyticsCode {
+            get {
+                return ResourceManager.GetString("InvalidGoogleAnalyticsCode", resourceCulture);
             }
         }
         

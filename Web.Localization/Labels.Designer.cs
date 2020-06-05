@@ -520,6 +520,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Google Analytics.
+        /// </summary>
+        public static string GoogleAnalytics {
+            get {
+                return ResourceManager.GetString("GoogleAnalytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Analytics Code.
+        /// </summary>
+        public static string GoogleAnalyticsCode {
+            get {
+                return ResourceManager.GetString("GoogleAnalyticsCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hiatus.
         /// </summary>
         public static string Hiatus {

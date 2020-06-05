@@ -32,7 +32,9 @@ namespace WeebReader.Data.Entities
             PageAboutEnabled = 23,
             PageDisqusEnabled = 24,
             PageDisqusShortname = 25,
-            PageBlogEnabled = 26
+            PageBlogEnabled = 26,
+            SiteGoogleAnalyticsEnabled = 27,
+            SiteGoogleAnalyticsCode = 28
         }
         
         public Types Type { get; }

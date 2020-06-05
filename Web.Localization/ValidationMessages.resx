@@ -216,4 +216,10 @@
     <data name="PreviousChaptersLinkValidUrl">
         <value>The address to the previous chapters must be a valid URL.</value>
     </data>
+    <data name="GoogleAnalyticsCodeRequired">
+        <value>A Google Analytics tracking code is required.</value>
+    </data>
+    <data name="InvalidGoogleAnalyticsCode">
+        <value>Invalid Google Analytics code inserted.</value>
+    </data>
 </root>

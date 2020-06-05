@@ -420,4 +420,10 @@
     <data name="PreviousChaptersLink">
         <value>Previous Chapters Link</value>
     </data>
+    <data name="GoogleAnalytics">
+        <value>Google Analytics</value>
+    </data>
+    <data name="GoogleAnalyticsCode">
+        <value>Google Analytics Code</value>
+    </data>
 </root>
