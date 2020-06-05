@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using iText.Html2pdf;
 using Microsoft.AspNetCore.Hosting;
+using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
@@ -18,32 +19,48 @@ namespace WeebReader.Web.Services
     public class ChapterArchiver<TChapter> where TChapter : Chapter
     {
         private readonly IWebHostEnvironment _environment;
+        private readonly BaseContext _context;
         private readonly ChapterManager<TChapter> _chapterManager;
         private readonly PagesManager<Page> _pageManager;
 
-        public ChapterArchiver(IWebHostEnvironment environment, ChapterManager<TChapter> chapterManager, PagesManager<Page> pageManager)
+        public ChapterArchiver(IWebHostEnvironment environment, BaseContext context, ChapterManager<TChapter> chapterManager, PagesManager<Page> pageManager)
         {
             _environment = environment;
+            _context = context;
             _chapterManager = chapterManager;
             _pageManager = pageManager;
         }
 
         public async Task<bool> AddChapter(TChapter chapter, ZipArchive? pages)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            
             if (!await _chapterManager.Add(chapter))
+            {
+                await transaction.RollbackAsync();
+                
                 return false;
+            }
             
             await ProcessContent(chapter, pages);
-
+            await transaction.CommitAsync();
+            
             return true;
         }
 
         public async Task<bool> EditChapter(TChapter chapter, ZipArchive? pages)
         {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
             if (!await _chapterManager.Edit(chapter))
-                return false; 
+            {
+                await transaction.RollbackAsync();
+
+                return false;
+            }
             
             await ProcessContent(chapter, pages, pages != null);
+            await transaction.CommitAsync();
 
             return true;
         }
