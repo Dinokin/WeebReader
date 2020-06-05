@@ -90,7 +90,7 @@ namespace WeebReader.Web.Services
         private async Task ProcessComicChapter(ComicChapter comicChapter, ZipArchive pages)
         {
             var location = Utilities.GetChapterFolder(_environment, comicChapter.TitleId, comicChapter.Id);
-            var entries = pages.Entries.ToArray().Where(entry => ValidateExtension(entry.Name, false)).OrderBy(entry => entry.Name).ToArray();
+            var entries = pages.Entries.Where(entry => ValidateExtension(entry.Name, false)).OrderBy(entry => entry.Name).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
             var zipFile = new FileInfo($"{location}/package.zip");
@@ -111,7 +111,7 @@ namespace WeebReader.Web.Services
             using var zipArchive = new ZipArchive(zipFile.Create(), ZipArchiveMode.Create);
 
             for (var i = 0; i < files.Count; i++)
-                zipArchive.CreateEntryFromFile($"{files[i]}", $"{i}{files[i].Extension}");
+                zipArchive.CreateEntryFromFile($"{files[i]}", $"{i}{files[i].Extension}", CompressionLevel.NoCompression);
         }
 
         private async Task ProcessNovelChapter(NovelChapter novelChapter)
