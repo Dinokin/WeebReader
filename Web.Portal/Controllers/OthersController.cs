@@ -67,6 +67,7 @@ namespace WeebReader.Web.Portal.Controllers
                     }
                 }
 
+                await transaction.RollbackAsync();
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
