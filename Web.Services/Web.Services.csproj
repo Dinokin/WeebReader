@@ -21,4 +21,10 @@
         <PackageReference Include="MailKit" Version="2.7.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ReCaptchaValidator.PrivateParts.cs">
+        <DependentUpon>ReCaptchaValidator.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>
