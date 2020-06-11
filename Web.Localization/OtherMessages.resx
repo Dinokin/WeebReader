@@ -153,4 +153,7 @@
     <data name="RequestFailed">
         <value>Something wrong happened. Please try again or contact an administrator.</value>
     </data>
+    <data name="NSFWMessage">
+        <value>The page you are about to see has adult content.&lt;br&gt;It is not suitable for children or people under 18.&lt;br&gt; Continue at your own discretion.</value>
+    </data>
 </root>

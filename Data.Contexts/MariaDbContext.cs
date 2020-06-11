@@ -46,6 +46,7 @@ namespace WeebReader.Data.Contexts
             {
                 typeBuilder.Property(title => title.Synopsis).HasColumnType("TEXT");
                 typeBuilder.Property(title => title.Status).HasColumnType("TINYINT UNSIGNED");
+                typeBuilder.Property(title => title.Nsfw).HasColumnType("BOOLEAN");
                 typeBuilder.Property(title => title.Visible).HasColumnType("BOOLEAN");
             });
 

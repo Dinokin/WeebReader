@@ -33,6 +33,7 @@ namespace WeebReader.Web.Models.Controllers.TitlesManager
         public string? Synopsis { get; set; }
         
         public Title.Statuses Status { get; set; }
+        public bool Nsfw { get; set; }
         
         public bool Visible { get; set; }
 

@@ -120,6 +120,9 @@ namespace WeebReader.Web.Portal.Controllers
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
                 return RedirectToAction("Titles");
 
+            if (title.Nsfw && !HasNsfwCookie()) 
+                return View("NSFWTitleWarning", title);
+            
             ViewData["Page"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
             
@@ -305,6 +308,9 @@ namespace WeebReader.Web.Portal.Controllers
                 "light" => Constants.LightModeClasses,
                 _ => Constants.DarkModeClasses
             };
+            
+            if (title.Nsfw && !HasNsfwCookie()) 
+                return View("NSFWChapterWarning", (title, chapter));
 
             var chapters = (await _chapterManager.GetAll(title, _signInManager.IsSignedIn(User))).ToArray();
             ViewData["PreviousChapter"] = chapters.Where(entity => entity.Number < chapter.Number).OrderByDescending(entity => entity.Number).FirstOrDefault()?.Id;
@@ -397,5 +403,15 @@ namespace WeebReader.Web.Portal.Controllers
         }
         
         private static string GetDownloadName(Title title, Chapter chapter) => $"{title.Name} - {Labels.Chapter} {chapter.Number}";
+
+        private bool HasNsfwCookie()
+        {
+            Request.Cookies.TryGetValue("seek_nsfw_content", out var value);
+
+            if (string.IsNullOrWhiteSpace(value))
+                value = false.ToString();
+
+            return Convert.ToBoolean(value);
+        }
     }
 }

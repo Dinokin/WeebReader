@@ -426,4 +426,16 @@
     <data name="GoogleAnalyticsCode">
         <value>Google Analytics Code</value>
     </data>
+    <data name="NSFWWarning">
+        <value>NSFW Warning</value>
+    </data>
+    <data name="NSFWWarningHeader">
+        <value>NSFW WARNING</value>
+    </data>
+    <data name="NSFWConfirm">
+        <value>I live on the edge</value>
+    </data>
+    <data name="NSFWDeny">
+        <value>Take me back to safety</value>
+    </data>
 </root>

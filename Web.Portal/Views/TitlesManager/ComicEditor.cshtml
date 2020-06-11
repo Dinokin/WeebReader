@@ -196,6 +196,13 @@
                 </div>
             </div>
             <div class="field">
+                <label>@Labels.NSFWWarning</label>
+                <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
+                    <input class="hidden" type="checkbox" name="nsfw" checked="@(Model == null ? "checked" : null)" asp-for="Nsfw"/>
+                    <label>@Labels.Enable</label>
+                </div>
+            </div>
+            <div class="field">
                 <label>@Labels.Visibility</label>
                 <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
                     <input class="hidden" type="checkbox" name="visible" checked="@(Model == null ? "checked" : null)" asp-for="Visible"/>

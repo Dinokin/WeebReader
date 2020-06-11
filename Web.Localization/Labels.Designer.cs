@@ -736,6 +736,42 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I live on the edge.
+        /// </summary>
+        public static string NSFWConfirm {
+            get {
+                return ResourceManager.GetString("NSFWConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Take me back to safety.
+        /// </summary>
+        public static string NSFWDeny {
+            get {
+                return ResourceManager.GetString("NSFWDeny", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NSFW Warning.
+        /// </summary>
+        public static string NSFWWarning {
+            get {
+                return ResourceManager.GetString("NSFWWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NSFW WARNING.
+        /// </summary>
+        public static string NSFWWarningHeader {
+            get {
+                return ResourceManager.GetString("NSFWWarningHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number.
         /// </summary>
         public static string Number {

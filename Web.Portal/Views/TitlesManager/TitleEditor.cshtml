@@ -187,7 +187,14 @@
         <textarea name="synopsis" placeholder="@Labels.Synopsis" asp-for="Synopsis"></textarea>
     </div>
     <div class="field">
-        <div class="two fields">
+        <div class="three fields">
+            <div class="field">
+                <label>@Labels.NSFWWarning</label>
+                <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
+                    <input class="hidden" type="checkbox" name="nsfw" checked="@(Model == null ? "checked" : null)" asp-for="Nsfw"/>
+                    <label>@Labels.Enable</label>
+                </div>
+            </div>
             <div class="field">
                 <label>@Labels.Visibility</label>
                 <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
