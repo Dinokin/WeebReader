@@ -50,7 +50,7 @@
             releaseList.forEach(currentValue => {
                 cardContainer.append(
                     "<div class=\"ui raised card\"><div class=\"content\">" +
-                    `${currentValue.nsfw ? `<div class="left aligned floating ui red label">@Labels.NSFW</div>` : `""`}` +
+                    `${currentValue.nsfw ? `<div class="left aligned floating ui red label">@Labels.NSFW</div>` : ``}` +
                     `<div class="center aligned content" style="overflow: hidden;"><a href="${currentValue.chapterAddress}"><img class="ui bordered image" ${currentValue.nsfw ? `style="filter: blur(15px);"` : ""} src="/content/${currentValue.titleId}/cover_thumb.jpg"></a></div>` +
                     `<h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="${currentValue.titleAddress}">${currentValue.titleName}</a></h4>` +
                     "<div class=\"center aligned description\">" +
