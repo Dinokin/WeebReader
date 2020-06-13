@@ -197,8 +197,8 @@
             </div>
             <div class="field">
                 <label>@Labels.NSFWWarning</label>
-                <div class="ui toggle checkbox @(Model == null ? "checked" : null)">
-                    <input class="hidden" type="checkbox" name="nsfw" checked="@(Model == null ? "checked" : null)" asp-for="Nsfw"/>
+                <div class="ui toggle checkbox">
+                    <input class="hidden" type="checkbox" name="nsfw" asp-for="Nsfw"/>
                     <label>@Labels.Enable</label>
                 </div>
             </div>
