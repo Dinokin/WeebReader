@@ -74,7 +74,8 @@ namespace WeebReader.Web.Portal.Controllers
                     chapterNumber = tuple.chapter.Number,
                     releaseDate = tuple.chapter.ReleaseDate,
                     titleAddress = Url.Action("Titles", new {titleId = tuple.title.Id}),
-                    chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.chapter.Id})
+                    chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.chapter.Id}),
+                    nsfw = tuple.title.Nsfw
                 })
             });
         }

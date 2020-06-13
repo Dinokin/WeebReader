@@ -50,7 +50,8 @@
             releaseList.forEach(currentValue => {
                 cardContainer.append(
                     "<div class=\"ui raised card\"><div class=\"content\">" +
-                    `<div class="center aligned content"><a href="${currentValue.chapterAddress}"><img class="ui bordered image" src="/content/${currentValue.titleId}/cover_thumb.jpg"></a></div>` +
+                    `${currentValue.nsfw ? `<div class="left aligned floating ui red label">@Labels.NSFW</div>` : `""`}` +
+                    `<div class="center aligned content" style="overflow: hidden;"><a href="${currentValue.chapterAddress}"><img class="ui bordered image" ${currentValue.nsfw ? `style="filter: blur(15px);"` : ""} src="/content/${currentValue.titleId}/cover_thumb.jpg"></a></div>` +
                     `<h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="${currentValue.titleAddress}">${currentValue.titleName}</a></h4>` +
                     "<div class=\"center aligned description\">" +
                     `<p><i class="file outline icon"></i>@Labels.Chapter ${currentValue.chapterNumber}</p>` +
@@ -71,8 +72,23 @@
         {
             <div class="ui raised card">
                 <div class="content">
-                    <div class="center aligned content"><a href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })"><img class="ui bordered image" src="/content/@title.Id/cover_thumb.jpg"></a></div>
-                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new { titleId = title.Id })">@title.Name</a></h4>
+                    @if (title.Nsfw)
+                    {
+                        <div class="left aligned floating ui red label">@Labels.NSFW</div>
+                    }
+                    <div class="center aligned content" style="overflow: hidden;">
+                        <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
+                            @if (title.Nsfw)
+                            {
+                                <img class="ui bordered image" style="filter: blur(15px);" src="/content/@title.Id/cover_thumb.jpg">
+                            }
+                            else
+                            {
+                                <img class="ui bordered image" src="/content/@title.Id/cover_thumb.jpg">
+                            }
+                        </a>
+                    </div>
+                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
                     <div class="center aligned description">
                         <p><i class="file outline icon"></i>@Labels.Chapter @chapter.Number</p>
                         <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p>

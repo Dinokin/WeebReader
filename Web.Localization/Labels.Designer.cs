@@ -736,6 +736,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to NSFW.
+        /// </summary>
+        public static string NSFW {
+            get {
+                return ResourceManager.GetString("NSFW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to I live on the edge.
         /// </summary>
         public static string NSFWConfirm {
