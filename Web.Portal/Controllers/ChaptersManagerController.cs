@@ -128,7 +128,6 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpGet("{chapterId:guid}")]
         public async Task<IActionResult> Edit(Guid titleId, Guid chapterId)
         {
@@ -147,7 +146,6 @@ namespace WeebReader.Web.Portal.Controllers
             return GetEditor(chapter);
         }
 
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpPatch("{chapterId:guid}")]
         [RequestSizeLimit(104857600)]
         public async Task<IActionResult> Edit(ChapterModel chapterModel)

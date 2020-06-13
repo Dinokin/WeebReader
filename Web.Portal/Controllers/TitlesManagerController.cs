@@ -42,6 +42,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View((await _titleManager.GetRange(Constants.ItemsPerPageTitleAdmin * (page - 1), Constants.ItemsPerPageTitleAdmin)));
         }
         
+        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpGet("{action}")]
         public IActionResult Add(string type)
         {
@@ -52,6 +53,7 @@ namespace WeebReader.Web.Portal.Controllers
             return GetEditor(type);
         }
         
+        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
         [HttpPost("{action}")]
         public async Task<IActionResult> Add(TitleModel titleModel, string type)
         {
