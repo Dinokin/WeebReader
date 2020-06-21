@@ -21,19 +21,12 @@
                     {
                         <div class="left aligned floating ui red label">@Labels.NSFW</div>
                     }
-                    <div class="center aligned content" style="overflow: hidden;">
+                    <div class="center aligned content ov-hidden">
                         <a href="@Url.Action("Titles", new {titleId = title.Id})">
-                            @if (title.Nsfw)
-                            {
-                                <img class="ui bordered image" style="filter: blur(15px);" src="/content/@title.Id/cover_thumb.jpg">
-                            }
-                            else
-                            {
-                                <img class="ui bordered image" src="/content/@title.Id/cover_thumb.jpg">
-                            }
+                            <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg">
                         </a>
                     </div>
-                    <h4 class="ui center aligned header line-clamp height-limiter-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
+                    <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
                     <div class="center aligned description">
                         <p>@Labels.Status: @TitleStatusTranslator.FromStatus(title.Status)</p>
                     </div>

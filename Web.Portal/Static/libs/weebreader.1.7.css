@@ -77,19 +77,15 @@
     border-radius: 0 !important;
 }
 
-.deactivated {
-    display: none !important;
-}
-
-.height-100 {
+.h-100p {
     height: 100%;
 }
 
-.margin-top-minus-100 {
+.mt-minus-100px {
     margin-top: -100px;
 }
 
-.max-width-450 {
+.mw-450px {
     max-width: 450px;
 }
 
@@ -98,7 +94,7 @@
     flex-wrap: wrap;
 }
 
-.height-limiter-2-7rem {
+.h-2-7rem {
     height: 2.7rem;
 }
 
@@ -118,4 +114,40 @@
 
 .clickable {
     cursor: pointer;
+}
+
+.ov-hidden {
+    overflow: hidden;
+}
+
+.mt-0-1rem {
+    margin-top: 0.1rem;
+}
+
+.mt-0-5rem {
+    margin-top: 0.5rem;
+}
+
+.mr-1rem {
+    margin-right: 1rem;
+}
+
+.mb-5rem {
+    margin-bottom: 5rem;
+}
+
+.dp-inline-block {
+    display: inline-block;
+}
+
+.dp-none {
+    display: none;
+}
+
+.ov-auto {
+    overflow: auto;
+}
+
+.blur {
+    filter: blur(15px);
 }

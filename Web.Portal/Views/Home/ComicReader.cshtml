@@ -71,9 +71,9 @@
         
         $(document).on("scroll", () => {
             if ($(document).scrollTop() > 125) {
-                jumpButton.removeClass("deactivated");
+                jumpButton.removeClass("dp-none");
             } else {
-                jumpButton.addClass("deactivated");
+                jumpButton.addClass("dp-none");
             }
         });
     });
@@ -203,7 +203,7 @@
     <div class="ui centered grid no-margin-top no-margin-bottom">
         <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.comic.Id})">@Model.comic.Name</a></div>
         <div class="row">
-            <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
+            <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown mr-1rem">
                 <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.Id})"/>
                 <div class="text">@Labels.Ch @Model.chapter.Number</div>
                 <i class="dropdown icon"></i>
@@ -216,7 +216,7 @@
             </div>
             @if (!longStrip)
             {
-                <div id="page-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown" style="margin-right: 1rem;">
+                <div id="page-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown mr-1rem">
                     <input type="hidden"/>
                     <div class="text">@Labels.Pg 1</div>
                     <i class="dropdown icon"></i>
@@ -257,7 +257,7 @@
     }
     else
     {
-        <div id="page-container" class="ui dimmable clickable" style="display: inline-block">
+        <div id="page-container" class="ui dimmable clickable dp-inline-block">
             <div class="ui loader"></div>
             <img id="page" class="ui bordered centered image"/>
         </div>
