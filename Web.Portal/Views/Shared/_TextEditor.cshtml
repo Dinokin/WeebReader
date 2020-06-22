@@ -1,0 +1,10 @@
+﻿<script src="~/libs/tinymce.min.5.2.1.js"></script>
+<script>
+tinymce.init({
+@(Labels.LangCode is var langCode && langCode != "en_US" ? $"language: {langCode}," : string.Empty)
+selector: "textarea",
+plugins: "autosave wordcount link paste",
+toolbar: "restoredraft wordcount link paste",
+height: 500
+});
+</script>
