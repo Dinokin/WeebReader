@@ -100,6 +100,11 @@
             }
             });
             
+            pageContainer.dimmer({
+            closable: false,
+            displayLoader: true
+            });
+            
             chapterContainer.on("click", (event) => {            
                 let pageWidth = chapterContainer.innerWidth();
                 let pageOffset = chapterContainer.offset();
@@ -112,10 +117,6 @@
                 }
             });
             
-            pageContainer.dimmer({
-            closable: false,
-            displayLoader: true
-            });
             
             page.on("load", () => pageContainer.dimmer("hide"));
             

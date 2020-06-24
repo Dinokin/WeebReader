@@ -37,24 +37,9 @@
                     loader.removeClass("active");
                     loader.addClass("disabled");
                 },
-                onSuccess: (response) => {
-                    generateItems(response.posts);
-                }
+                onSuccess: (response) => buildPostList(postContainer, response.posts)
                 });
             }
-        }
-        
-        function generateItems(postList) {
-            postList.forEach(currentValue => {
-                postContainer.append(
-                    "<div class=\"ui raised segment\">" +
-                    "<div class=\"content\">" +
-                    `<h4 class="ui header add-ellipsis">${currentValue.title}</h4>` +
-                    `<p><i class=\"calendar alternate outline icon\"></i>${getDate(new Date(currentValue.releaseDate))}</p>` +
-                    currentValue.content +
-                    "</div></div>"
-                )
-            });
         }
     });
     </script>

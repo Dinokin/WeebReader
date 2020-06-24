@@ -73,3 +73,14 @@ function getTime(date) {
 function isNullOrWhiteSpace(string) {
     return string === null || string.match(/^\s*$/) !== null;
 }
+
+function buildPostList(container, posts) {
+    posts.forEach(currentValue => postContainer.append(
+        "<div class=\"ui raised segment\">" + 
+        "<div class=\"content\">" + 
+        `<h4 class="ui header add-ellipsis">${currentValue.title}</h4>` + 
+        `<p><i class=\"calendar alternate outline icon\"></i>${getDate(new Date(currentValue.releaseDate))}</p>` + 
+        currentValue.content + 
+        "</div></div>"
+    ));
+}
