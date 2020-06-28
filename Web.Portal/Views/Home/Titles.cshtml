@@ -19,7 +19,7 @@
                 <div class="content">
                     @if (title.Nsfw)
                     {
-                        <div class="left aligned floating ui red label">@Labels.NSFW</div>
+                        <div class="right aligned floating ui red label">@Labels.NSFW</div>
                     }
                     <div class="center aligned content ov-hidden">
                         <a href="@Url.Action("Titles", new {titleId = title.Id})">
