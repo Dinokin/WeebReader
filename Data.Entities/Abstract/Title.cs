@@ -24,18 +24,8 @@ namespace WeebReader.Data.Entities.Abstract
         public string? PreviousChaptersLink { get; set; }
         public IEnumerable<TitleTag>? TitleTags { get; set; }
 
-        protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersLink = null)
-        {
-            Name = name;
-            OriginalName = originalName;
-            Author = author;
-            Artist = artist;
-            Synopsis = synopsis;
-            Status = status;
-            Nsfw = nsfw;
-            Visible = visible;
-            PreviousChaptersLink = previousChaptersLink;
-        }
+        protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersLink = null) :
+            this(default, name, originalName, author, artist, synopsis, status, nsfw, visible, previousChaptersLink) { }
 
         protected Title(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersLink = null) : base(id)
         {

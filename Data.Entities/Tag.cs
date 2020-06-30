@@ -6,13 +6,10 @@ namespace WeebReader.Data.Entities
 {
     public class Tag : BaseEntity
     {
-        public string Name { get; set; }
-        public IEnumerable<TitleTag> TitleTag { get; } = new List<TitleTag>();
+        public string Name { get; }
+        public IEnumerable<TitleTag>? TitleTag { get; private set; }
 
-        public Tag(string name)
-        {
-            Name = name;
-        }
+        public Tag(string name) : this (default, name) { }
 
         public Tag(Guid id, string name) : base(id)
         {

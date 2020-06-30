@@ -10,13 +10,7 @@ namespace WeebReader.Data.Entities
         public DateTime ReleaseDate { get; set; }
         public bool Visible { get; set; }
 
-        public Post(string title, string content, DateTime releaseDate, bool visible)
-        {
-            Title = title;
-            Content = content;
-            ReleaseDate = releaseDate;
-            Visible = visible;
-        }
+        public Post(string title, string content, DateTime releaseDate, bool visible) : this(default, title, content, releaseDate, visible) { }
 
         public Post(Guid id, string title, string content, DateTime releaseDate, bool visible) : base(id)
         {

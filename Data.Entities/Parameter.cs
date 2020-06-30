@@ -40,11 +40,7 @@ namespace WeebReader.Data.Entities
         public Types Type { get; }
         public string? Value { get; set; }
 
-        public Parameter(Types type, string? value)
-        {
-            Type = type;
-            Value = value;
-        }
+        public Parameter(Types type, string? value) : this (default, type, value) { }
 
         public Parameter(Guid id, Types type, string? value) : base(id)
         {
