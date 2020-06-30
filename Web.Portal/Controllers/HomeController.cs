@@ -98,7 +98,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
-            var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.LatestReleases} - {siteName}", new Uri(Url.Action("Index", "Home", null, Request.Scheme)), feedItems)
+            var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.Home} - {siteName}", new Uri(Url.Action("Index", "Home", null, Request.Scheme)), feedItems)
             {
                 BaseUri = new Uri(Url.Action("IndexRss", "Home", null, Request.Scheme)),
                 ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/assets/icon.png"),

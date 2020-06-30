@@ -405,8 +405,8 @@
     <data name="Comments">
         <value>Comments</value>
     </data>
-    <data name="LatestReleases">
-        <value>Latest Releases</value>
+    <data name="Home">
+        <value>Home</value>
     </data>
     <data name="NoChapterAvailable">
         <value>This title doesn't have any chapter available.</value>

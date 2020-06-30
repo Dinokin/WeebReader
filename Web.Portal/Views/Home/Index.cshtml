@@ -2,7 +2,7 @@
 @model IEnumerable<(Title title, Chapter chapter)>
 
 @{
-    ViewData["Title"] = Labels.LatestReleases;
+    ViewData["Title"] = Labels.Home;
     ViewData["ShowInSearch"] = true;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
 }
