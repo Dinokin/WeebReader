@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -20,15 +21,17 @@ namespace WeebReader.Web.Services
     {
         private readonly IWebHostEnvironment _environment;
         private readonly BaseContext _context;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ChapterManager<TChapter> _chapterManager;
         private readonly PagesManager<Page> _pageManager;
 
-        public ChapterArchiver(IWebHostEnvironment environment, BaseContext context, ChapterManager<TChapter> chapterManager, PagesManager<Page> pageManager)
+        public ChapterArchiver(IWebHostEnvironment environment, BaseContext context, IHttpClientFactory httpClientFactory, ChapterManager<TChapter> chapterManager, PagesManager<Page> pageManager)
         {
             _environment = environment;
             _context = context;
             _chapterManager = chapterManager;
             _pageManager = pageManager;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<bool> AddChapter(TChapter chapter, ZipArchive? pages)
@@ -136,17 +139,47 @@ namespace WeebReader.Web.Services
 
         private async Task ProcessNovelChapter(NovelChapter novelChapter)
         {
+            var httpClient = _httpClientFactory.CreateClient();
             var location = Utilities.GetChapterFolder(_environment, novelChapter.TitleId, novelChapter.Id);
             var pdfFile = new FileInfo($"{location}/chapter.pdf");
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(novelChapter.Content);
-            var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img").ToArray();
+            var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img")?.ToArray() ?? new HtmlNode[0];
 
             foreach (var node in imageNodes)
             {
                 var src = node.GetAttributeValue("src", string.Empty);
 
-                if (!HasValidExtension(src, true))
+                if (HasValidExtension(src, false))
+                {
+                    if (Uri.IsWellFormedUriString(src, UriKind.Absolute))
+                    {
+                        try
+                        {
+                            var image = $"data:image/{(IsAnimated(src, false) ? "gif" : "png")};base64,";
+                            image += Convert.ToBase64String(await httpClient.GetByteArrayAsync(src));
+                            node.SetAttributeValue("src", image);
+                        }
+                        catch
+                        {
+                            node.Remove();
+                        }
+                    }
+                    else
+                    {
+                        src = src.Replace("../../../..", string.Empty);
+                        var path = $"{_environment.WebRootPath}{src}";
+
+                        if (File.Exists(path))
+                        {
+                            src = $"data:image/{(IsAnimated(path, false) ? "gif" : "png")};base64,{Convert.ToBase64String(await File.ReadAllBytesAsync(path))}";
+                            node.SetAttributeValue("src", src);
+                        }
+                        else
+                            node.Remove();
+                    }
+                }
+                else if (!HasValidExtension(src, true))
                     node.Remove();
             }
 
@@ -157,26 +190,30 @@ namespace WeebReader.Web.Services
                 pdfFile.Delete();
 
             HtmlConverter.ConvertToPdf(htmlDocument.DocumentNode.OuterHtml, pdfFile.Create());
-            
-            imageNodes = htmlDocument.DocumentNode.SelectNodes("//img").ToArray();
-            var base64Images = imageNodes.Select(node => node.GetAttributeValue("src", string.Empty)).ToArray();
-            var pages = base64Images.Select(base64Image => new NovelPage(IsAnimated(base64Image, true), novelChapter.Id)).ToArray();
 
-            await _pageManager.AddRange(pages);
+            imageNodes = htmlDocument.DocumentNode.SelectNodes("//img")?.ToArray();
 
-            Parallel.For(0, base64Images.Length, i =>
+            if (imageNodes != null)
             {
-                var stream = new MemoryStream(Convert.FromBase64String(base64Images[i].Substring(base64Images[i].IndexOf(',') + 1)));
+                var base64Images = imageNodes.Select(node => node.GetAttributeValue("src", string.Empty)).ToArray();
+                var pages = base64Images.Select(base64Image => new NovelPage(IsAnimated(base64Image, true), novelChapter.Id)).ToArray();
 
-                if (pages[i].Animated)
-                    Utilities.WriteAnimation(location, Utilities.ProcessAnimation(stream), pages[i].Id.ToString());
-                else
-                    Utilities.WriteImage(location, Utilities.ProcessImage(stream), pages[i].Id.ToString());
-            });
+                await _pageManager.AddRange(pages);
 
-            for (var i = 0; i < imageNodes.Length; i++)
-                imageNodes[i].SetAttributeValue("src", $"/content/{novelChapter.TitleId}/{novelChapter.Id}/{pages[i].Id}{(pages[i].Animated ? ".gif" : ".png")}");
-            
+                Parallel.For(0, base64Images.Length, i =>
+                {
+                    var stream = new MemoryStream(Convert.FromBase64String(base64Images[i].Substring(base64Images[i].IndexOf(',') + 1)));
+
+                    if (pages[i].Animated)
+                        Utilities.WriteAnimation(location, Utilities.ProcessAnimation(stream), pages[i].Id.ToString());
+                    else
+                        Utilities.WriteImage(location, Utilities.ProcessImage(stream), pages[i].Id.ToString());
+                });
+
+                for (var i = 0; i < imageNodes.Length; i++)
+                    imageNodes[i].SetAttributeValue("src", $"/content/{novelChapter.TitleId}/{novelChapter.Id}/{pages[i].Id}{(pages[i].Animated ? ".gif" : ".png")}");
+            }
+
             novelChapter.Content = htmlDocument.DocumentNode.OuterHtml;
             await _chapterManager.Edit((TChapter) (Chapter) novelChapter);
         }
