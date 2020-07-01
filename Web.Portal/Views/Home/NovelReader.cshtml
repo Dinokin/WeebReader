@@ -20,10 +20,10 @@
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.novel.Id}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.novel.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
-    <!--suppress JSIncompatibleTypesComparison -->
     <script>
     $(() => {
         let jumpButton = $("#jump-button");
+        let chapterContainer = $("#chapter-container");
         
         $("#titles,#titles-mobile").addClass("active");
         $(".ui.dropdown").dropdown();
@@ -52,7 +52,7 @@
         });
         
         jumpButton.on("click", () => {
-            scrollToTop($("#chapter-container"));
+            scrollToTop(chapterContainer);
         });
         
         $(document).on("scroll", () => {
@@ -61,6 +61,12 @@
             } else {
                 jumpButton.addClass("dp-none");
             }
+        });
+                
+        chapterContainer.find("img").visibility({
+        type: "image",
+        transition: "fade in",
+        duration: 1000
         });
     });
     </script>
@@ -95,7 +101,7 @@
 </div>
 <div id="chapter-container" class="ui centered container">
     <div class="ui @(darkMode ? "inverted" : null ) segment">
-        @Html.Raw(Model.chapter.Content)
+        @Html.Raw(Model.chapter.Content.AddImgLazyLoading("/assets/placeholder_page.png"))
     </div>
 </div>
 <div class="ui container">
