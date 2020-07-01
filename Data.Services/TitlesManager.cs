@@ -56,6 +56,8 @@ namespace WeebReader.Data.Services
 
             if (tags != null)
                 await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
+            
+            Context.Tags.RemoveRange(GetUnusedTags());
 
             return await Context.SaveChangesAsync() > 0;
         }
@@ -69,8 +71,10 @@ namespace WeebReader.Data.Services
                     await Context.Tags.AddAsync(tagEntities[i]);
                 else
                     tagEntities[i] = entity;
-
+            
             return tagEntities;
         }
+
+        private IEnumerable<Tag> GetUnusedTags() => Context.Tags.Include(tag => tag.TitleTag).Where(tag => !tag.TitleTag.Any());
     }
 }
