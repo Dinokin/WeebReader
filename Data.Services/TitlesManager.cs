@@ -62,6 +62,26 @@ namespace WeebReader.Data.Services
             return await Context.SaveChangesAsync() > 0;
         }
 
+        public override async Task<bool> Delete(TTitle entity)
+        {
+            var result = await base.Delete(entity);
+
+            if (result)
+                Context.RemoveRange(GetUnusedTags());
+
+            return result;
+        }
+
+        public override async Task<bool> DeleteRange(IEnumerable<TTitle> entities)
+        {
+            var result = await base.DeleteRange(entities);
+            
+            if (result)
+                Context.RemoveRange(GetUnusedTags());
+
+            return result;
+        }
+
         private async Task<IEnumerable<Tag>> BuildTags(IEnumerable<string> tags)
         {
             var tagEntities = tags.Select(name => new Tag(name)).ToArray();
