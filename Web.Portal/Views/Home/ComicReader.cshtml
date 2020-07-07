@@ -19,7 +19,7 @@
 {
     <meta property="og:title" content="@(Model.chapter.Volume != null && Model.chapter.Volume > 0 ? $"{Labels.Vol}{Model.chapter.Volume} " : null)@Labels.Ch @Model.chapter.Number - @Model.comic.Name"/>
     <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.Id }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.Id}/cover_thumb.jpg")"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.Id}/cover_thumb.jpg?v={Model.comic.Version}")"/>
     <meta property="og:description" content="@Model.comic.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <!--suppress JSIncompatibleTypesComparison -->

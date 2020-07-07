@@ -75,7 +75,8 @@ namespace WeebReader.Web.Portal.Controllers
                     releaseDate = tuple.chapter.ReleaseDate,
                     titleAddress = Url.Action("Titles", new {titleId = tuple.title.Id}),
                     chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.chapter.Id}),
-                    nsfw = tuple.title.Nsfw
+                    nsfw = tuple.title.Nsfw,
+                    version = tuple.title.Version
                 })
             });
         }
@@ -127,7 +128,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["Page"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
             
-            return View("Title", ValueTuple.Create(Mapper.MapToModel(title, await _titlesManager.GetTags(title)), await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))));
+            return View("Title", ValueTuple.Create(title, await _titlesManager.GetTags(title), await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))));
         }
 
         [HttpGet("{action}/{titleId:Guid}/JSON/{page:int}")]
@@ -155,7 +156,8 @@ namespace WeebReader.Web.Portal.Controllers
                     name = chapter.Name,
                     releaseDate = chapter.ReleaseDate,
                     readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
-                    downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
+                    downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id}),
+                    version = title.Version
                 })
             });
         }
@@ -188,7 +190,7 @@ namespace WeebReader.Web.Portal.Controllers
             var feed = new SyndicationFeed($"{title.Name} RSS", $"{title.Name} - {siteName}", new Uri(Url.Action("Titles", "Home", new {titleId = title.Id}, Request.Scheme)), feedItems)
             {
                 BaseUri = new Uri(Url.Action("TitlesRss", "Home", new {titleId = title.Id}, Request.Scheme)),
-                ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{title.Id}/cover_thumb.jpg"),
+                ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{title.Id}/cover_thumb.jpg?v={title.Version}"),
                 LastUpdatedTime = DateTimeOffset.Now,
                 TimeToLive = TimeSpan.FromMinutes(1)
             };

@@ -23,7 +23,7 @@
                     }
                     <div class="center aligned content ov-hidden">
                         <a href="@Url.Action("Titles", new {titleId = title.Id})">
-                            <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg">
+                            <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg?v=@title.Version">
                         </a>
                     </div>
                     <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>

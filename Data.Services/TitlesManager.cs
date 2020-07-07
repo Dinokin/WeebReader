@@ -37,6 +37,8 @@ namespace WeebReader.Data.Services
 
         public async Task<bool> Add(TTitle title, IEnumerable<string>? tags = null)
         {
+            title.Version = 1;
+            
             if (!await base.Add(title))
                 return false;
 
@@ -48,6 +50,8 @@ namespace WeebReader.Data.Services
         
         public async Task<bool> Edit(TTitle title, IEnumerable<string>? tags = null)
         {
+            title.Version++;
+            
             if (!await base.Edit(title))
                 return false;
             

@@ -1,9 +1,9 @@
 ﻿@inject ParametersManager ParametersManager
-@model (TitleModel title, IEnumerable<Chapter> chapters)
+@model (Title title, IEnumerable<Tag> tags, IEnumerable<Chapter> chapters)
 
 @{
     ViewData["Title"] = $"{Model.title.Name}";
-    ViewData["DisqusIdentifier"] = $"title_{Model.title.TitleId}";
+    ViewData["DisqusIdentifier"] = $"title_{Model.title.Id}";
     ViewData["DisqusTitle"] = Model.title.Name;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
@@ -12,11 +12,11 @@
 @section Headers
 {
     <meta property="og:title" content="@Model.title.Name"/>
-    <meta property="og:url" content="@Url.Action("Titles", "Home", new { titleId = Model.title.TitleId }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.title.TitleId}/cover_thumb.jpg")"/>
+    <meta property="og:url" content="@Url.Action("Titles", "Home", new { titleId = Model.title.Id }, Context.Request.Scheme)"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.title.Id}/cover_thumb.jpg?v={Model.title.Version}")"/>
     <meta property="og:description" content="@Model.title.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
-    <link rel="alternate" type="application/rss+xml" title="@($"{Model.title.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.title.TitleId})"/>
+    <link rel="alternate" type="application/rss+xml" title="@($"{Model.title.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.title.Id})"/>
     <script>
     $(() => {
         $("#titles,#titles-mobile").addClass("active");
@@ -43,7 +43,7 @@
                     page++;
                     
                     chapterContainer.api({
-                    url: "@Url.Action("Titles", new {titleId = Model.title.TitleId, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
+                    url: "@Url.Action("Titles", new {titleId = Model.title.Id, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
                     method: "GET",
                     on: "now",
                     onRequest: () => {
@@ -88,10 +88,10 @@
     <div class="ui raised segment">
         <div class="ui hidden divider"></div>
         <div class="ui large bordered centered fluid image">
-            <a class="ui bottom right attached large label" href="@Url.Action("TitlesRss", new {titleId = Model.title.TitleId})">
+            <a class="ui bottom right attached large label" href="@Url.Action("TitlesRss", new {titleId = Model.title.Id})">
                 <i class="rss fitted icon"></i>
             </a>
-            <img src="/content/@Model.title.TitleId/cover.png" alt="Series Cover"/>
+            <img src="/content/@Model.title.Id/cover.png?v=@Model.title.Version" alt="Series Cover"/>
         </div>
         <div class="ui hidden divider"></div>
         <div class="content">
@@ -106,11 +106,11 @@
             </div>
             <div class="ui hidden divider"></div>
             <div class="ui hidden divider"></div>
-            @if (!string.IsNullOrWhiteSpace(Model.title.Tags))
+            @if (Model.tags.Any())
             {
                 <div class="ui labels">
                     <h5>@Labels.Tags</h5>
-                    @foreach (var tag in Model.title.Tags.Split(","))
+                    @foreach (var tag in Model.tags)
                     {
                         <div class="ui label">@tag</div>
                     }
