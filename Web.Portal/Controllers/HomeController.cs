@@ -190,7 +190,7 @@ namespace WeebReader.Web.Portal.Controllers
             var feed = new SyndicationFeed($"{title.Name} RSS", $"{title.Name} - {siteName}", new Uri(Url.Action("Titles", "Home", new {titleId = title.Id}, Request.Scheme)), feedItems)
             {
                 BaseUri = new Uri(Url.Action("TitlesRss", "Home", new {titleId = title.Id}, Request.Scheme)),
-                ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{title.Id}/cover_thumb.jpg?v={title.Version}"),
+                ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{title.Id}/cover_thumb.jpg"),
                 LastUpdatedTime = DateTimeOffset.Now,
                 TimeToLive = TimeSpan.FromMinutes(1)
             };
