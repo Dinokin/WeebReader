@@ -34,6 +34,6 @@ namespace WeebReader.Data.Services
         
         public Task<IEnumerable<TChapter>> GetAll(Title title, bool includeHidden = true) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
             ? DbSet.Where(chapter => chapter.TitleId == title.Id).OrderByDescending(chapter => chapter.Number)
-            : DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible).OrderByDescending(chapter => chapter.Number));
+            : DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.Number));
     }
 }
