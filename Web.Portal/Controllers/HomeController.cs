@@ -87,7 +87,7 @@ namespace WeebReader.Web.Portal.Controllers
             var feedItems = (await GetReleases(0, Constants.ItemsPerPageReleasesRss)).Select(tuple =>
             {
                 var title = $"{tuple.title.Name} - {Labels.Chapter} {tuple.chapter.Number}";
-                var description = tuple.title.Synopsis.RemoveHtmlTags();
+                var description = tuple.title.Synopsis.RemoveHtmlTags() is var desc && desc.Length > 200 ? $"{desc.Substring(0, 200)}..." : desc;
                 var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = tuple.chapter.Id}, Request.Scheme));
                 var feedItem = new SyndicationItem(title, description, url)
                 {
@@ -196,7 +196,7 @@ namespace WeebReader.Web.Portal.Controllers
             var feedItems = chapters.OrderByDescending(chapter => chapter.ReleaseDate).Select(chapter =>
             {
                 var itemTitle = $"{title.Name} - {Labels.Chapter} {chapter.Number}";
-                var description = title.Synopsis.RemoveHtmlTags();
+                var description = title.Synopsis.RemoveHtmlTags() is var desc && desc.Length > 200 ? $"{desc.Substring(0, 200)}..." : desc;
                 var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = chapter.Id}, Request.Scheme));
                 var feedItem = new SyndicationItem(itemTitle, description, url)
                 {
