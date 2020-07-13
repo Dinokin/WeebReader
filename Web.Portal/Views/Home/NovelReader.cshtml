@@ -10,12 +10,11 @@
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];
-    var chapters = ((IEnumerable<ChapterModel>) ViewData["Chapters"]).ToArray();
 }
 
 @section Headers
 {
-    <meta property="og:title" content="@(Model.chapter.Volume != null && Model.chapter.Volume > 0 ? $"{Labels.Vol}{Model.chapter.Volume} " : null)@Labels.Ch @Model.chapter.Number - @Model.novel.Name"/>
+    <meta property="og:title" content="@(Model.chapter.Volume != null && Model.chapter.Volume > 0 ? $"{Labels.Vol}{Model.chapter.Volume} " : null)@Labels.Chapter @Model.chapter.Number - @Model.novel.Name"/>
     <meta property="og:url" content="@Url.Action("ReadChapter", "Home", new { chapterId = Model.chapter.Id }, Context.Request.Scheme)"/>
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.novel.Id}/cover_thumb.jpg?v={Model.novel.Version}")"/>
     <meta property="og:description" content="@Model.novel.Synopsis.RemoveHtmlTags()"/>
@@ -32,6 +31,28 @@
         onChange: (value) => {
             if (value !== "default") {
                 window.location.href = value;
+            }
+        },
+        apiSettings: {
+            url: "@Url.Action("TitlesJson", new {titleId = Model.novel.Id})",
+            saveRemoteData: false,
+            cache: false,
+            onResponse: (response) => {
+                let array = [];
+                
+                response.chapters.forEach(currentValue => {
+                    array.push({
+                    name: "@Labels.Chapter " + currentValue.number,
+                    value: currentValue.readAddress,
+                    text: "@Labels.Chapter " + currentValue.number,
+                    class: @Html.Raw(Model.chapter.Number) === currentValue.number ? "item active selected" : "item"
+                    });
+                });
+                
+                return {
+                    success: response.success,
+                    results: array
+                }
             }
         }
         });
@@ -78,13 +99,9 @@
         <div class="row">
             <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown mr-1rem">
                 <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.Id})"/>
-                <div class="text">@Labels.Ch @Model.chapter.Number</div>
+                <div class="text">@Labels.Chapter @Model.chapter.Number</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    @foreach (var chapter in chapters)
-                    {
-                        <div class="item" data-value="@Url.Action("ReadChapter", new {chapterId = chapter.ChapterId})">@Labels.Chapter @chapter.Number</div>
-                    }
                 </div>
             </div>
             <div id="options" class="clickable">

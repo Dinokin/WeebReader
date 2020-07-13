@@ -363,9 +363,6 @@
     <data name="SwitchViewMode">
         <value>Switch View Mode</value>
     </data>
-    <data name="Ch">
-        <value>Ch.</value>
-    </data>
     <data name="ViewDetails">
         <value>View Details</value>
     </data>
@@ -393,8 +390,8 @@
     <data name="JoinOurDiscordCommunity">
         <value>Join our discord community</value>
     </data>
-    <data name="Pg">
-        <value>Pg.</value>
+    <data name="Page">
+        <value>Page</value>
     </data>
     <data name="Disqus">
         <value>Disqus</value>

@@ -131,34 +131,56 @@ namespace WeebReader.Web.Portal.Controllers
             return View("Title", ValueTuple.Create(title, await _titlesManager.GetTags(title), await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))));
         }
 
-        [HttpGet("{action}/{titleId:Guid}/JSON/{page:int}")]
-        public async Task<IActionResult> Titles(Guid titleId, ushort page)
+        [HttpGet("{action}/{titleId:Guid}/JSON/{page:int?}")]
+        public async Task<IActionResult> TitlesJson(Guid titleId, ushort? page)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
                 return RedirectToAction("Titles");
 
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
                 return RedirectToAction("Titles");
-            
-            var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
 
-            return new JsonResult(new
+            JsonResult returnValue;
+            
+            if (page != null && page > 0)
             {
-                success = true,
-                page,
-                totalPages,
-                chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPageChapters * (page - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))).Select(chapter => new
+                var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
+                page = page <= totalPages ? page : 1;
+
+                returnValue = new JsonResult(new
                 {
-                    id = chapter.Id,
-                    volume = chapter.Volume,
-                    number = chapter.Number,
-                    name = chapter.Name,
-                    releaseDate = chapter.ReleaseDate,
-                    readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
-                    downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
-                })
-            });
+                    success = true,
+                    page,
+                    totalPages,
+                    chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPageChapters * (page!.Value - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))).Select(chapter => new
+                    {
+                        id = chapter.Id,
+                        volume = chapter.Volume,
+                        number = chapter.Number,
+                        name = chapter.Name,
+                        releaseDate = chapter.ReleaseDate,
+                        readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
+                        downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
+                    })
+                });
+            }
+            else
+                returnValue = new JsonResult(new
+                {
+                    success = true,
+                    chapters = (await _chapterManager.GetAll(title, _signInManager.IsSignedIn(User))).Select(chapter => new
+                    {
+                        id = chapter.Id,
+                        volume = chapter.Volume,
+                        number = chapter.Number,
+                        name = chapter.Name,
+                        releaseDate = chapter.ReleaseDate,
+                        readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
+                        downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
+                    })
+                });
+
+            return returnValue;
         }
         
         [HttpGet("Titles/{titleId:Guid}/RSS")]
@@ -314,10 +336,8 @@ namespace WeebReader.Web.Portal.Controllers
             if (title.Nsfw && !HasNsfwCookie()) 
                 return View("NSFWChapterWarning", (title, chapter));
 
-            var chapters = (await _chapterManager.GetAll(title, _signInManager.IsSignedIn(User))).ToArray();
-            ViewData["PreviousChapter"] = chapters.Where(entity => entity.Number < chapter.Number).OrderByDescending(entity => entity.Number).FirstOrDefault()?.Id;
-            ViewData["NextChapter"] = chapters.Where(entity => entity.Number > chapter.Number).OrderBy(entity => entity.Number).FirstOrDefault()?.Id;
-            ViewData["Chapters"] = chapters.OrderByDescending(entity => entity.Number).Select(Mapper.MapToModel);
+            ViewData["PreviousChapter"] = (await _chapterManager.GetPreviousChapter(chapter))?.Id;
+            ViewData["NextChapter"] = (await _chapterManager.GetNextChapter(chapter))?.Id;
 
             return await GetReader(title, chapter);
         }

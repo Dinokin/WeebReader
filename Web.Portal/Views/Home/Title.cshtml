@@ -43,7 +43,7 @@
                     page++;
                     
                     chapterContainer.api({
-                    url: "@Url.Action("Titles", new {titleId = Model.title.Id, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
+                    url: "@Url.Action("TitlesJson", new {titleId = Model.title.Id, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
                     method: "GET",
                     on: "now",
                     onRequest: () => {
@@ -54,9 +54,7 @@
                         loader.removeClass("active");
                         loader.addClass("disabled");
                     },
-                    onSuccess: (response) => {
-                        generateItems(response.chapters);
-                    }
+                    onSuccess: (response) => generateItems(response.chapters)
                     });
                 }
                 else

@@ -187,15 +187,6 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ch..
-        /// </summary>
-        public static string Ch {
-            get {
-                return ResourceManager.GetString("Ch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Change E-mail.
         /// </summary>
         public static string ChangeEmail {
@@ -817,6 +808,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        public static string Page {
+            get {
+                return ResourceManager.GetString("Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pages.
         /// </summary>
         public static string Pages {
@@ -867,15 +867,6 @@ namespace WeebReader.Web.Localization {
         public static string PatreonPageAddress {
             get {
                 return ResourceManager.GetString("PatreonPageAddress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pg..
-        /// </summary>
-        public static string Pg {
-            get {
-                return ResourceManager.GetString("Pg", resourceCulture);
             }
         }
         
