@@ -29,7 +29,10 @@
     <div class="ui @(darkMode ? "inverted" : null ) segment">
         <h1 class="ui red header">@Labels.NSFWWarningHeader</h1>
         <h3 class="ui header">@Html.Raw(@OtherMessages.NSFWMessage)</h3>
-        <button id="nsfw-confirm" class="ui red button">@Labels.NSFWConfirm</button>
-        <a id="nsfw-deny" href="@Url.Action("Index")" class="ui @(!darkMode ? "black " : string.Empty)button">@Labels.NSFWDeny</a>
+        <div class="ui buttons">
+            <button id="nsfw-confirm" class="ui red button">@Labels.NSFWConfirm</button>
+            <div class="or"></div>
+            <a id="nsfw-deny" href="@Url.Action("Index")" class="ui @(!darkMode ? "black " : string.Empty)button">@Labels.NSFWDeny</a>
+        </div>
     </div>
 </div>

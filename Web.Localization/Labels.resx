@@ -430,10 +430,10 @@
         <value>NSFW WARNING</value>
     </data>
     <data name="NSFWConfirm">
-        <value>I live on the edge</value>
+        <value>Continue</value>
     </data>
     <data name="NSFWDeny">
-        <value>Take me back to safety</value>
+        <value>Go back to safety</value>
     </data>
     <data name="NSFW">
         <value>NSFW</value>

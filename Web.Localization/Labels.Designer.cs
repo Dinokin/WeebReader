@@ -736,7 +736,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to I live on the edge.
+        ///   Looks up a localized string similar to Continue.
         /// </summary>
         public static string NSFWConfirm {
             get {
@@ -745,7 +745,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Take me back to safety.
+        ///   Looks up a localized string similar to Go back to safety.
         /// </summary>
         public static string NSFWDeny {
             get {

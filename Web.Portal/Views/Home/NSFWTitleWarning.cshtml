@@ -4,7 +4,6 @@
 @{
     ViewData["Title"] = $"{Model.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
-    var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
 }
 
 @section Headers
@@ -29,8 +28,11 @@
 <div class="ui center aligned container">
     <div class="ui segment">
         <h1 class="ui red header">@Labels.NSFWWarningHeader</h1>
-        <h3 class="ui header">@Html.Raw(@OtherMessages.NSFWMessage)</h3>
-        <button id="nsfw-confirm" class="ui red button">@Labels.NSFWConfirm</button>
-        <a id="nsfw-deny" href="@Url.Action("Index")" class="ui black button">@Labels.NSFWDeny</a>
+        <h3 class="ui header">@Html.Raw(OtherMessages.NSFWMessage)</h3>
+        <div class="ui buttons">
+            <button id="nsfw-confirm" class="ui red button">@Labels.NSFWConfirm</button>
+            <div class="or"></div>
+            <a id="nsfw-deny" href="@Url.Action("Index")" class="ui black button">@Labels.NSFWDeny</a>
+        </div>
     </div>
 </div>

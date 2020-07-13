@@ -313,7 +313,7 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The page you are about to see has adult content.&lt;br&gt;It is not suitable for children or people under 18.&lt;br&gt; Continue at your own discretion..
+        ///   Looks up a localized string similar to &lt;p&gt;The page you are about to see has adult content.&lt;/p&gt;&lt;p&gt;It is not suitable for children or people under 18.&lt;/p&gt;&lt;p&gt;Continue at your own discretion.&lt;/p&gt;.
         /// </summary>
         public static string NSFWMessage {
             get {
