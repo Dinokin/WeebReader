@@ -156,8 +156,7 @@ namespace WeebReader.Web.Portal.Controllers
                     name = chapter.Name,
                     releaseDate = chapter.ReleaseDate,
                     readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
-                    downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id}),
-                    version = title.Version
+                    downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
                 })
             });
         }
