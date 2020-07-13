@@ -22,7 +22,7 @@ namespace WeebReader.Web.Portal.Others
             
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(source);
-            var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img").ToArray();
+            var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img")?.ToArray() ?? new HtmlNode[0];
 
             Parallel.ForEach(imageNodes, node =>
             {
