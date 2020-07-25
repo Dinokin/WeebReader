@@ -118,7 +118,8 @@ namespace WeebReader.Web.Services
             using var zippedPages = new ZipArchive(new MemoryStream(pages));
             
             var location = Utilities.GetChapterFolder(_environment, comicChapter.TitleId, comicChapter.Id);
-            var entries = zippedPages.Entries.Where(entry => HasValidExtension(entry.Name, false)).OrderBy(entry => entry.Name).ToArray();
+            var entries = zippedPages.Entries.Where(entry => HasValidExtension(entry.Name, false))
+                .OrderBy(entry => Regex.Replace(entry.Name, @"\d+", match => match.Value.PadLeft(10, '0'))).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
             var zipFile = new FileInfo($"{location}/package.zip");
