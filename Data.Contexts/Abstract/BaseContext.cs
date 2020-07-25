@@ -17,6 +17,7 @@ namespace WeebReader.Data.Contexts.Abstract
         public DbSet<ComicPage> ComicPages { get; set; } = null!;
         public DbSet<Novel> Novels { get; set; } = null!;
         public DbSet<NovelChapter> NovelChapters { get; set; } = null!;
+        public DbSet<NovelChapterContent> NovelChapterContents { get; set; } = null!;
         public DbSet<Tag> Tags { get; set; } = null!;
         public DbSet<TitleTag> TitleTags { get; set; } = null!;
         public DbSet<Post> Posts { get; set; } = null!;
@@ -142,8 +143,15 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<NovelChapter>(typeBuilder =>
             {
-                typeBuilder.Property(chapter => chapter.Content).IsRequired();
+                typeBuilder.HasOne(chapter => chapter.NovelChapterContent).WithOne(contents => contents!.Chapter!).HasForeignKey<NovelChapterContent>(content => content.ChapterId);
                 typeBuilder.HasMany(chapter => chapter.Pages).WithOne(page => page.Chapter!).HasForeignKey(page => page.ChapterId);
+            });
+
+            builder.Entity<NovelChapterContent>(typeBuilder =>
+            {
+                typeBuilder.Property(content => content.Content).IsRequired();
+                typeBuilder.Property(content => content.ChapterId).IsRequired();
+                typeBuilder.HasIndex(content => content.ChapterId).IsUnique();
             });
 
             builder.Entity<Tag>(typeBuilder =>

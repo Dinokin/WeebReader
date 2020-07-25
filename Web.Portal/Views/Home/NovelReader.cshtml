@@ -1,5 +1,5 @@
 ﻿@inject ParametersManager ParametersManager
-@model (Novel novel, NovelChapter chapter)
+@model (Novel novel, NovelChapter chapter, NovelChapterContent content)
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.novel.Name}";
@@ -118,7 +118,7 @@
 </div>
 <div id="chapter-container" class="ui centered container">
     <div class="ui @(darkMode ? "inverted" : null ) segment">
-        @Html.Raw(Model.chapter.Content.AddImgLazyLoading("/assets/placeholder_page.png"))
+        @Html.Raw(Model.content?.Content.AddImgLazyLoading("/assets/placeholder_page.png"))
     </div>
 </div>
 <div class="ui container">

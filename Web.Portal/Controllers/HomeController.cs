@@ -14,7 +14,6 @@ using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Controllers.Home;
-using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
@@ -25,21 +24,23 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
         private readonly TitlesManager<Title> _titlesManager;
         private readonly ChapterManager<Chapter> _chapterManager;
-        private readonly ChapterArchiver<Chapter> _chapterArchiver;
         private readonly PagesManager<Page> _pagesManager;
+        private readonly NovelChapterContentManager _novelChapterContentManager;
+        private readonly ChapterArchiver<Chapter> _chapterArchiver;
         private readonly PostsManager _postsManager;
         private readonly EmailSender _emailSender;
         private readonly ParametersManager _parametersManager;
         private readonly ReCaptchaValidator _reCaptchaValidator;
 
-        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, PagesManager<Page> pagesManager,
-            PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
+        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager,
+            ChapterArchiver<Chapter> chapterArchiver, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
             _chapterManager = chapterManager;
-            _chapterArchiver = chapterArchiver;
             _pagesManager = pagesManager;
+            _novelChapterContentManager = novelChapterContentManager;
+            _chapterArchiver = chapterArchiver;
             _postsManager = postsManager;
             _emailSender = emailSender;
             _parametersManager = parametersManager;
@@ -135,10 +136,10 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> TitlesJson(Guid titleId, ushort? page)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
-                return RedirectToAction("Titles");
+                return NotFound();
 
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
-                return RedirectToAction("Titles");
+                return NotFound();
 
             JsonResult returnValue;
             
@@ -187,10 +188,10 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> TitlesRss(Guid titleId)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
-                return RedirectToAction("IndexRss");
+                return NotFound();
 
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
-                return RedirectToAction("IndexRss");
+                return NotFound();
             
             var chapters = (await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChaptersRss, _signInManager.IsSignedIn(User))).ToArray();
             var feedItems = chapters.OrderByDescending(chapter => chapter.ReleaseDate).Select(chapter =>
@@ -384,7 +385,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View("ComicReader", ValueTuple.Create<Comic, ComicChapter, IEnumerable<ComicPage>>(comic, comicChapter, pages));
         }
 
-        private Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => Task.FromResult<IActionResult>(View("NovelReader", ValueTuple.Create(novel, novelChapter)));
+        private async Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => View("NovelReader", ValueTuple.Create(novel, novelChapter, await _novelChapterContentManager.GetContentByChapter(novelChapter)));
 
         private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
         {

@@ -84,6 +84,7 @@ namespace WeebReader.Web.Portal
             services.AddTransient<TitlesManager<Title>>();
             services.AddTransient<ChapterManager<Chapter>>();
             services.AddTransient<PagesManager<Page>>();
+            services.AddTransient<NovelChapterContentManager>();
             services.AddTransient<TitleArchiver<Title>>();
             services.AddTransient<ChapterArchiver<Chapter>>();
         }

@@ -1,6 +1,7 @@
 ﻿using System;
-using System.IO.Compression;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -90,24 +91,31 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.ChapterNumberAlreadyExist} 
                     });
 
-                ZipArchive? pagesZip = null;
-
-                if (chapterModel is ComicChapterModel comicChapterModel)
-                {
-                    if (comicChapterModel.Pages == null)
-                        return new JsonResult(new
-                        {
-                            success = false,
-                            messages = new[] {ValidationMessages.ChapterMustHavePages} 
-                        });
-                    
-                    var pagesStream = comicChapterModel.Pages.OpenReadStream();
-                    pagesZip = new ZipArchive(pagesStream);
-                }
+                byte[]? content = null;
                 
-                if (await _chapterArchiver.AddChapter(Mapper.MapToEntity(chapterModel), pagesZip))
+                switch (chapterModel)
                 {
-                    pagesZip?.Dispose();
+                    case ComicChapterModel comicChapterModel:
+                        if (comicChapterModel.Pages == null)
+                            return new JsonResult(new
+                            {
+                                success = false,
+                                messages = new[] {ValidationMessages.ChapterMustHavePages} 
+                            });
+
+                        await using (var memoryStream = new MemoryStream())
+                        {
+                            await comicChapterModel.Pages.CopyToAsync(memoryStream);
+                            content = memoryStream.ToArray();
+                        }
+                        break;
+                    case NovelChapterModel novelChapterModel:
+                        content = Encoding.Default.GetBytes(novelChapterModel.Content);
+                        break;
+                }
+
+                if (await _chapterArchiver.AddChapter(Mapper.MapToEntity(chapterModel), content))
+                {
                     TempData["SuccessMessage"] = new[] {OtherMessages.ChapterAddedSuccessfully};
                     
                     return new JsonResult(new
@@ -117,7 +125,6 @@ namespace WeebReader.Web.Portal.Controllers
                     });
                 }
                 
-                pagesZip?.Dispose();
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
@@ -166,17 +173,32 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.ChapterNumberAlreadyExist} 
                     });
                 
-                ZipArchive? pagesZip = null;
-
-                if (chapterModel is ComicChapterModel comicChapterModel)
+                byte[]? content = null;
+                
+                switch (chapterModel)
                 {
-                    var pagesStream = comicChapterModel.Pages?.OpenReadStream();
-                    pagesZip = pagesStream == null ? null : new ZipArchive(pagesStream);
+                    case ComicChapterModel comicChapterModel:
+                        if (comicChapterModel.Pages == null)
+                            return new JsonResult(new
+                            {
+                                success = false,
+                                messages = new[] {ValidationMessages.ChapterMustHavePages} 
+                            });
+
+                        await using (var memoryStream = new MemoryStream())
+                        {
+                            await comicChapterModel.Pages.CopyToAsync(memoryStream);
+                            content = memoryStream.ToArray();
+                        }
+                        break;
+                    case NovelChapterModel novelChapterModel:
+                        content = Encoding.Default.GetBytes(novelChapterModel.Content);
+                        break;
                 }
                 
                 Mapper.MapEditModelToEntity(chapterModel, ref chapter);
 
-                if (await _chapterArchiver.EditChapter(chapter, pagesZip))
+                if (await _chapterArchiver.EditChapter(chapter, content))
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.ChapterUpdatedSuccessfully};
                     
