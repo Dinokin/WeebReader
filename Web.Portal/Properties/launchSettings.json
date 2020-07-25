@@ -4,7 +4,6 @@
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "http://127.0.0.1:5000",
-      "workingDirectory": "C:\\Users\\lordv\\RiderProjects\\WeebReader\\Web.Portal\\bin\\Debug\\netcoreapp3.1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -13,7 +12,6 @@
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "http://127.0.0.1:5000",
-      "workingDirectory": "C:\\Users\\lordv\\RiderProjects\\WeebReader\\Web.Portal\\bin\\Release\\netcoreapp3.1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
