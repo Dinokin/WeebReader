@@ -1,0 +1,15 @@
+﻿@{
+    var darkMode = (bool) ViewData["DarkMode"];
+}
+
+<div class="ui center aligned container">
+    <div class="ui @(darkMode ? "inverted" : null ) segment">
+        <h1 class="ui red header">@Labels.NSFWWarningHeader</h1>
+        <h3 class="ui header">@Html.Raw(OtherMessages.NSFWMessage)</h3>
+        <div class="ui buttons">
+            <button id="nsfw-confirm" class="ui red button">@Labels.NSFWConfirm</button>
+            <div class="or"></div>
+            <a id="nsfw-deny" href="@Url.Action("Index", "Home")" class="ui @(!darkMode ? "black " : string.Empty)button">@Labels.NSFWDeny</a>
+        </div>
+    </div>
+</div>

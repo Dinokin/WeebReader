@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = $"{Model.Name}";
+    ViewData["DarkMode"] = false;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
 }
 
@@ -14,25 +15,7 @@
     <meta property="og:description" content="@Model.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.Id})"/>
-    <script>
-    $(() => {        
-        $("#titles,#titles-mobile").addClass("active");
-        
-        $("#nsfw-confirm").on("click", () => {
-            setCookie("seek_nsfw_content", "true", 0);
-            location.reload();
-        });
-    });
-    </script>
+    <partial name="_NSFWWarningScripts"/>
 }
-<div class="ui center aligned container">
-    <div class="ui segment">
-        <h1 class="ui red header">@Labels.NSFWWarningHeader</h1>
-        <h3 class="ui header">@Html.Raw(OtherMessages.NSFWMessage)</h3>
-        <div class="ui buttons">
-            <button id="nsfw-confirm" class="ui red button">@Labels.NSFWConfirm</button>
-            <div class="or"></div>
-            <a id="nsfw-deny" href="@Url.Action("Index")" class="ui black button">@Labels.NSFWDeny</a>
-        </div>
-    </div>
-</div>
+
+<partial name="_NSFWWarningBody"/>
