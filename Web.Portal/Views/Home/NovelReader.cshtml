@@ -6,7 +6,6 @@
     ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.Id}";
     ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.novel.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
-    var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];
@@ -135,10 +134,5 @@
         </div>
     </div>
 </div>
-@if (disqusEnabled)
-{
-    <div class="ui hidden divider"></div>
-    <div class="ui container">
-        <partial name="_Disqus"/>
-    </div>
-}
+
+<partial name="_Disqus"/>
