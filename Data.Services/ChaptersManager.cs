@@ -36,8 +36,12 @@ namespace WeebReader.Data.Services
             ? DbSet.Where(chapter => chapter.TitleId == title.Id).OrderByDescending(chapter => chapter.Number)
             : DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.Number));
 
-        public async Task<TChapter?> GetPreviousChapter(TChapter chapter) => await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number < chapter.Number).OrderByDescending(entity => entity.Number).FirstOrDefaultAsync();
+        public async Task<TChapter?> GetPreviousChapter(TChapter chapter, bool includeHidden) => includeHidden 
+            ? await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number < chapter.Number).OrderByDescending(entity => entity.Number).FirstOrDefaultAsync() 
+            : await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number < chapter.Number && entity.Visible).OrderByDescending(entity => entity.Number).FirstOrDefaultAsync();
         
-        public async Task<TChapter?> GetNextChapter(TChapter chapter) => await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number > chapter.Number).OrderBy(entity => entity.Number).FirstOrDefaultAsync();
+        public async Task<TChapter?> GetNextChapter(TChapter chapter, bool includeHidden) => includeHidden
+            ? await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number > chapter.Number).OrderBy(entity => entity.Number).FirstOrDefaultAsync()
+            : await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number > chapter.Number && entity.Visible).OrderBy(entity => entity.Number).FirstOrDefaultAsync();
     }
 }

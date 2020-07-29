@@ -337,8 +337,8 @@ namespace WeebReader.Web.Portal.Controllers
             if (title.Nsfw && !HasNsfwCookie()) 
                 return View("NSFWChapterWarning", (title, chapter));
 
-            ViewData["PreviousChapter"] = (await _chapterManager.GetPreviousChapter(chapter))?.Id;
-            ViewData["NextChapter"] = (await _chapterManager.GetNextChapter(chapter))?.Id;
+            ViewData["PreviousChapter"] = (await _chapterManager.GetPreviousChapter(chapter, _signInManager.IsSignedIn(User)))?.Id;
+            ViewData["NextChapter"] = (await _chapterManager.GetNextChapter(chapter, _signInManager.IsSignedIn(User)))?.Id;
 
             return await GetReader(title, chapter);
         }
