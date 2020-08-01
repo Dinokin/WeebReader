@@ -1,0 +1,27 @@
+﻿@model IEnumerable<(Title title, Chapter chapter)>
+
+@foreach (var (title, chapter) in Model)
+{
+    <div class="ui raised card">
+        <div class="content">
+            @if (title.Nsfw)
+            {
+                <div class="right aligned floating ui red label">@Labels.NSFW</div>
+            }
+            <div class="center aligned content ov-hidden">
+                <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
+                    <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg?v=@title.Version">
+                </a>
+            </div>
+            <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
+            <div class="center aligned description">
+                <p><i class="file outline icon"></i>@Labels.Chapter @chapter.Number</p>
+                <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p>
+            </div>
+        </div>
+        <a class="ui small black bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })">
+            @Labels.Read
+            <i class="angle double right fitted icon"></i>
+        </a>
+    </div>
+}

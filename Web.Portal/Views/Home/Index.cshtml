@@ -11,88 +11,16 @@
 {
     <link rel="alternate" type="application/rss+xml" title="@($"{siteName} RSS")" href="@Url.Action("IndexRss", "Home")"/>
     <script>
-    $(() => {
-        let cardContainer = $("#card-container");
-        let loader = $("#loader");
-        let page = @ViewData["Page"];
-        let totalPages = @ViewData["TotalPages"];
-        
-        cardContainer.visibility({
-        once: false,
-        observeChanges: true,
-        onBottomVisible: () => loadData()
-        });
-        
-        function loadData() {
-            if (page < totalPages) {
-                page++;
-                
-                cardContainer.api({
-                url: "@Url.Action("Index", new {page = 0})".replace("/0", `/${page}`),
-                method: "GET",
-                on: "now",
-                onRequest: () => {
-                    loader.removeClass("disabled");
-                    loader.addClass("active");
-                },
-                onComplete: () => {
-                    loader.removeClass("active");
-                    loader.addClass("disabled");
-                },
-                onSuccess: (response) => {
-                    generateCards(response.releases);
-                }
-                });
-            }
-        }
-        
-        function generateCards(releaseList) {
-            releaseList.forEach(currentValue => {
-                cardContainer.append(
-                    "<div class=\"ui raised card\"><div class=\"content\">" +
-                    `${currentValue.nsfw ? `<div class="right aligned floating ui red label">@Labels.NSFW</div>` : ``}` +
-                    `<div class="center aligned content ov-hidden"><a href="${currentValue.chapterAddress}"><img class="ui bordered image ${currentValue.nsfw ? `blur` : ``}" src="/content/${currentValue.titleId}/cover_thumb.jpg?v=${currentValue.version}"></a></div>` +
-                    `<h4 class="ui center aligned header line-clamp h-2-7rem"><a href="${currentValue.titleAddress}">${currentValue.titleName}</a></h4>` +
-                    "<div class=\"center aligned description\">" +
-                    `<p><i class="file outline icon"></i>@Labels.Chapter ${currentValue.chapterNumber}</p>` +
-                    `<p><i class=\"calendar alternate outline icon\"></i>${getDate(new Date(currentValue.releaseDate))}</p>` +
-                    "</div></div>" +
-                    `<a class="ui small black bottom attached button" href="${currentValue.chapterAddress}">@Labels.Read<i class="angle double right fitted icon"></i></a>` +
-                    "</div>"
-                )
-            });
-        }
-    });
+    var currentPage = @ViewData["Page"];
+    var totalPages = @ViewData["TotalPages"];
+    var pageRequestRoute = "@Url.Action("Index", new {page = 0})";
     </script>
+    <script src="libs/weebreader.1.0.0/main/index.js"></script>
 }
 
 <div class="ui center aligned container">
     <div id="card-container" class="ui four stackable cards">
-        @foreach (var (title, chapter) in Model)
-        {
-            <div class="ui raised card">
-                <div class="content">
-                    @if (title.Nsfw)
-                    {
-                        <div class="right aligned floating ui red label">@Labels.NSFW</div>
-                    }
-                    <div class="center aligned content ov-hidden">
-                        <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
-                            <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg?v=@title.Version">
-                        </a>
-                    </div>
-                    <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
-                    <div class="center aligned description">
-                        <p><i class="file outline icon"></i>@Labels.Chapter @chapter.Number</p>
-                        <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p>
-                    </div>
-                </div>
-                <a class="ui small black bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })">
-                    @Labels.Read
-                    <i class="angle double right fitted icon"></i>
-                </a>
-            </div>
-        }
+        <partial name="Partials/IndexPartial" model="Model"/>
     </div>
     <div class="ui hidden divider"></div>
     <div id="loader" class="ui disabled centered large inline loader"></div>

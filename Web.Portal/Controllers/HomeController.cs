@@ -56,31 +56,8 @@ namespace WeebReader.Web.Portal.Controllers
             return View(await GetReleases(0, Constants.ItemsPerPageReleases));
         }
 
-        [HttpGet("JSON/{page:int}")]
-        public async Task<IActionResult> Index(ushort page)
-        {
-            var totalPages = Math.Ceiling(await CountReleases() / (decimal) Constants.ItemsPerPageReleases);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-
-            return new JsonResult(new
-            {
-                success = true,
-                page,
-                totalPages,
-                releases = (await GetReleases(Constants.ItemsPerPageReleases * (page - 1), Constants.ItemsPerPageReleases)).Select(tuple => new
-                {
-                    titleId = tuple.title.Id,
-                    chapterId = tuple.chapter.Id,
-                    titleName = tuple.title.Name,
-                    chapterNumber = tuple.chapter.Number,
-                    releaseDate = tuple.chapter.ReleaseDate,
-                    titleAddress = Url.Action("Titles", new {titleId = tuple.title.Id}),
-                    chapterAddress = Url.Action("ReadChapter", new {chapterId = tuple.chapter.Id}),
-                    nsfw = tuple.title.Nsfw,
-                    version = tuple.title.Version
-                })
-            });
-        }
+        [HttpGet("{page:int}")]
+        public async Task<IActionResult> Index(ushort page) => PartialView("Partials/IndexPartial", await GetReleases(Constants.ItemsPerPageReleases * (page - 1), Constants.ItemsPerPageReleases));
 
         [HttpGet("RSS")]
         public async Task<IActionResult> IndexRss()
