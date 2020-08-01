@@ -2,6 +2,11 @@
     var darkMode = (bool) ViewData["DarkMode"];
 }
 
+@section PartialHeaders
+{
+    <script src="~/libs/weebreader.1.0.0/main/nsfw-warning.js"></script>
+}
+
 <div class="ui center aligned container">
     <div class="ui @(darkMode ? "inverted" : null ) segment">
         <h1 class="ui red header">@Labels.NSFWWarningHeader</h1>

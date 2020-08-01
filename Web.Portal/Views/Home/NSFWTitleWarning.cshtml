@@ -15,7 +15,6 @@
     <meta property="og:description" content="@Model.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.Id})"/>
-    <partial name="_NSFWWarningScripts"/>
 }
 
-<partial name="_NSFWWarningBody"/>
+<partial name="Partials/NSFWWarning"/>
