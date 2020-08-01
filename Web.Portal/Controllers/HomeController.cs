@@ -50,14 +50,14 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            ViewData["Page"] = 1;
+            ViewData["CurrentPage"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await CountReleases() / (decimal) Constants.ItemsPerPageReleases);
             
             return View(await GetReleases(0, Constants.ItemsPerPageReleases));
         }
 
         [HttpGet("{page:int}")]
-        public async Task<IActionResult> Index(ushort page) => PartialView("Partials/IndexPartial", await GetReleases(Constants.ItemsPerPageReleases * (page - 1), Constants.ItemsPerPageReleases));
+        public async Task<IActionResult> Index(ushort page) => PartialView("Partials/Index", await GetReleases(Constants.ItemsPerPageReleases * (page - 1), Constants.ItemsPerPageReleases));
 
         [HttpGet("RSS")]
         public async Task<IActionResult> IndexRss()
@@ -203,31 +203,14 @@ namespace WeebReader.Web.Portal.Controllers
             if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
                 return RedirectToAction("Index");
 
-            ViewData["Page"] = 1;
+            ViewData["CurrentPage"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
 
             return View(await _postsManager.GetRange(0, Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
         }
 
-        [HttpGet("{action}/JSON/{page:int}")]
-        public async Task<IActionResult> Blog(ushort page)
-        {
-            var totalPages = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
-
-            return new JsonResult(new
-            {
-                success = true,
-                page,
-                totalPages,
-                posts = (await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User))).Select(post => new
-                {
-                    title = post.Title,
-                    content = post.Content,
-                    releaseDate = post.ReleaseDate
-                })
-            });
-        }
+        [HttpGet("{action}/{page:int}")]
+        public async Task<IActionResult> Blog(ushort page) => PartialView("Partials/Blog", await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
 
         [HttpGet("{action}")]
         public async Task<IActionResult> About()

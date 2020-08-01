@@ -11,7 +11,7 @@
 {
     <link rel="alternate" type="application/rss+xml" title="@($"{siteName} RSS")" href="@Url.Action("IndexRss", "Home")"/>
     <script>
-    var currentPage = @ViewData["Page"];
+    var currentPage = @ViewData["CurrentPage"];
     var totalPages = @ViewData["TotalPages"];
     var pageRequestRoute = "@Url.Action("Index", new {page = 0})";
     </script>
@@ -20,7 +20,7 @@
 
 <div class="ui center aligned container">
     <div id="card-container" class="ui four stackable cards">
-        <partial name="Partials/IndexPartial" model="Model"/>
+        <partial name="Partials/Index" model="Model"/>
     </div>
     <div class="ui hidden divider"></div>
     <div id="loader" class="ui disabled centered large inline loader"></div>
