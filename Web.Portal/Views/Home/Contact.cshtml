@@ -18,64 +18,14 @@
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    $(() =>{
-        let messageContainer = $(".form .message");
-        let form = $(".form");
-        
-        $("#contact,#contact-mobile").addClass("active");
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-        
-        form.on("submit", () => tinyMCE.triggerSave()).form({
-        on: "blur",
-        fields: {
-            nickname: {
-                identifier: "nickname",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.NickNameRequired"
-                    }
-                ]
-            },
-            email: {
-                identifier: "email",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.EmailRequired"
-                    },
-                    {
-                        type: "email",
-                        prompt: "@ValidationMessages.ValidEmailRequired"
-                    }
-                ]
-            },
-            message: {
-                identifier: "message",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.MessageRequired"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@Url.Action("Contact")",
-        serializeForm: true,
-        method: "POST",
-        onSuccess: () => window.location.reload(),
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-    });
+    var nicknameRequired = "@ValidationMessages.NickNameRequired";
+    var emailRequired = "@ValidationMessages.EmailRequired";
+    var validEmailRequired = "@ValidationMessages.ValidEmailRequired";
+    var messageRequired = "@ValidationMessages.MessageRequired";
+    var requestFailed = "@OtherMessages.RequestFailed";
+    var requestRoute = "@Url.Action("Contact")";
     </script>
+    <script src="~/libs/weebreader.1.0.0/main/contact.js"></script>
     @if (reCaptchaEnabled)
     {
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
