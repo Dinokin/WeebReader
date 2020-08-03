@@ -3,14 +3,19 @@
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
-    ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.Id}";
-    ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var pages = Model.pages.Select(page => $"/content/{Model.comic.Id}/{Model.chapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];
+    var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
+
+    if (disqusEnabled)
+    {
+        ViewData["DisqusIdentifier"] = $"chapter_{Model.chapter.Id}";
+        ViewData["DisqusTitle"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
+    }
 }
 
 @section Headers
@@ -294,4 +299,9 @@
     </div>
 </div>
 <div class="ui hidden divider"></div>
-<partial name="_Disqus"/>
+@if (disqusEnabled)
+{
+    <div class="ui container">
+        <partial name="_Disqus"/>
+    </div>
+}

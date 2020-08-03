@@ -3,10 +3,14 @@
 
 @{
     ViewData["Title"] = $"{Model.title.Name}";
-    ViewData["DisqusIdentifier"] = $"title_{Model.title.Id}";
-    ViewData["DisqusTitle"] = Model.title.Name;
     var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
+
+    if (disqusEnabled)
+    {
+        ViewData["DisqusIdentifier"] = $"title_{Model.title.Id}";
+        ViewData["DisqusTitle"] = Model.title.Name;
+    }
 }
 
 @section Headers
