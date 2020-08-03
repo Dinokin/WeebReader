@@ -15,6 +15,7 @@
     <meta property="og:description" content="@Model.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.Id})"/>
+    <script src="~/libs/weebreader.1.0.0/main/nsfw-warning.js"></script>
 }
 
 <partial name="Partials/NSFWWarning"/>

@@ -14,6 +14,7 @@
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.title.Id}/cover_thumb.jpg?v={Model.title.Version}")"/>
     <meta property="og:description" content="@Model.title.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
+    <script src="~/libs/weebreader.1.0.0/main/nsfw-warning.js"></script>
 }
 
 <partial name="Partials/NSFWWarning"/>
