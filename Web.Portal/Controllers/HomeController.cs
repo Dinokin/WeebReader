@@ -210,7 +210,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{action}/{page:int}")]
-        public async Task<IActionResult> Blog(ushort page) => PartialView("Partials/Blog", await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
+        public async Task<IActionResult> Blog(ushort page) => PartialView("Partials/BlogPosts", await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
 
         [HttpGet("{action}")]
         public async Task<IActionResult> About()
