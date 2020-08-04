@@ -103,12 +103,27 @@ namespace WeebReader.Web.Portal.Controllers
             if (title.Nsfw && !HasNsfwCookie()) 
                 return View("NSFWTitleWarning", title);
             
-            ViewData["Page"] = 1;
+            ViewData["CurrentPage"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
             
             return View("Title", ValueTuple.Create(title, await _titlesManager.GetTags(title), await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))));
         }
 
+        [HttpGet("{action}/{titleId:Guid}/{page:int}")]
+        public async Task<IActionResult> Titles(Guid titleId, ushort page)
+        {
+            if (await _titlesManager.GetById(titleId) is var title && title == null)
+                return NotFound();
+
+            if (!_signInManager.IsSignedIn(User) && !title.Visible)
+                return NotFound();
+
+            if (page == 0)
+                page = 1;
+
+            return PartialView("Partials/TitleChapters", await _chapterManager.GetRange(title, Constants.ItemsPerPageChapters * (page - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User)));
+        }
+        
         [HttpGet("{action}/{titleId:Guid}/JSON/{page:int?}")]
         public async Task<IActionResult> TitlesJson(Guid titleId, ushort? page)
         {
@@ -117,50 +132,18 @@ namespace WeebReader.Web.Portal.Controllers
 
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
                 return NotFound();
-
-            JsonResult returnValue;
             
-            if (page != null && page > 0)
+            return new JsonResult(new
             {
-                var totalPages = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
-                page = page <= totalPages ? page : 1;
-
-                returnValue = new JsonResult(new
+                success = true,
+                chapters = (await _chapterManager.GetAll(title, _signInManager.IsSignedIn(User))).Select(chapter => new
                 {
-                    success = true,
-                    page,
-                    totalPages,
-                    chapters = (await _chapterManager.GetRange(title, Constants.ItemsPerPageChapters * (page!.Value - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))).Select(chapter => new
-                    {
-                        id = chapter.Id,
-                        volume = chapter.Volume,
-                        number = chapter.Number,
-                        name = chapter.Name,
-                        releaseDate = chapter.ReleaseDate,
-                        readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
-                        downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
-                    })
-                });
-            }
-            else
-                returnValue = new JsonResult(new
-                {
-                    success = true,
-                    chapters = (await _chapterManager.GetAll(title, _signInManager.IsSignedIn(User))).Select(chapter => new
-                    {
-                        id = chapter.Id,
-                        volume = chapter.Volume,
-                        number = chapter.Number,
-                        name = chapter.Name,
-                        releaseDate = chapter.ReleaseDate,
-                        readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id}),
-                        downloadAddress = Url.Action("DownloadChapter", new {chapterId = chapter.Id})
-                    })
-                });
-
-            return returnValue;
+                    number = chapter.Number,
+                    readAddress = Url.Action("ReadChapter", new {chapterId = chapter.Id})
+                })
+            });
         }
-        
+
         [HttpGet("Titles/{titleId:Guid}/RSS")]
         public async Task<IActionResult> TitlesRss(Guid titleId)
         {
@@ -210,7 +193,13 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{action}/{page:int}")]
-        public async Task<IActionResult> Blog(ushort page) => PartialView("Partials/BlogPosts", await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
+        public async Task<IActionResult> Blog(ushort page)
+        {
+            if (page == 0)
+                page = 1;
+            
+            return PartialView("Partials/BlogPosts", await _postsManager.GetRange(Constants.ItemsPerPagePosts * (page - 1), Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));
+        }
 
         [HttpGet("{action}")]
         public async Task<IActionResult> About()

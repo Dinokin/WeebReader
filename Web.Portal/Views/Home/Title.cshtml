@@ -22,68 +22,11 @@
     <meta property="og:site_name" content="@siteName"/>
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.title.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.title.Id})"/>
     <script>
-    $(() => {
-        $("#titles,#titles-mobile").addClass("active");
-        $(".tabular.menu .item").tab();
-    });
+    var currentPage = @ViewData["CurrentPage"];
+    var totalPages = @ViewData["TotalPages"];
+    var pageRequestRoute = "@Url.Action("Titles", new {titleId = Model.title.Id, page = 0})";
     </script>
-    @if (Model.chapters.Any())
-    {
-        <script>
-        $(() => {
-            let chapterContainer = $("#chapters");
-            let loader = $("#loader");
-            let page = @ViewData["Page"];
-            let totalPages = @ViewData["TotalPages"];
-            
-            chapterContainer.visibility({
-            once: false,
-            observeChanges: true,
-            onBottomVisible: () => loadData()
-            });
-            
-            function loadData() {
-                if (page < totalPages) {
-                    page++;
-                    
-                    chapterContainer.api({
-                    url: "@Url.Action("TitlesJson", new {titleId = Model.title.Id, page = ViewData["Page"]})".replace("/@ViewData["Page"]", `/${page}`),
-                    method: "GET",
-                    on: "now",
-                    onRequest: () => {
-                        loader.removeClass("disabled");
-                        loader.addClass("active");
-                    },
-                    onComplete: () => {
-                        loader.removeClass("active");
-                        loader.addClass("disabled");
-                    },
-                    onSuccess: (response) => generateItems(response.chapters)
-                    });
-                }
-                else
-                {
-                    $("#previous-chapters").removeClass("dp-none");
-                }
-            }
-            
-            function generateItems(chapterList) {
-                chapterList.forEach(currentValue => {
-                    chapterContainer.append(
-                        "<div class=\"item\"><div class=\"content\"><p class=\"header add-ellipsis\">" +
-                        `<a href="${currentValue.downloadAddress}"><i class="download icon"></i></a>` +
-                        `<a href="${currentValue.readAddress}">` +
-                        `${currentValue.volume != null && currentValue.volume > 0 ? `@Labels.Vol${currentValue.volume} ` : ""}@Labels.Chapter ${currentValue.number}${!isNullOrWhiteSpace(currentValue.name) ? `: ${currentValue.name}` : ""}` +
-                        "</a></p></div>" +
-                        "<div class=\"description\">" +
-                        `<p><i class="calendar alternate outline icon"></i>${getDate(new Date(currentValue.releaseDate))}</p>` +
-                        "</div></div>"
-                        );
-                });
-            }
-        });
-        </script>
-    }
+    <script src="~/libs/weebreader.1.0.0/main/title.js"></script>
 }
 
 <div class="ui container">
@@ -142,21 +85,7 @@
             @if(Model.chapters.Any())
             {
                 <div id="chapters" class="ui relaxed divided list">
-                    @foreach (var chapter in Model.chapters)
-                    {
-                        <div class="item">
-                            <div class="content">
-                                <p class="header add-ellipsis">
-                                    <a href="@Url.Action("DownloadChapter", new {chapterId = chapter.Id})"><i class="download icon"></i></a>
-                                    <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
-                                        @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}" : null)
-                                    </a>
-                                </p>
-                            </div>
-                            <div class="description">
-                                <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p></div>
-                        </div>
-                    }
+                    <partial name="Partials/TitleChapters" model="@Model.chapters"/>
                 </div>
                 <div id="loader" class="ui centered large inline loader"></div>
                 @if (!string.IsNullOrWhiteSpace(Model.title.PreviousChaptersLink))

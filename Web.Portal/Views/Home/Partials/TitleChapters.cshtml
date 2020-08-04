@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Chapter>
+
+@foreach (var chapter in Model)
+{
+    <div class="item">
+        <div class="content">
+            <p class="header add-ellipsis">
+                <a href="@Url.Action("DownloadChapter", new {chapterId = chapter.Id})"><i class="download icon"></i></a>
+                <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
+                    @(chapter.Volume != null && chapter.Volume > 0 ? $"{Labels.Vol}{chapter.Volume} " : null)@Labels.Chapter @chapter.Number@(!string.IsNullOrWhiteSpace(chapter.Name) ? $": {chapter.Name}" : null)
+                </a>
+            </p>
+        </div>
+        <div class="description">
+            <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p></div>
+    </div>
+}
