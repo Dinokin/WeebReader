@@ -72,6 +72,8 @@ namespace WeebReader.Web.Portal.Controllers
                     Id = tuple.chapter.Id.ToString(),
                     PublishDate = tuple.chapter.ReleaseDate
                 };
+                
+                feedItem.ElementExtensions.Add("titleLink", null, new Uri(Url.Action("Titles", "Home", new {titleId = tuple.title.Id}, Request.Scheme)));
 
                 return feedItem;
             });
