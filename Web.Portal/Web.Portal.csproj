@@ -28,4 +28,13 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Update="Controllers\HomeController.Content.cs">
+        <DependentUpon>HomeController.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Controllers\HomeController.PrivateParts.cs">
+        <DependentUpon>HomeController.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>
