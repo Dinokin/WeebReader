@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using WeebReader.Data.Entities;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Portal.Others;
@@ -26,7 +27,12 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("RSS")]
         public async Task<IActionResult> IndexRss()
         {
-            var feedItems = (await GetReleases(0, Constants.ItemsPerPageReleasesRss)).Select(tuple =>
+            const string key = "index_rss";
+            
+            if (_memoryCache.TryGetValue(key, out var value))
+                return await GetRssFeed((SyndicationFeed) value);
+            
+            var feedItems = (await GetReleases(0, Constants.ItemsPerPageReleasesRss, false)).Select(tuple =>
             {
                 var title = $"{tuple.title.Name} - {Labels.Chapter} {tuple.chapter.Number}";
                 var description = tuple.title.Synopsis.RemoveHtmlTags() is var desc && desc.Length > 200 ? $"{desc.Substring(0, 200)}..." : desc;
@@ -40,7 +46,7 @@ namespace WeebReader.Web.Portal.Controllers
                 feedItem.ElementExtensions.Add("titleLink", null, new Uri(Url.Action("Titles", "Home", new {titleId = tuple.title.Id}, Request.Scheme)));
 
                 return feedItem;
-            });
+            }).ToArray();
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
             var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.Home} - {siteName}", new Uri(Url.Action("Index", "Home", null, Request.Scheme)), feedItems)
@@ -48,9 +54,11 @@ namespace WeebReader.Web.Portal.Controllers
                 BaseUri = new Uri(Url.Action("IndexRss", "Home", null, Request.Scheme)),
                 ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/assets/icon.png"),
                 LastUpdatedTime = DateTimeOffset.Now,
-                TimeToLive = TimeSpan.FromMinutes(1)
+                TimeToLive = TimeSpan.FromMinutes(10)
             };
 
+            _memoryCache.Set(key, feed, TimeSpan.FromMinutes(10));
+            
             return await GetRssFeed(feed);
         }
         
@@ -113,6 +121,11 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Titles/{titleId:Guid}/RSS")]
         public async Task<IActionResult> TitlesRss(Guid titleId)
         {
+            var key = $"titles_rss_{titleId}";
+            
+            if (_memoryCache.TryGetValue(key, out var value))
+                return await GetRssFeed((SyndicationFeed) value);
+            
             if (await _titlesManager.GetById(titleId) is var title && title == null)
                 return NotFound();
 
@@ -132,7 +145,7 @@ namespace WeebReader.Web.Portal.Controllers
                 };
 
                 return feedItem;
-            });
+            }).ToArray();
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
             var feed = new SyndicationFeed($"{title.Name} RSS", $"{title.Name} - {siteName}", new Uri(Url.Action("Titles", "Home", new {titleId = title.Id}, Request.Scheme)), feedItems)
@@ -140,9 +153,11 @@ namespace WeebReader.Web.Portal.Controllers
                 BaseUri = new Uri(Url.Action("TitlesRss", "Home", new {titleId = title.Id}, Request.Scheme)),
                 ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{title.Id}/cover_thumb.jpg"),
                 LastUpdatedTime = DateTimeOffset.Now,
-                TimeToLive = TimeSpan.FromMinutes(1)
+                TimeToLive = TimeSpan.FromMinutes(10)
             };
 
+            _memoryCache.Set(key, feed, TimeSpan.FromMinutes(10));
+            
             return await GetRssFeed(feed);
         }
         

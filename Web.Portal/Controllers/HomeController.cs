@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
@@ -25,9 +26,10 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly EmailSender _emailSender;
         private readonly ParametersManager _parametersManager;
         private readonly ReCaptchaValidator _reCaptchaValidator;
+        private readonly IMemoryCache _memoryCache;
 
         public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager,
-            ChapterArchiver<Chapter> chapterArchiver, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
+            ChapterArchiver<Chapter> chapterArchiver, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator, IMemoryCache memoryCache)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
@@ -39,6 +41,7 @@ namespace WeebReader.Web.Portal.Controllers
             _emailSender = emailSender;
             _parametersManager = parametersManager;
             _reCaptchaValidator = reCaptchaValidator;
+            _memoryCache = memoryCache;
         }
 
         [HttpGet("{action}")]

@@ -72,13 +72,13 @@ namespace WeebReader.Web.Portal.Controllers
                     .OrderByDescending(tuple => tuple.chapter.ReleaseDate).LongCount();
         }
         
-        private async Task<IEnumerable<(Title title, Chapter chapter)>> GetReleases(int skip, int take)
+        private async Task<IEnumerable<(Title title, Chapter chapter)>> GetReleases(int skip, int take, bool? includeHidden = null)
         {
-            var includeHidden = _signInManager.IsSignedIn(User);
-            var titles = (await _titlesManager.GetAll(includeHidden)).AsQueryable();
-            var chapters = (await _chapterManager.GetAll(includeHidden)).AsQueryable();
+            includeHidden ??= _signInManager.IsSignedIn(User);
+            var titles = (await _titlesManager.GetAll(includeHidden.Value)).AsQueryable();
+            var chapters = (await _chapterManager.GetAll(includeHidden.Value)).AsQueryable();
 
-            var releases = includeHidden
+            var releases = includeHidden.Value
                 ? titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take)
                 : titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).Where(tuple => tuple.title.Visible && tuple.chapter.Visible)
                     .OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take);
