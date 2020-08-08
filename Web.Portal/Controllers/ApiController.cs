@@ -7,6 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
+using WeebReader.Web.Portal.Others;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -76,7 +77,7 @@ namespace WeebReader.Web.Portal.Controllers
                 Type = title.GetType().Name,
                 title.Author,
                 title.Artist,
-                title.Synopsis,
+                Synopsis = title.Synopsis.RemoveHtmlTags(),
                 title.Status,
                 CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
                 UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate,
