@@ -127,7 +127,7 @@ namespace WeebReader.Web.Portal.Controllers
                     {
                         page.Id,
                         page.Number,
-                        Format = page.Animated ? ".gif" : ".png"
+                        pageUrl = $"/content/{comicChapter.TitleId}/{comicChapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}"
                     }).ToArray()
                 },
                 NovelChapter novelChapter => new
@@ -142,7 +142,7 @@ namespace WeebReader.Web.Portal.Controllers
                     Pages = (await _pagesManager.GetAll(novelChapter)).Select(page => new
                     {
                         page.Id,
-                        Format = page.Animated ? ".gif" : ".png"
+                        pageUrl = $"/content/{novelChapter.TitleId}/{novelChapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}"
                     }).ToArray()
                 },
                 _ => throw new ArgumentException()
