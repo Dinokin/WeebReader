@@ -45,10 +45,9 @@ namespace WeebReader.Web.Portal.Controllers
                         Type = title.GetType().Name,
                         title.Author,
                         title.Artist,
-                        title.Synopsis,
+                        title.Status,
                         CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
-                        UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate,
-                        Tags = (await _titlesManager.GetTags(title)).Select(tag => tag.Name).ToArray()
+                        UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                     });
 
                 return titles;
@@ -78,6 +77,7 @@ namespace WeebReader.Web.Portal.Controllers
                 title.Author,
                 title.Artist,
                 title.Synopsis,
+                title.Status,
                 CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
                 UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate,
                 Tags = (await _titlesManager.GetTags(title)).Select(tag => tag.Name).ToArray(),
