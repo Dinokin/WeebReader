@@ -38,10 +38,14 @@ namespace WeebReader.Data.Services
 
         public async Task<TChapter?> GetPreviousChapter(TChapter chapter, bool includeHidden) => includeHidden 
             ? await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number < chapter.Number).OrderByDescending(entity => entity.Number).FirstOrDefaultAsync() 
-            : await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number < chapter.Number && entity.Visible).OrderByDescending(entity => entity.Number).FirstOrDefaultAsync();
+            : await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number < chapter.Number && entity.Visible && entity.ReleaseDate <= DateTime.Now).OrderByDescending(entity => entity.Number).FirstOrDefaultAsync();
         
         public async Task<TChapter?> GetNextChapter(TChapter chapter, bool includeHidden) => includeHidden
             ? await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number > chapter.Number).OrderBy(entity => entity.Number).FirstOrDefaultAsync()
-            : await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number > chapter.Number && entity.Visible).OrderBy(entity => entity.Number).FirstOrDefaultAsync();
+            : await DbSet.Where(entity => entity.TitleId == chapter.TitleId && entity.Number > chapter.Number && entity.Visible && entity.ReleaseDate <= DateTime.Now).OrderBy(entity => entity.Number).FirstOrDefaultAsync();
+        
+        public async Task<TChapter?> GetLatestChapter(Title title, bool includeHidden) => includeHidden
+            ? await DbSet.Where(entity => entity.TitleId == title.Id).OrderByDescending(entity => entity.ReleaseDate).FirstOrDefaultAsync()
+            : await DbSet.Where(entity => entity.TitleId == title.Id && entity.Visible && entity.ReleaseDate <= DateTime.Now).OrderByDescending(entity => entity.ReleaseDate).FirstOrDefaultAsync();
     }
 }
