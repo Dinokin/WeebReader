@@ -90,8 +90,8 @@ namespace WeebReader.Web.Portal.Controllers
             return PartialView("Partials/TitleChapters", await _chapterManager.GetRange(title, Constants.ItemsPerPageChapters * (page - 1), Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User)));
         }
         
-        [HttpGet("{action}/{titleId:Guid}/JSON/{page:int?}")]
-        public async Task<IActionResult> TitlesJson(Guid titleId, ushort? page)
+        [HttpGet("{action}/{titleId:Guid}/JSON")]
+        public async Task<IActionResult> TitlesJson(Guid titleId)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
                 return NotFound();
