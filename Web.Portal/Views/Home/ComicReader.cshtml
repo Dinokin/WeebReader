@@ -25,203 +25,27 @@
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.Id}/cover_thumb.jpg?v={Model.comic.Version}")"/>
     <meta property="og:description" content="@Model.comic.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@siteName"/>
-    <!--suppress JSIncompatibleTypesComparison -->
     <script>
-    $(() => {
-        let jumpButton = $("#jump-button");
-        
-        $("#titles,#titles-mobile").addClass("active");
-        $(".ui.dropdown").dropdown();
-        
-        $("#chapter-selector").dropdown({
-        onChange: (value) => {
-            if (value !== "default") {
-                window.location.href = value;
-            }
-        },
-        apiSettings: {
-            url: "@Url.Action("TitlesJson", new {titleId = Model.comic.Id})",
-            saveRemoteData: false,
-            cache: false,
-            onResponse: (response) => {
-                let array = [];
-                
-                response.chapters.forEach(currentValue => {
-                    array.push({
-                    name: "@Labels.Chapter " + currentValue.number,
-                    value: currentValue.readAddress,
-                    text: "@Labels.Chapter " + currentValue.number,
-                    class: @Html.Raw(Model.chapter.Number) === currentValue.number ? "item active selected" : "item"
-                    });
-                });
-                
-                return {
-                    success: response.success,
-                    results: array
-                }
-            }
-        }
-        });
-        
-        $("#options").popup({
-        popup: $("#popup"),
-        on: "click"
-        });
-        
-        $("#switch-view-mode").on("click", () => {
-            const cookieName = "@Html.Raw($"{Model.comic.Id}_long_strip")";
-            
-            if (getCookie(cookieName) === "true") {
-                setCookie(cookieName, false, 3650);
-            } else {
-                setCookie(cookieName, true, 3650);
-            }
-            
-            location.reload();
-        });
-       
-        $("#switch-theme").on("click", () => {
-            if (getCookie("reader_theme") !== "light") {
-                setCookie("reader_theme", "light", 3650);
-            } else {
-                setCookie("reader_theme", "dark", 3650);
-            }
-            
-            location.reload();
-        });
-        
-        jumpButton.on("click", () => {
-            scrollToTop($("#chapter-container"));
-        });
-        
-        $(document).on("scroll", () => {
-            if ($(document).scrollTop() > 125) {
-                jumpButton.removeClass("dp-none");
-            } else {
-                jumpButton.addClass("dp-none");
-            }
-        });
-    });
+    var chapterListRoute = "@Url.Action("TitlesJson", new {titleId = Model.comic.Id})";
+    var previousChapterRoute = "@(previousChapter != null ? Url.Action("ReadChapter", new { chapterId = previousChapter }) : string.Empty)";
+    var nextChapterRoute = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)"
+    var chapterLabel = "@Labels.Chapter";
+    var noNextChapterLabel = "@OtherMessages.NoNextChapter";
+    var noPreviousChapterLabel = "@OtherMessages.NoPreviousChapter";
+    var titleId = "@Model.comic.Id"
+    var chapterNumber = @Html.Raw(Model.chapter.Number);
+    var chapterPages =  @Html.Raw(JsonConvert.SerializeObject(pages));
     </script>
-    @if (!longStrip)
+    <script src="~/libs/weebreader.1.0.0/main/reader-shared.js"></script>
+    <script src="~/libs/weebreader.1.0.0/main/reader-comic-shared.js"></script>
+    
+    @if (longStrip)
     {
-        <script>
-        $(() => {
-            let pages = @Html.Raw(JsonConvert.SerializeObject(pages));
-            let pageSelector = $("#page-selector");
-            let chapterContainer = $("#chapter-container");
-            let pageContainer = $("#page-container");
-            let page = $("#page");
-            let currentPage = 0;
-            let previousChapter = "@(previousChapter != null ? Url.Action("ReadChapter", new { chapterId = previousChapter }) : string.Empty)";
-            let nextChapter = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)";
-            
-            pageSelector.dropdown({
-            onChange: (value) => {
-                currentPage = Number(value);
-                setPage(value);
-                previousPagePreload();
-                nextPagePreload();
-            }
-            });
-            
-            pageContainer.dimmer({
-            closable: false,
-            displayLoader: true
-            });
-            
-            chapterContainer.on("click", (event) => {            
-                let pageWidth = chapterContainer.innerWidth();
-                let pageOffset = chapterContainer.offset();
-                let clickLocation = event.pageX - pageOffset.left;
-            
-                if (pageWidth / 2 > clickLocation) {
-                    goPreviousPage();
-                } else {
-                    goNextPage();
-                }
-            });
-            
-            
-            page.on("load", () => pageContainer.dimmer("hide"));
-            
-            setPage();
-            
-            function setPage() {
-                pageContainer.dimmer("show");
-                page.attr("src", pages[currentPage]);
-                pageSelector.dropdown("set selected", [currentPage]);
-            }
-            
-            function goNextPage() {
-                if (currentPage + 1 >= pages.length) {
-                    if (nextChapter.length > 0) {
-                        window.location.href = nextChapter;
-                    } else {
-                        $("body").toast({
-                        class: "error",
-                        message: "@OtherMessages.NoNextChapter"
-                        });
-                    }
-                    
-                    return;
-                }
-
-                currentPage++;
-                setPage();
-                scrollToTop(chapterContainer);
-                nextPagePreload();
-            }
-        
-            function goPreviousPage() {
-                if (currentPage - 1 < 0) {
-                    if (previousChapter.length > 0) {
-                        window.location.href = previousChapter;
-                    } else {
-                        $("body").toast({
-                        class: "error",
-                        message: "@OtherMessages.NoPreviousChapter"
-                        });
-                    }
-                    
-                    return;
-                }
-                
-                currentPage--;
-                setPage();
-                scrollToTop(chapterContainer);
-                previousPagePreload();
-            }
-            
-            function nextPagePreload() {
-                for (let i = 1; i <= 2; i++) {
-                    if (currentPage + i < pages.length) {
-                        new Image().src = pages[currentPage + i];
-                    }
-                }
-            }
-            
-            function previousPagePreload() {
-                for (let i = 1; i <= 2; i++) {
-                    if (currentPage - i >= 0) {
-                        new Image().src = pages[currentPage - i];
-                    }
-                }
-            }            
-        });
-        </script>
+        <script src="~/libs/weebreader.1.0.0/main/reader-comic-longstrip.js"></script>
     }
     else
     {
-        <script>
-        $(() => {
-            $("#chapter-container").children().visibility({
-            type: "image",
-            transition: "fade in",
-            duration: 1000
-            });
-        });
-        </script>
+        <script src="~/libs/weebreader.1.0.0/main/reader-comic-multiplepages.js"></script>
     }
 }
 <button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>
