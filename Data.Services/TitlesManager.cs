@@ -21,7 +21,7 @@ namespace WeebReader.Data.Services
                 : DbSet.Join(Context.TitleTags, title => title.Id, titleTag => titleTag.TitleId, (title, titleTag) => new {title, titleTag})
                     .Join(Context.Tags, tuple => tuple.titleTag.TagId, tag => tag.Id, (tuple, tag) => new {tuple.title, tag, tuple.titleTag}).Where(tuple => tuple.title.Visible);
 
-            return Task.FromResult<IEnumerable<TTitle>>(results.Where(tuple => tuple.tag.Name.ToLower().Contains(term) || tuple.title.Name.ToLower().Contains(term)).Select(tuple => tuple.title).Distinct());
+            return Task.FromResult<IEnumerable<TTitle>>(results.Where(tuple => tuple.tag.Name.ToLower().Contains(term) || tuple.title.Name.ToLower().Contains(term) || tuple.title.Id.ToString() == term).Select(tuple => tuple.title).Distinct());
         }
         
         public async Task<long> Count(bool includeHidden) => includeHidden
