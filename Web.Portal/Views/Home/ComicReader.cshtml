@@ -28,11 +28,11 @@
     <script>
     var chapterListRoute = "@Url.Action("TitlesJson", new {titleId = Model.comic.Id})";
     var previousChapterRoute = "@(previousChapter != null ? Url.Action("ReadChapter", new { chapterId = previousChapter }) : string.Empty)";
-    var nextChapterRoute = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)"
+    var nextChapterRoute = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)";
     var chapterLabel = "@Labels.Chapter";
     var noNextChapterLabel = "@OtherMessages.NoNextChapter";
     var noPreviousChapterLabel = "@OtherMessages.NoPreviousChapter";
-    var titleId = "@Model.comic.Id"
+    var titleId = "@Model.comic.Id";
     var chapterNumber = @Html.Raw(Model.chapter.Number);
     var chapterPages =  @Html.Raw(JsonConvert.SerializeObject(pages));
     </script>

@@ -4,64 +4,14 @@
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    $(() => {
-        let messageContainer = $(".form .message");
-        let form = $(".form");
-        
-        $(".checkbox").checkbox();
-        $("#blog").addClass("active");
-        
-        $(".ui.calendar").calendar({
-        ampm: false,
-        formatter: {
-            date: (date) => getDate(date),
-            time: (date) => getTime(date)
-        }
-        });
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-        
-        form.on("submit", () => tinyMCE.triggerSave()).form({
-        on: "blur",
-        fields: {
-            title: {
-                identifier: "title",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.PostMustHaveTitle"
-                    },
-                    {
-                        type: "maxLength[100]",
-                        prompt: "@ValidationMessages.PostTitleMaxLength"
-                    }          
-                ]
-            },
-            content: {
-                identifier: "content",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.PostMustHaveContent"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@ViewData["ActionRoute"]",
-        serializeForm: true,
-        method: "@ViewData["Method"]",
-        onSuccess: response => window.location.href = response.destination,
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-    });
+    var postMustHaveTitleLabel = "@ValidationMessages.PostMustHaveTitle";
+    var postTitleMaxLengthLabel = "@ValidationMessages.PostTitleMaxLength";
+    var postMustHaveContentLabel = "@ValidationMessages.PostMustHaveContent";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var actionRoute = "@ViewData["ActionRoute"]";
+    var method = "@ViewData["Method"]";
     </script>
+    <script src="~/libs/weebreader.1.0.0/admin/blog-editor.js"></script>
 }
 
 <form class="ui form" novalidate>

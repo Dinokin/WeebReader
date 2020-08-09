@@ -5,44 +5,15 @@
     ViewData["Title"] = Labels.Posts;
     ViewData["SegmentedPaginator"] = false;
     ViewData["PaginatorButtonSize"] = "small";
-    var deletionRoute = (string) ViewData["DeletionRoute"];
 }
 
 @section Headers
 {
     <script>
-    $(() => {
-        let deletionTarget;
-        let deletionModal = $(".modal");
-        let messageContainer = $(".message");
-        
-        $("#blog").addClass("active");
-                
-        deletionModal.modal({
-        closable: false,
-        onDeny: () => deletionTarget = null,
-        onApprove: () => {
-            deletionModal.api({
-            on: "now",
-            url: "@deletionRoute" + deletionTarget,
-            method: "DELETE",
-            onSuccess: () => location.reload(),
-            onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-            onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-            })
-        }
-        });
-        
-        $(".negative.button").on("click", (event) => {
-            if ($(event.target).is("i"))
-                deletionTarget = $(event.target).parent().attr("post-id");
-            else
-                deletionTarget = $(event.target).attr("post-id");
-            
-            deletionModal.modal("show");
-        });
-    });
+    var deletionRoute = "@ViewData["DeletionRoute"]";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
     </script>
+    <script src="~/libs/weebreader.1.0.0/admin/blog-index.js"></script>
 }
 
 @if (Model.Any())
