@@ -157,6 +157,12 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Titles/Search")]
         public async Task<IActionResult> Search(string term)
         {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 3)
+                return new JsonResult(new object[0]);
+            
+            if (term.Length > 200)
+                term = term.Substring(0, 200);
+
             term = term.ToLowerInvariant();
             
             var key = $"titles_search_{term}";
