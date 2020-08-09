@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,16 @@ namespace WeebReader.Data.Services
     { 
         public TitlesManager(BaseContext context) : base(context) { }
 
+        public async Task<IEnumerable<TTitle>> Search(string term, bool includeHidden)
+        {
+            var titles = new List<TTitle>();
+            
+            titles.AddRange(await SearchByName(term, includeHidden));
+            titles.AddRange(await SearchByTag(term, includeHidden));
+
+            return titles.Distinct().OrderBy(title => title.Name);
+        }
+        
         public async Task<long> Count(bool includeHidden) => includeHidden
             ? await base.Count()
             : await DbSet.LongCountAsync(title => title.Visible);
@@ -100,5 +111,19 @@ namespace WeebReader.Data.Services
         }
 
         private IEnumerable<Tag> GetUnusedTags() => Context.Tags.Include(tag => tag.TitleTag).Where(tag => !tag.TitleTag.Any());
+
+        private Task<IEnumerable<TTitle>> SearchByName(string name, bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
+            ? DbSet.Where(title => title.Name.Contains(name))
+            : DbSet.Where(title => title.Visible && title.Name.Contains(name)));
+
+        private async Task<IEnumerable<TTitle>> SearchByTag(string name, bool includeHidden)
+        {
+            if (await Context.Tags.SingleOrDefaultAsync(entity => entity.Name == name) is var tag && tag == null)
+                return new TTitle[0];
+
+            return includeHidden
+                ? DbSet.Join(Context.TitleTags, title => title.Id, titleTag => titleTag.TitleId, (title, titleTag) => new {title, titleTag}).Where(tuple => tuple.titleTag.TagId == tag.Id).Select(tuple => tuple.title)
+                : DbSet.Join(Context.TitleTags, title => title.Id, titleTag => titleTag.TitleId, (title, titleTag) => new {title, titleTag}).Where(tuple => tuple.title.Visible && tuple.titleTag.TagId == tag.Id).Select(tuple => tuple.title);;
+        }
     }
 }

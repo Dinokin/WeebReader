@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -152,6 +152,37 @@ namespace WeebReader.Web.Portal.Controllers
             
             _memoryCache.Set(key, result, TimeSpan.FromMinutes(10));
             return new JsonResult(result);
+        }
+
+        [HttpGet("Titles/Search")]
+        public async Task<IActionResult> Search(string term)
+        {
+            term = term.ToLowerInvariant();
+            
+            var key = $"titles_search_{term}";
+
+            if (_memoryCache.TryGetValue(key, out var value))
+                return new JsonResult(value);
+
+            var titles = new List<object>();
+
+            foreach (var title in (await _titlesManager.Search(term, false)).ToArray())
+                titles.Add(new
+                {
+                    title.Id,
+                    title.Name,
+                    Type = title.GetType().Name,
+                    title.Author,
+                    title.Artist,
+                    title.Status,
+                    title.Nsfw,
+                    CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
+                    UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
+                });
+
+            _memoryCache.Set(key, titles, titles.Any() ? TimeSpan.FromMinutes(10) : TimeSpan.FromMinutes(1));
+
+            return new JsonResult(titles);
         }
     }
 }
