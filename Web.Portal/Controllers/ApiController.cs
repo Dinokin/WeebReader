@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -47,6 +47,7 @@ namespace WeebReader.Web.Portal.Controllers
                         title.Author,
                         title.Artist,
                         title.Status,
+                        title.Nsfw,
                         CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
                         UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                     });
@@ -79,6 +80,7 @@ namespace WeebReader.Web.Portal.Controllers
                 title.Artist,
                 Synopsis = title.Synopsis.RemoveHtmlTags(),
                 title.Status,
+                title.Nsfw,
                 CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
                 UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate,
                 Tags = (await _titlesManager.GetTags(title)).Select(tag => tag.Name).ToArray(),
