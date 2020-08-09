@@ -163,7 +163,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (term.Length > 200)
                 term = term.Substring(0, 200);
 
-            term = term.ToLowerInvariant();
+            term = term.ToLower();
             
             var key = $"titles_search_{term}";
 
