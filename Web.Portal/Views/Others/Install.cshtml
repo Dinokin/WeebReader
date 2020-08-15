@@ -13,79 +13,17 @@
 @section Headers
 {
     <script>
-    $(() => {
-        let messageContainer = $(".form .message");
-        let form = $(".form");
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-        
-        form.form({
-        on: "blur",
-        fields: {
-            username: {
-                identifier: "username",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.UsernameRequired"
-                    },
-                    {
-                        type: "minLength[3]",
-                        prompt: "@ValidationMessages.MinimumUsernameLength"
-                    }
-                ]
-            },
-            email: {
-                identifier: "email",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.EmailRequired"
-                        },
-                        {
-                            type: "email",
-                            prompt: "@ValidationMessages.ValidEmailRequired"
-                        }
-                    ]
-            },
-            password: {
-                identifier: "password",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.PasswordRequired"
-                    },
-                    {
-                        type: "minLength[8]",
-                        prompt: "@ValidationMessages.MinimumPasswordLength"
-                    }
-                ]
-            },
-            repeatNewPassword: {
-                identifier: "repeatPassword",
-                rules: [
-                    {
-                        type: "match[password]",
-                        prompt: "@ValidationMessages.PasswordsMustBeEqual"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@Url.Action("Install")",
-        serializeForm: true,
-        method: "POST",
-        onSuccess: response => window.location.href = response.destination,
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-    });
+    var usernameRequiredLabel = "@ValidationMessages.UsernameRequired";
+    var minimumUsernameLengthLabel = "@ValidationMessages.MinimumUsernameLength";
+    var emailRequiredLabel = "@ValidationMessages.EmailRequired";
+    var validEmailRequiredLabel = "@ValidationMessages.ValidEmailRequired";
+    var passwordRequiredLabel = "@ValidationMessages.PasswordRequired";
+    var minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
+    var passwordsMustBeEqualLabel = "@ValidationMessages.PasswordsMustBeEqual";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var installRoute = "@Url.Action("Install")";
     </script>
+    <script src="~/libs/weebreader.1.0.0/main/install.js"></script>
 }
 
 <div class="ui middle aligned center aligned grid h-100p">
