@@ -7,74 +7,15 @@
 @section Headers
 {
     <script>
-    $(() => {
-        let messageContainer = $(".form .message");
-        let form = $(".form");
-        
-        $("#parameters").addClass("active");
-        $("#parameters-content").addClass("active");
-        $("#parameters-email").addClass("active");
-        $(".checkbox").checkbox();
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-        
-        form.form({
-        on: "blur",
-        fields: {
-            siteEmail: {
-                identifier: "siteEmail",
-                depends: "emailEnabled",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.SiteEmailRequired"
-                    },
-                    {
-                        type: "email",
-                        prompt: "@ValidationMessages.ValidEmailRequiredSiteEmail"
-                    }
-                ]
-            },
-            smtpServer: {
-                identifier: "smtpServer",
-                depends: "emailEnabled",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.SmtpServerRequired"
-                    }
-                ]
-            },
-            smtpServerPort: {
-                identifier: "smtpServerPort",
-                depends: "emailEnabled",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.SmtpServerPortRequired"
-                    },
-                    {
-                        type: "integer[0,@ushort.MaxValue]",
-                        prompt: "@ValidationMessages.SmtpServerPortOutOfRange"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@Url.Action("Email")",
-        serializeForm: true,
-        method: "PATCH",
-        onSuccess: () => location.reload(),
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-    });
+    var siteEmailRequiredLabel = "@ValidationMessages.SiteEmailRequired";
+    var validEmailRequiredSiteEmailLabel = "@ValidationMessages.ValidEmailRequiredSiteEmail";
+    var smtpServerRequiredLabel = "@ValidationMessages.SmtpServerRequired";
+    var smtpServerPortRequiredLabel = "@ValidationMessages.SmtpServerPortRequired";
+    var smtpServerPortOutOfRangeLabel = "@ValidationMessages.SmtpServerPortOutOfRange";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var patchRoute = "@Url.Action("Email")";
     </script>
+    <script src="~/libs/weebreader.1.0.0/admin/parameter-email.js"></script>
 }
 
 <form class="ui form" novalidate>

@@ -8,87 +8,20 @@
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    $(() => {
-        let form = $(".form");
-        let messageContainer = $(".form .message");
-        
-        $("#parameters").addClass("active");
-        $("#parameters-content").addClass("active");
-        $("#parameters-pages").addClass("active");
-        $(".checkbox").checkbox();
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-        
-        form.on("submit", () => tinyMCE.triggerSave()).form({
-        on: "blur",
-        fields: {
-            aboutContent: {
-                identifier: "aboutContent",
-                depends: "aboutEnabled",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.AboutPageContentRequired"
-                    }
-                ]
-            },
-            patreonLink: {
-                identifier: "patreonLink",
-                depends: "patreonEnabled",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.PatreonLinkRequired"
-                    },
-                    {
-                        type: "url",
-                        prompt: "@ValidationMessages.PatreonLinkValidUrl"
-                    }
-                ]
-            },
-            kofiLink: {
-                identifier: "kofiLink",
-                depends: "kofiEnabled",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.KoFiLinkRequired"
-                    },
-                    {
-                        type: "url",
-                        prompt: "@ValidationMessages.KofiLinkValidUrl"
-                    }
-                ]
-            },
-            disqusShortname: {
-                identifier: "disqusShortname",
-                depends: "disqusEnabled",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.DisqusShortnameRequired"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@Url.Action("Pages")",
-        serializeForm: true,
-        method: "PATCH",
-        onSuccess: () => location.reload(),
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-    });
+    var aboutPageContentRequiredLabel = "@ValidationMessages.AboutPageContentRequired";
+    var patreonLinkRequiredLabel = "@ValidationMessages.PatreonLinkRequired";
+    var patreonLinkValidUrlLabel = "@ValidationMessages.PatreonLinkValidUrl";
+    var koFiLinkRequiredLabel = "@ValidationMessages.KoFiLinkRequired";
+    var kofiLinkValidUrlLabel = "@ValidationMessages.KofiLinkValidUrl";
+    var disqusShortnameRequiredLabel = "@ValidationMessages.DisqusShortnameRequired";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var patchRoute = "@Url.Action("Pages")";
     </script>
+    <script src="~/libs/weebreader.1.0.0/admin/parameter-pages.js"></script>
 }
 
 <form class="ui form" novalidate>
+    <div class="ui message error"></div>
     <div class="field">
         <label>@Labels.Blog</label>
         <div class="ui toggle checkbox">
@@ -104,7 +37,6 @@
             <label>@Labels.Enable</label>
         </div>
     </div>
-    <div class="ui message error"></div>
     <div class="field">
         <label>@Labels.AboutPageContent</label>
         <textarea name="aboutContent" placeholder="@Labels.AboutPageContent" asp-for="AboutContent"></textarea>
