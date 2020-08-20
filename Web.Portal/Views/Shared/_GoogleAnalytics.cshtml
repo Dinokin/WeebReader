@@ -1,16 +1,20 @@
 ﻿@inject ParametersManager ParametersManager
 
 @{
-    var trackingCode = await ParametersManager.GetValue<string>(Parameter.Types.SiteGoogleAnalyticsCode);
+    var googleAnalyticsEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.SiteGoogleAnalyticsEnabled);
+    var googleAnalyticsTrackingCode = string.Empty;
+
+    if (googleAnalyticsEnabled)
+    {
+        googleAnalyticsTrackingCode = await ParametersManager.GetValue<string>(Parameter.Types.SiteGoogleAnalyticsCode);
+    }
 }
 
-@if (await ParametersManager.GetValue<bool>(Parameter.Types.SiteGoogleAnalyticsEnabled))
+@if (googleAnalyticsEnabled)
 {
-    <script async src="https://www.googletagmanager.com/gtag/js?id=@trackingCode"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag("js", new Date());
-        gtag("config", "@trackingCode");
+    var googleAnalyticsTrackingCode = "@googleAnalyticsTrackingCode";
     </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@googleAnalyticsTrackingCode"></script>
+    <script src="~/libs/weebreader.1.0.1/google-analytics.js"></script>
 }

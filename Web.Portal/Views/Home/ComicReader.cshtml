@@ -36,16 +36,16 @@
     var chapterNumber = @Html.Raw(Model.chapter.Number);
     var chapterPages =  @Html.Raw(JsonConvert.SerializeObject(pages));
     </script>
-    <script src="~/libs/weebreader.1.0.0/main/reader-shared.js"></script>
-    <script src="~/libs/weebreader.1.0.0/main/reader-comic-shared.js"></script>
+    <script src="~/libs/weebreader.1.0.1/main/reader-shared.js"></script>
+    <script src="~/libs/weebreader.1.0.1/main/reader-comic-shared.js"></script>
     
     @if (longStrip)
     {
-        <script src="~/libs/weebreader.1.0.0/main/reader-comic-longstrip.js"></script>
+        <script src="~/libs/weebreader.1.0.1/main/reader-comic-longstrip.js"></script>
     }
     else
     {
-        <script src="~/libs/weebreader.1.0.0/main/reader-comic-multiplepages.js"></script>
+        <script src="~/libs/weebreader.1.0.1/main/reader-comic-multiplepages.js"></script>
     }
 }
 <button id="jump-button" class="ui black button"><i class="icon chevron up no-margin-left no-margin-right"></i></button>

@@ -10,17 +10,10 @@
 {
     <div id="disqus_thread"></div>
     <script>
-    var disqus_config = function () {
-        this.page.url = "@pageUrl";
-        this.page.identifier = "@ViewData["DisqusIdentifier"]";
-        this.page.title = "@ViewData["DisqusTitle"]";
-    };
-    
-    (function() {
-        var d = document, s = d.createElement("script");
-        s.src = "https://@(disqusShortname).disqus.com/embed.js";
-        s.setAttribute("data-timestamp", +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
+    var disqusPageUrl = "@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")";
+    var disqusIdentifier = "@ViewData["DisqusIdentifier"]";
+    var disqusTitle = "@ViewData["DisqusTitle"]";
+    var disqusShortname = "@disqusShortname";
+    </script>
+    <script src="~/libs/weebreader.1.0.1/disqus.js"></script>
 }

@@ -17,11 +17,7 @@
 <head>
     <partial name="_SharedHeaders"/>
     <partial name="_GoogleAnalytics"/>
-    <script>
-    $(() => {
-        $(".toggle").on("click", () => $(".mobile.only.grid .ui.vertical.menu").toggle(100));
-    });
-    </script>
+    <script src="~/libs/weebreader.1.0.1/main/main-shared.js"></script>
     @await RenderSectionAsync("Headers", false)
 </head>
 <body class="@(ViewData["BodyClass"] ?? "background")">

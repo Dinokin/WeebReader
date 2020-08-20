@@ -7,15 +7,7 @@
 <html lang="en">
 <head>
     <partial name="_SharedHeaders"/>
-    <script>
-    $(() => {        
-        $(".ui.sidebar").sidebar("attach events", "#toggler").accordion();
-        
-        $(".message .close").on("click", function() {
-            $(this).closest(".message").transition("fade");
-        });
-    })
-    </script>
+    <script src="~/libs/weebreader.1.0.1/admin/admin-shared.js"></script>
     @await RenderSectionAsync("Headers", false)
 </head>
 <body>

@@ -1,5 +1,23 @@
 $.fn.api.settings.successTest = (response) => response.success;
 
+$(() => {
+    window.cookieconsent.initialise({
+        "palette": {
+            "popup": {
+                "background": "#333"
+            },
+            "button": {
+                "background": "#000000"
+            }},
+        "showLink": false,
+        "theme": "edgeless",
+        "position": "bottom-right",
+        "content": {
+            "message": cookieNoticeLabel,
+            "dismiss": cookieConfirmationLabel
+        }});
+});
+
 function addError(element, response) {
     element.removeClass("success hidden");
     element.addClass("error");

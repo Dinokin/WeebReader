@@ -28,7 +28,7 @@
 }
 <link rel="icon" href="~/assets/icon.png">
 <link rel="stylesheet" href="~/libs/fomantic.2.8.6/semantic.min.css"/>
-<link rel="stylesheet" href="~/libs/weebreader.1.0.0/weebreader-shared.css"/>
+<link rel="stylesheet" href="~/libs/weebreader.1.0.1/weebreader-shared.css"/>
 <link rel="stylesheet" href="~/libs/cookieconsent.3.1.1.css"/>
 @if (overridesVersion > 1)
 {
@@ -39,23 +39,8 @@
 <script src="~/libs/jquery.serialize-object.2.5.0.js"></script>
 <script src="~/libs/fomantic.2.8.6/semantic.min.js"></script>
 <script src="~/libs/cookieconsent.3.1.1.js"></script>
-<script src="~/libs/weebreader.1.0.0/weebreader-shared.js"></script>
 <script>
-$(() => {
-    window.cookieconsent.initialise({
-    "palette": {
-        "popup": {
-            "background": "#333"
-            },
-            "button": {
-            "background": "#000000"
-        }},
-        "showLink": false,
-        "theme": "edgeless",
-        "position": "bottom-right",
-        "content": {
-        "message": "@OtherMessages.CookieNotice",
-        "dismiss": "@Labels.CookieConfirmation"
-    }});
-});
+var cookieNoticeLabel = "@OtherMessages.CookieNotice";
+var cookieConfirmationLabel = "@Labels.CookieConfirmation";
 </script>
+<script src="~/libs/weebreader.1.0.1/weebreader-shared.js"></script>
