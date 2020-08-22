@@ -4,126 +4,20 @@
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    $(() => {
-        let form = $(".form");
-        let messageContainer = $(".form .message");
-        let progressBar = $(".indicating");
-        let fileInput = $("#file");
-        
-        $("#titles").addClass("active");
-        $(".checkbox").checkbox();
-        $("#status").dropdown();
-        $("#tags").dropdown({
-        allowAdditions: true
-        });
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-        
-        form.on("submit", () => tinyMCE.triggerSave()).form({
-        on: "blur",
-        fields: {
-            name: {
-                identifier: "name",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.TitleMustHaveName"
-                    },
-                    {
-                        type   : "maxLength[200]",
-                        prompt : "@ValidationMessages.TitleNameMaxLength"
-                    }
-                ]
-            },
-            originalName: {
-                identifier: "originalName",
-                rules: [
-                    {
-                        type   : "maxLength[200]",
-                        prompt : "@ValidationMessages.TitleOriginalNameMaxLength"
-                    }
-                ]
-            },
-            author: {
-                identifier: "author",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.TitleMustHaveAuthor"
-                    },
-                    {
-                        type: "maxLength[50]",
-                        prompt: "@ValidationMessages.TitleAuthorMaxLength"
-                    }
-                ]
-            },
-            artist: {
-                identifier: "artist",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.TitleMustHaveArtist"
-                    },
-                    {
-                        type: "maxLength[50]",
-                        prompt: "@ValidationMessages.TitleArtistMaxLength"
-                    }
-                ]
-            },
-            previousChaptersLink: {
-                identifier: "previousChaptersLink",
-                optional: true,
-                rules: [
-                    {
-                        type: "maxLength[500]",
-                        prompt: "@ValidationMessages.MaxPreviousChaptersLinkSize"
-                    },
-                    {
-                        type: "url",
-                        prompt: "@ValidationMessages.PreviousChaptersLinkValidUrl"
-                    }
-                ]
-            }
-        }
-        }).api({
-        xhr: () => {
-            let xhr = new window.XMLHttpRequest();
-            xhr.upload.addEventListener("progress", (event) => animateProgressBar(progressBar, event), false);
-            
-            return xhr;
-        },
-        url: "@ViewData["ActionRoute"]",
-        method: "@ViewData["Method"]",
-        processData: false,
-        contentType: false,
-        beforeSend: (settings) => {
-            settings.data = new FormData(form.get(0));
-            
-            return settings;
-        },
-        onRequest: () => {
-            if (fileInput[0].files.length > 0)
-                progressBar.removeClass("dp-none");
-        },
-        onComplete: () => {
-            if (fileInput[0].files.length > 0)
-                progressBar.addClass("dp-none");
-        },
-        onSuccess: (response) => window.location.href = response.destination,
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-        
-        fileInput.on("change", (event) => {
-            $("label.button").html("<i class=\"file icon\"></i>" + event.target.files[0].name.substr(0, 14) + (event.target.files[0].name.length > 15 ? "..." : ""));
-        });
-    });
+    var titleMustHaveNameLabel = "@ValidationMessages.TitleMustHaveName";
+    var titleNameMaxLengthLabel = "@ValidationMessages.TitleNameMaxLength";
+    var titleOriginalNameMaxLengthLabel = "@ValidationMessages.TitleOriginalNameMaxLength";
+    var titleMustHaveAuthorLabel = "@ValidationMessages.TitleMustHaveAuthor";
+    var titleAuthorMaxLengthLabel = "@ValidationMessages.TitleAuthorMaxLength";
+    var titleMustHaveArtistLabel = "@ValidationMessages.TitleMustHaveArtist";
+    var titleArtistMaxLengthLabel = "@ValidationMessages.TitleArtistMaxLength";
+    var maxPreviousChaptersLinkSizeLabel = "@ValidationMessages.MaxPreviousChaptersLinkSize";
+    var previousChaptersLinkValidUrlLabel = "@ValidationMessages.PreviousChaptersLinkValidUrl";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var actionRoute = "@ViewData["ActionRoute"]";
+    var method = "@ViewData["Method"]";
     </script>
+    <script src="~/libs/weebreader.1.0.1/admin/title-editor.js"></script>
 }
 
 <form class="ui form" novalidate>
