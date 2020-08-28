@@ -1,19 +1,13 @@
 ﻿@inject ParametersManager ParametersManager
 
-@{
-    var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
-    var disqusShortname = await ParametersManager.GetValue<string>(Parameter.Types.PageDisqusShortname);
-    var pageUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}";
-}
-
-@if (disqusEnabled)
+@if (await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled))
 {
     <div id="disqus_thread"></div>
     <script>
-    var disqusPageUrl = "@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")";
-    var disqusIdentifier = "@ViewData["DisqusIdentifier"]";
-    var disqusTitle = "@ViewData["DisqusTitle"]";
-    var disqusShortname = "@disqusShortname";
+    const disqusPageUrl = "@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")";
+    const disqusIdentifier = "@ViewData["DisqusIdentifier"]";
+    const disqusTitle = "@ViewData["DisqusTitle"]";
+    const disqusShortname = "@(await ParametersManager.GetValue<string>(Parameter.Types.PageDisqusShortname))";
     </script>
-    <script src="~/libs/weebreader.1.0.1/disqus.js"></script>
+    <script src="~/libs/weebreader/disqus.js" asp-append-version="true"></script>
 }

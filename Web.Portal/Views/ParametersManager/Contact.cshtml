@@ -9,14 +9,14 @@
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    var reCaptchaClientKeyRequiredLabel = "@ValidationMessages.ReCaptchaClientKeyRequired";
-    var reCaptchaServerKeyRequiredLabel = "@ValidationMessages.ReCaptchaServerKeyRequired";
-    var discordLinkRequiredLabel = "@ValidationMessages.DiscordLinkRequired";
-    var discordLinkValidUrlLabel = "@ValidationMessages.DiscordLinkValidUrl";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
-    var patchRoute = "@Url.Action("Contact")";
+    const reCaptchaClientKeyRequiredLabel = "@ValidationMessages.ReCaptchaClientKeyRequired";
+    const reCaptchaServerKeyRequiredLabel = "@ValidationMessages.ReCaptchaServerKeyRequired";
+    const discordLinkRequiredLabel = "@ValidationMessages.DiscordLinkRequired";
+    const discordLinkValidUrlLabel = "@ValidationMessages.DiscordLinkValidUrl";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const patchRoute = "@Url.Action("Contact")";
     </script>
-    <script src="~/libs/weebreader.1.0.1/admin/parameter-contact.js"></script>
+    <script src="~/libs/weebreader/admin/parameter-contact.js" asp-append-version="true"></script>
 }
 
 <form class="ui form" novalidate>

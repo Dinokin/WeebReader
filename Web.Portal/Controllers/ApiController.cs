@@ -48,7 +48,7 @@ namespace WeebReader.Web.Portal.Controllers
                         title.Artist,
                         title.Status,
                         title.Nsfw,
-                        CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
+                        CoverUrl = $"/content/{title.Id}/cover.png",
                         UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                     });
 
@@ -81,7 +81,7 @@ namespace WeebReader.Web.Portal.Controllers
                 Synopsis = title.Synopsis.RemoveHtmlTags(),
                 title.Status,
                 title.Nsfw,
-                CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
+                CoverUrl = $"/content/{title.Id}/cover.png",
                 UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate,
                 Tags = (await _titlesManager.GetTags(title)).Select(tag => tag.Name).ToArray(),
                 Chapters = (await _chapterManager.GetAll(title, false)).Select(chapter => new
@@ -182,7 +182,7 @@ namespace WeebReader.Web.Portal.Controllers
                     title.Artist,
                     title.Status,
                     title.Nsfw,
-                    CoverUrl = $"/content/{title.Id}/cover.png?v={title.Version}",
+                    CoverUrl = $"/content/{title.Id}/cover.png",
                     UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                 });
 

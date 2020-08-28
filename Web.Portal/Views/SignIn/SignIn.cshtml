@@ -5,26 +5,25 @@
     ViewData["Title"] = Labels.SignIn;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var emailSenderEnabled = await ParameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
 }
 
 @section Headers
 {
     <script>
-    var usernameRequiredLabel = "@ValidationMessages.UsernameRequired";
-    var minimumUsernameLengthLabel = "@ValidationMessages.MinimumUsernameLength";
-    var passwordRequiredLabel = "@ValidationMessages.PasswordRequired";
-    var minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
-    var actionRoute = "@Url.Action("SignIn")";
+    const usernameRequiredLabel = "@ValidationMessages.UsernameRequired";
+    const minimumUsernameLengthLabel = "@ValidationMessages.MinimumUsernameLength";
+    const passwordRequiredLabel = "@ValidationMessages.PasswordRequired";
+    const minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const actionRoute = "@Url.Action("SignIn")";
     </script>
-    <script src="~/libs/weebreader.1.0.1/main/sign-in.js"></script>
+    <script src="~/libs/weebreader/main/sign-in.js" asp-append-version="true"></script>
 }
 
 <div class="ui middle aligned center aligned grid h-100p">
     <div class="column mw-450px">
         <h2 class="ui image header mt-minus-100px">
-            <img class="image mt-minus-100px" src="~/assets/logo_d.png" alt="Logo">
+            <img class="image mt-minus-100px" src="~/assets/logo_d.png" alt="@Labels.Logo" asp-append-version="true">
             <div class="content">
                 @Labels.SignInToAccount
             </div>
@@ -61,7 +60,7 @@
                 </div>
             }
         </form>
-        @if (emailSenderEnabled)
+        @if (await ParameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
         {
             <div class="ui message">
                 @Labels.ForgotPassword2 <a href="@Url.Action("ForgotPassword")">@Labels.ResetIt</a>

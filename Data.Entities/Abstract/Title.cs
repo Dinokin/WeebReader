@@ -23,8 +23,7 @@ namespace WeebReader.Data.Entities.Abstract
         public bool Visible { get; set; }
         public string? PreviousChaptersLink { get; set; }
         public IEnumerable<TitleTag>? TitleTags { get; set; }
-        public ulong Version { get; set; }
-
+        
         protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersLink = null) :
             this(default, name, originalName, author, artist, synopsis, status, nsfw, visible, previousChaptersLink) { }
 

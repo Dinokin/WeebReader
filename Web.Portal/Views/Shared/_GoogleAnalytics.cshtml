@@ -13,8 +13,8 @@
 @if (googleAnalyticsEnabled)
 {
     <script>
-    var googleAnalyticsTrackingCode = "@googleAnalyticsTrackingCode";
+    const googleAnalyticsTrackingCode = "@googleAnalyticsTrackingCode";
     </script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=@googleAnalyticsTrackingCode"></script>
-    <script src="~/libs/weebreader.1.0.1/google-analytics.js"></script>
+    <script src="~/libs/weebreader/google-analytics.js" asp-append-version="true"></script>
 }

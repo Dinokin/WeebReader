@@ -4,13 +4,13 @@
 {
     <partial name="_FullTextEditor"/>
     <script>
-    var chapterNameMaxLengthLabel = "@ValidationMessages.ChapterNameMaxLength";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
-    var actionRoute = "@ViewData["ActionRoute"]";
-    var method = "@ViewData["Method"]";
+    const chapterNameMaxLengthLabel = "@ValidationMessages.ChapterNameMaxLength";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const actionRoute = "@ViewData["ActionRoute"]";
+    const method = "@ViewData["Method"]";
     </script>
-    <script src="~/libs/weebreader.1.0.1/admin/chapter-editor-shared.js"></script>
-    <script src="~/libs/weebreader.1.0.1/admin/chapter-editor-novel.js"></script>
+    <script src="~/libs/weebreader/admin/chapter-editor-shared.js" asp-append-version="true"></script>
+    <script src="~/libs/weebreader/admin/chapter-editor-novel.js" asp-append-version="true"></script>
 }
 
 <form class="ui form" novalidate>

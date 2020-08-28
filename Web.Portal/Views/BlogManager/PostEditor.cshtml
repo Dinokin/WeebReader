@@ -4,14 +4,14 @@
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    var postMustHaveTitleLabel = "@ValidationMessages.PostMustHaveTitle";
-    var postTitleMaxLengthLabel = "@ValidationMessages.PostTitleMaxLength";
-    var postMustHaveContentLabel = "@ValidationMessages.PostMustHaveContent";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
-    var actionRoute = "@ViewData["ActionRoute"]";
-    var method = "@ViewData["Method"]";
+    const postMustHaveTitleLabel = "@ValidationMessages.PostMustHaveTitle";
+    const postTitleMaxLengthLabel = "@ValidationMessages.PostTitleMaxLength";
+    const postMustHaveContentLabel = "@ValidationMessages.PostMustHaveContent";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const actionRoute = "@ViewData["ActionRoute"]";
+    const method = "@ViewData["Method"]";
     </script>
-    <script src="~/libs/weebreader.1.0.1/admin/blog-editor.js"></script>
+    <script src="~/libs/weebreader/admin/blog-editor.js" asp-append-version="true"></script>
 }
 
 <form class="ui form" novalidate>

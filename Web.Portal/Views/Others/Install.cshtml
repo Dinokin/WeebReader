@@ -13,23 +13,23 @@
 @section Headers
 {
     <script>
-    var usernameRequiredLabel = "@ValidationMessages.UsernameRequired";
-    var minimumUsernameLengthLabel = "@ValidationMessages.MinimumUsernameLength";
-    var emailRequiredLabel = "@ValidationMessages.EmailRequired";
-    var validEmailRequiredLabel = "@ValidationMessages.ValidEmailRequired";
-    var passwordRequiredLabel = "@ValidationMessages.PasswordRequired";
-    var minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
-    var passwordsMustBeEqualLabel = "@ValidationMessages.PasswordsMustBeEqual";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
-    var installRoute = "@Url.Action("Install")";
+    const usernameRequiredLabel = "@ValidationMessages.UsernameRequired";
+    const minimumUsernameLengthLabel = "@ValidationMessages.MinimumUsernameLength";
+    const emailRequiredLabel = "@ValidationMessages.EmailRequired";
+    const validEmailRequiredLabel = "@ValidationMessages.ValidEmailRequired";
+    const passwordRequiredLabel = "@ValidationMessages.PasswordRequired";
+    const minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
+    const passwordsMustBeEqualLabel = "@ValidationMessages.PasswordsMustBeEqual";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const installRoute = "@Url.Action("Install")";
     </script>
-    <script src="~/libs/weebreader.1.0.1/main/install.js"></script>
+    <script src="~/libs/weebreader/main/install.js" asp-append-version="true"></script>
 }
 
 <div class="ui middle aligned center aligned grid h-100p">
     <div class="column mw-450px">
         <h2 class="ui image header mt-minus-100px">
-            <img class="image mt-minus-100px" src="~/assets/logo_l.png">
+            <img class="image mt-minus-100px" src="~/assets/logo_l.png" alt="@Labels.Logo" asp-append-version="true">
             <div class="content">
                 @Labels.InstallWeebReader
             </div>

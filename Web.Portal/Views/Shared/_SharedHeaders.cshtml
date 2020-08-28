@@ -2,9 +2,7 @@
 @inject ParametersManager ParameterManager
 
 @{
-    var siteName = await ParameterManager.GetValue<string>(Parameter.Types.SiteName);
     var siteDescription = await ParameterManager.GetValue<string>(Parameter.Types.SiteDescription);
-    var overridesVersion = Configuration.GetValue<ushort>("Web:OverrideVersion");
 }
 
 <!-- Standard Meta -->
@@ -17,7 +15,7 @@
 }
 
 <!-- Site Properties -->
-<title>@ViewData["Title"] - @siteName</title>
+<title>@ViewData["Title"] - @(await ParameterManager.GetValue<string>(Parameter.Types.SiteName))</title>
 @if (!string.IsNullOrWhiteSpace(siteDescription))
 {
     <meta name="description" content="@siteDescription">
@@ -27,20 +25,16 @@
     <meta name="robots" content="noindex, nofollow">
 }
 <link rel="icon" href="~/assets/icon.png">
-<link rel="stylesheet" href="~/libs/fomantic.2.8.6/semantic.min.css"/>
-<link rel="stylesheet" href="~/libs/weebreader.1.0.1/weebreader-shared.css"/>
-<link rel="stylesheet" href="~/libs/cookieconsent.3.1.1.css"/>
-@if (overridesVersion > 1)
-{
-    <link rel="stylesheet" href="~/libs/overrides.@(overridesVersion).css"/>
-
-}
-<script src="~/libs/jquery.3.5.1.js"></script>
-<script src="~/libs/jquery.serialize-object.2.5.0.js"></script>
-<script src="~/libs/fomantic.2.8.6/semantic.min.js"></script>
-<script src="~/libs/cookieconsent.3.1.1.js"></script>
+<link rel="stylesheet" href="~/libs/fomantic/semantic.min.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/libs/weebreader/weebreader-shared.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/libs/cookieconsent.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/libs/weebreader/overrides.css" asp-append-version="true"/>
+<script src="~/libs/jquery.js" asp-append-version="true"></script>
+<script src="~/libs/jquery.serialize-object.js" asp-append-version="true"></script>
+<script src="~/libs/fomantic/semantic.min.js" asp-append-version="true"></script>
+<script src="~/libs/cookieconsent.js" asp-append-version="true"></script>
 <script>
-var cookieNoticeLabel = "@OtherMessages.CookieNotice";
-var cookieConfirmationLabel = "@Labels.CookieConfirmation";
+const cookieNoticeLabel = "@OtherMessages.CookieNotice";
+const cookieConfirmationLabel = "@Labels.CookieConfirmation";
 </script>
-<script src="~/libs/weebreader.1.0.1/weebreader-shared.js"></script>
+<script src="~/libs/weebreader/weebreader-shared.js" asp-append-version="true"></script>

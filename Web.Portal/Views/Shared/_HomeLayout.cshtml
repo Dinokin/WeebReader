@@ -1,9 +1,7 @@
 ﻿@inject ParametersManager ParametersManager
 
 @{
-    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
     var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
-    var discordLink = await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink);
     var blogEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled);
     var aboutEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
     var kofiEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
@@ -12,12 +10,13 @@
     var emailContactEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
     var lightMode = ViewData["BodyClass"]?.ToString() != Constants.DarkModeClasses;
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <partial name="_SharedHeaders"/>
     <partial name="_GoogleAnalytics"/>
-    <script src="~/libs/weebreader.1.0.1/main/main-shared.js"></script>
+    <script src="~/libs/weebreader/main/main-shared.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Headers", false)
 </head>
 <body class="@(ViewData["BodyClass"] ?? "background")">
@@ -95,10 +94,10 @@
 <div class="ui center aligned container">
     <footer>
         <div class="ui large @(ViewData["BodyClass"] == null ? null : lightMode ? "inverted" : null) label">
-            © @DateTime.Now.Year @siteName
+            © @DateTime.Now.Year @(await ParametersManager.GetValue<string>(Parameter.Types.SiteName))
             @if (discordEnabled)
             {
-                <a href="@discordLink">
+                <a href="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink))">
                     <i class="discord big icon"></i>
                 </a>
             }

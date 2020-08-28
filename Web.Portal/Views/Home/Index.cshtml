@@ -4,18 +4,17 @@
 @{
     ViewData["Title"] = Labels.Home;
     ViewData["ShowInSearch"] = true;
-    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
 }
 
 @section Headers
 {
-    <link rel="alternate" type="application/rss+xml" title="@($"{siteName} RSS")" href="@Url.Action("IndexRss", "Home")"/>
+    <link rel="alternate" type="application/rss+xml" title="@($"{await ParametersManager.GetValue<string>(Parameter.Types.SiteName)} RSS")" href="@Url.Action("IndexRss", "Home")"/>
     <script>
-    var currentPage = @ViewData["CurrentPage"];
-    var totalPages = @ViewData["TotalPages"];
-    var pageRequestRoute = "@Url.Action("Index", new {page = 0})";
+    const currentPage = @ViewData["CurrentPage"];
+    const totalPages = @ViewData["TotalPages"];
+    const pageRequestRoute = "@Url.Action("Index", new {page = 0})";
     </script>
-    <script src="~/libs/weebreader.1.0.1/main/index.js"></script>
+    <script src="~/libs/weebreader/main/index.js" asp-append-version="true"></script>
 }
 
 <div class="ui center aligned container">

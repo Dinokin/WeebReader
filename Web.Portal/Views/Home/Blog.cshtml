@@ -7,11 +7,11 @@
 @section Headers
 {
     <script>
-    var currentPage = @ViewData["CurrentPage"];
-    var totalPages = @ViewData["TotalPages"];
-    var pageRequestRoute = "@Url.Action("Blog", new {page = 0})";
+    const currentPage = @ViewData["CurrentPage"];
+    const totalPages = @ViewData["TotalPages"];
+    const pageRequestRoute = "@Url.Action("Blog", new {page = 0})";
     </script>
-    <script src="~/libs/weebreader.1.0.1/main/blog.js"></script>
+    <script src="~/libs/weebreader/main/blog.js" asp-append-version="true"></script>
 }
 
 <div id="post-container" class="ui container">

@@ -2,48 +2,40 @@
 
 @{
     ViewData["Title"] = Labels.About;
-    var content = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutContent);
-    var patreonEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
-    var patreonLink = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonLink);
-    var patreonNotice = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonNotice);
-    var kofiEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
-    var kofiLink = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiLink);
-    var kofiNotice = await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiNotice);
-    var aboutEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
 }
 
 @section Headers
 {
-    <script src="~/libs/weebreader.1.0.1/main/about.js"></script>
+    <script src="~/libs/weebreader/main/about.js" asp-append-version="true"></script>
 }
 
 <div class="ui container">
-    @if (aboutEnabled)
+    @if (await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled))
     {
         <div class="ui raised segment">
             <div class="ui hidden divider"></div>
             <div class="ui content">
-                @Html.Raw(content)
+                @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutContent))
             </div>
         </div>   
     }
-    @if (patreonEnabled)
+    @if (await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled))
     {
         <div class="ui raised segment">
             <h4 class="ui header">@Labels.BecomeOurPatreon</h4>
-            @Html.Raw(patreonNotice)
-            <a class="ui fluid mini grey button" href="@patreonLink">
-                <img class="ui centered small image" src="~/assets/patreon.png"/>
+            @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonNotice))
+            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonLink))">
+                <img class="ui centered small image" src="~/assets/patreon.png" alt="@Labels.Patreon" asp-append-version="true"/>
             </a>
         </div>
     }
-    @if (kofiEnabled)
+    @if (await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled))
     {
         <div class="ui raised segment">
             <h4 class="ui header">@Labels.BuyUsACoffee</h4>
-            @Html.Raw(kofiNotice)
-            <a class="ui fluid mini grey button" href="@kofiLink">
-                <img class="ui centered small image" src="~/assets/kofi.png"/>
+            @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiNotice))
+            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiLink))">
+                <img class="ui centered small image" src="~/assets/kofi.png" alt="@Labels.KoFi" asp-append-version="true"/>
             </a>
         </div>
     }

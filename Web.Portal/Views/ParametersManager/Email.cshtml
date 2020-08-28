@@ -7,15 +7,15 @@
 @section Headers
 {
     <script>
-    var siteEmailRequiredLabel = "@ValidationMessages.SiteEmailRequired";
-    var validEmailRequiredSiteEmailLabel = "@ValidationMessages.ValidEmailRequiredSiteEmail";
-    var smtpServerRequiredLabel = "@ValidationMessages.SmtpServerRequired";
-    var smtpServerPortRequiredLabel = "@ValidationMessages.SmtpServerPortRequired";
-    var smtpServerPortOutOfRangeLabel = "@ValidationMessages.SmtpServerPortOutOfRange";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
-    var patchRoute = "@Url.Action("Email")";
+    const siteEmailRequiredLabel = "@ValidationMessages.SiteEmailRequired";
+    const validEmailRequiredSiteEmailLabel = "@ValidationMessages.ValidEmailRequiredSiteEmail";
+    const smtpServerRequiredLabel = "@ValidationMessages.SmtpServerRequired";
+    const smtpServerPortRequiredLabel = "@ValidationMessages.SmtpServerPortRequired";
+    const smtpServerPortOutOfRangeLabel = "@ValidationMessages.SmtpServerPortOutOfRange";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const patchRoute = "@Url.Action("Email")";
     </script>
-    <script src="~/libs/weebreader.1.0.1/admin/parameter-email.js"></script>
+    <script src="~/libs/weebreader/admin/parameter-email.js" asp-append-version="true"></script>
 }
 
 <form class="ui form" novalidate>

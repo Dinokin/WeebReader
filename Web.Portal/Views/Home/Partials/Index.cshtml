@@ -10,7 +10,7 @@
             }
             <div class="center aligned content ov-hidden">
                 <a href="@Url.Action("ReadChapter", new {chapterId = chapter.Id})">
-                    <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg?v=@title.Version">
+                    <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg" asp-append-version="true" alt="@title.Name">
                 </a>
             </div>
             <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>

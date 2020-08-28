@@ -10,10 +10,10 @@
 @section Headers
 {
     <script>
-    var deletionRoute = "@ViewData["DeletionRoute"]";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    const deletionRoute = "@ViewData["DeletionRoute"]";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
     </script>
-    <script src="~/libs/weebreader.1.0.1/admin/blog-index.js"></script>
+    <script src="~/libs/weebreader/admin/blog-index.js" asp-append-version="true"></script>
 }
 
 @if (Model.Any())

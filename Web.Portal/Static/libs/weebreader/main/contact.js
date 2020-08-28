@@ -55,3 +55,7 @@
         onError: () => addError(messageContainer, buildFakeResponse([requestFailed]))
     });
 });
+
+function recaptcha_callback(token) {
+    $("input[name=\"reCaptchaResponse\"]").val(token);
+}

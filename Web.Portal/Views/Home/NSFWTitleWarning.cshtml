@@ -4,18 +4,17 @@
 @{
     ViewData["Title"] = $"{Model.Name}";
     ViewData["DarkMode"] = false;
-    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
 }
 
 @section Headers
 {
     <meta property="og:title" content="@Model.Name"/>
     <meta property="og:url" content="@Url.Action("Titles", "Home", new { titleId = Model.Id }, Context.Request.Scheme)"/>
-    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Id}/cover_thumb.jpg?v={Model.Version}")"/>
+    <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.Id}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.Synopsis.RemoveHtmlTags()"/>
-    <meta property="og:site_name" content="@siteName"/>
+    <meta property="og:site_name" content="@(await ParametersManager.GetValue<string>(Parameter.Types.SiteName))"/>
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.Id})"/>
-    <script src="~/libs/weebreader.1.0.1/main/nsfw-warning.js"></script>
+    <script src="~/libs/weebreader/main/nsfw-warning.js" asp-append-version="true"></script>
 }
 
 <partial name="Partials/NSFWWarning"/>

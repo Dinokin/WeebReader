@@ -9,11 +9,11 @@
 @section Headers
 {
     <script>
-    var creationRoute = "@(Url.Action("Add"))";
-    var deletionRoute = "@ViewData["DeletionRoute"]";
-    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    const creationRoute = "@(Url.Action("Add"))";
+    const deletionRoute = "@ViewData["DeletionRoute"]";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
     </script>
-    <script src="~/libs/weebreader.1.0.1/admin/title-index.js"></script>
+    <script src="~/libs/weebreader/admin/title-index.js" asp-append-version="true"></script>
 }
 
 <div id="creation-modal" class="ui mini modal">

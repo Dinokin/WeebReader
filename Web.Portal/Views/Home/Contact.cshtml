@@ -5,50 +5,39 @@
     ViewData["Title"] = Labels.Contact;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var emailSenderEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
-    var emailContactEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
-    var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
-    var discordLink = await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink);
-    var discordNotice = await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordNotice);
     var reCaptchaEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
-    var reCaptchaClientKey = await ParametersManager.GetValue<string>(Parameter.Types.ContactEmailRecaptchaClientKey);
 }
 
 @section Headers
 {
     <partial name="_PartialTextEditor"/>
     <script>
-    var nicknameRequired = "@ValidationMessages.NickNameRequired";
-    var emailRequired = "@ValidationMessages.EmailRequired";
-    var validEmailRequired = "@ValidationMessages.ValidEmailRequired";
-    var messageRequired = "@ValidationMessages.MessageRequired";
-    var requestFailed = "@OtherMessages.RequestFailed";
-    var requestRoute = "@Url.Action("Contact")";
+    const nicknameRequired = "@ValidationMessages.NickNameRequired";
+    const emailRequired = "@ValidationMessages.EmailRequired";
+    const validEmailRequired = "@ValidationMessages.ValidEmailRequired";
+    const messageRequired = "@ValidationMessages.MessageRequired";
+    const requestFailed = "@OtherMessages.RequestFailed";
+    const requestRoute = "@Url.Action("Contact")";
     </script>
-    <script src="~/libs/weebreader.1.0.1/main/contact.js"></script>
+    <script src="~/libs/weebreader/main/contact.js" asp-append-version="true"></script>
     @if (reCaptchaEnabled)
     {
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-        <script>
-        function recaptcha_callback(token) {
-            $("input[name=\"reCaptchaResponse\"]").val(token);
-        }
-        </script>
     }
 }
 
 <div class="ui container">
-    @if (discordEnabled)
+    @if (await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled))
     {
         <div class="ui raised segment">
             <h4 class="ui header">@Labels.JoinOurDiscordCommunity</h4>
-            @Html.Raw(discordNotice)
-            <a class="ui fluid mini grey button" href="@discordLink">
-                <img class="ui centered small image" src="~/assets/discord_b.png"/>
+            @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordNotice))
+            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink))">
+                <img class="ui centered small image" src="~/assets/discord_b.png" alt="@Labels.Discord" asp-append-version="true"/>
             </a>
         </div>
     }
-    @if (emailSenderEnabled && emailContactEnabled)
+    @if (await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled) && await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled))
     {
         <div class="ui raised segment">
             <h4 class="ui header">@Labels.ContactUsViaEmail</h4>
@@ -86,7 +75,7 @@
                 {
                     <input type="hidden" name="reCaptchaResponse" asp-for="ReCaptchaResponse"/>
                     <div class="field">
-                        <div class="g-recaptcha" data-sitekey="@reCaptchaClientKey" data-callback="recaptcha_callback"></div>
+                        <div class="g-recaptcha" data-sitekey="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactEmailRecaptchaClientKey))" data-callback="recaptcha_callback"></div>
                     </div>   
                 }
                 <div class="field ov-auto">
