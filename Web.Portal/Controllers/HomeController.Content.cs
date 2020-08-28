@@ -15,7 +15,6 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            ViewData["CurrentPage"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await CountReleases() / (decimal) Constants.ItemsPerPageReleases);
             
             return View(await GetReleases(0, Constants.ItemsPerPageReleases));
@@ -77,7 +76,6 @@ namespace WeebReader.Web.Portal.Controllers
             if (title.Nsfw && !HasNsfwCookie()) 
                 return View("NSFWTitleWarning", title);
             
-            ViewData["CurrentPage"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _chapterManager.Count(title, _signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPageChapters);
             
             return View("Title", ValueTuple.Create(title, await _titlesManager.GetTags(title), await _chapterManager.GetRange(title, 0, Constants.ItemsPerPageChapters, _signInManager.IsSignedIn(User))));

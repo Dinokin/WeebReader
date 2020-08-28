@@ -21,7 +21,6 @@
     <meta property="og:site_name" content="@(await ParametersManager.GetValue<string>(Parameter.Types.SiteName))"/>
     <link rel="alternate" type="application/rss+xml" title="@($"{Model.title.Name} RSS")" href="@Url.Action("TitlesRss", "Home", new {titleId = Model.title.Id})"/>
     <script>
-    const currentPage = @ViewData["CurrentPage"];
     const totalPages = @ViewData["TotalPages"];
     const pageRequestRoute = "@Url.Action("Titles", new {titleId = Model.title.Id, page = 0})";
     </script>

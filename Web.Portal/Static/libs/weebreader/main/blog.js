@@ -1,4 +1,5 @@
 ﻿$(() => {
+    let currentPage = 1;
     let postContainer = $("#post-container");
     let loader = $("#loader");
 

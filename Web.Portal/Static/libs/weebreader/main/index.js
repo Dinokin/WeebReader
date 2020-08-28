@@ -1,4 +1,5 @@
 ﻿$(() => {
+    let currentPage = 1;
     let cardContainer = $("#card-container");
     let loader = $("#loader");
     

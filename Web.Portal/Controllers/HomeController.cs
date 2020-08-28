@@ -50,7 +50,6 @@ namespace WeebReader.Web.Portal.Controllers
             if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
                 return RedirectToAction("Index");
 
-            ViewData["CurrentPage"] = 1;
             ViewData["TotalPages"] = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
 
             return View(await _postsManager.GetRange(0, Constants.ItemsPerPagePosts, _signInManager.IsSignedIn(User)));

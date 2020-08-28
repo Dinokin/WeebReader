@@ -1,4 +1,5 @@
 ﻿$(() => {
+    let currentPage = 1;
     let chapterContainer = $("#chapters");
     let loader = $("#loader");
 

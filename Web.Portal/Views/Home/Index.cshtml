@@ -10,7 +10,6 @@
 {
     <link rel="alternate" type="application/rss+xml" title="@($"{await ParametersManager.GetValue<string>(Parameter.Types.SiteName)} RSS")" href="@Url.Action("IndexRss", "Home")"/>
     <script>
-    const currentPage = @ViewData["CurrentPage"];
     const totalPages = @ViewData["TotalPages"];
     const pageRequestRoute = "@Url.Action("Index", new {page = 0})";
     </script>
