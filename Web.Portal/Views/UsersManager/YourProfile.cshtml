@@ -6,112 +6,19 @@
 
 @section Headers
 {
-    <script>    
-    $(() => {
-        let changePasswordForm = $("#change-password-form");
-        let changeEmailForm = $("#change-email-form");
-        let changePasswordMessage = changePasswordForm.children(".message");
-        let changeEmailMessage = changeEmailForm.children(".message");
-        
-        $("#your-profile").addClass("active");
-        
-        $(".form").on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-  
-        changePasswordForm.form({
-        on: "blur",
-        fields: {
-            password: {
-                identifier: "password",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.PasswordRequired"
-                    },
-                    {
-                        type: "minLength[8]",
-                        prompt: "@ValidationMessages.MinimumPasswordLength"
-                    }
-                ]
-            },
-            newPassword: {
-                identifier: "newPassword",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.NewPasswordRequired"
-                    },
-                    {
-                        type: "minLength[8]",
-                        prompt: "@ValidationMessages.MinimumPasswordLength"
-                    }
-                ]
-            },
-            repeatNewPassword: {
-                identifier: "repeatNewPassword",
-                rules: [
-                    {
-                        type: "match[newPassword]",
-                        prompt: "@ValidationMessages.PasswordsMustBeEqual"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@Url.Action("ChangePassword")",
-        serializeForm: true,
-        method: "PATCH",
-        onSuccess: response => {
-            addSuccess(changePasswordMessage, response); 
-            changePasswordForm.form("reset");
-        },
-        onFailure: response => Array.isArray(response.messages) ? addError(changePasswordMessage, response) : addError(changePasswordMessage, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(changePasswordMessage, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-                
-        changeEmailForm.form({
-        on: "blur",
-        fields: {
-            email: {
-                identifier: "email",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.EmailRequired"
-                    },
-                    {
-                        type: "email",
-                        prompt: "@ValidationMessages.ValidEmailRequired"
-                    }
-                ]
-            },
-            repeatNewPassword: {
-                identifier: "repeatEmail",
-                rules: [
-                    {
-                        type: "match[email]",
-                        prompt: "@ValidationMessages.EmailsMustBeEqual"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@Url.Action("ChangeEmail")",
-        serializeForm: true,
-        method: "PATCH",
-        onSuccess: response => {
-            addSuccess(changeEmailMessage, response);
-            changeEmailForm.form("reset");
-        },
-        onFailure: response => Array.isArray(response.messages) ? addError(changeEmailMessage, response) : addError(changeEmailMessage, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(changeEmailMessage, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-    });
+    <script>
+    var passwordRequiredLabel = "@ValidationMessages.PasswordRequired";
+    var minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
+    var newPasswordRequiredLabel = "@ValidationMessages.NewPasswordRequired";
+    var passwordsMustBeEqualLabel = "@ValidationMessages.PasswordsMustBeEqual";
+    var emailRequiredLabel = "@ValidationMessages.EmailRequired";
+    var validEmailRequiredLabel = "@ValidationMessages.ValidEmailRequired";
+    var emailsMustBeEqualLabel = "@ValidationMessages.EmailsMustBeEqual";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var changePasswordRoute = "@Url.Action("ChangePassword")";
+    var changeEmailRoute = "@Url.Action("ChangeEmail")";
     </script>
+    <script src="~/libs/weebreader.1.0.1/admin/user-profile.js"></script>
 }
 
 <div class="ui three column stackable grid">

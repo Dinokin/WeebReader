@@ -4,44 +4,15 @@
     ViewData["Title"] = Labels.Users;
     ViewData["SegmentedPaginator"] = false;
     ViewData["PaginatorButtonSize"] = "small";
-    var deletionRoute = (string) ViewData["DeletionRoute"];
 }
 
 @section Headers
 {
     <script>
-    $(() => {
-        let deletionTarget;
-        let deletionModal = $(".modal");
-        let messageContainer = $(".message");
-        
-        $("#users").addClass("active");
-                
-        deletionModal.modal({
-        closable: false,
-        onDeny: () => deletionTarget = null,
-        onApprove: () => {
-            deletionModal.api({
-            on: "now",
-            url: "@deletionRoute" + deletionTarget,
-            method: "DELETE",
-            onSuccess: () => location.reload(),
-            onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-            onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-            })
-        }
-        });
-        
-        $(".negative.button").on("click", (event) => {
-            if ($(event.target).is("i"))
-                deletionTarget = $(event.target).parent().attr("user-id");
-            else
-                deletionTarget = $(event.target).attr("user-id");
-            
-            deletionModal.modal("show");
-        });
-    });
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var deletionRoute = "@ViewData["DeletionRoute"]";
     </script>
+    <script src="~/libs/weebreader.1.0.1/admin/user-index.js"></script>
 }
 
 @if (Model.Any())
@@ -53,7 +24,6 @@
         <i class="plus icon"></i>
     </a>
 }
-
     
     <div class="ui basic mini modal">
         <div class="ui icon header">
@@ -110,5 +80,5 @@ else
             @OtherMessages.NoUserExist
         </div>
         <a class="ui primary button" href="@Url.Action("Add")">@Labels.AddUser</a>
-    </div>   
+    </div>
 }

@@ -9,93 +9,19 @@
 @section Headers
 {
     <script>
-    $(() => {
-        let messageContainer = $(".form .message");
-        let form = $(".form");
-        
-        $("#users").addClass("active");
-        
-        form.on("keypress", function (event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                return false;
-            }
-        });
-                
-        form.form({
-        on: "blur",
-        fields: {
-            username: {
-                identifier: "username",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.UsernameRequired"
-                    },
-                    {
-                        type: "minLength[3]",
-                        prompt: "@ValidationMessages.MinimumUsernameLength"
-                    },
-                    {
-                        type: "maxLength[50]",
-                        prompt: "@ValidationMessages.MaxUsernameLength"
-                    }
-                ]
-            },
-            email: {
-                identifier: "email",
-                rules: [
-                    {
-                        type: "empty",
-                        prompt: "@ValidationMessages.EmailRequired"
-                    },
-                    {
-                        type: "email",
-                        prompt: "@ValidationMessages.ValidEmailRequired"
-                    }
-                ]
-            },
-            role: {
-                identifier  : "role",
-                rules: [
-                    {
-                        type   : "empty",
-                        prompt : "@ValidationMessages.RoleRequired"
-                    }
-                ]
-            },
-            password: {
-                identifier: "password",
-                optional: true,
-                rules: [
-                    {
-                        type: "minLength[8]",
-                        prompt: "@ValidationMessages.MinimumPasswordLength"
-                    }
-                ]
-            },
-            repeatNewPassword: {
-                identifier: "repeatPassword",
-                rules: [
-                    {
-                        type: "match[password]",
-                        prompt: "@ValidationMessages.PasswordsMustBeEqual"
-                    }
-                ]
-            }
-        }
-        }).api({
-        url: "@ViewData["ActionRoute"]",
-        serializeForm: true,
-        method: "@ViewData["Method"]",
-        onSuccess: response => window.location.href = response.destination,
-        onFailure: response => Array.isArray(response.messages) ? addError(messageContainer, response) : addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"])),
-        onError: () => addError(messageContainer, buildFakeResponse(["@OtherMessages.RequestFailed"]))
-        });
-        
-        $(".dropdown").dropdown();
-    });
+    var usernameRequiredLabel = "@ValidationMessages.UsernameRequired";
+    var minimumUsernameLengthLabel = "@ValidationMessages.MinimumUsernameLength";
+    var maxUsernameLengthLabel = "@ValidationMessages.MaxUsernameLength";
+    var emailRequiredLabel = "@ValidationMessages.EmailRequired";
+    var validEmailRequiredLabel = "@ValidationMessages.ValidEmailRequired";
+    var roleRequiredLabel = "@ValidationMessages.RoleRequired";
+    var minimumPasswordLengthLabel = "@ValidationMessages.MinimumPasswordLength";
+    var passwordsMustBeEqualLabel = "@ValidationMessages.PasswordsMustBeEqual";
+    var requestFailedLabel = "@OtherMessages.RequestFailed";
+    var actionRoute = "@ViewData["ActionRoute"]";
+    var method = "@ViewData["Method"]";
     </script>
+    <script src="~/libs/weebreader.1.0.1/admin/user-editor.js"></script>
 }
 
 <form class="ui form" novalidate>
