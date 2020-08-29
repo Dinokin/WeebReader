@@ -43,9 +43,11 @@ namespace WeebReader.Web.Services
 
         private static IEnumerable<KeyValuePair<string,string>> Encode(ReCaptchaRequest request)
         {
-            var result = new List<KeyValuePair<string,string>>();
-            result.Add(new KeyValuePair<string, string>(nameof(request.Secret).ToLower(), request.Secret));
-            result.Add(new KeyValuePair<string, string>(nameof(request.Response).ToLower(), request.Response));
+            var result = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>(nameof(request.Secret).ToLower(), request.Secret),
+                new KeyValuePair<string, string>(nameof(request.Response).ToLower(), request.Response)
+            };
 
             if (request.RemoteIp != null) 
                 result.Add(new KeyValuePair<string, string>(nameof(request.RemoteIp).ToLower(), request.RemoteIp));

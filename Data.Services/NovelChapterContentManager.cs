@@ -9,6 +9,6 @@ namespace WeebReader.Data.Services
     {
         public NovelChapterContentManager(BaseContext context) : base(context) { }
         
-        public async Task<NovelChapterContent> GetContentByChapter(NovelChapter novelChapter) => await DbSet.SingleOrDefaultAsync(content => content.ChapterId == novelChapter.Id);
+        public async Task<NovelChapterContent?> GetContentByChapter(NovelChapter novelChapter) => await DbSet.SingleOrDefaultAsync(content => content.ChapterId == novelChapter.Id);
     }
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
+    [SuppressMessage("ReSharper", "UnusedType.Global")]
     public partial class TitlePreviousChapters : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

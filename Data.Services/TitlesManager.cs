@@ -22,16 +22,8 @@ namespace WeebReader.Data.Services
 
             return Task.FromResult<IEnumerable<TTitle>>(results.Where(tuple => tuple.tag.Name.ToLower().Contains(term) || tuple.title.Name.ToLower().Contains(term) || tuple.title.Id.ToString() == term).Select(tuple => tuple.title).Distinct());
         }
-        
-        public async Task<long> Count(bool includeHidden) => includeHidden
-            ? await base.Count()
-            : await DbSet.LongCountAsync(title => title.Visible);
 
         public override async Task<IEnumerable<TTitle>> GetRange(int skip, int take) => await GetRange(skip, take, true);
-
-        public Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
-            ? DbSet.OrderBy(title => title.Name).Skip(skip).Take(take)
-            : DbSet.Where(title => title.Visible).OrderBy(title => title.Name).Skip(skip).Take(take));
 
         public override async Task<IEnumerable<TTitle>> GetAll() => await GetAll(true);
 
@@ -43,7 +35,7 @@ namespace WeebReader.Data.Services
         {
             var targetTitle = await DbSet.Include(entity => entity.TitleTags).SingleOrDefaultAsync(entity => entity == title);
 
-            return targetTitle == null ? new Tag[0] : targetTitle.TitleTags.Join(Context.Tags, titleTag => titleTag.TagId, tag => tag.Id, (titleTag, tag) => tag);
+            return targetTitle?.TitleTags?.Join(Context.Tags, titleTag => titleTag.TagId, tag => tag.Id, (titleTag, tag) => tag) ?? new Tag[0];
         }
 
         public async Task<bool> Add(TTitle title, IEnumerable<string>? tags = null)
@@ -92,6 +84,10 @@ namespace WeebReader.Data.Services
 
             return result;
         }
+        
+        private Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
+            ? DbSet.OrderBy(title => title.Name).Skip(skip).Take(take)
+            : DbSet.Where(title => title.Visible).OrderBy(title => title.Name).Skip(skip).Take(take));
 
         private async Task<IEnumerable<Tag>> BuildTags(IEnumerable<string> tags)
         {
@@ -106,6 +102,6 @@ namespace WeebReader.Data.Services
             return tagEntities;
         }
 
-        private IEnumerable<Tag> GetUnusedTags() => Context.Tags.Include(tag => tag.TitleTag).Where(tag => !tag.TitleTag.Any());
+        private IEnumerable<Tag> GetUnusedTags() => Context.Tags.Include(tag => tag.TitleTag).Where(tag => tag.TitleTag!.Any());
     }
 }

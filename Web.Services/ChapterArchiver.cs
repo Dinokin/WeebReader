@@ -81,7 +81,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        public FileInfo? GetChapterDownload(Chapter chapter) => chapter switch
+        public FileInfo GetChapterDownload(Chapter chapter) => chapter switch
         {
             ComicChapter _ => new FileInfo($"{Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id)}/package.zip"),
             NovelChapter _ => new FileInfo($"{Utilities.GetChapterFolder(_environment, chapter.TitleId, chapter.Id)}/chapter.pdf"),

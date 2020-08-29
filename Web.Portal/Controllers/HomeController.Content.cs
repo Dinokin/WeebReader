@@ -167,7 +167,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             var title = await _titlesManager.GetById(chapter.TitleId);
             
-            if (!_signInManager.IsSignedIn(User) && (!title.Visible || !chapter.Visible))
+            if (!_signInManager.IsSignedIn(User) && (!title!.Visible || !chapter.Visible))
                 return RedirectToAction("Titles");
 
             Request.Cookies.TryGetValue("reader_theme", out var value);
@@ -177,7 +177,7 @@ namespace WeebReader.Web.Portal.Controllers
                 _ => Constants.DarkModeClasses
             };
             
-            if (title.Nsfw && !HasNsfwCookie()) 
+            if (title!.Nsfw && !HasNsfwCookie()) 
                 return View("NSFWChapterWarning", (title, chapter));
 
             ViewData["PreviousChapter"] = (await _chapterManager.GetPreviousChapter(chapter, _signInManager.IsSignedIn(User)))?.Id;
@@ -194,10 +194,10 @@ namespace WeebReader.Web.Portal.Controllers
 
             var title = await _titlesManager.GetById(chapter.TitleId);
             
-            if (!_signInManager.IsSignedIn(User) && (!title.Visible || !chapter.Visible))
+            if (!_signInManager.IsSignedIn(User) && (!title!.Visible || !chapter.Visible))
                 return RedirectToAction("Titles");
 
-            return GetDownload(title, chapter);
+            return GetDownload(title!, chapter);
         }
     }
 }

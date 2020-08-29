@@ -147,7 +147,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return RedirectToAction("Index", new { titleId });
             }
             
-            ViewData["Title"] = $"{Labels.EditChapter} - {(await _titleManager.GetById(titleId)).Name}";
+            ViewData["Title"] = $"{Labels.EditChapter} - {(await _titleManager.GetById(titleId))?.Name}";
             ViewData["ActionRoute"] = Url.Action("Edit");
             ViewData["Method"] = "PATCH";
             ViewData["Function"] = Labels.EditChapter;

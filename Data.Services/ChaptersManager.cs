@@ -18,10 +18,6 @@ namespace WeebReader.Data.Services
 
         public override async Task<IEnumerable<TChapter>> GetRange(int skip, int take) => await GetRange(skip, take, true);
 
-        public Task<IEnumerable<TChapter>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
-            ? DbSet.OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take)
-            : DbSet.Where(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take));
-
         public Task<IEnumerable<TChapter>> GetRange(Title title, int skip, int take, bool includeHidden = true) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
             ? DbSet.Where(chapter => chapter.TitleId == title.Id).OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take)
             : DbSet.Where(chapter => chapter.TitleId == title.Id && chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.Number).Skip(skip).Take(take));
@@ -47,5 +43,9 @@ namespace WeebReader.Data.Services
         public async Task<TChapter?> GetLatestChapter(Title title, bool includeHidden) => includeHidden
             ? await DbSet.Where(entity => entity.TitleId == title.Id).OrderByDescending(entity => entity.ReleaseDate).FirstOrDefaultAsync()
             : await DbSet.Where(entity => entity.TitleId == title.Id && entity.Visible && entity.ReleaseDate <= DateTime.Now).OrderByDescending(entity => entity.ReleaseDate).FirstOrDefaultAsync();
+        
+        private Task<IEnumerable<TChapter>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TChapter>>(includeHidden
+            ? DbSet.OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take)
+            : DbSet.Where(chapter => chapter.Visible && chapter.ReleaseDate <= DateTime.Now).OrderByDescending(chapter => chapter.ReleaseDate).Skip(skip).Take(take));
     }
 }

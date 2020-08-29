@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Entities
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     public class Tag : BaseEntity
     {
         public string Name { get; }

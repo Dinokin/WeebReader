@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Entities
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     public class TitleTag : BaseEntity
     {
         public Guid TitleId { get; }

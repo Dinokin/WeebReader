@@ -23,7 +23,7 @@ namespace WeebReader.Data.Services
 
         public override async Task<IEnumerable<Post>> GetAll() => await GetAll(true);
 
-        public Task<IEnumerable<Post>> GetAll(bool includeHidden) => Task.FromResult<IEnumerable<Post>>(includeHidden
+        private Task<IEnumerable<Post>> GetAll(bool includeHidden) => Task.FromResult<IEnumerable<Post>>(includeHidden
             ? DbSet.OrderByDescending(post => post.ReleaseDate)
             : DbSet.Where(post => post.Visible).OrderByDescending(post => post.ReleaseDate));
     }

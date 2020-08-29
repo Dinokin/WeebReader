@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
@@ -183,6 +184,7 @@ namespace WeebReader.Web.Models.Others
             chapter.Visible = chapterModel.Visible;
         }
 
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static T Map<T>(IEnumerable<Parameter> parameters) where T : new()
         {
             var t = new T();

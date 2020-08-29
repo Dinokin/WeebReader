@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +38,7 @@ namespace WeebReader.Web.Portal.Controllers
 
         [HttpGet("{page:int?}")]
         [Authorize(Roles = RoleTranslator.Administrator)]
+        [SuppressMessage("ReSharper", "PossibleUnintendedQueryableAsEnumerable")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPageUserAdmin);
@@ -405,7 +407,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
 
-        private async Task<bool> SendAccountCreationEmail(IdentityUser<Guid> user)
+        private async Task SendAccountCreationEmail(IdentityUser<Guid> user)
         {
             var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).EncodeToBase64();
             var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
@@ -413,7 +415,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token));
 
-            return await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
+            await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }
     }
 }

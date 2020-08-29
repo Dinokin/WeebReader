@@ -50,7 +50,7 @@ namespace WeebReader.Web.Models.Controllers.ParametersManager
             var results = new List<ValidationResult>();
 
             if (AboutEnabled)
-                if (string.IsNullOrWhiteSpace(Regex.Replace(AboutContent, "<.*?>", string.Empty)))
+                if (string.IsNullOrWhiteSpace(Regex.Replace(AboutContent ?? string.Empty, "<.*?>", string.Empty)))
                     results.Add(new ValidationResult(ValidationMessages.AboutPageContentRequired, new []{nameof(AboutContent)}));
                     
             if (PatreonEnabled)

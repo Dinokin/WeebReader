@@ -12,19 +12,14 @@ namespace WeebReader.Web.Models.Others.Attributes
         /// <summary>
         ///     List of comma separated file extensions to be tested against an <see cref="IFormFile"/>.
         /// </summary>
-        public string AllowedExtensions { get; }
+        private readonly string _allowedExtensions;
 
-        public AllowedFormatsAttribute(string allowedExtensions) => AllowedExtensions = allowedExtensions;
+        public AllowedFormatsAttribute(string allowedExtensions) => _allowedExtensions = allowedExtensions.Replace(",", "|").ToLowerInvariant();
 
         public override bool IsValid(object value)
         {
-            if (value == null)
-                return true;
-
-            var allowedExtensions = AllowedExtensions.Replace(",", "|").ToLowerInvariant();
-            
             if (value is IFormFile formFile) 
-                if (Regex.IsMatch(Path.GetExtension(formFile.FileName.ToLowerInvariant()), $"({allowedExtensions})"))
+                if (Regex.IsMatch(Path.GetExtension(formFile.FileName.ToLowerInvariant()), $"({_allowedExtensions})"))
                     return true;
 
             return false;

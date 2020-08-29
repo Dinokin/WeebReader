@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Pomelo.EntityFrameworkCore.MySql.Storage;
 
 namespace WeebReader.Data.Contexts.Factories
 {
+    [SuppressMessage("ReSharper", "UnusedType.Global")]
     internal class MariaDbContextFactory : IDesignTimeDbContextFactory<MariaDbContext>
     {
         public MariaDbContext CreateDbContext(string[] args)
