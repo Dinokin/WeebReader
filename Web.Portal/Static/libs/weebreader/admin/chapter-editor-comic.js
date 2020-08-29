@@ -15,6 +15,19 @@
                         prompt: chapterNameMaxLengthLabel
                     }
                 ]
+            },
+            number: {
+                identifier: "number",
+                rules: [
+                    {
+                        type: "empty",
+                        prompt: chapterMustHaveNumberLabel
+                    },
+                    {
+                        type: "integer",
+                        prompt: chapterNumberOutOfRangeLabel
+                    }
+                ]
             }
         }
     }).api({
