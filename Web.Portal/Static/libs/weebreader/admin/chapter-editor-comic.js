@@ -12,7 +12,7 @@
                 rules: [
                     {
                         type: "maxLength[100]",
-                        prompt: ChapterNameMaxLengthLabel
+                        prompt: chapterNameMaxLengthLabel
                     }
                 ]
             }
