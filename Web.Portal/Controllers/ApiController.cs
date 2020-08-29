@@ -140,7 +140,7 @@ namespace WeebReader.Web.Portal.Controllers
                     chapter.Name,
                     chapter.ReleaseDate,
                     chapter.TitleId,
-                    (await _novelChapterContentManager.GetContentByChapter(novelChapter)).Content,
+                    (await _novelChapterContentManager.GetContentByChapter(novelChapter))?.Content,
                     Pages = (await _pagesManager.GetAll(novelChapter)).Select(page => new
                     {
                         page.Id,
