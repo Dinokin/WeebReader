@@ -24,12 +24,14 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly TitlesManager<Title> _titleManager;
         private readonly ChapterManager<Chapter> _chapterManager;
         private readonly ChapterArchiver<Chapter> _chapterArchiver;
+        private readonly NovelChapterContentManager _novelChapterContentManager;
 
-        public ChaptersManagerController(TitlesManager<Title> titleManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver)
+        public ChaptersManagerController(TitlesManager<Title> titleManager, ChapterManager<Chapter> chapterManager, ChapterArchiver<Chapter> chapterArchiver, NovelChapterContentManager novelChapterContentManager)
         {
             _titleManager = titleManager;
             _chapterManager = chapterManager;
             _chapterArchiver = chapterArchiver;
+            _novelChapterContentManager = novelChapterContentManager;
         }
 
         [HttpGet("{page:int?}")]
@@ -150,7 +152,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["Method"] = "PATCH";
             ViewData["Function"] = Labels.EditChapter;
 
-            return GetEditor(chapter);
+            return await GetEditor(chapter);
         }
 
         [HttpPatch("{chapterId:guid}")]
@@ -253,12 +255,19 @@ namespace WeebReader.Web.Portal.Controllers
             Novel _ => View("NovelChapterEditor"),
             _ => RedirectToAction("Index")
         };
-        
-        private IActionResult GetEditor(Chapter chapter) => chapter switch
+
+        private async Task<IActionResult> GetEditor(Chapter chapter)
         {
-            ComicChapter comicChapter => View("ComicChapterEditor", (ComicChapterModel) Mapper.MapToModel(comicChapter)),
-            NovelChapter novelChapter => View("NovelChapterEditor", (NovelChapterModel) Mapper.MapToModel(novelChapter)),
-            _ => RedirectToAction("Index")
-        };
+            switch (chapter)
+            {
+                case ComicChapter comicChapter:
+                    return View("ComicChapterEditor", (ComicChapterModel) Mapper.MapToModel(comicChapter));
+                case NovelChapter novelChapter:
+                    novelChapter.NovelChapterContent = await _novelChapterContentManager.GetContentByChapter(novelChapter);
+                    return View("NovelChapterEditor", (NovelChapterModel) Mapper.MapToModel(novelChapter));
+                default:
+                    return RedirectToAction("Index");
+            }
+        }
     }
 }

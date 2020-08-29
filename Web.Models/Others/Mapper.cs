@@ -158,6 +158,7 @@ namespace WeebReader.Web.Models.Others
                 ReleaseDate = novelChapter.ReleaseDate,
                 Visible = novelChapter.Visible,
                 TitleId = novelChapter.TitleId,
+                Content = novelChapter.NovelChapterContent?.Content ?? string.Empty
             },
             _ => throw new ArgumentException()
         };
