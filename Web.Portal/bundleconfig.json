@@ -1,0 +1,162 @@
+﻿[
+  {
+    "outputFileName": "Static/libs/weebreader/disqus.min.js",
+    "inputFiles": ["Static/libs/weebreader/disqus.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/google-analytics.min.js",
+    "inputFiles": ["Static/libs/weebreader/google-analytics.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/overrides.min.css",
+    "inputFiles": ["Static/libs/weebreader/overrides.css"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/tinymce-full.min.js",
+    "inputFiles": ["Static/libs/weebreader/tinymce-full.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/tinymce-partial.min.js",
+    "inputFiles": ["Static/libs/weebreader/tinymce-partial.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/weebreader-shared.min.css",
+    "inputFiles": ["Static/libs/weebreader/weebreader-shared.css"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/weebreader-shared.min.js",
+    "inputFiles": ["Static/libs/weebreader/weebreader-shared.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/about.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/about.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/blog.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/blog.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/contact.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/contact.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/forgot-password.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/forgot-password.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/index.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/index.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/install.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/install.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/main-shared.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/main-shared.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/nsfw-warning.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/nsfw-warning.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/reader-comic-longstrip.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/reader-comic-longstrip.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/reader-comic-multiplepages.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/reader-comic-multiplepages.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/reader-comic-shared.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/reader-comic-shared.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/reader-novel.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/reader-novel.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/reader-shared.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/reader-shared.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/reset-password.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/reset-password.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/sign-in.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/sign-in.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/title.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/title.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/main/titles.min.js",
+    "inputFiles": ["Static/libs/weebreader/main/titles.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/admin-shared.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/admin-shared.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/blog-editor.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/blog-editor.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/blog-index.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/blog-index.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/chapter-editor-comic.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/chapter-editor-comic.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/chapter-editor-novel.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/chapter-editor-novel.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/chapter-editor-shared.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/chapter-editor-shared.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/chapter-index.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/chapter-index.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/parameter-contact.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/parameter-contact.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/parameter-email.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/parameter-email.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/parameter-general.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/parameter-general.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/parameter-pages.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/parameter-pages.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/title-editor.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/title-editor.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/title-index.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/title-index.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/user-editor.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/user-editor.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/user-index.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/user-index.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/user-profile.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/user-profile.js"]
+  }
+]

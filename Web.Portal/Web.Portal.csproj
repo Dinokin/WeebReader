@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
         <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.7" />
         <PackageReference Include="System.ServiceModel.Syndication" Version="4.7.0" />
@@ -23,7 +24,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <Content Include="Static\**">
+        <Content Include="Static\**" Exclude="Static\libs\weebreader\**">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
@@ -37,4 +38,20 @@
         <DependentUpon>HomeController.cs</DependentUpon>
       </Compile>
     </ItemGroup>
+    
+    <Target Name="CopyMinifiedFiles" BeforeTargets="AfterCompile" AfterTargets="BundleMinify;BeforeCompile" Condition="'$(RunBundleMinify)' != 'False'">
+        <ItemGroup>
+            <MinifiedFiles Include="Static\libs\weebreader\**\*.min.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(MinifiedFiles)"
+              DestinationFiles="@(MinifiedFiles->'$(OutDir)Static\libs\weebreader\%(RecursiveDir)$([System.Text.RegularExpressions.Regex]::Replace(%(Filename), '\.min', ''))%(Extension)')"
+              SkipUnchangedFiles="true"/>
+    </Target>
+    
+    <Target Name="CleanMinifiedFiles" AfterTargets="BundleMinifyClean;CoreClean" Condition="'$(RunBundleMinify)' != 'False'">
+        <ItemGroup>
+            <MinifiedFiles Include="$(OutDir)Static\libs\weebreader\**\*.*"/>
+        </ItemGroup>
+        <Delete Files="@(MinifiedFiles)"/>
+    </Target>
 </Project>
