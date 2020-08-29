@@ -29,7 +29,6 @@
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="bundleconfig.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never"/>
         <Content Include="Static\**" Exclude="Static\libs\weebreader\**">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -54,7 +53,7 @@
               SkipUnchangedFiles="true"/>
     </Target>
 
-    <Target Name="PublishMinifiedFiles" AfterTargets="BundleMinify;CopyMinifiedFiles;AfterPublish" Condition="'$(RunBundleMinify)' != 'False'">
+    <Target Name="PublishMinifiedFiles" AfterTargets="BundleMinify;BeforeCompile;CopyMinifiedFiles" Condition="'$(RunBundleMinify)' != 'False'">
         <ItemGroup>
             <MinifiedFiles Include="$(OutDir)Static\libs\weebreader\**\*.*"/>
         </ItemGroup>
