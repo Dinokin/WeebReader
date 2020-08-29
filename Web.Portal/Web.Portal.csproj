@@ -47,6 +47,15 @@
               DestinationFiles="@(MinifiedFiles->'$(OutDir)Static\libs\weebreader\%(RecursiveDir)$([System.Text.RegularExpressions.Regex]::Replace(%(Filename), '\.min', ''))%(Extension)')"
               SkipUnchangedFiles="true"/>
     </Target>
+
+    <Target Name="PublishMinifiedFiles" AfterTargets="BundleMinify;CopyMinifiedFiles;AfterPublish" Condition="'$(RunBundleMinify)' != 'False'">
+        <ItemGroup>
+            <MinifiedFiles Include="$(OutDir)Static\libs\weebreader\**\*.*"/>
+        </ItemGroup>
+        <Copy SourceFiles="@(MinifiedFiles)"
+              DestinationFiles="@(MinifiedFiles->'$(OutDir)publish\Static\libs\weebreader\%(RecursiveDir)$([System.Text.RegularExpressions.Regex]::Replace(%(Filename), '\.min', ''))%(Extension)')"
+              SkipUnchangedFiles="true"/>
+    </Target>
     
     <Target Name="CleanMinifiedFiles" AfterTargets="BundleMinifyClean;CoreClean" Condition="'$(RunBundleMinify)' != 'False'">
         <ItemGroup>
