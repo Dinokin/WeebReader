@@ -7,6 +7,11 @@
         <Nullable>enable</Nullable>
         <PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <DebugSymbols>false</DebugSymbols>
+        <DebugType>none</DebugType>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
@@ -24,6 +29,7 @@
     </ItemGroup>
     
     <ItemGroup>
+        <None Include="bundleconfig.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never"/>
         <Content Include="Static\**" Exclude="Static\libs\weebreader\**">
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
