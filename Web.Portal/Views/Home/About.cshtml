@@ -25,7 +25,7 @@
             <h4 class="ui header">@Labels.BecomeOurPatreon</h4>
             @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonNotice))
             <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutPatreonLink))">
-                <img class="ui centered small image" src="~/assets/patreon.png" alt="@Labels.Patreon" asp-append-version="true"/>
+                <img class="ui centered small image" src="~/assets/patreon.png" alt="@Labels.Patreon"/>
             </a>
         </div>
     }
@@ -35,7 +35,7 @@
             <h4 class="ui header">@Labels.BuyUsACoffee</h4>
             @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiNotice))
             <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.PageAboutKofiLink))">
-                <img class="ui centered small image" src="~/assets/kofi.png" alt="@Labels.KoFi" asp-append-version="true"/>
+                <img class="ui centered small image" src="~/assets/kofi.png" alt="@Labels.KoFi"/>
             </a>
         </div>
     }

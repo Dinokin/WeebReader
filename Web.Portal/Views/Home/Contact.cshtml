@@ -33,7 +33,7 @@
             <h4 class="ui header">@Labels.JoinOurDiscordCommunity</h4>
             @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordNotice))
             <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink))">
-                <img class="ui centered small image" src="~/assets/discord_b.png" alt="@Labels.Discord" asp-append-version="true"/>
+                <img class="ui centered small image" src="~/assets/discord_b.png" alt="@Labels.Discord"/>
             </a>
         </div>
     }
