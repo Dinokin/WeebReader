@@ -76,14 +76,14 @@ namespace WeebReader.Web.Portal.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Content");
         }
 
         [HttpGet("Admin/{action:slugify}")]
         public async Task<IActionResult> ForgotPassword()
         {
             if (!await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index","Content");
             
             return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
         }
@@ -154,7 +154,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             TempData["ErrorMessage"] = new[] {OtherMessages.PasswordResetInvalidData};
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Content");
         } 
         
         [HttpPatch("Admin/{action:slugify}")]
@@ -220,7 +220,7 @@ namespace WeebReader.Web.Portal.Controllers
             else
                 TempData["ErrorMessage"] = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage);
             
-            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : RedirectToAction("Index", "Home");
+            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : RedirectToAction("Index", "Content");
         }
     }
 }

@@ -28,7 +28,7 @@ namespace WeebReader.Web.Portal.Controllers
         public IActionResult Denied() => Forbid();
 
         [HttpGet("{action}")]
-        public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index", "Home");
+        public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index", "Content");
 
         [HttpPost("{action}")]
         public async Task<IActionResult> Install(InstallerModel installerModel)

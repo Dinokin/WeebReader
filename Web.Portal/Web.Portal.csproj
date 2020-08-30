@@ -35,15 +35,6 @@
         </Content>
     </ItemGroup>
     
-    <ItemGroup>
-      <Compile Update="Controllers\HomeController.Content.cs">
-        <DependentUpon>HomeController.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Controllers\HomeController.PrivateParts.cs">
-        <DependentUpon>HomeController.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-    
     <Target Name="CopyMinifiedFiles" BeforeTargets="AfterCompile" AfterTargets="BundleMinify;BeforeCompile" Condition="'$(RunBundleMinify)' != 'False'">
         <ItemGroup>
             <MinifiedFiles Include="Static\libs\weebreader\**\*.min.*"/>

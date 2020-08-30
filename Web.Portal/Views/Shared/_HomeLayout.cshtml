@@ -26,7 +26,7 @@
             <a class="item" href="/">
                 <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
             </a>
-            <a id="titles" class="item menu-item" href="@Url.Action("Titles", "Home", new { titleId = string.Empty})">
+            <a id="titles" class="item menu-item" href="@Url.Action("Titles", "Content", new { titleId = string.Empty})">
                 @Labels.Titles
             </a>
             @if (blogEnabled)
@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="ui vertical secondary fluid menu @(lightMode ? "inverted" : null)" style="display: none">
-            <a id="titles-mobile" class="item menu-item" href="@Url.Action("Titles", "Home", new { titleId = string.Empty})">
+            <a id="titles-mobile" class="item menu-item" href="@Url.Action("Titles", "Content", new { titleId = string.Empty})">
                 @Labels.Titles
             </a>
             @if (blogEnabled)
@@ -101,7 +101,7 @@
                     <i class="discord big icon"></i>
                 </a>
             }
-            <a href="@Url.Action("IndexRss", "Home")">
+            <a href="@Url.Action("IndexRss", "Content")">
                 <i class="rss big fitted icon"></i>
             </a>
         </div>

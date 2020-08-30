@@ -1,17 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using WeebReader.Data.Entities;
+using WeebReader.Data.Entities.Abstract;
+using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Portal.Others;
+using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    public partial class HomeController
+    public class ContentController : Controller
     {
+        private readonly SignInManager<IdentityUser<Guid>> _signInManager;
+        private readonly TitlesManager<Title> _titlesManager;
+        private readonly ChapterManager<Chapter> _chapterManager;
+        private readonly PagesManager<Page> _pagesManager;
+        private readonly NovelChapterContentManager _novelChapterContentManager;
+        private readonly ChapterArchiver<Chapter> _chapterArchiver;
+        private readonly ParametersManager _parametersManager;
+        private readonly IMemoryCache _memoryCache;
+
+        public ContentController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager, ChapterArchiver<Chapter> chapterArchiver, ParametersManager parametersManager, IMemoryCache memoryCache)
+        {
+            _signInManager = signInManager;
+            _titlesManager = titlesManager;
+            _chapterManager = chapterManager;
+            _pagesManager = pagesManager;
+            _novelChapterContentManager = novelChapterContentManager;
+            _chapterArchiver = chapterArchiver;
+            _parametersManager = parametersManager;
+            _memoryCache = memoryCache;
+        }
+
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
@@ -35,22 +65,22 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 var title = $"{tuple.title.Name} - {Labels.Chapter} {tuple.chapter.Number}";
                 var description = tuple.title.Synopsis.RemoveHtmlTags() is var desc && desc.Length > 200 ? $"{desc.Substring(0, 200)}..." : desc;
-                var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = tuple.chapter.Id}, Request.Scheme));
+                var url = new Uri(Url.Action("ReadChapter", "Content", new {chapterId = tuple.chapter.Id}, Request.Scheme));
                 var feedItem = new SyndicationItem(title, description, url)
                 {
                     Id = tuple.chapter.Id.ToString(),
                     PublishDate = tuple.chapter.ReleaseDate
                 };
                 
-                feedItem.ElementExtensions.Add("titleLink", null, new Uri(Url.Action("Titles", "Home", new {titleId = tuple.title.Id}, Request.Scheme)));
+                feedItem.ElementExtensions.Add("titleLink", null, new Uri(Url.Action("Titles", "Content", new {titleId = tuple.title.Id}, Request.Scheme)));
 
                 return feedItem;
             }).ToArray();
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
-            var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.Home} - {siteName}", new Uri(Url.Action("Index", "Home", null, Request.Scheme)), feedItems)
+            var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.Home} - {siteName}", new Uri(Url.Action("Index", "Content", null, Request.Scheme)), feedItems)
             {
-                BaseUri = new Uri(Url.Action("IndexRss", "Home", null, Request.Scheme)),
+                BaseUri = new Uri(Url.Action("IndexRss", "Content", null, Request.Scheme)),
                 ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/assets/icon.png"),
                 LastUpdatedTime = DateTimeOffset.Now,
                 TimeToLive = TimeSpan.FromMinutes(10)
@@ -135,7 +165,7 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 var itemTitle = $"{title.Name} - {Labels.Chapter} {chapter.Number}";
                 var description = title.Synopsis.RemoveHtmlTags() is var desc && desc.Length > 200 ? $"{desc.Substring(0, 200)}..." : desc;
-                var url = new Uri(Url.Action("ReadChapter", "Home", new {chapterId = chapter.Id}, Request.Scheme));
+                var url = new Uri(Url.Action("ReadChapter", "Content", new {chapterId = chapter.Id}, Request.Scheme));
                 var feedItem = new SyndicationItem(itemTitle, description, url)
                 {
                     Id = chapter.Id.ToString(),
@@ -146,9 +176,9 @@ namespace WeebReader.Web.Portal.Controllers
             }).ToArray();
             
             var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
-            var feed = new SyndicationFeed($"{title.Name} RSS", $"{title.Name} - {siteName}", new Uri(Url.Action("Titles", "Home", new {titleId = title.Id}, Request.Scheme)), feedItems)
+            var feed = new SyndicationFeed($"{title.Name} RSS", $"{title.Name} - {siteName}", new Uri(Url.Action("Titles", "Content", new {titleId = title.Id}, Request.Scheme)), feedItems)
             {
-                BaseUri = new Uri(Url.Action("TitlesRss", "Home", new {titleId = title.Id}, Request.Scheme)),
+                BaseUri = new Uri(Url.Action("TitlesRss", "Content", new {titleId = title.Id}, Request.Scheme)),
                 ImageUrl = new Uri($"{Request.Scheme}://{Request.Host}/content/{title.Id}/cover_thumb.jpg"),
                 LastUpdatedTime = DateTimeOffset.Now,
                 TimeToLive = TimeSpan.FromMinutes(10)
@@ -198,6 +228,86 @@ namespace WeebReader.Web.Portal.Controllers
                 return RedirectToAction("Titles");
 
             return GetDownload(title!, chapter);
+        }
+        
+        private IActionResult GetDownload(Title title, Chapter chapter) => chapter switch
+        {
+            ComicChapter comicChapter => File(_chapterArchiver.GetChapterDownload(comicChapter).OpenRead(), "application/zip", $"{GetDownloadName(title, comicChapter)}.zip"),
+            NovelChapter novelChapter => File(_chapterArchiver.GetChapterDownload(novelChapter).OpenRead(), "application/pdf", $"{GetDownloadName(title, novelChapter)}.pdf"),
+            _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
+        };
+        
+        private static string GetDownloadName(Title title, Chapter chapter) => $"{title.Name} - {Labels.Chapter} {chapter.Number}";
+
+        private async Task<IActionResult> GetReader(Title title, Chapter chapter) => chapter switch
+        {
+            ComicChapter comicChapter => await GetComicReader((Comic) title, comicChapter),
+            NovelChapter novelChapter => await GetNovelReader((Novel) title, novelChapter),
+            _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
+        };
+
+        private async Task<IActionResult> GetComicReader(Comic comic, ComicChapter comicChapter)
+        {
+            var pages = (await _pagesManager.GetAll(comicChapter)).Select(page => (ComicPage) page).OrderBy(page => page.Number);
+
+            Request.Cookies.TryGetValue($"{comic.Id}_long_strip", out var value);
+
+            if (string.IsNullOrWhiteSpace(value))
+                Response.Cookies.Append($"{comic.Id}_long_strip", comic.LongStrip.ToString().ToLower(), new CookieOptions{ MaxAge = TimeSpan.FromDays(365 * 10) });
+
+            ViewData["LongStrip"] = Convert.ToBoolean(value) || comic.LongStrip;
+            
+            return View("ComicReader", ValueTuple.Create<Comic, ComicChapter, IEnumerable<ComicPage>>(comic, comicChapter, pages));
+        }
+
+        private async Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => View("NovelReader", ValueTuple.Create(novel, novelChapter, await _novelChapterContentManager.GetContentByChapter(novelChapter)));
+
+        private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
+        {
+            var stream = new MemoryStream();
+            using var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings {Encoding = Encoding.UTF8, NewLineHandling = NewLineHandling.Entitize, Indent = true, Async = true});
+            new Rss20FeedFormatter(feed, false).WriteTo(xmlWriter);
+            await xmlWriter.FlushAsync();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return File(stream, "application/rss+xml; charset=utf-8");
+        }
+
+        private async Task<long> CountReleases()
+        {
+            var includeHidden = _signInManager.IsSignedIn(User);
+            var titles = (await _titlesManager.GetAll(includeHidden)).AsQueryable();
+            var chapters = (await _chapterManager.GetAll(includeHidden)).AsQueryable();
+
+            return includeHidden
+                ? titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter})
+                    .OrderByDescending(tuple => tuple.chapter.ReleaseDate).LongCount()
+                : titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).Where(tuple => tuple.title.Visible && tuple.chapter.Visible)
+                    .OrderByDescending(tuple => tuple.chapter.ReleaseDate).LongCount();
+        }
+        
+        private async Task<IEnumerable<(Title title, Chapter chapter)>> GetReleases(int skip, int take, bool? includeHidden = null)
+        {
+            includeHidden ??= _signInManager.IsSignedIn(User);
+            var titles = (await _titlesManager.GetAll(includeHidden.Value)).AsQueryable();
+            var chapters = (await _chapterManager.GetAll(includeHidden.Value)).AsQueryable();
+
+            var releases = includeHidden.Value
+                ? titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take)
+                : titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).Where(tuple => tuple.title.Visible && tuple.chapter.Visible)
+                    .OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take);
+
+            return releases.Select(tuple => ValueTuple.Create(tuple.title, tuple.chapter));
+        }
+        
+        private bool HasNsfwCookie()
+        {
+            Request.Cookies.TryGetValue("seek_nsfw_content", out var value);
+
+            if (string.IsNullOrWhiteSpace(value))
+                value = false.ToString();
+
+            return Convert.ToBoolean(value);
         }
     }
 }

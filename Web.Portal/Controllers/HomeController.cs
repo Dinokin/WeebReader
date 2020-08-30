@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using WeebReader.Data.Entities;
-using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Controllers.Home;
@@ -14,41 +12,28 @@ using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    public partial class HomeController : Controller
+    public class HomeController : Controller
     {
         private readonly SignInManager<IdentityUser<Guid>> _signInManager;
-        private readonly TitlesManager<Title> _titlesManager;
-        private readonly ChapterManager<Chapter> _chapterManager;
-        private readonly PagesManager<Page> _pagesManager;
-        private readonly NovelChapterContentManager _novelChapterContentManager;
-        private readonly ChapterArchiver<Chapter> _chapterArchiver;
         private readonly PostsManager _postsManager;
         private readonly EmailSender _emailSender;
         private readonly ParametersManager _parametersManager;
         private readonly ReCaptchaValidator _reCaptchaValidator;
-        private readonly IMemoryCache _memoryCache;
 
-        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager,
-            ChapterArchiver<Chapter> chapterArchiver, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator, IMemoryCache memoryCache)
+        public HomeController(SignInManager<IdentityUser<Guid>> signInManager, PostsManager postsManager, EmailSender emailSender, ParametersManager parametersManager, ReCaptchaValidator reCaptchaValidator)
         {
             _signInManager = signInManager;
-            _titlesManager = titlesManager;
-            _chapterManager = chapterManager;
-            _pagesManager = pagesManager;
-            _novelChapterContentManager = novelChapterContentManager;
-            _chapterArchiver = chapterArchiver;
             _postsManager = postsManager;
             _emailSender = emailSender;
             _parametersManager = parametersManager;
             _reCaptchaValidator = reCaptchaValidator;
-            _memoryCache = memoryCache;
         }
 
         [HttpGet("{action}")]
         public async Task<IActionResult> Blog()
         {
             if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Content");
 
             ViewData["TotalPages"] = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
 
@@ -74,7 +59,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (aboutEnabled || kofiEnabled || patreonEnabled)
                 return View();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Content");
         }
 
         [HttpGet("{action}")]
@@ -87,7 +72,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (emailSenderEnabled && emailContactEnabled || discordEnabled)
                 return View();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Content");
         }
 
         [HttpPost("{action}")]
