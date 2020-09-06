@@ -60,7 +60,7 @@
                 </div>
             }
         </form>
-        @if (await ParameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
+        @if (await ParameterManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled))
         {
             <div class="ui message">
                 @Labels.ForgotPassword2 <a href="@Url.Action("ForgotPassword")">@Labels.ResetIt</a>

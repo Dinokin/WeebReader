@@ -5,7 +5,7 @@
     ViewData["Title"] = Labels.Contact;
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
-    var reCaptchaEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
+    var reCaptchaEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.ContactEmailRecaptchaEnabled);
 }
 
 @section Headers
@@ -27,17 +27,17 @@
 }
 
 <div class="ui container">
-    @if (await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled))
+    @if (await ParametersManager.GetValue<bool>(ParameterTypes.ContactDiscordEnabled))
     {
         <div class="ui raised segment">
             <h4 class="ui header">@Labels.JoinOurDiscordCommunity</h4>
-            @Html.Raw(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordNotice))
-            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink))">
+            @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.ContactDiscordNotice))
+            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactDiscordLink))">
                 <img class="ui centered small image" src="~/assets/discord_b.png" alt="@Labels.Discord"/>
             </a>
         </div>
     }
-    @if (await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled) && await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled))
+    @if (await ParametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled) && await ParametersManager.GetValue<bool>(ParameterTypes.ContactEmailEnabled))
     {
         <div class="ui raised segment">
             <h4 class="ui header">@Labels.ContactUsViaEmail</h4>
@@ -75,7 +75,7 @@
                 {
                     <input type="hidden" name="reCaptchaResponse" asp-for="ReCaptchaResponse"/>
                     <div class="field">
-                        <div class="g-recaptcha" data-sitekey="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactEmailRecaptchaClientKey))" data-callback="recaptcha_callback"></div>
+                        <div class="g-recaptcha" data-sitekey="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaClientKey))" data-callback="recaptcha_callback"></div>
                     </div>   
                 }
                 <div class="field ov-auto">

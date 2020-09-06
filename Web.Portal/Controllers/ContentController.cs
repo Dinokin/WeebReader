@@ -14,6 +14,8 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
+using WeebReader.Web.Models.Others;
+using WeebReader.Web.Models.Others.Extensions;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
@@ -77,7 +79,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return feedItem;
             }).ToArray();
             
-            var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
+            var siteName = await _parametersManager.GetValue<string>(ParameterTypes.SiteName);
             var feed = new SyndicationFeed($"{siteName} RSS", $"{Labels.Home} - {siteName}", new Uri(Url.Action("Index", "Content", null, Request.Scheme)), feedItems)
             {
                 BaseUri = new Uri(Url.Action("IndexRss", "Content", null, Request.Scheme)),
@@ -175,7 +177,7 @@ namespace WeebReader.Web.Portal.Controllers
                 return feedItem;
             }).ToArray();
             
-            var siteName = await _parametersManager.GetValue<string>(Parameter.Types.SiteName);
+            var siteName = await _parametersManager.GetValue<string>(ParameterTypes.SiteName);
             var feed = new SyndicationFeed($"{title.Name} RSS", $"{title.Name} - {siteName}", new Uri(Url.Action("Titles", "Content", new {titleId = title.Id}, Request.Scheme)), feedItems)
             {
                 BaseUri = new Uri(Url.Action("TitlesRss", "Content", new {titleId = title.Id}, Request.Scheme)),

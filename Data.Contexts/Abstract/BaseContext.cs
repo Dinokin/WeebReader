@@ -180,8 +180,8 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.HasIndex(setting => setting.Type).IsUnique();
 
                 typeBuilder.HasData(
-                    new Parameter(Guid.Parse("b2f7adc5-9090-417c-bbc1-805071fc7a81"), Parameter.Types.SiteName, "WeebReader"), 
-                    new Parameter(Guid.Parse("27c51234-bf33-40de-86db-1941c8622a73"), Parameter.Types.SiteDescription, "We read weebs."));
+                    new Parameter(Guid.Parse("b2f7adc5-9090-417c-bbc1-805071fc7a81"), 0, "WeebReader"), 
+                    new Parameter(Guid.Parse("27c51234-bf33-40de-86db-1941c8622a73"), 1, "We read weebs."));
             });
         }
     }

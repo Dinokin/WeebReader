@@ -15,6 +15,7 @@
         
         <ItemGroup>
                 <ProjectReference Include="..\Data.Entities\Data.Entities.csproj" />
+                <ProjectReference Include="..\Data.Services\Data.Services.csproj" />
                 <ProjectReference Include="..\Web.Localization\Web.Localization.csproj" />
         </ItemGroup>
 </Project>

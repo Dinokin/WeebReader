@@ -3,10 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Controllers.Home;
+using WeebReader.Web.Models.Others;
+using WeebReader.Web.Models.Others.Extensions;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
@@ -32,7 +33,7 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{action}")]
         public async Task<IActionResult> Blog()
         {
-            if (!await _parametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled))
+            if (!await _parametersManager.GetValue<bool>(ParameterTypes.PageBlogEnabled))
                 return RedirectToAction("Index", "Content");
 
             ViewData["TotalPages"] = Math.Ceiling(await _postsManager.Count(_signInManager.IsSignedIn(User)) / (decimal) Constants.ItemsPerPagePosts);
@@ -52,9 +53,9 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{action}")]
         public async Task<IActionResult> About()
         {
-            var aboutEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
-            var kofiEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
-            var patreonEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
+            var aboutEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.PageAboutEnabled);
+            var kofiEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.PageAboutKofiEnabled);
+            var patreonEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.PageAboutPatreonEnabled);
 
             if (aboutEnabled || kofiEnabled || patreonEnabled)
                 return View();
@@ -65,9 +66,9 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("{action}")]
         public async Task<IActionResult> Contact()
         {
-            var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
-            var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
-            var discordEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
+            var emailSenderEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled);
+            var emailContactEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.ContactEmailEnabled);
+            var discordEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.ContactDiscordEnabled);
 
             if (emailSenderEnabled && emailContactEnabled || discordEnabled)
                 return View();
@@ -80,16 +81,16 @@ namespace WeebReader.Web.Portal.Controllers
         {
             if (ModelState.IsValid)
             {
-                var emailSenderEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
-                var emailContactEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
+                var emailSenderEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled);
+                var emailContactEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.ContactEmailEnabled);
                 
                 if (emailSenderEnabled && emailContactEnabled)
                 {
-                    var reCaptchaEnabled = await _parametersManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled);
+                    var reCaptchaEnabled = await _parametersManager.GetValue<bool>(ParameterTypes.ContactEmailRecaptchaEnabled);
 
                     if (!reCaptchaEnabled || await _reCaptchaValidator.Validate(contactModel.ReCaptchaResponse!, null))
                     {
-                        if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(Parameter.Types.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
+                        if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(ParameterTypes.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
                         {
                             TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
 

@@ -8,7 +8,7 @@
 
 @section Headers
 {
-    <link rel="alternate" type="application/rss+xml" title="@($"{await ParametersManager.GetValue<string>(Parameter.Types.SiteName)} RSS")" href="@Url.Action("IndexRss")"/>
+    <link rel="alternate" type="application/rss+xml" title="@($"{await ParametersManager.GetValue<string>(ParameterTypes.SiteName)} RSS")" href="@Url.Action("IndexRss")"/>
     <script>
     const totalPages = @ViewData["TotalPages"];
     const pageRequestRoute = "@Url.Action("Index", new {page = 0})";

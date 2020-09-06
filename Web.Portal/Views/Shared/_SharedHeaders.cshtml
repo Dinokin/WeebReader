@@ -2,7 +2,7 @@
 @inject ParametersManager ParameterManager
 
 @{
-    var siteDescription = await ParameterManager.GetValue<string>(Parameter.Types.SiteDescription);
+    var siteDescription = await ParameterManager.GetValue<string>(ParameterTypes.SiteDescription);
 }
 
 <!-- Standard Meta -->
@@ -15,7 +15,7 @@
 }
 
 <!-- Site Properties -->
-<title>@ViewData["Title"] - @(await ParameterManager.GetValue<string>(Parameter.Types.SiteName))</title>
+<title>@ViewData["Title"] - @(await ParameterManager.GetValue<string>(ParameterTypes.SiteName))</title>
 @if (!string.IsNullOrWhiteSpace(siteDescription))
 {
     <meta name="description" content="@siteDescription">

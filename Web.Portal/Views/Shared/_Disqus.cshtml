@@ -1,13 +1,13 @@
 ﻿@inject ParametersManager ParametersManager
 
-@if (await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled))
+@if (await ParametersManager.GetValue<bool>(ParameterTypes.PageDisqusEnabled))
 {
     <div id="disqus_thread"></div>
     <script>
     const disqusPageUrl = "@($"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")";
     const disqusIdentifier = "@ViewData["DisqusIdentifier"]";
     const disqusTitle = "@ViewData["DisqusTitle"]";
-    const disqusShortname = "@(await ParametersManager.GetValue<string>(Parameter.Types.PageDisqusShortname))";
+    const disqusShortname = "@(await ParametersManager.GetValue<string>(ParameterTypes.PageDisqusShortname))";
     </script>
     <script src="~/libs/weebreader/disqus.js" asp-append-version="true"></script>
 }

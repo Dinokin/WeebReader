@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
@@ -11,7 +9,6 @@ using WeebReader.Web.Models.Controllers.ChaptersManager;
 using WeebReader.Web.Models.Controllers.Others;
 using WeebReader.Web.Models.Controllers.TitlesManager;
 using WeebReader.Web.Models.Controllers.UsersManager;
-using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.Others
 {
@@ -182,25 +179,6 @@ namespace WeebReader.Web.Models.Others
             chapter.Name = chapterModel.Name;
             chapter.ReleaseDate = chapterModel.ReleaseDate ?? chapter.ReleaseDate;
             chapter.Visible = chapterModel.Visible;
-        }
-
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static T Map<T>(IEnumerable<Parameter> parameters) where T : new()
-        {
-            var t = new T();
-
-            foreach (var property in t.GetType().GetProperties().Where(property => Attribute.IsDefined(property, typeof(ParameterAttribute))))
-            {
-                var attribute = (ParameterAttribute) property.GetCustomAttribute(typeof(ParameterAttribute))!;
-                var parameter = parameters.SingleOrDefault(entity => entity.Type == attribute.ParameterType);
-
-                if (parameter == null)
-                    continue;
-
-                property.SetValue(t, parameter.Value == null ? null : Convert.ChangeType(parameter.Value, Nullable.GetUnderlyingType(property.PropertyType) is var underlyingType && underlyingType != null ? underlyingType : property.PropertyType));
-            }
-
-            return t;
         }
     }
 }

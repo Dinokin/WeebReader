@@ -2,8 +2,9 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
+using WeebReader.Web.Models.Others;
+using WeebReader.Web.Models.Others.Extensions;
 
 namespace WeebReader.Web.Services
 {
@@ -22,9 +23,9 @@ namespace WeebReader.Web.Services
 
         public async Task<bool> Validate(string clientSecret, string? clientIp)
         {
-            if (await _parameterManager.GetValue<bool>(Parameter.Types.ContactEmailRecaptchaEnabled))
+            if (await _parameterManager.GetValue<bool>(ParameterTypes.ContactEmailRecaptchaEnabled))
             {
-                var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(Parameter.Types.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
+                var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
                 var content = new FormUrlEncodedContent(Encode(reCaptchaRequest));
                 var httpResponse = await _httpClientFactory.CreateClient().PostAsync(PostAddress, content);
 

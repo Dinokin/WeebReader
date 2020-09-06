@@ -9,8 +9,8 @@ using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.ParametersManager;
-using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Attributes;
+using WeebReader.Web.Models.Others.Extensions;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -30,25 +30,25 @@ namespace WeebReader.Web.Portal.Controllers
         public ParametersManagerController(ParametersManager parametersManager) => _parametersManager = parametersManager;
 
         [HttpGet("{action}")]
-        public async Task<IActionResult> General() => View(Mapper.Map<GeneralParametersModel>(await _parametersManager.GetAll()));
+        public async Task<IActionResult> General() => View(await _parametersManager.GetModel<GeneralParametersModel>());
         
         [HttpPatch("{action}")]
         public async Task<IActionResult> General(GeneralParametersModel generalParametersModel) => await ProcessPatchRequest(generalParametersModel);
 
         [HttpGet("{action}")]
-        public async Task<IActionResult> Email() => View(Mapper.Map<EmailParametersModel>(await _parametersManager.GetAll()));
+        public async Task<IActionResult> Email() => View(await _parametersManager.GetModel<EmailParametersModel>());
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Email(EmailParametersModel emailParametersModel) => await ProcessPatchRequest(emailParametersModel);
 
         [HttpGet("{action}")]
-        public async Task<IActionResult> Contact() => View(Mapper.Map<ContactParametersModel>(await _parametersManager.GetAll()));
+        public async Task<IActionResult> Contact() => View(await _parametersManager.GetModel<ContactParametersModel>());
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Contact(ContactParametersModel contactParametersModel) => await ProcessPatchRequest(contactParametersModel);
 
         [HttpGet("{action}")]
-        public async Task<IActionResult> Pages() => View(Mapper.Map<PagesParametersModel>(await _parametersManager.GetAll()));
+        public async Task<IActionResult> Pages() => View(await _parametersManager.GetModel<PagesParametersModel>());
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Pages(PagesParametersModel pagesParametersModel) => await ProcessPatchRequest(pagesParametersModel);

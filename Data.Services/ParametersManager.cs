@@ -9,8 +9,8 @@ namespace WeebReader.Data.Services
     public class ParametersManager : GenericManager<Parameter>
     {
         public ParametersManager(BaseContext context) : base(context) { }
-        
-        public async Task<T> GetValue<T>(Parameter.Types type)
+
+        public async Task<T> GetValue<T>(ushort type)
         {
             if ((await DbSet.SingleOrDefaultAsync(parameter => parameter.Type == type))?.Value is var value && value != null)
                 return (T) Convert.ChangeType(value, typeof(T));
@@ -18,7 +18,7 @@ namespace WeebReader.Data.Services
             return default!;
         }
 
-        public async Task<bool> Save(Parameter.Types type, string? value)
+        public async Task<bool> Save(ushort type, string? value)
         {
             var parameter = await DbSet.SingleOrDefaultAsync(entity => entity.Type == type);
 

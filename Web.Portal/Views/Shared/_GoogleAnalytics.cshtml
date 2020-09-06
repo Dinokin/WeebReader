@@ -1,12 +1,12 @@
 ﻿@inject ParametersManager ParametersManager
 
 @{
-    var googleAnalyticsEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.SiteGoogleAnalyticsEnabled);
+    var googleAnalyticsEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.SiteGoogleAnalyticsEnabled);
     var googleAnalyticsTrackingCode = string.Empty;
 
     if (googleAnalyticsEnabled)
     {
-        googleAnalyticsTrackingCode = await ParametersManager.GetValue<string>(Parameter.Types.SiteGoogleAnalyticsCode);
+        googleAnalyticsTrackingCode = await ParametersManager.GetValue<string>(ParameterTypes.SiteGoogleAnalyticsCode);
     }
 }
 

@@ -1,13 +1,13 @@
 ﻿@inject ParametersManager ParametersManager
 
 @{
-    var discordEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactDiscordEnabled);
-    var blogEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageBlogEnabled);
-    var aboutEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutEnabled);
-    var kofiEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutKofiEnabled);
-    var patreonEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageAboutPatreonEnabled);
-    var emailSenderEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled);
-    var emailContactEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.ContactEmailEnabled);
+    var discordEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.ContactDiscordEnabled);
+    var blogEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageBlogEnabled);
+    var aboutEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutEnabled);
+    var kofiEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutKofiEnabled);
+    var patreonEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutPatreonEnabled);
+    var emailSenderEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled);
+    var emailContactEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.ContactEmailEnabled);
     var lightMode = ViewData["BodyClass"]?.ToString() != Constants.DarkModeClasses;
 }
 
@@ -94,10 +94,10 @@
 <div class="ui center aligned container">
     <footer>
         <div class="ui large @(ViewData["BodyClass"] == null ? null : lightMode ? "inverted" : null) label">
-            © @DateTime.Now.Year @(await ParametersManager.GetValue<string>(Parameter.Types.SiteName))
+            © @DateTime.Now.Year @(await ParametersManager.GetValue<string>(ParameterTypes.SiteName))
             @if (discordEnabled)
             {
-                <a href="@(await ParametersManager.GetValue<string>(Parameter.Types.ContactDiscordLink))">
+                <a href="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactDiscordLink))">
                     <i class="discord big icon"></i>
                 </a>
             }

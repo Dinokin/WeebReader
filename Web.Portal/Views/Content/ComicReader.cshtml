@@ -8,7 +8,7 @@
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];
-    var disqusEnabled = await ParametersManager.GetValue<bool>(Parameter.Types.PageDisqusEnabled);
+    var disqusEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageDisqusEnabled);
 
     if (disqusEnabled)
     {
@@ -23,7 +23,7 @@
     <meta property="og:url" content="@Url.Action("ReadChapter", "Content", new { chapterId = Model.chapter.Id }, Context.Request.Scheme)"/>
     <meta property="og:image" content="@($"{Context.Request.Scheme}://{Context.Request.Host}/content/{Model.comic.Id}/cover_thumb.jpg")"/>
     <meta property="og:description" content="@Model.comic.Synopsis.RemoveHtmlTags()"/>
-    <meta property="og:site_name" content="@(await ParametersManager.GetValue<string>(Parameter.Types.SiteName))"/>
+    <meta property="og:site_name" content="@(await ParametersManager.GetValue<string>(ParameterTypes.SiteName))"/>
     <script>
     const chapterListRoute = "@Url.Action("TitlesJson", new {titleId = Model.comic.Id})";
     const previousChapterRoute = "@(previousChapter != null ? Url.Action("ReadChapter", new { chapterId = previousChapter }) : string.Empty)";

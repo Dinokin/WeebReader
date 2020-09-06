@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using WeebReader.Data.Entities;
 using WeebReader.Web.Localization;
+using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.Controllers.ParametersManager
 {
     public class GeneralParametersModel : IValidatableObject
     {
-        [Parameter(Parameter.Types.SiteName)]
+        [Parameter(ParameterTypes.SiteName)]
         [Required(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "SiteNameRequired")]
         public string SiteName { get; set; } = string.Empty;
         
-        [Parameter(Parameter.Types.SiteDescription)]
+        [Parameter(ParameterTypes.SiteDescription)]
         public string? SiteDescription { get; set; }
         
-        [Parameter(Parameter.Types.SiteGoogleAnalyticsEnabled)]
+        [Parameter(ParameterTypes.SiteGoogleAnalyticsEnabled)]
         public bool GoogleAnalyticsEnabled { get; set; }
         
-        [Parameter(Parameter.Types.SiteGoogleAnalyticsCode)]
+        [Parameter(ParameterTypes.SiteGoogleAnalyticsCode)]
         public string? GoogleAnalyticsCode { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.title.Name}";
     ViewData["DarkMode"] = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
-    var siteName = await ParametersManager.GetValue<string>(Parameter.Types.SiteName);
+    var siteName = await ParametersManager.GetValue<string>(ParameterTypes.SiteName);
 }
 
 @section Headers

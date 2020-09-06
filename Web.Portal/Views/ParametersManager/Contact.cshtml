@@ -24,7 +24,7 @@
     <div class="field">
         <label>@Labels.EmailContact</label>
         <div class="ui toggle checkbox">
-            <input class="hidden" type="checkbox" name="emailEnabled" asp-for="EmailEnabled" disabled="@(!await ParametersManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))"/>
+            <input class="hidden" type="checkbox" name="emailEnabled" asp-for="EmailEnabled" disabled="@(!await ParametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled))"/>
             <label>@Labels.Enable</label>
         </div>
     </div>

@@ -1,47 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using WeebReader.Data.Entities;
 using WeebReader.Web.Localization;
+using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Attributes;
 
 namespace WeebReader.Web.Models.Controllers.ParametersManager
 {
     public class PagesParametersModel : IValidatableObject
     {
-        [Parameter(Parameter.Types.PageBlogEnabled)]
+        [Parameter(ParameterTypes.PageBlogEnabled)]
         public bool BlogEnabled { get; set; }
 
-        [Parameter(Parameter.Types.PageAboutEnabled)]
+        [Parameter(ParameterTypes.PageAboutEnabled)]
         public bool AboutEnabled { get; set; }
         
-        [Parameter(Parameter.Types.PageAboutContent)]
+        [Parameter(ParameterTypes.PageAboutContent)]
         public string? AboutContent { get; set; }
 
-        [Parameter(Parameter.Types.PageAboutPatreonEnabled)]
+        [Parameter(ParameterTypes.PageAboutPatreonEnabled)]
         public bool PatreonEnabled { get; set; }
         
-        [Parameter(Parameter.Types.PageAboutKofiEnabled)]
+        [Parameter(ParameterTypes.PageAboutKofiEnabled)]
         public bool KofiEnabled { get; set; }
         
-        [Parameter(Parameter.Types.PageAboutPatreonLink)]
+        [Parameter(ParameterTypes.PageAboutPatreonLink)]
         [Url(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "PatreonLinkValidUrl")]
         public string? PatreonLink { get; set; }
         
-        [Parameter(Parameter.Types.PageAboutPatreonNotice)]
+        [Parameter(ParameterTypes.PageAboutPatreonNotice)]
         public string? PatreonNotice { get; set; }
         
-        [Parameter(Parameter.Types.PageAboutKofiLink)]
+        [Parameter(ParameterTypes.PageAboutKofiLink)]
         [Url(ErrorMessageResourceType = typeof(ValidationMessages), ErrorMessageResourceName = "KofiLinkValidUrl")]
         public string? KofiLink { get; set; }
         
-        [Parameter(Parameter.Types.PageAboutKofiNotice)]
+        [Parameter(ParameterTypes.PageAboutKofiNotice)]
         public string? KofiNotice { get; set; }
         
-        [Parameter(Parameter.Types.PageDisqusEnabled)]
+        [Parameter(ParameterTypes.PageDisqusEnabled)]
         public bool DisqusEnabled { get; set; }
         
-        [Parameter(Parameter.Types.PageDisqusShortname)]
+        [Parameter(ParameterTypes.PageDisqusShortname)]
         public string? DisqusShortname { get; set; }
 
 

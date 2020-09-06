@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
-using WeebReader.Data.Entities;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
 using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.SignIn;
 using WeebReader.Web.Models.Controllers.UsersManager;
 using WeebReader.Web.Models.Others;
+using WeebReader.Web.Models.Others.Extensions;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
 
@@ -92,7 +92,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 await using var transaction = await _context.Database.BeginTransactionAsync();
                 
-                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
+                if (await _parameterManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled))
                 {
                     var userResult = string.IsNullOrWhiteSpace(userModel.Password) ? await _userManager.CreateAsync(user) : await _userManager.CreateAsync(user, userModel.Password);
 
@@ -363,11 +363,11 @@ namespace WeebReader.Web.Portal.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
 
-                if (await _parameterManager.GetValue<bool>(Parameter.Types.EmailSenderEnabled))
+                if (await _parameterManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled))
                 {
                     var token = (await _userManager.GenerateChangeEmailTokenAsync(user, emailModel.Email)).EncodeToBase64();
-                    var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
-                    var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
+                    var siteName = await _parameterManager.GetValue<string>(ParameterTypes.SiteName);
+                    var siteEmail = await _parameterManager.GetValue<string>(ParameterTypes.SiteEmail);
 
                     var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, Url.Action("ChangeEmail", "UsersManager", new {userId = user.Id, email = emailModel.Email, token = "replace"}, Request.Scheme).Replace("replace", token));
 
@@ -410,8 +410,8 @@ namespace WeebReader.Web.Portal.Controllers
         private async Task SendAccountCreationEmail(IdentityUser<Guid> user)
         {
             var token = (await _userManager.GeneratePasswordResetTokenAsync(user)).EncodeToBase64();
-            var siteName = await _parameterManager.GetValue<string>(Parameter.Types.SiteName);
-            var siteEmail = await _parameterManager.GetValue<string>(Parameter.Types.SiteEmail);
+            var siteName = await _parameterManager.GetValue<string>(ParameterTypes.SiteName);
+            var siteEmail = await _parameterManager.GetValue<string>(ParameterTypes.SiteEmail);
 
             var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token));
 
