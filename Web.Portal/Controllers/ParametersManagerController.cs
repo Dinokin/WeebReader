@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Utilities;
+using WeebReader.Web.Localization.Others;
 using WeebReader.Web.Models.Controllers.ParametersManager;
 using WeebReader.Web.Models.Others.Attributes;
 using WeebReader.Web.Models.Others.Extensions;
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    [Authorize(Roles = RoleTranslator.Administrator)]
+    [Authorize(Roles = Utilities.Roles.Administrator)]
     [Route("Admin/Parameters/")]
     public class ParametersManagerController : Controller
     {

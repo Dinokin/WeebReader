@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Utilities = WeebReader.Web.Localization.Others.Utilities
+@{
     var successMessage = (IEnumerable<string>) TempData["SuccessMessage"];
     var errorMessage = (IEnumerable<string>) TempData["ErrorMessage"];
 }
@@ -12,21 +13,21 @@
 </head>
 <body>
 <div class="ui inverted left vertical sidebar accordion menu">
-    @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+    @if (User.IsInRole(Utilities.Roles.Uploader) || User.IsInRole(Utilities.Roles.Moderator) || User.IsInRole(Utilities.Roles.Administrator))
     {
         <a id="titles" class="item" href="@Url.Action("Index", "TitlesManager")">
             <i class="left book icon"></i>
             @Labels.Titles
         </a>   
     }
-    @if (User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+    @if (User.IsInRole(Utilities.Roles.Moderator) || User.IsInRole(Utilities.Roles.Administrator))
     {
         <a id="blog" class="item" href="@Url.Action("Index", "BlogManager")">
             <i class="left newspaper icon"></i>
             @Labels.Blog
         </a>
     }
-    @if (User.IsInRole(RoleTranslator.Administrator))
+    @if (User.IsInRole(Utilities.Roles.Administrator))
     {
         <a id="users" class="item" href="@Url.Action("Index", "UsersManager")">
             <i class="left users icon"></i>
@@ -51,7 +52,7 @@
     <a class="item" href="/">
         <img src="~/assets/logo_l.png" alt="@Labels.Logo"/>
     </a>
-    @if (User.IsInRole(RoleTranslator.Uploader) || User.IsInRole(RoleTranslator.Moderator) || User.IsInRole(RoleTranslator.Administrator))
+    @if (User.IsInRole(Utilities.Roles.Uploader) || User.IsInRole(Utilities.Roles.Moderator) || User.IsInRole(Utilities.Roles.Administrator))
     {
         <a id="toggler" class="item">
             <i class="sidebar icon"></i>

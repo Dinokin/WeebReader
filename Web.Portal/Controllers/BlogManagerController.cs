@@ -5,15 +5,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.BlogManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
+using Utilities = WeebReader.Web.Localization.Others.Utilities;
 
 namespace WeebReader.Web.Portal.Controllers
 {
     
-    [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+    [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
     [Route("Admin/Blog/")]
     public class BlogManagerController : Controller
     {

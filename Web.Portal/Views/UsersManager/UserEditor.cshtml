@@ -1,9 +1,10 @@
-﻿@model UserModel
+﻿@using Utilities = WeebReader.Web.Localization.Others.Utilities
+@model UserModel
 
 @{
     var roles = new List<string> {Labels.None};
 
-    roles.AddRange(typeof(RoleTranslator).GetFields().Select(info => RoleTranslator.FromRole(info.GetValue(null)!.ToString())).Reverse());
+    roles.AddRange(typeof(Utilities.Roles).GetFields().Select(info => Utilities.FromRole(info.GetValue(null)!.ToString())).Reverse());
 }
 
 @section Headers

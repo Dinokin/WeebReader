@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.SignIn;
 using WeebReader.Web.Models.Controllers.UsersManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Extensions;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
+using Utilities = WeebReader.Web.Localization.Others.Utilities;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -37,7 +37,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{page:int?}")]
-        [Authorize(Roles = RoleTranslator.Administrator)]
+        [Authorize(Roles = Utilities.Roles.Administrator)]
         [SuppressMessage("ReSharper", "PossibleUnintendedQueryableAsEnumerable")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
@@ -48,7 +48,7 @@ namespace WeebReader.Web.Portal.Controllers
                 .Select(Mapper.MapToModel).ToArray();
             
             foreach (var user in users)
-                user.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault());
+                user.Role = Utilities.FromRole((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.UserId.ToString()))).FirstOrDefault());
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
@@ -58,7 +58,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{action}")]
-        [Authorize(Roles = RoleTranslator.Administrator)]
+        [Authorize(Roles = Utilities.Roles.Administrator)]
         public IActionResult Add()
         {
             ViewData["Title"] = Labels.AddUser;
@@ -69,7 +69,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpPost("{action}")]
-        [Authorize(Roles = RoleTranslator.Administrator)]
+        [Authorize(Roles = Utilities.Roles.Administrator)]
         public async Task<IActionResult> Add(UserModel userModel)
         {
             if (ModelState.IsValid)
@@ -98,7 +98,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (userResult.Succeeded)
                     {
-                        if (RoleTranslator.ToRole(userModel.Role) is var resultingRole && resultingRole != null)
+                        if (Utilities.ToRole(userModel.Role) is var resultingRole && resultingRole != null)
                         {
                             var roleResult = await _userManager.AddToRoleAsync(user, resultingRole);
 
@@ -143,7 +143,7 @@ namespace WeebReader.Web.Portal.Controllers
                         
                         if (userResult.Succeeded)
                         {
-                            if (RoleTranslator.ToRole(userModel.Role) is var resultingRole && resultingRole != null)
+                            if (Utilities.ToRole(userModel.Role) is var resultingRole && resultingRole != null)
                             {
                                 var roleResult = await _userManager.AddToRoleAsync(user, resultingRole);
 
@@ -189,7 +189,7 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("{userId:guid}")]
-        [Authorize(Roles = RoleTranslator.Administrator)]
+        [Authorize(Roles = Utilities.Roles.Administrator)]
         public async Task<IActionResult> Edit(Guid userId)
         {
             if (await _userManager.FindByIdAsync(userId.ToString()) is var user && user == null)
@@ -204,13 +204,13 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["Method"] = "PATCH";
 
             var model = Mapper.MapToModel(user);
-            model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
+            model.Role = Utilities.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
 
             return View("UserEditor", model);
         }
 
         [HttpPatch("{userId:guid}")]
-        [Authorize(Roles = RoleTranslator.Administrator)]
+        [Authorize(Roles = Utilities.Roles.Administrator)]
         public async Task<IActionResult> Edit(UserModel userModel)
         {
             if (ModelState.IsValid)
@@ -229,7 +229,7 @@ namespace WeebReader.Web.Portal.Controllers
                         messages = new[] {ValidationMessages.EmailAlreadyInUse}
                     });
 
-                if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() is var role && role == RoleTranslator.Administrator && (await _userManager.GetUsersInRoleAsync(RoleTranslator.Administrator)).Count == 1 && RoleTranslator.ToRole(userModel.Role) != role)
+                if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() is var role && role == Utilities.Roles.Administrator && (await _userManager.GetUsersInRoleAsync(Utilities.Roles.Administrator)).Count == 1 && Utilities.ToRole(userModel.Role) != role)
                     return new JsonResult(new
                     {
                         success = false,
@@ -248,7 +248,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     var roleResult = true;
 
-                    if (RoleTranslator.ToRole(userModel.Role) is var targetRole && targetRole != role && targetRole != null)
+                    if (Utilities.ToRole(userModel.Role) is var targetRole && targetRole != role && targetRole != null)
                     {
                         roleResult = (role == null || (await _userManager.RemoveFromRoleAsync(user, role)).Succeeded) && (await _userManager.AddToRoleAsync(user, targetRole)).Succeeded;
                     }
@@ -291,7 +291,7 @@ namespace WeebReader.Web.Portal.Controllers
                     messages = new[] {ValidationMessages.UserNotFound}
                 });
 
-            if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() == RoleTranslator.Administrator && (await _userManager.GetUsersInRoleAsync(RoleTranslator.Administrator)).Count == 1)
+            if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() == Utilities.Roles.Administrator && (await _userManager.GetUsersInRoleAsync(Utilities.Roles.Administrator)).Count == 1)
                 return new JsonResult(new
                 {
                     success = false,
@@ -320,7 +320,7 @@ namespace WeebReader.Web.Portal.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             var model = Mapper.MapToModel(user);
-            model.Role = RoleTranslator.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
+            model.Role = Utilities.FromRole((await _userManager.GetRolesAsync(user)).FirstOrDefault());
 
             return View(model);
         }

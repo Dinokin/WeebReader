@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Data.Contexts.Abstract;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.Others;
 using WeebReader.Web.Models.Others;
+using Utilities = WeebReader.Web.Localization.Others.Utilities;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -51,7 +51,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                 if (userResult.Succeeded)
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(user, RoleTranslator.Administrator);
+                    var roleResult = await _userManager.AddToRoleAsync(user, Utilities.Roles.Administrator);
 
                     if (roleResult.Succeeded)
                     {

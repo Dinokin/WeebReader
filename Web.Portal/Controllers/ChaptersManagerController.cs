@@ -9,15 +9,15 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.ChaptersManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
+using Utilities = WeebReader.Web.Localization.Others.Utilities;
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator + "," + RoleTranslator.Uploader)]
+    [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator + "," + Utilities.Roles.Uploader)]
     [Route("Admin/Titles/{titleId:guid}/Chapters")]
     public class ChaptersManagerController : Controller
     {
@@ -221,7 +221,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+        [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
         [HttpDelete("{chapterId:guid}")]
         public async Task<IActionResult> Delete(Guid chapterId)
         {

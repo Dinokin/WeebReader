@@ -8,15 +8,15 @@ using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Utilities;
 using WeebReader.Web.Models.Controllers.TitlesManager;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Portal.Others;
 using WeebReader.Web.Services;
+using Utilities = WeebReader.Web.Localization.Others.Utilities;
 
 namespace WeebReader.Web.Portal.Controllers
 {
-    [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator + "," + RoleTranslator.Uploader)]
+    [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator + "," + Utilities.Roles.Uploader)]
     [Route("Admin/Titles/")]
     public class TitlesManager : Controller
     {
@@ -42,7 +42,7 @@ namespace WeebReader.Web.Portal.Controllers
             return View((await _titleManager.GetRange(Constants.ItemsPerPageTitleAdmin * (page - 1), Constants.ItemsPerPageTitleAdmin)));
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+        [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
         [HttpGet("{action}")]
         public IActionResult Add(string type)
         {
@@ -53,7 +53,7 @@ namespace WeebReader.Web.Portal.Controllers
             return GetEditor(type);
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+        [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
         [HttpPost("{action}")]
         public async Task<IActionResult> Add(TitleModel titleModel, string type)
         {
@@ -89,7 +89,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+        [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
         [HttpGet("{titleId:guid}")]
         public async Task<IActionResult> Edit(Guid titleId)
         {
@@ -107,7 +107,7 @@ namespace WeebReader.Web.Portal.Controllers
             return GetEditor(title, await _titleManager.GetTags(title));
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+        [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
         [HttpPatch("{titleId:guid}")]
         public async Task<IActionResult> Edit(TitleModel titleModel)
         {
@@ -151,7 +151,7 @@ namespace WeebReader.Web.Portal.Controllers
             });
         }
         
-        [Authorize(Roles = RoleTranslator.Administrator + "," + RoleTranslator.Moderator)]
+        [Authorize(Roles = Utilities.Roles.Administrator + "," + Utilities.Roles.Moderator)]
         [HttpDelete("{titleId:guid}")]
         public async Task<IActionResult> Delete(Guid titleId)
         {

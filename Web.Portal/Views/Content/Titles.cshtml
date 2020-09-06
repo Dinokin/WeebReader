@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Title>
+﻿@using Utilities = WeebReader.Web.Localization.Others.Utilities
+@model IEnumerable<Title>
 
 @{
     ViewData["Title"] = Labels.Titles;
@@ -26,7 +27,7 @@
                     </div>
                     <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
                     <div class="center aligned description">
-                        <p>@Labels.Status: @TitleStatusTranslator.FromStatus(title.Status)</p>
+                        <p>@Labels.Status: @Utilities.FromStatus(title.Status)</p>
                     </div>
                 </div>
                 <a class="ui small black bottom attached button" href="@Url.Action("Titles", new { titleId = title.Id })">
