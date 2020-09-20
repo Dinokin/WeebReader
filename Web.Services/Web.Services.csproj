@@ -23,8 +23,8 @@
     <ItemGroup>
         <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
         <PackageReference Include="itext7.pdfhtml" Version="3.0.1" />
-        <PackageReference Include="Magick.NET-Q8-x64" Version="7.21.1" />
-        <PackageReference Include="MailKit" Version="2.8.0" />
+        <PackageReference Include="Magick.NET-Q8-x64" Version="7.22.0" />
+        <PackageReference Include="MailKit" Version="2.9.0" />
         <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     </ItemGroup>
 
