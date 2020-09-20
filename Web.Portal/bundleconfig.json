@@ -158,5 +158,9 @@
   {
     "outputFileName": "Static/libs/weebreader/admin/user-profile.min.js",
     "inputFiles": ["Static/libs/weebreader/admin/user-profile.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/parameter-ratelimit.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/parameter-ratelimit.js"]
   }
 ]

@@ -17,6 +17,7 @@ using WeebReader.Web.Localization;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Extensions;
 using WeebReader.Web.Portal.Others;
+using WeebReader.Web.Portal.Others.Extensions;
 using WeebReader.Web.Services;
 
 namespace WeebReader.Web.Portal.Controllers

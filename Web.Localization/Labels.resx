@@ -441,4 +441,31 @@
     <data name="Logo">
         <value>Logo</value>
     </data>
+    <data name="Second">
+        <value>Second</value>
+    </data>
+    <data name="Minute">
+        <value>Minute</value>
+    </data>
+    <data name="Hour">
+        <value>Hour</value>
+    </data>
+    <data name="RateLimit">
+        <value>Rate Limit</value>
+    </data>
+    <data name="RealIpHeader">
+        <value>Real IP Header</value>
+    </data>
+    <data name="APIRateLimit">
+        <value>API Rate Limit</value>
+    </data>
+    <data name="AllowedRequests">
+        <value>Allowed Requests</value>
+    </data>
+    <data name="TimeInterval">
+        <value>Time Interval</value>
+    </data>
+    <data name="ContentRateLimit">
+        <value>Content Rate Limit</value>
+    </data>
 </root>

@@ -1,0 +1,80 @@
+﻿@model RateLimitParametersModel
+
+@{
+    ViewData["Title"] = $"{Labels.RateLimit} - {Labels.Parameters}";
+}
+
+@section Headers
+{
+    <script>
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const patchRoute = "@Url.Action("RateLimit")";
+    </script>
+    <script src="~/libs/weebreader/admin/parameter-ratelimit.js" asp-append-version="true"></script>
+}
+
+<form class="ui form" novalidate>
+    <div class="ui message error"></div>
+    <div class="field">
+        <label>@Labels.RealIpHeader</label>
+        <input type="text" name="rateLimitRealIpHeader" placeholder="@Labels.RealIpHeader" asp-for="RateLimitRealIpHeader"/>
+    </div>
+    <div class="ui divider"></div>
+    <div class="three fields">
+        <div class="field">
+            <label>@Labels.ContentRateLimit</label>
+            <div class="ui toggle checkbox">
+                <input class="hidden" type="checkbox" name="rateLimitContentEnabled" asp-for="RateLimitContentEnabled"/>
+                <label>@Labels.Enable</label>
+            </div>
+        </div>
+        <div class="field">
+            <label>@Labels.AllowedRequests</label>
+            <input type="number" min="1" max="10000" step="1" name="rateLimitMaxContentRequests" placeholder="@Labels.AllowedRequests" asp-for="RateLimitMaxContentRequests"/>
+        </div>
+        <div class="field">
+            <label>@Labels.TimeInterval</label>
+            <div id="content-interval" class="ui fluid selection dropdown">
+                <input type="hidden" name="rateLimitPeriodContent" asp-for="RateLimitPeriodContent">
+                <i class="dropdown icon"></i>
+                <div class="default text">@Labels.TimeInterval</div>
+                <div class="menu">
+                    <div class="item" data-value="@((byte) RateLimitPeriods.Second)">@Labels.Second</div>
+                    <div class="item" data-value="@((byte) RateLimitPeriods.Minute)">@Labels.Minute</div>
+                    <div class="item" data-value="@((byte) RateLimitPeriods.Hour)">@Labels.Hour</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="three fields">
+        <div class="field">
+            <label>@Labels.APIRateLimit</label>
+            <div class="ui toggle checkbox">
+                <input class="hidden" type="checkbox" name="rateLimitApiEnabled" asp-for="RateLimitApiEnabled"/>
+                <label>@Labels.Enable</label>
+            </div>
+        </div>
+        <div class="field">
+            <label>@Labels.AllowedRequests</label>
+            <input type="number" min="1" max="10000" step="1" name="rateLimitMaxApiRequests" placeholder="@Labels.AllowedRequests" asp-for="RateLimitMaxApiRequests"/>
+        </div>
+        <div class="field">
+            <label>@Labels.TimeInterval</label>
+            <div id="api-interval" class="ui fluid selection dropdown">
+                <input type="hidden" name="rateLimitPeriodApi" asp-for="RateLimitPeriodApi">
+                <i class="dropdown icon"></i>
+                <div class="default text">@Labels.TimeInterval</div>
+                <div class="menu">
+                    <div class="item" data-value="@((byte) RateLimitPeriods.Second)">@Labels.Second</div>
+                    <div class="item" data-value="@((byte) RateLimitPeriods.Minute)">@Labels.Minute</div>
+                    <div class="item" data-value="@((byte) RateLimitPeriods.Hour)">@Labels.Hour</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="field ov-auto">
+        <div class="ui right floated black submit button ov-hidden">@Labels.UpdateParameters</div>
+    </div>
+</form>

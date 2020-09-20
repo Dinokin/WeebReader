@@ -14,5 +14,10 @@
         public const ushort ItemsPerPagePosts = 8;
         public const ushort ItemsPerPageChapters = 25;
         public const ushort ItemsPerPageChaptersRss = 16;
+
+        public const double RateLimitDefaultRequestLimit = 20;
+        public const string RateLimitDefaultTimeInterval = "s";
+        public const string RateLimitEndpointContent = "*:/content/*";
+        public const string RateLimitEndpointApi = "*:/api/*";
     }
 }

@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using WeebReader.Data.Services;
 using WeebReader.Web.Localization;
-using WeebReader.Web.Localization.Others;
 using WeebReader.Web.Models.Controllers.ParametersManager;
+using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Attributes;
 using WeebReader.Web.Models.Others.Extensions;
+using WeebReader.Web.Portal.Others;
+using Utilities = WeebReader.Web.Localization.Others.Utilities;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -26,8 +30,15 @@ namespace WeebReader.Web.Portal.Controllers
         }
         
         private readonly ParametersManager _parametersManager;
+        private readonly IpRateLimitOptions _rateLimitOptions;
+        private readonly IIpPolicyStore _ipPolicyStore;
 
-        public ParametersManagerController(ParametersManager parametersManager) => _parametersManager = parametersManager;
+        public ParametersManagerController(ParametersManager parametersManager, IOptions<IpRateLimitOptions> rateLimitOptions, IIpPolicyStore ipPolicyStore)
+        {
+            _parametersManager = parametersManager;
+            _rateLimitOptions = rateLimitOptions.Value;
+            _ipPolicyStore = ipPolicyStore;
+        }
 
         [HttpGet("{action}")]
         public async Task<IActionResult> General() => View(await _parametersManager.GetModel<GeneralParametersModel>());
@@ -52,6 +63,50 @@ namespace WeebReader.Web.Portal.Controllers
 
         [HttpPatch("{action}")]
         public async Task<IActionResult> Pages(PagesParametersModel pagesParametersModel) => await ProcessPatchRequest(pagesParametersModel);
+
+        [HttpGet("{action}")]
+        public async Task<IActionResult> RateLimit()
+        {
+            var model = await _parametersManager.GetModel<RateLimitParametersModel>();
+
+            model.RateLimitRealIpHeader ??= _rateLimitOptions.RealIpHeader;
+            model.RateLimitPeriodContent ??= (byte) RateLimitPeriods.Second;
+            model.RateLimitPeriodApi ??= (byte) RateLimitPeriods.Second;
+            model.RateLimitMaxContentRequests ??= Constants.RateLimitDefaultRequestLimit;
+            model.RateLimitMaxApiRequests ??= Constants.RateLimitDefaultRequestLimit;
+
+            return View(model);
+        }
+
+        [HttpPatch("{action}")]
+        public async Task<IActionResult> RateLimit(RateLimitParametersModel rateLimitParametersModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _rateLimitOptions.GeneralRules.Clear();
+                _rateLimitOptions.RealIpHeader = rateLimitParametersModel.RateLimitRealIpHeader;
+                
+                if (rateLimitParametersModel.RateLimitContentEnabled)
+                    _rateLimitOptions.GeneralRules.Add(new RateLimitRule
+                    {
+                        Endpoint = Constants.RateLimitEndpointContent,
+                        Limit = rateLimitParametersModel.RateLimitMaxContentRequests ?? Constants.RateLimitDefaultRequestLimit,
+                        Period = $"1{Models.Others.Utilities.GetRateLimitTimePeriod(rateLimitParametersModel.RateLimitPeriodContent) ?? Constants.RateLimitDefaultTimeInterval}"
+                    });
+                
+                if (rateLimitParametersModel.RateLimitApiEnabled)
+                    _rateLimitOptions.GeneralRules.Add(new RateLimitRule
+                    {
+                        Endpoint = Constants.RateLimitEndpointApi,
+                        Limit = rateLimitParametersModel.RateLimitMaxApiRequests ?? Constants.RateLimitDefaultRequestLimit,
+                        Period = $"1{Models.Others.Utilities.GetRateLimitTimePeriod(rateLimitParametersModel.RateLimitPeriodApi) ?? Constants.RateLimitDefaultTimeInterval}"
+                    });
+
+                await _ipPolicyStore.SeedAsync();
+            }
+
+            return await ProcessPatchRequest(rateLimitParametersModel);
+        }
 
         private async Task<JsonResult> ProcessPatchRequest(object model)
         {

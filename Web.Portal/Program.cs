@@ -25,7 +25,7 @@ namespace WeebReader.Web.Portal
             {
                 options.Listen(IPAddress.Parse(context.Configuration.GetValue<string>("Application:IpAddress")), context.Configuration.GetValue<int>("Application:HttpPort"));
 
-                if (context.Configuration.GetValue<bool>("Web:UseHttps"))
+                if (context.Configuration.GetValue<bool>("Application:UseHttps"))
                 {
                     options.Listen(IPAddress.Parse(context.Configuration.GetValue<string>("Application:IpAddress")), context.Configuration.GetValue<int>("Application:HttpsPort"), listenOptions =>
                     {

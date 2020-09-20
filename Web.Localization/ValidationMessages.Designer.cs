@@ -70,6 +70,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The amount of requests to the API must be a value between 1 and 10000..
+        /// </summary>
+        public static string AmountOfApiRequestMustBeBetween1And10000 {
+            get {
+                return ResourceManager.GetString("AmountOfApiRequestMustBeBetween1And10000", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The amount of requests to the content must be a value between 1 and 10000..
+        /// </summary>
+        public static string AmountOfContentRequestMustBeBetween1And10000 {
+            get {
+                return ResourceManager.GetString("AmountOfContentRequestMustBeBetween1And10000", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installation cannot proceed because the application is already installed..
         /// </summary>
         public static string CannotProceedAlreadyInstalled {
@@ -237,6 +255,15 @@ namespace WeebReader.Web.Localization {
         public static string InvalidPagesFormat {
             get {
                 return ResourceManager.GetString("InvalidPagesFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid IP header is required..
+        /// </summary>
+        public static string IpHeaderRequired {
+            get {
+                return ResourceManager.GetString("IpHeaderRequired", resourceCulture);
             }
         }
         
@@ -651,6 +678,42 @@ namespace WeebReader.Web.Localization {
         public static string UserUpdateIsLastAdministrator {
             get {
                 return ResourceManager.GetString("UserUpdateIsLastAdministrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must specify a valid amount of requests for the API limits..
+        /// </summary>
+        public static string ValidApiAmountOfRequestsIsRequired {
+            get {
+                return ResourceManager.GetString("ValidApiAmountOfRequestsIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must specify a valid time interval for the API limits..
+        /// </summary>
+        public static string ValidApiTimeIntervalIsRequired {
+            get {
+                return ResourceManager.GetString("ValidApiTimeIntervalIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must specify a valid amount of requests for the content limits..
+        /// </summary>
+        public static string ValidContentAmountOfRequestsIsRequired {
+            get {
+                return ResourceManager.GetString("ValidContentAmountOfRequestsIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must specify a valid time interval for the content limits..
+        /// </summary>
+        public static string ValidContentTimeIntervalIsRequired {
+            get {
+                return ResourceManager.GetString("ValidContentTimeIntervalIsRequired", resourceCulture);
             }
         }
         

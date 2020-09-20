@@ -1,4 +1,7 @@
-﻿namespace WeebReader.Web.Models.Others
+﻿using System.ComponentModel.DataAnnotations;
+using WeebReader.Web.Localization;
+
+namespace WeebReader.Web.Models.Others
 {
     public enum ParameterTypes : ushort
     {
@@ -29,6 +32,23 @@
         PageDisqusShortname = 25,
         PageBlogEnabled = 26,
         SiteGoogleAnalyticsEnabled = 27,
-        SiteGoogleAnalyticsCode = 28
+        SiteGoogleAnalyticsCode = 28,
+        RateLimitRealIpHeader = 29,
+        RateLimitContentEnabled = 30,
+        RateLimitApiEnabled = 31,
+        RateLimitMaxContentRequests = 32,
+        RateLimitMaxApiRequests = 33,
+        RateLimitPeriodContent = 34,
+        RateLimitPeriodApi = 35
+    }
+
+    public enum RateLimitPeriods : byte
+    {
+        [Display(ResourceType = typeof(Labels), Name = "Second")]
+        Second = 0,
+        [Display(ResourceType = typeof(Labels), Name = "Minute")]
+        Minute = 1,
+        [Display(ResourceType = typeof(Labels), Name = "Hour")]
+        Hour = 2
     }
 }

@@ -385,6 +385,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Request limit exceeded, please wait {2} seconds..
+        /// </summary>
+        public static string RequestLimitExceeded {
+            get {
+                return ResourceManager.GetString("RequestLimitExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Some parameters failed to update..
         /// </summary>
         public static string SomeParametersFailedToUpdate {

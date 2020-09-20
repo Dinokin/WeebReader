@@ -222,4 +222,25 @@
     <data name="InvalidGoogleAnalyticsCode">
         <value>Invalid Google Analytics code inserted.</value>
     </data>
+    <data name="IpHeaderRequired">
+        <value>A valid IP header is required.</value>
+    </data>
+    <data name="ValidApiTimeIntervalIsRequired">
+        <value>You must specify a valid time interval for the API limits.</value>
+    </data>
+    <data name="ValidContentTimeIntervalIsRequired">
+        <value>You must specify a valid time interval for the content limits.</value>
+    </data>
+    <data name="ValidApiAmountOfRequestsIsRequired">
+        <value>You must specify a valid amount of requests for the API limits.</value>
+    </data>
+    <data name="ValidContentAmountOfRequestsIsRequired">
+        <value>You must specify a valid amount of requests for the content limits.</value>
+    </data>
+    <data name="AmountOfApiRequestMustBeBetween1And10000">
+        <value>The amount of requests to the API must be a value between 1 and 10000.</value>
+    </data>
+    <data name="AmountOfContentRequestMustBeBetween1And10000">
+        <value>The amount of requests to the content must be a value between 1 and 10000.</value>
+    </data>
 </root>

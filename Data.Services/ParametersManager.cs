@@ -13,7 +13,7 @@ namespace WeebReader.Data.Services
         public async Task<T> GetValue<T>(ushort type)
         {
             if ((await DbSet.SingleOrDefaultAsync(parameter => parameter.Type == type))?.Value is var value && value != null)
-                return (T) Convert.ChangeType(value, typeof(T));
+                return (T) Convert.ChangeType(value, Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T));
 
             return default!;
         }

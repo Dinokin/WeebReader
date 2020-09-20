@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace WeebReader.Web.Portal.Others
+namespace WeebReader.Web.Portal.Others.Extensions
 {
-    public static class Utilities
+    public static class StringExtensions
     {
         public static string EncodeToBase64(this string? source) => source == null ? string.Empty : WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(source));
 

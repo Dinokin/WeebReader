@@ -156,4 +156,7 @@
     <data name="NSFWMessage">
         <value>&lt;p&gt;The page you are about to see has adult content.&lt;/p&gt;&lt;p&gt;It is not suitable for children or people under 18.&lt;/p&gt;&lt;p&gt;Continue at your own discretion.&lt;/p&gt;</value>
     </data>
+    <data name="RequestLimitExceeded">
+        <value>Request limit exceeded, please wait {2} seconds.</value>
+    </data>
 </root>

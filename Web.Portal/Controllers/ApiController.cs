@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using WeebReader.Data.Entities;
 using WeebReader.Data.Entities.Abstract;
 using WeebReader.Data.Services;
-using WeebReader.Web.Portal.Others;
+using WeebReader.Web.Portal.Others.Extensions;
 
 namespace WeebReader.Web.Portal.Controllers
 {
@@ -15,15 +14,14 @@ namespace WeebReader.Web.Portal.Controllers
     [Route("Api")]
     public class ApiController : ControllerBase
     {
-        private readonly IMemoryCache _memoryCache;
         private readonly TitlesManager<Title> _titlesManager;
         private readonly ChapterManager<Chapter> _chapterManager;
         private readonly PagesManager<Page> _pagesManager;
         private readonly NovelChapterContentManager _novelChapterContentManager;
 
-        public ApiController(IMemoryCache memoryCache, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager)
+        public ApiController(TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager)
         {
-            _memoryCache = memoryCache;
+
             _titlesManager = titlesManager;
             _chapterManager = chapterManager;
             _pagesManager = pagesManager;
@@ -33,39 +31,28 @@ namespace WeebReader.Web.Portal.Controllers
         [HttpGet("Titles")]
         public async Task<IActionResult> Titles()
         {
-            var result = await _memoryCache.GetOrCreateAsync("titles", async entry =>
-            {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-                var titles = new List<object>();
-
-                foreach (var title in (await _titlesManager.GetAll(false)).ToArray())
-                    titles.Add(new
-                    {
-                        title.Id,
-                        title.Name,
-                        Type = title.GetType().Name,
-                        title.Author,
-                        title.Artist,
-                        title.Status,
-                        title.Nsfw,
-                        CoverUrl = $"/content/{title.Id}/cover.png",
-                        UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
-                    });
-
-                return titles;
-            });
+            var titles = new List<object>();
             
-            return new JsonResult(result);
+            foreach (var title in (await _titlesManager.GetAll(false)).ToArray())
+                titles.Add(new
+                {
+                    title.Id,
+                    title.Name,
+                    Type = title.GetType().Name,
+                    title.Author,
+                    title.Artist,
+                    title.Status,
+                    title.Nsfw,
+                    CoverUrl = $"/content/{title.Id}/cover.png",
+                    UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
+                });
+            
+            return new JsonResult(titles);
         }
 
         [HttpGet("Titles/{titleId:guid}")]
         public async Task<IActionResult> Chapters(Guid titleId)
         {
-            var key = $"title_{titleId}";
-            
-            if (_memoryCache.TryGetValue(key, out var value))
-                return new JsonResult(value);
-
             var title = await _titlesManager.GetById(titleId);
 
             if (title == null || !title.Visible)
@@ -94,18 +81,12 @@ namespace WeebReader.Web.Portal.Controllers
                 }).ToArray()
             };
 
-            _memoryCache.Set(key, result, TimeSpan.FromMinutes(10));
             return new JsonResult(result);
         }
 
         [HttpGet("Titles/{titleId:guid}/Chapters/{chapterId:guid}")]
         public async Task<IActionResult> Content(Guid titleId, Guid chapterId)
         {
-            var key = $"title_{titleId}_chapter_{chapterId}";
-            
-            if (_memoryCache.TryGetValue(key, out var value))
-                return new JsonResult(value);
-
             if (await _titlesManager.GetById(titleId) is var title && title == null)
                 return NotFound();
             
@@ -150,7 +131,6 @@ namespace WeebReader.Web.Portal.Controllers
                 _ => throw new ArgumentException()
             };
             
-            _memoryCache.Set(key, result, TimeSpan.FromMinutes(10));
             return new JsonResult(result);
         }
 
@@ -164,11 +144,6 @@ namespace WeebReader.Web.Portal.Controllers
                 term = term.Substring(0, 200);
 
             term = term.ToLower();
-            
-            var key = $"titles_search_{term}";
-
-            if (_memoryCache.TryGetValue(key, out var value))
-                return new JsonResult(value);
 
             var titles = new List<object>();
 
@@ -185,9 +160,7 @@ namespace WeebReader.Web.Portal.Controllers
                     CoverUrl = $"/content/{title.Id}/cover.png",
                     UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                 });
-
-            _memoryCache.Set(key, titles, titles.Any() ? TimeSpan.FromMinutes(10) : TimeSpan.FromMinutes(1));
-
+            
             return new JsonResult(titles);
         }
     }

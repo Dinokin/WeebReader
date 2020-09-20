@@ -133,6 +133,24 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allowed Requests.
+        /// </summary>
+        public static string AllowedRequests {
+            get {
+                return ResourceManager.GetString("AllowedRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to API Rate Limit.
+        /// </summary>
+        public static string APIRateLimit {
+            get {
+                return ResourceManager.GetString("APIRateLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Artist.
         /// </summary>
         public static string Artist {
@@ -291,6 +309,15 @@ namespace WeebReader.Web.Localization {
         public static string Content {
             get {
                 return ResourceManager.GetString("Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Content Rate Limit.
+        /// </summary>
+        public static string ContentRateLimit {
+            get {
+                return ResourceManager.GetString("ContentRateLimit", resourceCulture);
             }
         }
         
@@ -556,6 +583,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hour.
+        /// </summary>
+        public static string Hour {
+            get {
+                return ResourceManager.GetString("Hour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Install.
         /// </summary>
         public static string Install {
@@ -651,6 +687,15 @@ namespace WeebReader.Web.Localization {
         public static string Message {
             get {
                 return ResourceManager.GetString("Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minute.
+        /// </summary>
+        public static string Minute {
+            get {
+                return ResourceManager.GetString("Minute", resourceCulture);
             }
         }
         
@@ -907,11 +952,29 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rate Limit.
+        /// </summary>
+        public static string RateLimit {
+            get {
+                return ResourceManager.GetString("RateLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Read.
         /// </summary>
         public static string Read {
             get {
                 return ResourceManager.GetString("Read", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Real IP Header.
+        /// </summary>
+        public static string RealIpHeader {
+            get {
+                return ResourceManager.GetString("RealIpHeader", resourceCulture);
             }
         }
         
@@ -1011,6 +1074,15 @@ namespace WeebReader.Web.Localization {
         public static string Role {
             get {
                 return ResourceManager.GetString("Role", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Second.
+        /// </summary>
+        public static string Second {
+            get {
+                return ResourceManager.GetString("Second", resourceCulture);
             }
         }
         
@@ -1164,6 +1236,15 @@ namespace WeebReader.Web.Localization {
         public static string Tags {
             get {
                 return ResourceManager.GetString("Tags", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time Interval.
+        /// </summary>
+        public static string TimeInterval {
+            get {
+                return ResourceManager.GetString("TimeInterval", resourceCulture);
             }
         }
         
