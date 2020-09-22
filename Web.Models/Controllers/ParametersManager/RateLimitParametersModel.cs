@@ -37,7 +37,7 @@ namespace WeebReader.Web.Models.Controllers.ParametersManager
 
             if (RateLimitContentEnabled)
             {
-                if (Utilities.GetRateLimitTimePeriod(RateLimitPeriodContent) != null)
+                if (Utilities.GetRateLimitTimePeriod(RateLimitPeriodContent) == null)
                     results.Add(new ValidationResult(ValidationMessages.ValidContentTimeIntervalIsRequired, new []{nameof(RateLimitPeriodContent)}));
 
                 if (!RateLimitMaxContentRequests.HasValue)
@@ -49,14 +49,14 @@ namespace WeebReader.Web.Models.Controllers.ParametersManager
 
             if (RateLimitApiEnabled)
             {
-                if (Utilities.GetRateLimitTimePeriod(RateLimitPeriodApi) != null)
+                if (Utilities.GetRateLimitTimePeriod(RateLimitPeriodApi) == null)
                     results.Add(new ValidationResult(ValidationMessages.ValidApiTimeIntervalIsRequired, new []{nameof(RateLimitPeriodApi)}));
 
                 if (!RateLimitMaxApiRequests.HasValue)
                     results.Add(new ValidationResult(ValidationMessages.ValidApiAmountOfRequestsIsRequired, new []{nameof(RateLimitMaxApiRequests)}));
 
                 if (!RateLimitMaxContentRequests.Between(1, 10000))
-                    results.Add(new ValidationResult(ValidationMessages.AmountOfContentRequestMustBeBetween1And10000, new []{nameof(RateLimitMaxContentRequests)}));
+                    results.Add(new ValidationResult(ValidationMessages.AmountOfApiRequestMustBeBetween1And10000, new []{nameof(RateLimitMaxApiRequests)}));
             }
             
             return results;

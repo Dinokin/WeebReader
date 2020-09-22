@@ -22,7 +22,7 @@
                         prompt: chapterMustHaveNumberLabel
                     },
                     {
-                        type: "integer",
+                        type: "decimal",
                         prompt: chapterNumberOutOfRangeLabel
                     }
                 ]

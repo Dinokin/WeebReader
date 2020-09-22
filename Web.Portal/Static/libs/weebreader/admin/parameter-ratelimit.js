@@ -18,6 +18,43 @@
     form.form({
         on: "blur",
         fields: {
+            rateLimitRealIpHeader: {
+                identifier: "rateLimitRealIpHeader",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : ipHeaderRequiredLabel
+                    }
+                ]
+            },
+            rateLimitMaxContentRequests: {
+                identifier: "rateLimitMaxContentRequests",
+                depends: "rateLimitContentEnabled",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : ValidContentAmountOfRequestsIsRequired
+                    },
+                    {
+                        type: "decimal",
+                        prompt: AmountOfContentRequestMustBeBetween1And10000
+                    }
+                ]
+            },
+            rateLimitMaxApiRequests: {
+                identifier: "rateLimitMaxApiRequests",
+                depends: "rateLimitApiEnabled",
+                rules: [
+                    {
+                        type   : "empty",
+                        prompt : ValidApiAmountOfRequestsIsRequired
+                    },
+                    {
+                        type: "decimal",
+                        prompt: AmountOfApiRequestMustBeBetween1And10000
+                    }
+                ]
+            }
         }
     }).api({
         url: patchRoute,
