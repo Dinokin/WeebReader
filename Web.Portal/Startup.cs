@@ -177,11 +177,19 @@ namespace WeebReader.Web.Portal
             rateLimitOptions.GeneralRules = new List<RateLimitRule>();
 
             if (await parametersManager.GetValue<bool>(ParameterTypes.ContactDiscordEnabled))
-                rateLimitOptions.GeneralRules.Add(new RateLimitRule
-                {
-                    Endpoint = Constants.RateLimitEndpointContent,
-                    Limit = await parametersManager.GetValue<double?>(ParameterTypes.RateLimitMaxContentRequests) ?? Constants.RateLimitDefaultRequestLimit,
-                    Period = $"1{Utilities.GetRateLimitTimePeriod(await parametersManager.GetValue<byte?>(ParameterTypes.RateLimitPeriodContent)) ?? Constants.RateLimitDefaultTimeInterval}"
+                rateLimitOptions.GeneralRules.AddRange(new [] {
+                    new RateLimitRule 
+                    {
+                        Endpoint = Constants.RateLimitEndpointContent, 
+                        Limit = await parametersManager.GetValue<double?>(ParameterTypes.RateLimitMaxContentRequests) ?? Constants.RateLimitDefaultRequestLimit, 
+                        Period = $"1{Utilities.GetRateLimitTimePeriod(await parametersManager.GetValue<byte?>(ParameterTypes.RateLimitPeriodContent)) ?? Constants.RateLimitDefaultTimeInterval}"
+                    },
+                    new RateLimitRule
+                    {
+                        Endpoint = Constants.RateLimitEndpointContentJson,
+                        Limit = await parametersManager.GetValue<double?>(ParameterTypes.RateLimitMaxContentRequests) ?? Constants.RateLimitDefaultRequestLimit, 
+                        Period = $"1{Utilities.GetRateLimitTimePeriod(await parametersManager.GetValue<byte?>(ParameterTypes.RateLimitPeriodContent)) ?? Constants.RateLimitDefaultTimeInterval}"
+                    }
                 });
             
             if (await parametersManager.GetValue<bool>(ParameterTypes.RateLimitApiEnabled))

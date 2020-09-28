@@ -18,6 +18,7 @@
         public const double RateLimitDefaultRequestLimit = 20;
         public const string RateLimitDefaultTimeInterval = "s";
         public const string RateLimitEndpointContent = "*:/content/*";
+        public const string RateLimitEndpointContentJson = "*:*/json";
         public const string RateLimitEndpointApi = "*:/api/*";
     }
 }

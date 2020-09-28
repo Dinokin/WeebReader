@@ -87,11 +87,19 @@ namespace WeebReader.Web.Portal.Controllers
                 _rateLimitOptions.RealIpHeader = rateLimitParametersModel.RateLimitRealIpHeader;
                 
                 if (rateLimitParametersModel.RateLimitContentEnabled)
-                    _rateLimitOptions.GeneralRules.Add(new RateLimitRule
-                    {
-                        Endpoint = Constants.RateLimitEndpointContent,
-                        Limit = rateLimitParametersModel.RateLimitMaxContentRequests ?? Constants.RateLimitDefaultRequestLimit,
-                        Period = $"1{Models.Others.Utilities.GetRateLimitTimePeriod(rateLimitParametersModel.RateLimitPeriodContent) ?? Constants.RateLimitDefaultTimeInterval}"
+                    _rateLimitOptions.GeneralRules.AddRange(new [] {
+                        new RateLimitRule
+                        {
+                            Endpoint = Constants.RateLimitEndpointContent,
+                            Limit = rateLimitParametersModel.RateLimitMaxContentRequests ?? Constants.RateLimitDefaultRequestLimit,
+                            Period = $"1{Models.Others.Utilities.GetRateLimitTimePeriod(rateLimitParametersModel.RateLimitPeriodContent) ?? Constants.RateLimitDefaultTimeInterval}"
+                        },
+                        new RateLimitRule
+                        {
+                            Endpoint = Constants.RateLimitEndpointContentJson,
+                            Limit = rateLimitParametersModel.RateLimitMaxContentRequests ?? Constants.RateLimitDefaultRequestLimit,
+                            Period = $"1{Models.Others.Utilities.GetRateLimitTimePeriod(rateLimitParametersModel.RateLimitPeriodContent) ?? Constants.RateLimitDefaultTimeInterval}"
+                        }
                     });
                 
                 if (rateLimitParametersModel.RateLimitApiEnabled)
