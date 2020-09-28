@@ -243,4 +243,7 @@
     <data name="AmountOfContentRequestMustBeBetween1And10000">
         <value>The amount of requests to the content must be a value between 1 and 10000.</value>
     </data>
+    <data name="ContentNotAvailable">
+        <value>This content is not available to you.</value>
+    </data>
 </root>

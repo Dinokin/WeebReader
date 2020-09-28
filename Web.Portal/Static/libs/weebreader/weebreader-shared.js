@@ -91,3 +91,10 @@ function getTime(date) {
 function isNullOrWhiteSpace(string) {
     return string === null || string.match(/^\s*$/) !== null;
 }
+
+function showErrorToast(message) {
+    $("body").toast({
+        class: "error",
+        message: message
+    });
+}

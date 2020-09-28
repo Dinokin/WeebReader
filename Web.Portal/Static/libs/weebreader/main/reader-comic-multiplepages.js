@@ -4,19 +4,36 @@
     let pageContainer = $("#page-container");
     let page = $("#page");
     let currentPage = 0;
-
-    pageSelector.dropdown({
-        onChange: (value) => {
-            currentPage = Number(value);
-            setPage(value);
-            previousPagePreload();
-            nextPagePreload();
-        }
-    });
+    let pageList;
 
     pageContainer.dimmer({
         closable: false,
         displayLoader: true
+    });
+    
+    page.on("load", () => pageContainer.dimmer("hide"));
+
+    chapterContainer.api({
+        url: chapterContentRoute,
+        method: "GET",
+        on: "now",
+        onSuccess: (response) => {
+            pageList = response.pages;
+
+            pageSelector.dropdown({
+                values: pageList.map(item => createDropdownPage(item)),
+                onChange: (value) => {
+                    currentPage = Number(value);
+                    setPage();
+                    previousPagePreload();
+                    nextPagePreload();
+                }
+            });
+
+            setPage();
+        },
+        onFailure: response => Array.isArray(response.messages) ? showErrorToast(response.messages[0]) : showErrorToast(requestFailedLabel),
+        onError: () => showErrorToast(requestFailedLabel)
     });
 
     chapterContainer.on("click", (event) => {
@@ -31,26 +48,18 @@
         }
     });
 
-
-    page.on("load", () => pageContainer.dimmer("hide"));
-
-    setPage();
-
     function setPage() {
         pageContainer.dimmer("show");
-        page.attr("src", chapterPages[currentPage]);
+        page.attr("src", pageList[currentPage].address);
         pageSelector.dropdown("set selected", [currentPage]);
     }
 
     function goNextPage() {
-        if (currentPage + 1 >= chapterPages.length) {
+        if (currentPage + 1 >= pageList.length) {
             if (nextChapterRoute.length > 0) {
                 window.location.href = nextChapterRoute;
             } else {
-                $("body").toast({
-                    class: "error",
-                    message: noNextChapterLabel
-                });
+                showErrorToast(noNextChapterLabel);
             }
 
             return;
@@ -67,10 +76,7 @@
             if (previousChapterRoute.length > 0) {
                 window.location.href = previousChapterRoute;
             } else {
-                $("body").toast({
-                    class: "error",
-                    message: noPreviousChapterLabel
-                });
+                showErrorToast(noPreviousChapterLabel);
             }
 
             return;
@@ -84,8 +90,8 @@
 
     function nextPagePreload() {
         for (let i = 1; i <= 2; i++) {
-            if (currentPage + i < chapterPages.length) {
-                new Image().src = chapterPages[currentPage + i];
+            if (currentPage + i < pageList.length) {
+                new Image().src = pageList[currentPage + i].address;
             }
         }
     }
@@ -93,8 +99,16 @@
     function previousPagePreload() {
         for (let i = 1; i <= 2; i++) {
             if (currentPage - i >= 0) {
-                new Image().src = chapterPages[currentPage - i];
+                new Image().src = pageList[currentPage - i].address;
             }
+        }
+    }
+    
+    function createDropdownPage(page){
+        return {
+            name: `${pageLabel} ${page.number + 1}`,
+            value: page.number,
+            selected: page.number === 0
         }
     }
 });

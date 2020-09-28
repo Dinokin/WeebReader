@@ -1,9 +1,8 @@
 ﻿@inject ParametersManager ParametersManager
-@model (Comic comic, ComicChapter chapter, IEnumerable<ComicPage> pages)
+@model (Comic comic, ComicChapter chapter)
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
-    var pages = Model.pages.Select(page => $"/content/{Model.comic.Id}/{Model.chapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}").ToArray();
     var longStrip = (bool) ViewData["LongStrip"];
     var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
@@ -25,15 +24,18 @@
     <meta property="og:description" content="@Model.comic.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@(await ParametersManager.GetValue<string>(ParameterTypes.SiteName))"/>
     <script>
+    const chapterContentRoute = "@Url.Action("ChapterJson", new {chapterId = Model.chapter.Id})";
     const chapterListRoute = "@Url.Action("TitlesJson", new {titleId = Model.comic.Id})";
     const previousChapterRoute = "@(previousChapter != null ? Url.Action("ReadChapter", new { chapterId = previousChapter }) : string.Empty)";
     const nextChapterRoute = "@(nextChapter != null ? Url.Action("ReadChapter", new { chapterId = nextChapter }) : string.Empty)";
     const chapterLabel = "@Labels.Chapter";
+    const pageLabel = "@Labels.Page"
     const noNextChapterLabel = "@OtherMessages.NoNextChapter";
     const noPreviousChapterLabel = "@OtherMessages.NoPreviousChapter";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
     const titleId = "@Model.comic.Id";
     const chapterNumber = @Html.Raw(Model.chapter.Number);
-    const chapterPages =  @Html.Raw(JsonConvert.SerializeObject(pages));
+    const longStrip = @Html.Raw(Model.comic.LongStrip.ToString().ToLower());
     </script>
     <script src="~/libs/weebreader/main/reader-shared.js" asp-append-version="true"></script>
     <script src="~/libs/weebreader/main/reader-comic-shared.js" asp-append-version="true"></script>
@@ -66,10 +68,6 @@
                     <div class="text">@Labels.Page 1</div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        @for (var i = 0; i < pages.Length; i++)
-                        {
-                            <div class="item" data-value="@i">@Labels.Page @(i + 1)</div>
-                        }
                     </div>
                 </div>
             }
@@ -89,21 +87,14 @@
 <div id="chapter-container" class="ui center aligned fluid container">
     @if (longStrip)
     {
-        for (var i = 0; i < pages.Length; i++)
-        {
-            <img class="ui bordered image centered" src="/assets/placeholder_page.png" data-src="@pages[i]" alt="@Labels.Page @(i + 1)"/>
-
-            if (!Model.comic.LongStrip && i != pages.Length - 1)
-            {
-                <div class="ui hidden divider"></div>
-            }
-        }
+        <img id="skeleton-page" class="ui bordered image centered" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
+        <div id="skeleton-divider" class="ui hidden divider"></div>
     }
     else
     {
         <div id="page-container" class="ui dimmable clickable dp-inline-block">
             <div class="ui loader"></div>
-            <img id="page" class="ui bordered centered image" src="" alt="@Labels.Page"/>
+            <img id="page" class="ui bordered centered image" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
         </div>
     }
 </div>

@@ -240,6 +240,50 @@ namespace WeebReader.Web.Portal.Controllers
 
             return GetDownload(title!, chapter);
         }
+
+        [HttpGet("Chapters/{chapterId:Guid}/JSON")]
+        public async Task<IActionResult> ChapterJson(Guid chapterId)
+        {
+            if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {ValidationMessages.ChapterNotFound}
+                });
+            
+            var title = await _titlesManager.GetById(chapter.TitleId);
+            
+            if (!_signInManager.IsSignedIn(User) && (!title!.Visible || !chapter.Visible))
+                return new JsonResult(new
+                {
+                    success = false,
+                    messages = new[] {ValidationMessages.ContentNotAvailable}
+                });
+            
+            object result = chapter switch
+            {
+                ComicChapter comicChapter => new
+                {
+                    success = true,
+                    Pages = (await _pagesManager.GetAll(comicChapter)).Select(page => (ComicPage) page).OrderBy(page => page.Number).Select(page => new
+                    {
+                        number = page.Number,
+                        address = $"/content/{comicChapter.TitleId}/{comicChapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}"
+                    }).ToArray()
+                },
+                NovelChapter novelChapter => new
+                {
+                    success = true,
+                    content = (await _novelChapterContentManager.GetContentByChapter(novelChapter))?.Content
+                },
+                _ => new
+                {
+                    success = false
+                }
+            };
+            
+            return new JsonResult(result);
+        }
         
         private IActionResult GetDownload(Title title, Chapter chapter) => chapter switch
         {
@@ -252,15 +296,13 @@ namespace WeebReader.Web.Portal.Controllers
 
         private async Task<IActionResult> GetReader(Title title, Chapter chapter) => chapter switch
         {
-            ComicChapter comicChapter => await GetComicReader((Comic) title, comicChapter),
+            ComicChapter comicChapter => GetComicReader((Comic) title, comicChapter),
             NovelChapter novelChapter => await GetNovelReader((Novel) title, novelChapter),
             _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
         };
 
-        private async Task<IActionResult> GetComicReader(Comic comic, ComicChapter comicChapter)
+        private IActionResult GetComicReader(Comic comic, ComicChapter comicChapter)
         {
-            var pages = (await _pagesManager.GetAll(comicChapter)).Select(page => (ComicPage) page).OrderBy(page => page.Number);
-
             Request.Cookies.TryGetValue($"{comic.Id}_long_strip", out var value);
 
             if (string.IsNullOrWhiteSpace(value))
@@ -268,7 +310,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             ViewData["LongStrip"] = Convert.ToBoolean(value) || comic.LongStrip;
             
-            return View("ComicReader", ValueTuple.Create<Comic, ComicChapter, IEnumerable<ComicPage>>(comic, comicChapter, pages));
+            return View("ComicReader", ValueTuple.Create<Comic, ComicChapter>(comic, comicChapter));
         }
 
         private async Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => View("NovelReader", ValueTuple.Create(novel, novelChapter, await _novelChapterContentManager.GetContentByChapter(novelChapter)));

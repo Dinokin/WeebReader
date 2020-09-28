@@ -160,6 +160,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This content is not available to you..
+        /// </summary>
+        public static string ContentNotAvailable {
+            get {
+                return ResourceManager.GetString("ContentNotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A link to a discord server is required..
         /// </summary>
         public static string DiscordLinkRequired {
