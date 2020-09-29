@@ -88,7 +88,11 @@
     @if (longStrip)
     {
         <img id="skeleton-page" class="ui bordered image centered" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
-        <div id="skeleton-divider" class="ui hidden divider"></div>
+                                                                                                                         
+        @if (!Model.comic.LongStrip)
+        {
+            <div id="skeleton-divider" class="ui hidden divider"></div>
+        }
     }
     else
     {

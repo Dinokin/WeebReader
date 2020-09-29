@@ -23,7 +23,9 @@
         });
         
         skeletonPage.remove();
-        skeletonDivider.remove();
+        
+        if (!longStrip) 
+            skeletonDivider.remove();
 
         chapterContainer.children().visibility({
             type: "image",
