@@ -1,5 +1,5 @@
 ﻿@inject ParametersManager ParametersManager
-@model (Novel novel, NovelChapter chapter, NovelChapterContent content)
+@model (Novel novel, NovelChapter chapter)
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.novel.Name}";
@@ -23,8 +23,10 @@
     <meta property="og:description" content="@Model.novel.Synopsis.RemoveHtmlTags()"/>
     <meta property="og:site_name" content="@(await ParametersManager.GetValue<string>(ParameterTypes.SiteName))"/>
     <script>
+    const chapterContentRoute = "@Url.Action("ChapterJson", new {chapterId = Model.chapter.Id})";
     const chapterListRoute = "@Url.Action("TitlesJson", new {titleId = Model.novel.Id})";
     const chapterLabel = "@Labels.Chapter";
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
     const chapterNumber = @Html.Raw(Model.chapter.Number);
     </script>
     <script src="~/libs/weebreader/main/reader-shared.js" asp-append-version="true"></script>
@@ -55,8 +57,7 @@
     </div>
 </div>
 <div id="chapter-container" class="ui centered container">
-    <div class="ui @(darkMode ? "inverted" : null ) segment">
-        @Html.Raw(Model.content?.Content.AddImgLazyLoading("/assets/placeholder_page.png"))
+    <div id="content" class="ui @(darkMode ? "inverted" : null ) segment mh-100px">
     </div>
 </div>
 <div class="ui container">

@@ -151,3 +151,7 @@
 .blur {
     filter: blur(15px);
 }
+
+.mh-100px {
+    min-height: 100px;
+}

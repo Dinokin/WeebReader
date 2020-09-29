@@ -224,7 +224,7 @@ namespace WeebReader.Web.Portal.Controllers
             ViewData["PreviousChapter"] = (await _chapterManager.GetPreviousChapter(chapter, _signInManager.IsSignedIn(User)))?.Id;
             ViewData["NextChapter"] = (await _chapterManager.GetNextChapter(chapter, _signInManager.IsSignedIn(User)))?.Id;
 
-            return await GetReader(title, chapter);
+            return GetReader(title, chapter);
         }
         
         [HttpGet("Chapters/{chapterId:Guid}/Download")]
@@ -274,7 +274,7 @@ namespace WeebReader.Web.Portal.Controllers
                 NovelChapter novelChapter => new
                 {
                     success = true,
-                    content = (await _novelChapterContentManager.GetContentByChapter(novelChapter))?.Content
+                    content = (await _novelChapterContentManager.GetContentByChapter(novelChapter))?.Content.AddImgLazyLoading("/assets/placeholder_page.png")
                 },
                 _ => new
                 {
@@ -294,10 +294,10 @@ namespace WeebReader.Web.Portal.Controllers
         
         private static string GetDownloadName(Title title, Chapter chapter) => $"{title.Name} - {Labels.Chapter} {chapter.Number}";
 
-        private async Task<IActionResult> GetReader(Title title, Chapter chapter) => chapter switch
+        private IActionResult GetReader(Title title, Chapter chapter) => chapter switch
         {
             ComicChapter comicChapter => GetComicReader((Comic) title, comicChapter),
-            NovelChapter novelChapter => await GetNovelReader((Novel) title, novelChapter),
+            NovelChapter novelChapter => GetNovelReader((Novel) title, novelChapter),
             _ => RedirectToAction("Titles", new { titleId = chapter.TitleId })
         };
 
@@ -310,10 +310,10 @@ namespace WeebReader.Web.Portal.Controllers
 
             ViewData["LongStrip"] = Convert.ToBoolean(value) || comic.LongStrip;
             
-            return View("ComicReader", ValueTuple.Create<Comic, ComicChapter>(comic, comicChapter));
+            return View("ComicReader", ValueTuple.Create(comic, comicChapter));
         }
 
-        private async Task<IActionResult> GetNovelReader(Novel novel, NovelChapter novelChapter) => View("NovelReader", ValueTuple.Create(novel, novelChapter, await _novelChapterContentManager.GetContentByChapter(novelChapter)));
+        private IActionResult GetNovelReader(Novel novel, NovelChapter novelChapter) => View("NovelReader", ValueTuple.Create(novel, novelChapter));
 
         private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
         {
