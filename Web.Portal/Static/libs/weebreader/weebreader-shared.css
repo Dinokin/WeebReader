@@ -155,3 +155,10 @@
 .mh-100px {
     min-height: 100px;
 }
+
+.no-select-effects {
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
