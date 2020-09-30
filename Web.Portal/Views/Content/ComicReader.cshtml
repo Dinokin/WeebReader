@@ -87,7 +87,7 @@
 <div id="chapter-container" class="ui center aligned fluid container">
     @if (longStrip)
     {
-        <img id="skeleton-page" class="ui bordered image centered no-select-effects" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
+        <img id="skeleton-page" class="ui bordered image centered" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
                                                                                                                          
         @if (!Model.comic.LongStrip)
         {
@@ -96,9 +96,9 @@
     }
     else
     {
-        <div id="page-container" class="ui dimmable clickable dp-inline-block">
+        <div id="page-container" class="ui dimmable clickable dp-inline-block no-select-effects">
             <div class="ui loader"></div>
-            <img id="page" class="ui bordered centered image no-select-effects" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
+            <img id="page" class="ui bordered centered image" src="~/assets/placeholder_page.png" alt="@Labels.Page"/>
         </div>
     }
 </div>
