@@ -70,16 +70,16 @@
                 ]
             },
             previousChaptersLink: {
-                identifier: "previousChaptersLink",
+                identifier: "previousChaptersUrl",
                 optional: true,
                 rules: [
                     {
                         type: "maxLength[500]",
-                        prompt: maxPreviousChaptersLinkSizeLabel
+                        prompt: maxPreviousChaptersUrlSizeLabel
                     },
                     {
                         type: "url",
-                        prompt: previousChaptersLinkValidUrlLabel
+                        prompt: invalidPreviousChaptersUrlLabel
                     }
                 ]
             }

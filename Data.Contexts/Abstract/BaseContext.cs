@@ -103,7 +103,7 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(title => title.Status).IsRequired();
                 typeBuilder.Property(title => title.Nsfw).IsRequired();
                 typeBuilder.Property(title => title.Visible).IsRequired();
-                typeBuilder.Property(title => title.PreviousChaptersLink).HasMaxLength(500);
+                typeBuilder.Property(title => title.PreviousChaptersUrl).HasMaxLength(500);
                 typeBuilder.HasMany(title => title.TitleTags).WithOne(titleTag => titleTag.Title!).HasForeignKey(titleTag => titleTag.TitleId);
                 typeBuilder.HasDiscriminator<string>("TitleType").HasValue<Comic>("Comic").HasValue<Novel>("Novel");
             });

@@ -198,8 +198,8 @@
     <data name="MaxUsernameLength">
         <value>An username can only have up to 50 characters.</value>
     </data>
-    <data name="MaxPreviousChaptersLinkSize">
-        <value>The link to the previous chapters can only have up to 500 characters.</value>
+    <data name="MaxPreviousChaptersUrlSize">
+        <value>The url to the previous chapters can only have up to 500 characters.</value>
     </data>
     <data name="MaxTagSize">
         <value>A tag can only contain up to 50 characters.</value>
@@ -213,7 +213,7 @@
     <data name="TitleMustHaveType">
         <value>A title must have a type.</value>
     </data>
-    <data name="PreviousChaptersLinkValidUrl">
+    <data name="InvalidPreviousChaptersUrl">
         <value>The address to the previous chapters must be a valid URL.</value>
     </data>
     <data name="GoogleAnalyticsCodeRequired">

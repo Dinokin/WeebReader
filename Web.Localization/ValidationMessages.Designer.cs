@@ -268,6 +268,15 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The address to the previous chapters must be a valid URL..
+        /// </summary>
+        public static string InvalidPreviousChaptersUrl {
+            get {
+                return ResourceManager.GetString("InvalidPreviousChaptersUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A valid IP header is required..
         /// </summary>
         public static string IpHeaderRequired {
@@ -295,11 +304,11 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The link to the previous chapters can only have up to 500 characters..
+        ///   Looks up a localized string similar to The url to the previous chapters can only have up to 500 characters..
         /// </summary>
-        public static string MaxPreviousChaptersLinkSize {
+        public static string MaxPreviousChaptersUrlSize {
             get {
-                return ResourceManager.GetString("MaxPreviousChaptersLinkSize", resourceCulture);
+                return ResourceManager.GetString("MaxPreviousChaptersUrlSize", resourceCulture);
             }
         }
         
@@ -444,15 +453,6 @@ namespace WeebReader.Web.Localization {
         public static string PostTitleMaxLength {
             get {
                 return ResourceManager.GetString("PostTitleMaxLength", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The address to the previous chapters must be a valid URL..
-        /// </summary>
-        public static string PreviousChaptersLinkValidUrl {
-            get {
-                return ResourceManager.GetString("PreviousChaptersLinkValidUrl", resourceCulture);
             }
         }
         

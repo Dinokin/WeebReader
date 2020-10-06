@@ -23,13 +23,13 @@ namespace WeebReader.Data.Entities.Abstract
         public Statuses Status { get; set; }
         public bool Nsfw { get; set; }    
         public bool Visible { get; set; }
-        public string? PreviousChaptersLink { get; set; }
+        public string? PreviousChaptersUrl { get; set; }
         public IEnumerable<TitleTag>? TitleTags { get; private set; }
         
-        protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersLink = null) :
-            this(default, name, originalName, author, artist, synopsis, status, nsfw, visible, previousChaptersLink) { }
+        protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersUrl = null) :
+            this(default, name, originalName, author, artist, synopsis, status, nsfw, visible, previousChaptersUrl) { }
 
-        protected Title(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersLink = null) : base(id)
+        protected Title(Guid id, string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersUrl = null) : base(id)
         {
             Name = name;
             OriginalName = originalName;
@@ -39,7 +39,7 @@ namespace WeebReader.Data.Entities.Abstract
             Status = status;
             Nsfw = nsfw;
             Visible = visible;
-            PreviousChaptersLink = previousChaptersLink;
+            PreviousChaptersUrl = previousChaptersUrl;
         }
     }
 }

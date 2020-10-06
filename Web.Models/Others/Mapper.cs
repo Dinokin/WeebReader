@@ -76,7 +76,7 @@ namespace WeebReader.Web.Models.Others
                 Visible = comic.Visible,
                 LongStrip = comic.LongStrip,
                 Tags = tags == null ? null : string.Join(",", tags.Select(tag => tag.Name)),
-                PreviousChaptersLink = comic.PreviousChaptersLink
+                PreviousChaptersUrl = comic.PreviousChaptersUrl
             },
             _ => new TitleModel
             {
@@ -90,7 +90,7 @@ namespace WeebReader.Web.Models.Others
                 Nsfw = title.Nsfw,
                 Visible = title.Visible,
                 Tags = tags == null ? null : string.Join(",", tags.Select(tag => tag.Name)),
-                PreviousChaptersLink = title.PreviousChaptersLink
+                PreviousChaptersUrl = title.PreviousChaptersUrl
             }
         };
 
@@ -104,13 +104,13 @@ namespace WeebReader.Web.Models.Others
                     var comicModel = (ComicModel) titleModel;
                     
                     result = comicModel.TitleId.HasValue ? 
-                        new Comic(comicModel.TitleId.Value, comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Nsfw, comicModel.Visible, comicModel.LongStrip, comicModel.PreviousChaptersLink) : 
-                        new Comic(comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Nsfw, comicModel.Visible, comicModel.LongStrip, comicModel.PreviousChaptersLink);
+                        new Comic(comicModel.TitleId.Value, comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Nsfw, comicModel.Visible, comicModel.LongStrip, comicModel.PreviousChaptersUrl) : 
+                        new Comic(comicModel.Name, comicModel.OriginalName, comicModel.Author, comicModel.Artist, comicModel.Synopsis, comicModel.Status, comicModel.Nsfw, comicModel.Visible, comicModel.LongStrip, comicModel.PreviousChaptersUrl);
                     break;
                 case "novel":
                     result = titleModel.TitleId.HasValue ? 
-                        new Novel(titleModel.TitleId.Value, titleModel.Name, titleModel.OriginalName, titleModel.Author, titleModel.Artist, titleModel.Synopsis, titleModel.Status, titleModel.Nsfw, titleModel.Visible, titleModel.PreviousChaptersLink) : 
-                        new Novel(titleModel.Name, titleModel.OriginalName, titleModel.Author, titleModel.Artist, titleModel.Synopsis, titleModel.Status, titleModel.Nsfw, titleModel.Visible, titleModel.PreviousChaptersLink);
+                        new Novel(titleModel.TitleId.Value, titleModel.Name, titleModel.OriginalName, titleModel.Author, titleModel.Artist, titleModel.Synopsis, titleModel.Status, titleModel.Nsfw, titleModel.Visible, titleModel.PreviousChaptersUrl) : 
+                        new Novel(titleModel.Name, titleModel.OriginalName, titleModel.Author, titleModel.Artist, titleModel.Synopsis, titleModel.Status, titleModel.Nsfw, titleModel.Visible, titleModel.PreviousChaptersUrl);
                     break;
                 default:
                     throw new ArgumentException();
@@ -129,7 +129,7 @@ namespace WeebReader.Web.Models.Others
             title.Status = titleModel.Status;
             title.Nsfw = titleModel.Nsfw;
             title.Visible = titleModel.Visible;
-            title.PreviousChaptersLink = titleModel.PreviousChaptersLink;
+            title.PreviousChaptersUrl = titleModel.PreviousChaptersUrl;
 
             if (title is Comic comic && titleModel is ComicModel comicModel)
                 comic.LongStrip = comicModel.LongStrip;

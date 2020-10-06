@@ -86,9 +86,9 @@
                     <partial name="Partials/TitleChapters" model="@Model.chapters"/>
                 </div>
                 <div id="loader" class="ui centered large inline loader"></div>
-                @if (!string.IsNullOrWhiteSpace(Model.title.PreviousChaptersLink))
+                @if (!string.IsNullOrWhiteSpace(Model.title.PreviousChaptersUrl))
                 {
-                    <a id="previous-chapters" class="ui fluid grey button dp-none" href="@Model.title.PreviousChaptersLink">@Labels.PreviousChapters <i class="external alternate icon"></i></a>
+                    <a id="previous-chapters" class="ui fluid grey button dp-none" href="@Model.title.PreviousChaptersUrl">@Labels.PreviousChapters <i class="external alternate icon"></i></a>
                 }
             }
             else

@@ -943,11 +943,11 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Previous Chapters Link.
+        ///   Looks up a localized string similar to Previous Chapters URL.
         /// </summary>
-        public static string PreviousChaptersLink {
+        public static string PreviousChaptersUrl {
             get {
-                return ResourceManager.GetString("PreviousChaptersLink", resourceCulture);
+                return ResourceManager.GetString("PreviousChaptersUrl", resourceCulture);
             }
         }
         

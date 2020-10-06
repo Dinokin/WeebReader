@@ -414,8 +414,8 @@
     <data name="PreviousChapters">
         <value>Previous Chapters</value>
     </data>
-    <data name="PreviousChaptersLink">
-        <value>Previous Chapters Link</value>
+    <data name="PreviousChaptersUrl">
+        <value>Previous Chapters URL</value>
     </data>
     <data name="GoogleAnalytics">
         <value>Google Analytics</value>
