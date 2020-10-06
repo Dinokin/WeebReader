@@ -13,33 +13,24 @@ namespace WeebReader.Web.Services
         private const string PostAddress = "https://www.google.com/recaptcha/api/siteverify";
 
         private readonly ParametersManager _parameterManager;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly HttpClient _httpClient;
 
         public ReCaptchaValidator(ParametersManager parameterManager, IHttpClientFactory httpClientFactory)
         {
             _parameterManager = parameterManager;
-            _httpClientFactory = httpClientFactory;
+            _httpClient = httpClientFactory.CreateClient();
         }
 
         public async Task<bool> Validate(string clientSecret, string? clientIp)
         {
-            if (await _parameterManager.GetValue<bool>(ParameterTypes.ContactEmailRecaptchaEnabled))
-            {
-                var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
-                var content = new FormUrlEncodedContent(Encode(reCaptchaRequest));
-                var httpResponse = await _httpClientFactory.CreateClient().PostAsync(PostAddress, content);
-
-                if (httpResponse.IsSuccessStatusCode)
-                {
-                    var reCaptchaResponse = JsonConvert.DeserializeObject<ReCaptchaResponse>(await httpResponse.Content.ReadAsStringAsync());
-
-                    return reCaptchaResponse.Success;
-                }
-
+            if (!await _parameterManager.GetValue<bool>(ParameterTypes.ContactEmailRecaptchaEnabled))
                 return false;
-            }
+            
+            var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
+            var httpResponse = await _httpClient.PostAsync(PostAddress, new FormUrlEncodedContent(Encode(reCaptchaRequest)));
+            var reCaptchaResponse = JsonConvert.DeserializeObject<ReCaptchaResponse>(await httpResponse.Content.ReadAsStringAsync());
 
-            return true;
+            return httpResponse.IsSuccessStatusCode && reCaptchaResponse.Success;
         }
 
         private static IEnumerable<KeyValuePair<string,string>> Encode(ReCaptchaRequest request)
