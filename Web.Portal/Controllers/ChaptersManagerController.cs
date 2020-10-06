@@ -110,6 +110,13 @@ namespace WeebReader.Web.Portal.Controllers
                             await comicChapterModel.Pages.CopyToAsync(memoryStream);
                             content = memoryStream.ToArray();
                         }
+                        
+                        if (await _chapterArchiver.IsValidComicChapterContent(content))
+                            return new JsonResult(new
+                            {
+                                success = false,
+                                messages = new[] {ValidationMessages.ZipDoesntContainSupportedImage} 
+                            });
                         break;
                     case NovelChapterModel novelChapterModel:
                         content = Encoding.Default.GetBytes(novelChapterModel.Content);
@@ -179,19 +186,19 @@ namespace WeebReader.Web.Portal.Controllers
                 
                 switch (chapterModel)
                 {
-                    case ComicChapterModel comicChapterModel:
-                        if (comicChapterModel.Pages == null)
-                            return new JsonResult(new
-                            {
-                                success = false,
-                                messages = new[] {ValidationMessages.ChapterMustHavePages} 
-                            });
-
+                    case ComicChapterModel comicChapterModel when comicChapterModel.Pages != null:
                         await using (var memoryStream = new MemoryStream())
                         {
                             await comicChapterModel.Pages.CopyToAsync(memoryStream);
                             content = memoryStream.ToArray();
                         }
+                            
+                        if (await _chapterArchiver.IsValidComicChapterContent(content))
+                            return new JsonResult(new
+                            {
+                                success = false,
+                                messages = new[] {ValidationMessages.ZipDoesntContainSupportedImage} 
+                            });
                         break;
                     case NovelChapterModel novelChapterModel:
                         content = Encoding.Default.GetBytes(novelChapterModel.Content);

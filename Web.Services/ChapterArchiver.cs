@@ -88,6 +88,17 @@ namespace WeebReader.Web.Services
             _ => throw new ArgumentException()
         };
 
+        public async Task<bool> IsValidComicChapterContent(byte[] content)
+        {
+            if (!content.Any())
+                return false;
+
+            await using var memoryStream = new MemoryStream(content);
+            var zipArchive = new ZipArchive(memoryStream);
+
+            return zipArchive.Entries.Any(entry => HasValidExtension(entry.Name, false));
+        }
+
         private async Task ProcessContent(TChapter chapter, byte[]? content)
         {
             switch (chapter)

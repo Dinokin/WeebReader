@@ -743,5 +743,14 @@ namespace WeebReader.Web.Localization {
                 return ResourceManager.GetString("ValidEmailRequiredSiteEmail", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The zip doesn&apos;t contain any support image format..
+        /// </summary>
+        public static string ZipDoesntContainSupportedImage {
+            get {
+                return ResourceManager.GetString("ZipDoesntContainSupportedImage", resourceCulture);
+            }
+        }
     }
 }

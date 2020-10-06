@@ -246,4 +246,7 @@
     <data name="ContentNotAvailable">
         <value>This content is not available to you.</value>
     </data>
+    <data name="ZipDoesntContainSupportedImage">
+        <value>The zip doesn't contain any support image format.</value>
+    </data>
 </root>
