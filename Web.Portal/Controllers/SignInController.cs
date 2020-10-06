@@ -120,8 +120,8 @@ namespace WeebReader.Web.Portal.Controllers
                     var siteName = await _parameterManager.GetValue<string>(ParameterTypes.SiteName);
                     var siteEmail = await _parameterManager.GetValue<string>(ParameterTypes.SiteEmail);
                     var message = string.Format(Emails.PasswordResetEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token));
-
-                    await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.PasswordResetEmailSubject, siteName), message);
+                    
+                    _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.PasswordResetEmailSubject, siteName), message);
                 }
 
                 TempData["SuccessMessage"] = new[] {OtherMessages.EmailAlreadyInDatabaseWarning};

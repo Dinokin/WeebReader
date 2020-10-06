@@ -372,16 +372,13 @@ namespace WeebReader.Web.Portal.Controllers
 
                     var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, Url.Action("ChangeEmail", "UsersManager", new {userId = user.Id, email = emailModel.Email, token = "replace"}, Request.Scheme).Replace("replace", token));
 
-                    var result =  await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
+                    _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
-                    if(result)
-                        return new JsonResult(new
-                        {
-                            success = true,
-                            messages = new[] {OtherMessages.ChangeEmailSent}
-                        });
-                    
-                    ModelState.AddModelError("NotSucceeded", OtherMessages.CouldNotSendConfirmationEmail);
+                    return new JsonResult(new
+                    {
+                        success = true,
+                        messages = new[] {OtherMessages.ChangeEmailSent}
+                    });
                 }
                 else
                 {
@@ -414,9 +411,9 @@ namespace WeebReader.Web.Portal.Controllers
             var siteName = await _parameterManager.GetValue<string>(ParameterTypes.SiteName);
             var siteEmail = await _parameterManager.GetValue<string>(ParameterTypes.SiteEmail);
 
-            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token));
-
-            await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
+            var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token)); 
+            
+            _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }
     }
 }

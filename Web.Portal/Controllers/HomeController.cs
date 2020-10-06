@@ -90,18 +90,16 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (!reCaptchaEnabled || await _reCaptchaValidator.Validate(contactModel.ReCaptchaResponse!, null))
                     {
-                        if (await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(ParameterTypes.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message))
-                        {
-                            TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
+                        _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(ParameterTypes.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message);
+                        TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
 
-                            return new JsonResult(new
-                            {
-                                success = true
-                            });
-                        }
-                    }
-                    else
-                        ModelState.AddModelError("CouldNotVerifyRobot", OtherMessages.CouldntVerifyRobot);
+                        return new JsonResult(new
+                        {
+                            success = true
+                        });
+                    } 
+                    
+                    ModelState.AddModelError("CouldNotVerifyRobot", OtherMessages.CouldntVerifyRobot);
                 } 
                 
                 ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
