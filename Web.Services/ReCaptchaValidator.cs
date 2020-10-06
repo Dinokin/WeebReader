@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using WeebReader.Data.Services;
 using WeebReader.Web.Models.Others;
 using WeebReader.Web.Models.Others.Extensions;
@@ -28,7 +28,7 @@ namespace WeebReader.Web.Services
             
             var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
             var httpResponse = await _httpClient.PostAsync(PostAddress, new FormUrlEncodedContent(Encode(reCaptchaRequest)));
-            var reCaptchaResponse = JsonConvert.DeserializeObject<ReCaptchaResponse>(await httpResponse.Content.ReadAsStringAsync());
+            var reCaptchaResponse = JsonSerializer.Deserialize<ReCaptchaResponse>(await httpResponse.Content.ReadAsStringAsync());
 
             return httpResponse.IsSuccessStatusCode && reCaptchaResponse.Success;
         }
