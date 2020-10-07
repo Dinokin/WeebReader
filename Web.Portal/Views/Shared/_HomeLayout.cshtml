@@ -24,7 +24,7 @@
     <div class="ui top attached large borderless menu @(lightMode ? "inverted" : null) no-margin-left no-margin-right no-border-radius">
         <div class="ui container">
             <a class="item" href="/">
-                <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
+                <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo" asp-append-version="true" />
             </a>
             <a id="titles" class="item menu-item" href="@Url.Action("Titles", "Content", new { titleId = string.Empty})">
                 @Labels.Titles
@@ -53,7 +53,7 @@
 <div class="ui tablet mobile only grid no-margin">
     <div class="ui top attached large borderless menu mobile-menu @(lightMode ? "inverted" : null) no-margin-left no-margin-right no-border-radius">
         <a class="item" href="/">
-            <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo"/>
+            <img src="~/assets/@(lightMode ? "logo_l" : "logo_d").png" alt="Logo" asp-append-version="true"/>
         </a>
         <div class="right menu">
             <div class="item">

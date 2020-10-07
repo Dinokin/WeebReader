@@ -51,7 +51,7 @@
 </div>
 <div class="ui top fixed inverted menu">
     <a class="item" href="/">
-        <img src="~/assets/logo_l.png" alt="@Labels.Logo"/>
+        <img src="~/assets/logo_l.png" alt="@Labels.Logo" asp-append-version="true"/>
     </a>
     @if (User.IsInRole(Utilities.Roles.Uploader) || User.IsInRole(Utilities.Roles.Moderator) || User.IsInRole(Utilities.Roles.Administrator))
     {
