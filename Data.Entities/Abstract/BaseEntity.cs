@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
     {
         public Guid Id { get; private set; }
 
-        protected BaseEntity() { }
+        protected BaseEntity() : this(default) { }
         
         protected BaseEntity(Guid id) => Id = id;
     }

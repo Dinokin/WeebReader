@@ -12,9 +12,6 @@ namespace WeebReader.Data.Entities
 
         public ComicPage(bool animated, Guid chapterId, ushort number) : this(default, animated, chapterId, number) { }
 
-        public ComicPage(Guid id, bool animated, Guid chapterId, ushort number) : base(id, animated, chapterId)
-        {
-            Number = number;
-        }
+        public ComicPage(Guid id, bool animated, Guid chapterId, ushort number) : base(id, animated, chapterId) => Number = number;
     }
 }

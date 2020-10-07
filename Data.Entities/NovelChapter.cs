@@ -12,10 +12,10 @@ namespace WeebReader.Data.Entities
         public NovelChapterContent? NovelChapterContent { get; set; }
         public IEnumerable<NovelPage>? Pages { get; private set; }
 
-        public NovelChapter(ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId) :
-            base(volume, number, name, releaseDate, visible, titleId) { }
+        public NovelChapter(ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId)
+            : this(default, volume, number, name, releaseDate, visible, titleId) { }
 
-        public NovelChapter(Guid id, ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId) :
-            base(id, volume, number, name, releaseDate, visible, titleId) { }
+        public NovelChapter(Guid id, ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId)
+            : base(id, volume, number, name, releaseDate, visible, titleId) { }
     }
 }

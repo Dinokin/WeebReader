@@ -11,7 +11,8 @@ namespace WeebReader.Data.Entities.Abstract
         public bool Visible { get; set; }
         public Guid TitleId { get; }
 
-        protected Chapter(ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId) : this(default, volume, number, name, releaseDate, visible, titleId) { }
+        protected Chapter(ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId)
+            : this(default, volume, number, name, releaseDate, visible, titleId) { }
 
         protected Chapter(Guid id, ushort? volume, decimal number, string? name, DateTime releaseDate, bool visible, Guid titleId) : base(id)
         {
