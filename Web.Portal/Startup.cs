@@ -98,6 +98,8 @@ namespace WeebReader.Web.Portal
 
             services.AddHttpClient();
             services.AddTransient<ReCaptchaValidator>();
+            services.AddTransient<EmailSender>();
+            services.AddTransient<DiscordSender>();
             services.AddTransient<ParametersManager>();
             services.AddTransient<PostsManager>();
             services.AddTransient<TitlesManager<Title>>();
@@ -106,7 +108,6 @@ namespace WeebReader.Web.Portal
             services.AddTransient<NovelChapterContentManager>();
             services.AddTransient<TitleArchiver<Title>>();
             services.AddTransient<ChapterArchiver<Chapter>>();
-            services.AddSingleton<EmailSender>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
