@@ -111,7 +111,7 @@ namespace WeebReader.Web.Portal.Controllers
                             content = memoryStream.ToArray();
                         }
                         
-                        if (await _chapterArchiver.IsValidComicChapterContent(content))
+                        if (!await _chapterArchiver.IsValidComicChapterContent(content))
                             return new JsonResult(new
                             {
                                 success = false,
@@ -193,7 +193,7 @@ namespace WeebReader.Web.Portal.Controllers
                             content = memoryStream.ToArray();
                         }
                             
-                        if (await _chapterArchiver.IsValidComicChapterContent(content))
+                        if (!await _chapterArchiver.IsValidComicChapterContent(content))
                             return new JsonResult(new
                             {
                                 success = false,
