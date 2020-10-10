@@ -99,7 +99,6 @@ namespace WeebReader.Web.Portal
             services.AddHttpClient();
             services.AddTransient<ReCaptchaValidator>();
             services.AddTransient<EmailSender>();
-            services.AddTransient<DiscordSender>();
             services.AddTransient<ParametersManager>();
             services.AddTransient<PostsManager>();
             services.AddTransient<TitlesManager<Title>>();
