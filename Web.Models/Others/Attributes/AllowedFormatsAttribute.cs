@@ -18,11 +18,11 @@ namespace WeebReader.Web.Models.Others.Attributes
 
         public override bool IsValid(object value)
         {
-            if (value is IFormFile formFile) 
-                if (Regex.IsMatch(Path.GetExtension(formFile.FileName.ToLowerInvariant()), $"({_allowedExtensions})"))
-                    return true;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            if (value is IFormFile formFile && formFile != null)
+                return Regex.IsMatch(Path.GetExtension(formFile.FileName.ToLowerInvariant()), $"({_allowedExtensions})");
 
-            return false;
+            return true;
         }
     }
 }
