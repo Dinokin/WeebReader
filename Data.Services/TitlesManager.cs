@@ -43,26 +43,20 @@ namespace WeebReader.Data.Services
             if (!await base.Add(title))
                 return false;
 
-            if (tags != null)
-                await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
+            await AddTags(title, tags);
 
-            return await Context.SaveChangesAsync() > 0;
+            return true;
         }
         
         public async Task<bool> Edit(TTitle title, IEnumerable<string>? tags = null)
         {
             if (!await base.Edit(title))
                 return false;
-            
-            if (Context.TitleTags.Where(titleTag => titleTag.Title == title) is var titleTags && titleTags.Any())
-                Context.TitleTags.RemoveRange(Context.TitleTags.Where(titleTag => titleTag.Title == title));
 
-            if (tags != null)
-                await Context.TitleTags.AddRangeAsync((await BuildTags(tags)).Select(tag => new TitleTag(title.Id, tag.Id)));
-            
-            Context.Tags.RemoveRange(GetUnusedTags());
+            await AddTags(title, tags);
+            await RemoveUnusedTags();
 
-            return await Context.SaveChangesAsync() > 0;
+            return true;
         }
 
         public override async Task<bool> Delete(TTitle entity)
@@ -70,7 +64,7 @@ namespace WeebReader.Data.Services
             var result = await base.Delete(entity);
 
             if (result)
-                Context.RemoveRange(GetUnusedTags());
+                await RemoveUnusedTags();
 
             return result;
         }
@@ -78,9 +72,9 @@ namespace WeebReader.Data.Services
         public override async Task<bool> DeleteRange(IEnumerable<TTitle> entities)
         {
             var result = await base.DeleteRange(entities);
-            
+
             if (result)
-                Context.RemoveRange(GetUnusedTags());
+                await RemoveUnusedTags();
 
             return result;
         }
@@ -88,20 +82,41 @@ namespace WeebReader.Data.Services
         private Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
             ? DbSet.OrderBy(title => title.Name).Skip(skip).Take(take)
             : DbSet.Where(title => title.Visible).OrderBy(title => title.Name).Skip(skip).Take(take));
-
-        private async Task<IEnumerable<Tag>> BuildTags(IEnumerable<string> tags)
+        
+        private async Task AddTags(TTitle title, IEnumerable<string>? tags)
         {
-            var tagEntities = tags.Select(name => new Tag(name)).ToArray();
+            var currentTitleTags = Context.TitleTags.Include(titleTag => titleTag.Tag).Where(titleTag => titleTag.Title == title).ToList();
+            var newTags = tags?.Distinct().Select(str => new Tag(str)).ToArray();
+
+            if (newTags != null && newTags.Any())
+            {
+                for (var i = 0; i < newTags.Length; i++)
+                {
+                    if (currentTitleTags.SingleOrDefault(titleTag => titleTag.Tag!.Name == newTags[i].Name) is var currentTitleTag && currentTitleTag != null)
+                    {
+                        currentTitleTags.Remove(currentTitleTag);
+                        
+                        continue;
+                    }
+
+                    if (await Context.Tags.SingleOrDefaultAsync(tag => tag.Name == newTags[i].Name) is var tagEntity && tagEntity != null)
+                        await Context.TitleTags.AddAsync(new TitleTag(title.Id, tagEntity.Id));
+                    else
+                    {
+                        await Context.Tags.AddAsync(newTags[i]);
+                        await Context.TitleTags.AddAsync(new TitleTag(title.Id, newTags[i].Id));
+                    }
+                }
+            }
             
-            for (var i = 0; i < tagEntities.Length; i++)
-                if (await Context.Tags.SingleOrDefaultAsync(tag => tag.Name == tagEntities[i].Name) is var entity && entity == null)
-                    await Context.Tags.AddAsync(tagEntities[i]);
-                else
-                    tagEntities[i] = entity;
-            
-            return tagEntities;
+            Context.TitleTags.RemoveRange(currentTitleTags);
+            await Context.SaveChangesAsync();
         }
 
-        private IEnumerable<Tag> GetUnusedTags() => Context.Tags.Include(tag => tag.TitleTag).Where(tag => tag.TitleTag!.Any());
+        private async Task RemoveUnusedTags()
+        {
+            Context.Tags.RemoveRange(Context.Tags.Include(tag => tag.TitleTag).Where(tag => !tag.TitleTag!.Any()));
+            await Context.SaveChangesAsync();
+        }
     }
 }
