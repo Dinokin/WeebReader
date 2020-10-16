@@ -9,6 +9,7 @@
     var emailSenderEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled);
     var emailContactEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.ContactEmailEnabled);
     var lightMode = ViewData["BodyClass"]?.ToString() != Constants.DarkModeClasses;
+    var fixedFooter = (bool?) ViewData["FixedFooter"] ?? false;
 }
 
 <!DOCTYPE html>
@@ -91,7 +92,14 @@
 <div class="ui fluid container">
     @RenderBody()
 </div>
-<div class="ui center aligned container">
+@if (fixedFooter)
+{
+    <div class="ui hidden divider"></div>
+    <div class="ui hidden divider"></div>
+    <div class="ui hidden divider"></div>
+    <div class="ui hidden divider"></div>   
+}
+<div class="ui center aligned fluid container @(fixedFooter ? "fixed-footer" : "normal-footer")">
     <footer>
         <div class="ui large @(ViewData["BodyClass"] == null ? null : lightMode ? "inverted" : null) label">
             © @DateTime.Now.Year @(await ParametersManager.GetValue<string>(ParameterTypes.SiteName))

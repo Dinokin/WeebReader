@@ -1,5 +1,10 @@
-﻿footer {
+﻿.normal-footer {
     padding: 1rem;
+}
+
+.fixed-footer {
+    position: fixed;
+    bottom: 1rem;
 }
 
 .ui.vertical.menu .item > i.icon.left {

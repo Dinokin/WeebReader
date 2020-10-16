@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = $"{Model.title.Name}";
+    ViewData["FixedFooter"] = true;
     var disqusEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageDisqusEnabled);
 
     if (disqusEnabled)
