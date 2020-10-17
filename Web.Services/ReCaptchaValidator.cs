@@ -28,7 +28,7 @@ namespace WeebReader.Web.Services
             
             var reCaptchaRequest = new ReCaptchaRequest(await _parameterManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaServerKey), clientSecret, clientIp);
             var httpResponse = await _httpClient.PostAsync(PostAddress, new FormUrlEncodedContent(Encode(reCaptchaRequest)));
-            var reCaptchaResponse = JsonSerializer.Deserialize<ReCaptchaResponse>(await httpResponse.Content.ReadAsStringAsync());
+            var reCaptchaResponse = JsonSerializer.Deserialize<ReCaptchaResponse>(await httpResponse.Content.ReadAsStringAsync(), new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
 
             return httpResponse.IsSuccessStatusCode && reCaptchaResponse.Success;
         }

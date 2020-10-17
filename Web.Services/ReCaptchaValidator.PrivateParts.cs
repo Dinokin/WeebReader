@@ -37,14 +37,6 @@ namespace WeebReader.Web.Services
             
             [JsonPropertyName("error-codes")]
             public IEnumerable<string>? ErrorCodes { get; set; }
-
-            public ReCaptchaResponse(bool success, DateTime challengeTimestamp, string hostname, IEnumerable<string>? errorCodes)
-            {
-                Success = success;
-                ChallengeTimestamp = challengeTimestamp;
-                Hostname = hostname;
-                ErrorCodes = errorCodes;
-            }
         }
     }
 }
