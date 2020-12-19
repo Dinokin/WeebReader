@@ -21,9 +21,9 @@ namespace WeebReader.Web.Portal.Controllers
     public class TitlesManager : Controller
     {
         private readonly TitlesManager<Title> _titleManager;
-        private readonly TitleArchiver<Title> _titleArchiver;
+        private readonly TitleArchiver _titleArchiver;
 
-        public TitlesManager(TitlesManager<Title> titleManager, TitleArchiver<Title> titleArchiver)
+        public TitlesManager(TitlesManager<Title> titleManager, TitleArchiver titleArchiver)
         {
             _titleManager = titleManager;
             _titleArchiver = titleArchiver;
@@ -33,7 +33,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _titleManager.Count() / (decimal) Constants.ItemsPerPageTitleAdmin);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            page = page >= 1 && page <= totalPages ? page : 1;
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;

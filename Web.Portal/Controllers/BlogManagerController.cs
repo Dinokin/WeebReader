@@ -25,7 +25,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _postManager.Count() / (decimal) Constants.ItemsPerPageBlogAdmin);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            page = page >= 1 && page <= totalPages ? page : 1;
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;

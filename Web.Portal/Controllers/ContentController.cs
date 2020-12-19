@@ -28,18 +28,16 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly TitlesManager<Title> _titlesManager;
         private readonly ChapterManager<Chapter> _chapterManager;
         private readonly PagesManager<Page> _pagesManager;
-        private readonly NovelChapterContentManager _novelChapterContentManager;
-        private readonly ChapterArchiver<Chapter> _chapterArchiver;
+        private readonly ChapterArchiver _chapterArchiver;
         private readonly ParametersManager _parametersManager;
         private readonly IMemoryCache _memoryCache;
 
-        public ContentController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager, ChapterArchiver<Chapter> chapterArchiver, ParametersManager parametersManager, IMemoryCache memoryCache)
+        public ContentController(SignInManager<IdentityUser<Guid>> signInManager, TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, ChapterArchiver chapterArchiver, ParametersManager parametersManager, IMemoryCache memoryCache)
         {
             _signInManager = signInManager;
             _titlesManager = titlesManager;
             _chapterManager = chapterManager;
             _pagesManager = pagesManager;
-            _novelChapterContentManager = novelChapterContentManager;
             _chapterArchiver = chapterArchiver;
             _parametersManager = parametersManager;
             _memoryCache = memoryCache;
@@ -274,7 +272,7 @@ namespace WeebReader.Web.Portal.Controllers
                 NovelChapter novelChapter => new
                 {
                     success = true,
-                    content = (await _novelChapterContentManager.GetContentByChapter(novelChapter))?.Content.AddImgLazyLoading("/assets/placeholder_page.png")
+                    content = novelChapter.Content.AddImgLazyLoading("/assets/placeholder_page.png")
                 },
                 _ => new
                 {
@@ -318,7 +316,7 @@ namespace WeebReader.Web.Portal.Controllers
         private async Task<IActionResult> GetRssFeed(SyndicationFeed feed)
         {
             var stream = new MemoryStream();
-            using var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings {Encoding = Encoding.UTF8, NewLineHandling = NewLineHandling.Entitize, Indent = true, Async = true});
+            await using var xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings {Encoding = Encoding.UTF8, NewLineHandling = NewLineHandling.Entitize, Indent = true, Async = true});
             new Rss20FeedFormatter(feed, false).WriteTo(xmlWriter);
             await xmlWriter.FlushAsync();
             stream.Seek(0, SeekOrigin.Begin);

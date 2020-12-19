@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace WeebReader.Web.Services
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local")]
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     public partial class ReCaptchaValidator
     {
         private struct ReCaptchaRequest

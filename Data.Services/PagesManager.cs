@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using WeebReader.Data.Contexts.Abstract;
@@ -7,7 +6,6 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
     public class PagesManager<TPage> : GenericManager<TPage> where TPage : Page
     {
         public PagesManager(BaseContext context) : base(context) { }

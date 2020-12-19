@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -18,26 +17,24 @@ using WeebReader.Web.Services.Others;
 
 namespace WeebReader.Web.Services
 {
-    public class ChapterArchiver<TChapter> where TChapter : Chapter
+    public class ChapterArchiver
     {
         private readonly IWebHostEnvironment _environment;
         private readonly BaseContext _context;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ChapterManager<TChapter> _chapterManager;
+        private readonly ChapterManager<Chapter> _chapterManager;
         private readonly PagesManager<Page> _pageManager;
-        private readonly NovelChapterContentManager _novelChapterContentManager;
 
-        public ChapterArchiver(IWebHostEnvironment environment, BaseContext context, IHttpClientFactory httpClientFactory, ChapterManager<TChapter> chapterManager, PagesManager<Page> pageManager, NovelChapterContentManager novelChapterContentManager)
+        public ChapterArchiver(IWebHostEnvironment environment, BaseContext context, IHttpClientFactory httpClientFactory, ChapterManager<Chapter> chapterManager, PagesManager<Page> pageManager)
         {
             _environment = environment;
             _context = context;
             _httpClientFactory = httpClientFactory;
             _chapterManager = chapterManager;
             _pageManager = pageManager;
-            _novelChapterContentManager = novelChapterContentManager;
         }
 
-        public async Task<bool> AddChapter(TChapter chapter, byte[]? content)
+        public async Task<bool> AddChapter(Chapter chapter, byte[]? content)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
             
@@ -54,7 +51,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        public async Task<bool> EditChapter(TChapter chapter, byte[]? content)
+        public async Task<bool> EditChapter(Chapter chapter, byte[]? content)
         {
             await using var transaction = await _context.Database.BeginTransactionAsync();
 
@@ -71,7 +68,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        public async Task<bool> DeleteChapter(TChapter chapter)
+        public async Task<bool> DeleteChapter(Chapter chapter)
         {
             if (!await _chapterManager.Delete(chapter))
                 return false;
@@ -99,7 +96,7 @@ namespace WeebReader.Web.Services
             return zipArchive.Entries.Any(entry => HasValidExtension(entry.Name, false));
         }
 
-        private async Task ProcessContent(TChapter chapter, byte[]? content)
+        private async Task ProcessContent(Chapter chapter, byte[]? content)
         {
             switch (chapter)
             {
@@ -116,8 +113,8 @@ namespace WeebReader.Web.Services
                     await ProcessComicChapter(comicChapter, content);
                     Parallel.ForEach(oldFiles, file => file.Delete());
                     return;
-                case NovelChapter novelChapter when content?.Length > 0:
-                    await ProcessNovelChapter(novelChapter, content);
+                case NovelChapter novelChapter:
+                    await ProcessNovelChapter(novelChapter);
                     return;
                 default:
                     return;
@@ -154,13 +151,13 @@ namespace WeebReader.Web.Services
                 zipArchive.CreateEntryFromFile($"{files[i]}", $"{i}{files[i].Extension}", CompressionLevel.NoCompression);
         }
 
-        private async Task ProcessNovelChapter(NovelChapter novelChapter, byte[] content)
+        private async Task ProcessNovelChapter(NovelChapter novelChapter)
         {
             var httpClient = _httpClientFactory.CreateClient();
             var location = Utilities.GetChapterFolder(_environment, novelChapter.TitleId, novelChapter.Id);
             var pdfFile = new FileInfo($"{location}/chapter.pdf");
             var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(Encoding.Default.GetString(content));
+            htmlDocument.LoadHtml(novelChapter.Content);
             var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img")?.ToArray() ?? new HtmlNode[0];
 
             foreach (var node in imageNodes)
@@ -230,17 +227,10 @@ namespace WeebReader.Web.Services
                 for (var i = 0; i < imageNodes.Length; i++)
                     imageNodes[i].SetAttributeValue("src", $"/content/{novelChapter.TitleId}/{novelChapter.Id}/{pages[i].Id}{(pages[i].Animated ? ".gif" : ".png")}");
             }
-            
-            if (await _novelChapterContentManager.GetContentByChapter(novelChapter) is var chapterContent && chapterContent == null)
-            {
-                chapterContent = new NovelChapterContent(htmlDocument.DocumentNode.OuterHtml, novelChapter.Id);
-                await _novelChapterContentManager.Add(chapterContent);
-            }
-            else
-            {
-                chapterContent.Content = htmlDocument.DocumentNode.OuterHtml;
-                await _novelChapterContentManager.Edit(chapterContent);
-            }
+
+            novelChapter.Content = htmlDocument.DocumentNode.OuterHtml;
+
+            await _chapterManager.Edit(novelChapter);
         }
 
         private static bool HasValidExtension(string content, bool base64)

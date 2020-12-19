@@ -40,7 +40,7 @@ namespace WeebReader.Data.Contexts.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("Roles");
 
@@ -146,11 +146,11 @@ namespace WeebReader.Data.Contexts.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("Users");
                 });
@@ -474,7 +474,7 @@ namespace WeebReader.Data.Contexts.Migrations
                         .HasColumnType("LONGTEXT");
 
                     b.HasIndex("TitleId")
-                        .HasName("IX_Chapters_TitleId1");
+                        .HasDatabaseName("IX_Chapters_TitleId1");
 
                     b.HasDiscriminator().HasValue("Novel");
                 });

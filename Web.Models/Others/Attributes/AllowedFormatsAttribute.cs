@@ -16,7 +16,7 @@ namespace WeebReader.Web.Models.Others.Attributes
 
         public AllowedFormatsAttribute(string allowedExtensions) => _allowedExtensions = allowedExtensions.Replace(",", "|").ToLowerInvariant();
 
-        public override bool IsValid(object value)
+        public override bool IsValid(object? value)
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (value is IFormFile formFile && formFile != null)

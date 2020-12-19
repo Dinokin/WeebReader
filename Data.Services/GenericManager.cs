@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,17 +8,11 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Services
 {
-    [SuppressMessage("ReSharper", "VirtualMemberNeverOverridden.Global")]
-    [SuppressMessage("ReSharper", "UnusedMemberInSuper.Global")]
-    [SuppressMessage("ReSharper", "UnusedMethodReturnValue.Global")]
-    [SuppressMessage("ReSharper", "UnusedMemberHierarchy.Global")]
-    [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
     public class GenericManager<TEntity> where TEntity : BaseEntity
     {
         protected readonly BaseContext Context;
-        protected readonly DbSet<TEntity> DbSet;
+        protected readonly DbSet<TEntity> DbSet; 
         
-        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global")]
         public GenericManager(BaseContext context)
         {
             Context = context;

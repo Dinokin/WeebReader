@@ -25,7 +25,7 @@ namespace WeebReader.Web.Models.Others.Attributes
             else
                 model = new ChapterModel();
 
-            model.TitleId = Guid.Parse(bindingContext.ValueProvider.GetValue(nameof(ChapterModel.TitleId)).FirstValue);
+            model.TitleId = Guid.Parse(bindingContext.ValueProvider.GetValue(nameof(ChapterModel.TitleId)).FirstValue!);
             
             foreach (var (key, value) in bindingContext.HttpContext.Request.Form)
             {

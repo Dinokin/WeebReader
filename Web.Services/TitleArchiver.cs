@@ -9,18 +9,18 @@ using WeebReader.Web.Services.Others;
 
 namespace WeebReader.Web.Services
 {
-    public class TitleArchiver<TTitle> where TTitle : Title
+    public class TitleArchiver
     {
         private readonly IWebHostEnvironment _environment;
-        private readonly TitlesManager<TTitle> _titleManager;
+        private readonly TitlesManager<Title> _titleManager;
 
-        public TitleArchiver(IWebHostEnvironment environment, TitlesManager<TTitle> titleManager)
+        public TitleArchiver(IWebHostEnvironment environment, TitlesManager<Title> titleManager)
         {
             _environment = environment;
             _titleManager = titleManager;
         }
 
-        public async Task<bool> AddTitle(TTitle title, IEnumerable<string>? tags = null, Stream? cover = null)
+        public async Task<bool> AddTitle(Title title, IEnumerable<string>? tags = null, Stream? cover = null)
         {
             if (!await _titleManager.Add(title, tags))
                 return false;
@@ -31,7 +31,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        public async Task<bool> EditTitle(TTitle title, IEnumerable<string>? tags = null, Stream? cover = null)
+        public async Task<bool> EditTitle(Title title, IEnumerable<string>? tags = null, Stream? cover = null)
         {
             if (!await _titleManager.Edit(title, tags))
                 return false;
@@ -42,7 +42,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        public async Task<bool> DeleteTitle(TTitle title)
+        public async Task<bool> DeleteTitle(Title title)
         {
             if (!await _titleManager.Delete(title))
                 return false;
@@ -52,7 +52,7 @@ namespace WeebReader.Web.Services
             return true;
         }
 
-        private void GenerateCover(TTitle title, Stream cover)
+        private void GenerateCover(Title title, Stream cover)
         {
             var image = Utilities.ProcessImage(cover);
             Utilities.WriteImage(Utilities.GetTitleFolder(_environment, title.Id), image, "cover", false, false);

@@ -33,16 +33,16 @@ namespace WeebReader.Web.Services
             return httpResponse.IsSuccessStatusCode && reCaptchaResponse.Success;
         }
 
-        private static IEnumerable<KeyValuePair<string,string>> Encode(ReCaptchaRequest request)
+        private static IEnumerable<KeyValuePair<string?,string?>> Encode(ReCaptchaRequest request)
         {
-            var result = new List<KeyValuePair<string, string>>
+            var result = new List<KeyValuePair<string?, string?>>
             {
-                new KeyValuePair<string, string>(nameof(request.Secret).ToLower(), request.Secret),
-                new KeyValuePair<string, string>(nameof(request.Response).ToLower(), request.Response)
+                new(nameof(request.Secret).ToLower(), request.Secret),
+                new(nameof(request.Response).ToLower(), request.Response)
             };
 
             if (request.RemoteIp != null) 
-                result.Add(new KeyValuePair<string, string>(nameof(request.RemoteIp).ToLower(), request.RemoteIp));
+                result.Add(new KeyValuePair<string?, string?>(nameof(request.RemoteIp).ToLower(), request.RemoteIp));
 
             return result;
         }

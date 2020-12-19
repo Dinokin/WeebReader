@@ -1,18 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Pomelo.EntityFrameworkCore.MySql.Storage;
 
 namespace WeebReader.Data.Contexts.Factories
 {
-    [SuppressMessage("ReSharper", "UnusedType.Global")]
     internal class MariaDbContextFactory : IDesignTimeDbContextFactory<MariaDbContext>
     {
         public MariaDbContext CreateDbContext(string[] args)
         {
             var options = new DbContextOptionsBuilder();
-            options.UseMySql("Server=localhost;Database=WeebDb;Uid=root;Pwd=123456;", builder => builder.ServerVersion(ServerVersion.Default.Version, ServerType.MariaDb));
+            options.UseMySql("Server=localhost;Database=WeebDb;Uid=root;Pwd=123456;", new MariaDbServerVersion(new Version(10, 3)));
             
             return new MariaDbContext(options.Options);
         }

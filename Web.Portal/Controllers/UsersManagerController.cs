@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -39,11 +38,10 @@ namespace WeebReader.Web.Portal.Controllers
 
         [HttpGet("{page:int?}")]
         [Authorize(Roles = Utilities.Roles.Administrator)]
-        [SuppressMessage("ReSharper", "PossibleUnintendedQueryableAsEnumerable")]
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPageUserAdmin);
-            page = (ushort) (page >= 1 && page <= totalPages ? page : 1);
+            page = page >= 1 && page <= totalPages ? page : 1;
 
             var users = _userManager.Users.OrderBy(user => user.UserName).Skip(Constants.ItemsPerPageUserAdmin * (page - 1)).Take(Constants.ItemsPerPageUserAdmin)
                 .Select(Mapper.MapToModel).ToArray();

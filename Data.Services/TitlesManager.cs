@@ -35,7 +35,7 @@ namespace WeebReader.Data.Services
         {
             var targetTitle = await DbSet.Include(entity => entity.TitleTags).SingleOrDefaultAsync(entity => entity == title);
 
-            return targetTitle?.TitleTags?.Join(Context.Tags, titleTag => titleTag.TagId, tag => tag.Id, (titleTag, tag) => tag) ?? new Tag[0];
+            return targetTitle?.TitleTags?.Join(Context.Tags, titleTag => titleTag.TagId, tag => tag.Id, (_, tag) => tag) ?? new Tag[0];
         }
 
         public async Task<bool> Add(TTitle title, IEnumerable<string>? tags = null)

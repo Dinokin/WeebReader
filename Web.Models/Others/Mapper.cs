@@ -156,7 +156,7 @@ namespace WeebReader.Web.Models.Others
                 ReleaseDate = novelChapter.ReleaseDate,
                 Visible = novelChapter.Visible,
                 TitleId = novelChapter.TitleId,
-                Content = novelChapter.NovelChapterContent?.Content ?? string.Empty
+                Content = novelChapter.Content
             },
             _ => throw new ArgumentException()
         };
@@ -167,8 +167,8 @@ namespace WeebReader.Web.Models.Others
                 new ComicChapter(comicChapterModel.ChapterId.Value, comicChapterModel.Volume, comicChapterModel.Number, comicChapterModel.Name, comicChapterModel.ReleaseDate ?? DateTime.Now, comicChapterModel.Visible, comicChapterModel.TitleId) : 
                 new ComicChapter(comicChapterModel.Volume, comicChapterModel.Number, comicChapterModel.Name, comicChapterModel.ReleaseDate ?? DateTime.Now, comicChapterModel.Visible, comicChapterModel.TitleId),
             NovelChapterModel novelChapterModel => novelChapterModel.ChapterId.HasValue ? 
-                new NovelChapter(novelChapterModel.ChapterId.Value, novelChapterModel.Volume, novelChapterModel.Number, novelChapterModel.Name, novelChapterModel.ReleaseDate ?? DateTime.Now, novelChapterModel. Visible, novelChapterModel.TitleId) : 
-                new NovelChapter(novelChapterModel.Volume, novelChapterModel.Number, novelChapterModel.Name, novelChapterModel.ReleaseDate ?? DateTime.Now, novelChapterModel. Visible, novelChapterModel.TitleId),
+                new NovelChapter(novelChapterModel.ChapterId.Value, novelChapterModel.Volume, novelChapterModel.Number, novelChapterModel.Name, novelChapterModel.ReleaseDate ?? DateTime.Now, novelChapterModel. Visible, novelChapterModel.TitleId, novelChapterModel.Content) : 
+                new NovelChapter(novelChapterModel.Volume, novelChapterModel.Number, novelChapterModel.Name, novelChapterModel.ReleaseDate ?? DateTime.Now, novelChapterModel. Visible, novelChapterModel.TitleId, novelChapterModel.Content),
             _ => throw new ArgumentException()
         };
 

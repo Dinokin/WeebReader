@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace WeebReader.Data.Entities.Abstract
 {
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]
     public abstract class Title : BaseEntity
     {
         public enum Statuses
@@ -24,7 +22,7 @@ namespace WeebReader.Data.Entities.Abstract
         public bool Nsfw { get; set; }    
         public bool Visible { get; set; }
         public string? PreviousChaptersUrl { get; set; }
-        public IEnumerable<TitleTag>? TitleTags { get; private set; }
+        public IEnumerable<TitleTag>? TitleTags { get; set; }
         
         protected Title(string name, string? originalName, string author, string artist, string? synopsis, Statuses status, bool nsfw, bool visible, string? previousChaptersUrl = null)
             : this(default, name, originalName, author, artist, synopsis, status, nsfw, visible, previousChaptersUrl) { }

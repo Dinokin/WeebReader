@@ -1,10 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
-    [SuppressMessage("ReSharper", "UnusedType.Global")]
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public partial class RenameTitleLinkToURL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

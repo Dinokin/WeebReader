@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -8,8 +7,6 @@ using WeebReader.Data.Entities.Abstract;
 
 namespace WeebReader.Data.Contexts.Abstract
 {
-    [SuppressMessage("ReSharper", "UnusedMember.Global")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public abstract class BaseContext : IdentityDbContext<IdentityUser<Guid>, IdentityRole<Guid>, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
         public DbSet<Title> Titles { get; set; } = null!;
@@ -20,7 +17,6 @@ namespace WeebReader.Data.Contexts.Abstract
         public DbSet<ComicPage> ComicPages { get; set; } = null!;
         public DbSet<Novel> Novels { get; set; } = null!;
         public DbSet<NovelChapter> NovelChapters { get; set; } = null!;
-        public DbSet<NovelChapterContent> NovelChapterContents { get; set; } = null!;
         public DbSet<Tag> Tags { get; set; } = null!;
         public DbSet<TitleTag> TitleTags { get; set; } = null!;
         public DbSet<Post> Posts { get; set; } = null!;
@@ -145,15 +141,9 @@ namespace WeebReader.Data.Contexts.Abstract
 
             builder.Entity<NovelChapter>(typeBuilder =>
             {
-                typeBuilder.HasOne(chapter => chapter.NovelChapterContent).WithOne(contents => contents!.Chapter!).HasForeignKey<NovelChapterContent>(content => content.ChapterId);
+                typeBuilder.Property(chapter => chapter.Content).IsRequired();
+                
                 typeBuilder.HasMany(chapter => chapter.Pages).WithOne(page => page.Chapter!).HasForeignKey(page => page.ChapterId);
-            });
-
-            builder.Entity<NovelChapterContent>(typeBuilder =>
-            {
-                typeBuilder.Property(content => content.Content).IsRequired();
-                typeBuilder.Property(content => content.ChapterId).IsRequired();
-                typeBuilder.HasIndex(content => content.ChapterId).IsUnique();
             });
 
             builder.Entity<Tag>(typeBuilder =>

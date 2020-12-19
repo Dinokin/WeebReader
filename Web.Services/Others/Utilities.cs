@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using ImageMagick;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +7,6 @@ namespace WeebReader.Web.Services.Others
 {
     internal static class Utilities
     {
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
         internal static DirectoryInfo GetContentFolder(IWebHostEnvironment environment)
         {
             var folder = new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");

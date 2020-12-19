@@ -15,7 +15,7 @@ namespace WeebReader.Web.Services
         public EmailSender(ParametersManager parameterManager)
         {
             _parameterManager = parameterManager;
-            _smtpClient = new SmtpClient {ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true};
+            _smtpClient = new SmtpClient {ServerCertificateValidationCallback = (_, _, _, _) => true};
         }
 
         public async void SendEmail(string replyTo, string destination, string subject, string content)

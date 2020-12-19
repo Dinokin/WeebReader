@@ -73,7 +73,7 @@ namespace WeebReader.Web.Portal.Controllers
 
         [Authorize]
         [HttpGet("Admin/{action:slugify}")]
-        public async Task<IActionResult> SignOut()
+        public new async Task<IActionResult> SignOut()
         {
             await _signInManager.SignOutAsync();
 

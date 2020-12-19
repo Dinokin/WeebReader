@@ -20,8 +20,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Pomelo.EntityFrameworkCore.MySql.Storage;
 using WeebReader.Common.Utilities;
 using WeebReader.Data.Contexts;
 using WeebReader.Data.Contexts.Abstract;
@@ -45,7 +43,7 @@ namespace WeebReader.Web.Portal
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BaseContext, MariaDbContext>(builder => builder.UseMySql(_configuration.GetConnectionString("MariaDb"), optionsBuilder => optionsBuilder.ServerVersion(ServerVersion.Default.Version, ServerType.MariaDb)));
+            services.AddDbContext<BaseContext, MariaDbContext>(builder => builder.UseMySql(_configuration.GetConnectionString("MariaDb"), new MariaDbServerVersion(new Version(10, 3))));
 
             services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
                 {
@@ -96,6 +94,8 @@ namespace WeebReader.Web.Portal
                     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
                 });
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.AddHttpClient();
             services.AddTransient<ReCaptchaValidator>();
             services.AddTransient<EmailSender>();
@@ -104,9 +104,8 @@ namespace WeebReader.Web.Portal
             services.AddTransient<TitlesManager<Title>>();
             services.AddTransient<ChapterManager<Chapter>>();
             services.AddTransient<PagesManager<Page>>();
-            services.AddTransient<NovelChapterContentManager>();
-            services.AddTransient<TitleArchiver<Title>>();
-            services.AddTransient<ChapterArchiver<Chapter>>();
+            services.AddTransient<TitleArchiver>();
+            services.AddTransient<ChapterArchiver>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -118,7 +117,7 @@ namespace WeebReader.Web.Portal
             if (environment.IsDevelopment())
             {
                 application.UseDeveloperExceptionPage();
-                application.UseDatabaseErrorPage();
+                application.UseMigrationsEndPoint();
             }
             else
                 application.UseExceptionHandler("/error");

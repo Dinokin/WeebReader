@@ -3,8 +3,8 @@
     var totalPages = (decimal) ViewData["TotalPages"];
     var segmented = (bool) ViewData["SegmentedPaginator"];
     var buttonSize = (string) ViewData["PaginatorButtonSize"];
-    var controller = (string) ViewContext.RouteData.Values["Controller"];
-    var action = (string) ViewContext.RouteData.Values["Action"];
+    var controller = (string) ViewContext.RouteData.Values["Controller"]!;
+    var action = (string) ViewContext.RouteData.Values["Action"]!;
 }
 
 @if (totalPages > 1)

@@ -17,15 +17,12 @@ namespace WeebReader.Web.Portal.Controllers
         private readonly TitlesManager<Title> _titlesManager;
         private readonly ChapterManager<Chapter> _chapterManager;
         private readonly PagesManager<Page> _pagesManager;
-        private readonly NovelChapterContentManager _novelChapterContentManager;
 
-        public ApiController(TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager, NovelChapterContentManager novelChapterContentManager)
+        public ApiController(TitlesManager<Title> titlesManager, ChapterManager<Chapter> chapterManager, PagesManager<Page> pagesManager)
         {
-
             _titlesManager = titlesManager;
             _chapterManager = chapterManager;
             _pagesManager = pagesManager;
-            _novelChapterContentManager = novelChapterContentManager;
         }
 
         [HttpGet("Titles")]
@@ -84,7 +81,7 @@ namespace WeebReader.Web.Portal.Controllers
             return new JsonResult(result);
         }
 
-        [HttpGet("Titles/{titleId:guid}/Chapters/{chapterId:guid}")]
+        [HttpGet("Chapters/{chapterId:guid}")]
         public async Task<IActionResult> Content(Guid titleId, Guid chapterId)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
@@ -121,7 +118,7 @@ namespace WeebReader.Web.Portal.Controllers
                     chapter.Name,
                     chapter.ReleaseDate,
                     chapter.TitleId,
-                    (await _novelChapterContentManager.GetContentByChapter(novelChapter))?.Content,
+                    novelChapter.Content,
                     Pages = (await _pagesManager.GetAll(novelChapter)).Select(page => new
                     {
                         page.Id,
