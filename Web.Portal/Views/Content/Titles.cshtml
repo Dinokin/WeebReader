@@ -10,30 +10,77 @@
     <script src="~/libs/weebreader/main/titles.js" asp-append-version="true"></script>
 }
 
-<div class="ui center aligned container">
-    <div class="ui four stackable cards">
-        @foreach (var title in Model)
-        {
-            <div class="ui raised card">
-                <div class="content">
-                    @if (title.Nsfw)
-                    {
-                        <div class="right aligned floating ui red label">@Labels.NSFW</div>
-                    }
-                    <div class="center aligned content ov-hidden">
-                        <a href="@Url.Action("Titles", new {titleId = title.Id})">
-                            <img class="ui bordered image @(title.Nsfw ? "blur" : string.Empty)" src="/content/@title.Id/cover_thumb.jpg" alt="@Labels.Cover" asp-append-version="true"/>
-                        </a>
-                    </div>
-                    <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = title.Id})">@title.Name</a></h4>
-                    <div class="center aligned description">
-                        <p>@Labels.Status: @Utilities.FromStatus(title.Status)</p>
-                    </div>
-                </div>
-                <a class="ui small black bottom attached button" href="@Url.Action("Titles", new { titleId = title.Id })">
-                    @Labels.ViewDetails
-                </a>
+<div class="ui container">
+    
+    @if (Model.Any(title => title.Status == Title.Statuses.Ongoing))
+    {
+        <div>
+            <div class="ui green raised segment">
+                <h4 class="ui header">
+                    @Utilities.FromStatus(Title.Statuses.Ongoing)
+                </h4>
             </div>
-        }
-    </div>
+            <div class="ui four stackable cards">
+                @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Ongoing))
+                {
+                    <partial name="Partials/TitleCard" model="title"/>
+                }
+            </div>
+            <div class="ui hidden divider"></div>
+        </div>
+    }
+
+    @if (Model.Any(title => title.Status == Title.Statuses.Hiatus))
+    {
+        <div>
+            <div class="ui yellow raised segment">
+                <h4 class="ui header">
+                    @Utilities.FromStatus(Title.Statuses.Hiatus)
+                </h4>
+            </div>
+            <div class="ui four stackable cards">
+                @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Hiatus))
+                {
+                    <partial name="Partials/TitleCard" model="title"/>
+                }
+            </div>
+            <div class="ui hidden divider"></div>
+        </div>
+    }
+    
+    @if (Model.Any(title => title.Status == Title.Statuses.Completed))
+    {
+        <div>
+            <div class="ui blue raised segment">
+                <h4 class="ui header">
+                    @Utilities.FromStatus(Title.Statuses.Completed)
+                </h4>
+            </div>
+            <div class="ui four stackable cards">
+                @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Completed))
+                {
+                    <partial name="Partials/TitleCard" model="title"/>
+                }
+            </div>
+            <div class="ui hidden divider"></div>
+        </div>
+    }
+    
+    @if (Model.Any(title => title.Status == Title.Statuses.Dropped))
+    {
+        <div>
+            <div class="ui red raised segment">
+                <h4 class="ui header">
+                    @Utilities.FromStatus(Title.Statuses.Dropped)
+                </h4>
+            </div>
+            <div class="ui four stackable cards">
+                @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Dropped))
+                {
+                    <partial name="Partials/TitleCard" model="title"/>
+                }
+            </div>
+            <div class="ui hidden divider"></div>
+        </div>
+    }
 </div>
