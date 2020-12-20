@@ -14,10 +14,10 @@
     
     @if (Model.Any(title => title.Status == Title.Statuses.Ongoing))
     {
-        <div class="ui green raised segment">
-            <h4 class="ui header">
-                @Utilities.FromStatus(Title.Statuses.Ongoing)
-            </h4>
+        <h4 class="ui top attached header">
+            @Utilities.FromStatus(Title.Statuses.Ongoing)
+        </h4>
+        <div class="ui green attached segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Ongoing))
                 {
@@ -25,14 +25,15 @@
                 }
             </div>
         </div>
+        <div class="ui hidden divider"></div>
     }
 
     @if (Model.Any(title => title.Status == Title.Statuses.Hiatus))
     {
-        <div class="ui yellow raised segment">
-            <h4 class="ui header">
-                @Utilities.FromStatus(Title.Statuses.Hiatus)
-            </h4>
+        <h4 class="ui top attached header">
+            @Utilities.FromStatus(Title.Statuses.Hiatus)
+        </h4>
+        <div class="ui yellow attached segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Hiatus))
                 {
@@ -40,14 +41,15 @@
                 }
             </div>
         </div>
+        <div class="ui hidden divider"></div>
     }
     
     @if (Model.Any(title => title.Status == Title.Statuses.Completed))
     {
-        <div class="ui blue raised segment">
-            <h4 class="ui header">
-                @Utilities.FromStatus(Title.Statuses.Completed)
-            </h4>
+        <h4 class="ui top attached header">
+            @Utilities.FromStatus(Title.Statuses.Completed)
+        </h4>
+        <div class="ui blue attached segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Completed))
                 {
@@ -55,14 +57,15 @@
                 }
             </div>
         </div>
+        <div class="ui hidden divider"></div>
     }
     
     @if (Model.Any(title => title.Status == Title.Statuses.Dropped))
     {
-        <div class="ui red raised segment">
-            <h4 class="ui header">
-                @Utilities.FromStatus(Title.Statuses.Dropped)
-            </h4>
+        <h4 class="ui top attached header">
+            @Utilities.FromStatus(Title.Statuses.Dropped)
+        </h4>
+        <div class="ui red attached segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Dropped))
                 {
@@ -70,5 +73,6 @@
                 }
             </div>
         </div>
+        <div class="ui hidden divider"></div>
     }
 </div>

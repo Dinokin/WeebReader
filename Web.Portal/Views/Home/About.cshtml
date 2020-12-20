@@ -10,15 +10,6 @@
 }
 
 <div class="ui container">
-    @if (await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutEnabled))
-    {
-        <div class="ui raised segment">
-            <div class="ui hidden divider"></div>
-            <div class="ui content">
-                @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutContent))
-            </div>
-        </div>   
-    }
     @if (await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutPatreonEnabled))
     {
         <div class="ui raised segment">
@@ -37,6 +28,14 @@
             <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutKofiLink))">
                 <img class="ui centered small image" src="~/assets/kofi.png" alt="@Labels.KoFi"/>
             </a>
+        </div>
+    }
+    @if (await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutEnabled))
+    {
+        <div class="ui raised segment">
+            <div class="ui content">
+                @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutContent))
+            </div>
         </div>
     }
 </div>
