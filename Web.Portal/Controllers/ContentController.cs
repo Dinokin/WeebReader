@@ -62,7 +62,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (_memoryCache.TryGetValue(key, out var value))
                 return await GetRssFeed((SyndicationFeed) value);
             
-            var feedItems = (await GetReleases(0, Constants.ItemsPerPageReleasesRss, false)).Select(tuple =>
+            var feedItems = (await GetReleases(0, Constants.ItemsPerPageReleasesRss)).Select(tuple =>
             {
                 var title = $"{tuple.title.Name} - {Labels.Chapter} {tuple.chapter.Number}";
                 var description = tuple.title.Synopsis.RemoveHtmlTags() is var desc && desc.Length > 200 ? $"{desc.Substring(0, 200)}..." : desc;
@@ -337,13 +337,13 @@ namespace WeebReader.Web.Portal.Controllers
                     .OrderByDescending(tuple => tuple.chapter.ReleaseDate).LongCount();
         }
         
-        private async Task<IEnumerable<(Title title, Chapter chapter)>> GetReleases(int skip, int take, bool? includeHidden = null)
+        private async Task<IEnumerable<(Title title, Chapter chapter)>> GetReleases(int skip, int take)
         {
-            includeHidden ??= _signInManager.IsSignedIn(User);
-            var titles = (await _titlesManager.GetAll(includeHidden.Value)).AsQueryable();
-            var chapters = (await _chapterManager.GetAll(includeHidden.Value)).AsQueryable();
+            var includeHidden = _signInManager.IsSignedIn(User);
+            var titles = (await _titlesManager.GetAll(includeHidden)).AsQueryable();
+            var chapters = (await _chapterManager.GetAll(includeHidden)).AsQueryable();
 
-            var releases = includeHidden.Value
+            var releases = includeHidden
                 ? titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take)
                 : titles.Join(chapters, title => title.Id, chapter => chapter.TitleId, (title, chapter) => new {title, chapter}).Where(tuple => tuple.title.Visible && tuple.chapter.Visible)
                     .OrderByDescending(tuple => tuple.chapter.ReleaseDate).Skip(skip).Take(take);
