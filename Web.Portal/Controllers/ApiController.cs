@@ -82,14 +82,14 @@ namespace WeebReader.Web.Portal.Controllers
         }
 
         [HttpGet("Chapters/{chapterId:guid}")]
-        public async Task<IActionResult> Content(Guid titleId, Guid chapterId)
+        public async Task<IActionResult> Content(Guid chapterId)
         {
-            if (await _titlesManager.GetById(titleId) is var title && title == null)
-                return NotFound();
-            
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
                 return NotFound(); 
             
+            if (await _titlesManager.GetById(chapter.TitleId) is var title && title == null)
+                return NotFound();
+
             if (!title.Visible || !chapter.Visible)
                 return NotFound();
 
