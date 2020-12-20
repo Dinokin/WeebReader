@@ -16,9 +16,6 @@ namespace WeebReader.Web.Portal
             {
                 configurationBuilder.AddEnvironmentVariables();
                 configurationBuilder.AddJsonFile($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.json");
-
-                if (!context.HostingEnvironment.IsProduction())
-                    configurationBuilder.AddJsonFile($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.{context.HostingEnvironment.EnvironmentName}.json");
             });
 
             builder.ConfigureKestrel((context, options) =>

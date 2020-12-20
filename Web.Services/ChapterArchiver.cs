@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
@@ -113,8 +114,8 @@ namespace WeebReader.Web.Services
                     await ProcessComicChapter(comicChapter, content);
                     Parallel.ForEach(oldFiles, file => file.Delete());
                     return;
-                case NovelChapter novelChapter:
-                    await ProcessNovelChapter(novelChapter);
+                case NovelChapter novelChapter when content?.Length > 0:
+                    await ProcessNovelChapter(novelChapter, content);
                     return;
                 default:
                     return;
@@ -151,13 +152,13 @@ namespace WeebReader.Web.Services
                 zipArchive.CreateEntryFromFile($"{files[i]}", $"{i}{files[i].Extension}", CompressionLevel.NoCompression);
         }
 
-        private async Task ProcessNovelChapter(NovelChapter novelChapter)
+        private async Task ProcessNovelChapter(NovelChapter novelChapter, byte[] content)
         {
             var httpClient = _httpClientFactory.CreateClient();
             var location = Utilities.GetChapterFolder(_environment, novelChapter.TitleId, novelChapter.Id);
             var pdfFile = new FileInfo($"{location}/chapter.pdf");
             var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(novelChapter.Content);
+            htmlDocument.LoadHtml(Encoding.Default.GetString(content));
             var imageNodes = htmlDocument.DocumentNode.SelectNodes("//img")?.ToArray() ?? new HtmlNode[0];
 
             foreach (var node in imageNodes)
