@@ -14,73 +14,61 @@
     
     @if (Model.Any(title => title.Status == Title.Statuses.Ongoing))
     {
-        <div>
-            <div class="ui green raised segment">
-                <h4 class="ui header">
-                    @Utilities.FromStatus(Title.Statuses.Ongoing)
-                </h4>
-            </div>
+        <div class="ui green raised segment">
+            <h4 class="ui header">
+                @Utilities.FromStatus(Title.Statuses.Ongoing)
+            </h4>
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Ongoing))
                 {
                     <partial name="Partials/TitleCard" model="title"/>
                 }
             </div>
-            <div class="ui hidden divider"></div>
         </div>
     }
 
     @if (Model.Any(title => title.Status == Title.Statuses.Hiatus))
     {
-        <div>
-            <div class="ui yellow raised segment">
-                <h4 class="ui header">
-                    @Utilities.FromStatus(Title.Statuses.Hiatus)
-                </h4>
-            </div>
+        <div class="ui yellow raised segment">
+            <h4 class="ui header">
+                @Utilities.FromStatus(Title.Statuses.Hiatus)
+            </h4>
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Hiatus))
                 {
                     <partial name="Partials/TitleCard" model="title"/>
                 }
             </div>
-            <div class="ui hidden divider"></div>
         </div>
     }
     
     @if (Model.Any(title => title.Status == Title.Statuses.Completed))
     {
-        <div>
-            <div class="ui blue raised segment">
-                <h4 class="ui header">
-                    @Utilities.FromStatus(Title.Statuses.Completed)
-                </h4>
-            </div>
+        <div class="ui blue raised segment">
+            <h4 class="ui header">
+                @Utilities.FromStatus(Title.Statuses.Completed)
+            </h4>
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Completed))
                 {
                     <partial name="Partials/TitleCard" model="title"/>
                 }
             </div>
-            <div class="ui hidden divider"></div>
         </div>
     }
     
     @if (Model.Any(title => title.Status == Title.Statuses.Dropped))
     {
-        <div>
-            <div class="ui red raised segment">
-                <h4 class="ui header">
-                    @Utilities.FromStatus(Title.Statuses.Dropped)
-                </h4>
-            </div>
+        <div class="ui red raised segment">
+            <h4 class="ui header">
+                @Utilities.FromStatus(Title.Statuses.Dropped)
+            </h4>
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Dropped))
                 {
                     <partial name="Partials/TitleCard" model="title"/>
                 }
             </div>
-            <div class="ui hidden divider"></div>
         </div>
     }
 </div>
