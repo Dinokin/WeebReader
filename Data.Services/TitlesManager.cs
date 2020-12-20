@@ -80,8 +80,8 @@ namespace WeebReader.Data.Services
         }
         
         private Task<IEnumerable<TTitle>> GetRange(int skip, int take, bool includeHidden) => Task.FromResult<IEnumerable<TTitle>>(includeHidden
-            ? DbSet.OrderBy(title => title.Name).Skip(skip).Take(take)
-            : DbSet.Where(title => title.Visible).OrderBy(title => title.Name).Skip(skip).Take(take));
+            ? DbSet.OrderBy(title => title.Status).ThenBy(title => title.Name).Skip(skip).Take(take)
+            : DbSet.Where(title => title.Visible).OrderBy(title => title.Status).ThenBy(title => title.Name).Skip(skip).Take(take));
         
         private async Task AddTags(TTitle title, IEnumerable<string>? tags)
         {
