@@ -1,0 +1,19 @@
+﻿@model Title
+
+<div class="ui raised card">
+    <div class="content">
+        @if (Model.Nsfw)
+        {
+            <div class="right aligned floating ui red label">@Labels.NSFW</div>
+        }
+        <div class="center aligned content ov-hidden">
+            <a href="@Url.Action("Titles", new {titleId = Model.Id})">
+                <img class="ui bordered image @(Model.Nsfw ? "blur" : string.Empty)" src="/content/@Model.Id/cover_thumb.jpg" alt="@Labels.Cover" asp-append-version="true"/>
+            </a>
+        </div>
+        <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = Model.Id})">@Model.Name</a></h4>
+    </div>
+    <a class="ui small black bottom attached button" href="@Url.Action("Titles", new {titleId = Model.Id})">
+        @Labels.ViewDetails
+    </a>
+</div>
