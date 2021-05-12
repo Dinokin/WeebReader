@@ -21,10 +21,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="HtmlAgilityPack" Version="1.11.29" />
-        <PackageReference Include="itext7.pdfhtml" Version="3.0.2" />
-        <PackageReference Include="Magick.NET-Q8-x64" Version="7.22.2.2" />
-        <PackageReference Include="MailKit" Version="2.10.0" />
+        <PackageReference Include="HtmlAgilityPack" Version="1.11.33" />
+        <PackageReference Include="itext7.pdfhtml" Version="3.0.4" />
+        <PackageReference Include="Magick.NET-Q8-x64" Version="7.24.0" />
+        <PackageReference Include="MailKit" Version="2.12.0" />
     </ItemGroup>
 
     <ItemGroup>
