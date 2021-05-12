@@ -12,7 +12,7 @@ namespace WeebReader.Web.Portal
     {
         public static async Task Main(string[] args) => await Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder =>
         {
-            builder.ConfigureAppConfiguration((context, configurationBuilder) =>
+            builder.ConfigureAppConfiguration((_, configurationBuilder) =>
             {
                 configurationBuilder.AddEnvironmentVariables();
                 configurationBuilder.AddJsonFile($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}appsettings.json");

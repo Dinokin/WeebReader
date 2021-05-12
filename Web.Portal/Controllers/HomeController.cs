@@ -93,7 +93,7 @@ namespace WeebReader.Web.Portal.Controllers
                         _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(ParameterTypes.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message);
                         TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
 
-                        return new JsonResult(new
+                        return Json(new
                         {
                             success = true
                         });
@@ -105,7 +105,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("MessageNotSent", OtherMessages.MessageCouldntBeSent);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)

@@ -34,6 +34,10 @@ namespace WeebReader.Data.Contexts.Abstract
                 typeBuilder.Property(user => user.NormalizedUserName).HasMaxLength(50);
                 typeBuilder.Property(user => user.Email).HasMaxLength(320);
                 typeBuilder.Property(user => user.NormalizedEmail).HasMaxLength(320);
+                typeBuilder.Property(user => user.PhoneNumber).HasMaxLength(50);
+                typeBuilder.Property(user => user.PasswordHash).HasMaxLength(512);
+                typeBuilder.Property(user => user.ConcurrencyStamp).HasMaxLength(36);
+                typeBuilder.Property(user => user.SecurityStamp).HasMaxLength(36);
                 typeBuilder.ToTable("Users");
             });
             
@@ -41,6 +45,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(role => role.Name).HasMaxLength(50);
                 typeBuilder.Property(role => role.NormalizedName).HasMaxLength(50);
+                typeBuilder.Property(role => role.ConcurrencyStamp).HasMaxLength(36);
                 typeBuilder.ToTable("Roles");
 
                 typeBuilder.HasData(new IdentityRole<Guid>
@@ -77,6 +82,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(userLogin => userLogin.LoginProvider).HasMaxLength(50);
                 typeBuilder.Property(userLogin => userLogin.ProviderKey).HasMaxLength(512);
+                typeBuilder.Property(userLogin => userLogin.ProviderDisplayName).HasMaxLength(200);
                 typeBuilder.ToTable("UserLogins");
             });
             
@@ -86,6 +92,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(userToken => userToken.LoginProvider).HasMaxLength(50);
                 typeBuilder.Property(userToken => userToken.Name).HasMaxLength(50);
+                typeBuilder.Property(userToken => userToken.Value).HasMaxLength(512);
                 typeBuilder.ToTable("UserTokens");
             });
 
@@ -93,6 +100,7 @@ namespace WeebReader.Data.Contexts.Abstract
             {
                 typeBuilder.Property(title => title.Name).IsRequired().HasMaxLength(200);
                 typeBuilder.HasIndex(title => title.Name).IsUnique();
+                typeBuilder.Property(title => title.OriginalName).HasMaxLength(200);
                 typeBuilder.Property(title => title.Author).IsRequired().HasMaxLength(50);
                 typeBuilder.Property(title => title.Artist).IsRequired().HasMaxLength(50);
                 typeBuilder.Property(title => title.Synopsis).IsRequired();

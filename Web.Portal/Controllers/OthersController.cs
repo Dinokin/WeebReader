@@ -28,13 +28,13 @@ namespace WeebReader.Web.Portal.Controllers
         public IActionResult Denied() => Forbid();
 
         [HttpGet("{action}")]
-        public async Task<IActionResult> Install() => await AllowInstaller() ? View() : (IActionResult) RedirectToAction("Index", "Content");
+        public async Task<IActionResult> Install() => await AllowInstaller() ? View() : RedirectToAction("Index", "Content");
 
         [HttpPost("{action}")]
         public async Task<IActionResult> Install(InstallerModel installerModel)
         {
             if (!await AllowInstaller())
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.CannotProceedAlreadyInstalled}
@@ -59,7 +59,7 @@ namespace WeebReader.Web.Portal.Controllers
                         
                         TempData["SuccessMessage"] = new[] {OtherMessages.InstalledSuccessfully};
 
-                        return new JsonResult(new
+                        return Json(new
                         {
                             success = true,
                             destination = Url.Action("SignIn", "SignIn")
@@ -71,7 +71,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)

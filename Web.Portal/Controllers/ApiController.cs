@@ -12,7 +12,7 @@ namespace WeebReader.Web.Portal.Controllers
 {
     [ApiController]
     [Route("Api")]
-    public class ApiController : ControllerBase
+    public class ApiController : Controller
     {
         private readonly TitlesManager<Title> _titlesManager;
         private readonly ChapterManager<Chapter> _chapterManager;
@@ -43,8 +43,8 @@ namespace WeebReader.Web.Portal.Controllers
                     CoverUrl = $"/content/{title.Id}/cover.png",
                     UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                 });
-            
-            return new JsonResult(titles);
+
+            return Json(titles);
         }
 
         [HttpGet("Titles/{titleId:guid}")]
@@ -78,7 +78,7 @@ namespace WeebReader.Web.Portal.Controllers
                 }).ToArray()
             };
 
-            return new JsonResult(result);
+            return Json(result);
         }
 
         [HttpGet("Chapters/{chapterId:guid}")]
@@ -125,20 +125,20 @@ namespace WeebReader.Web.Portal.Controllers
                         pageUrl = $"/content/{novelChapter.TitleId}/{novelChapter.Id}/{page.Id}{(page.Animated ? ".gif" : ".png")}"
                     }).ToArray()
                 },
-                _ => throw new ArgumentException()
+                _ => throw new ArgumentException($"{chapter.GetType().Name} is not a supported type.")
             };
             
-            return new JsonResult(result);
+            return Json(result);
         }
 
         [HttpGet("Titles/Search")]
         public async Task<IActionResult> Search(string term)
         {
             if (string.IsNullOrWhiteSpace(term) || term.Length < 3)
-                return new JsonResult(new object[0]);
+                return Json(Array.Empty<object>());
             
             if (term.Length > 200)
-                term = term.Substring(0, 200);
+                term = term[..200];
 
             term = term.ToLower();
 
@@ -158,7 +158,7 @@ namespace WeebReader.Web.Portal.Controllers
                     UpdatedAt = (await _chapterManager.GetLatestChapter(title, false))?.ReleaseDate
                 });
             
-            return new JsonResult(titles);
+            return Json(titles);
         }
     }
 }

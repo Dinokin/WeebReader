@@ -22,7 +22,7 @@ namespace WeebReader.Web.Models.Others.Attributes
                 if (property.PropertyType.IsEnum)
                     property.SetValue(model, Enum.Parse(property.PropertyType, value.First()));
                 else if (property.PropertyType == typeof(Guid?) || property.PropertyType == typeof(Guid))
-                    property.SetValue(model, property.PropertyType == typeof(Guid?) && string.IsNullOrWhiteSpace(value.FirstOrDefault()) ? (object?) null : Guid.Parse(value.First()));
+                    property.SetValue(model, property.PropertyType == typeof(Guid?) && string.IsNullOrWhiteSpace(value.FirstOrDefault()) ? null : Guid.Parse(value.First()));
                 else
                     property.SetValue(model, string.IsNullOrEmpty(value.FirstOrDefault()) ? null : Convert.ChangeType(value.FirstOrDefault(), Nullable.GetUnderlyingType(property.PropertyType) is var underlyingType && underlyingType != null ? underlyingType : property.PropertyType));
             }

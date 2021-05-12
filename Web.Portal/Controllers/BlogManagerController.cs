@@ -25,7 +25,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _postManager.Count() / (decimal) Constants.ItemsPerPageBlogAdmin);
-            page = page >= 1 && page <= totalPages ? page : 1;
+            page = page >= 1 && page <= totalPages ? page : (ushort) 1;
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
@@ -50,7 +50,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if ((await _postManager.GetAll()).Any(entity => entity.Title == postModel.Title))
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
@@ -60,7 +60,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.PostAddedSuccessfully};
                     
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("Index")
@@ -70,7 +70,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -107,7 +107,7 @@ namespace WeebReader.Web.Portal.Controllers
                 }
                 
                 if ((await _postManager.GetAll()).Any(entity => entity.Title == postModel.Title && post != entity))
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.PostNameAlreadyExist} 
@@ -119,7 +119,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.PostUpdatedSuccessfully};
                     
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("Index")
@@ -129,7 +129,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -140,7 +140,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Delete(Guid postId)
         {
             if (await _postManager.GetById(postId) is var post && post == null)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.PostNotFound}
@@ -150,13 +150,13 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 TempData["SuccessMessage"] = new[] {OtherMessages.PostDeletedSuccessfully};
                 
-                return new JsonResult(new
+                return Json(new
                 {
                     success = true
                 });
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = new[] {OtherMessages.SomethingWrong}

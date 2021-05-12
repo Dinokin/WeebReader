@@ -33,7 +33,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _titleManager.Count() / (decimal) Constants.ItemsPerPageTitleAdmin);
-            page = page >= 1 && page <= totalPages ? page : 1;
+            page = page >= 1 && page <= totalPages ? page : (ushort) 1;
 
             ViewData["Page"] = page;
             ViewData["TotalPages"] = totalPages;
@@ -60,7 +60,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if ((await _titleManager.GetAll()).Any(entity => entity.Name == titleModel.Name))
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.TitleNameAlreadyExist} 
@@ -72,7 +72,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleAddedSuccessfully};
                     
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("Index")
@@ -82,7 +82,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -114,14 +114,14 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if (titleModel.TitleId == null || await _titleManager.GetById(titleModel.TitleId.Value) is var title && title == null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.TitleNotFound} 
                     });
                 
                 if ((await _titleManager.GetAll()).Any(entity => entity.Name == titleModel.Name && title != entity))
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.TitleNameAlreadyExist} 
@@ -134,7 +134,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.TitleUpdatedSuccessfully};
                     
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("Index")
@@ -144,7 +144,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -156,7 +156,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Delete(Guid titleId)
         {
             if (await _titleManager.GetById(titleId) is var title && title == null)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.TitleNotFound}
@@ -166,13 +166,13 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 TempData["SuccessMessage"] = new[] {OtherMessages.TitleDeletedSuccessfully};
                 
-                return new JsonResult(new
+                return Json(new
                 {
                     success = true
                 });
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = new[] {OtherMessages.SomethingWrong}

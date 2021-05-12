@@ -7,16 +7,6 @@ namespace WeebReader.Web.Services.Others
 {
     internal static class Utilities
     {
-        internal static DirectoryInfo GetContentFolder(IWebHostEnvironment environment)
-        {
-            var folder = new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");
-
-            if (!folder.Exists)
-                folder.Create();
-
-            return folder;
-        }
-
         internal static DirectoryInfo GetTitleFolder(IWebHostEnvironment environment, Guid titleId)
         {
             var folder = new DirectoryInfo($"{GetContentFolder(environment)}{Path.DirectorySeparatorChar}{titleId}");
@@ -85,6 +75,16 @@ namespace WeebReader.Web.Services.Others
                 image.Dispose();
 
             return file;
+        }
+        
+        private static DirectoryInfo GetContentFolder(IWebHostEnvironment environment)
+        {
+            var folder = new DirectoryInfo($"{environment.WebRootPath}{Path.DirectorySeparatorChar}content");
+
+            if (!folder.Exists)
+                folder.Create();
+
+            return folder;
         }
     }
 }

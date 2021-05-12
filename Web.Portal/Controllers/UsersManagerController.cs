@@ -41,9 +41,9 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Index(ushort page = 1)
         {
             var totalPages = Math.Ceiling(await _userManager.Users.LongCountAsync() / (decimal) Constants.ItemsPerPageUserAdmin);
-            page = page >= 1 && page <= totalPages ? page : 1;
+            page = page >= 1 && page <= totalPages ? page : (ushort) 1;
 
-            var users = _userManager.Users.OrderBy(user => user.UserName).Skip(Constants.ItemsPerPageUserAdmin * (page - 1)).Take(Constants.ItemsPerPageUserAdmin)
+            var users = _userManager.Users.OrderBy(user => user.UserName).Skip(Constants.ItemsPerPageUserAdmin * (page - 1)).Take(Constants.ItemsPerPageUserAdmin).AsEnumerable()
                 .Select(Mapper.MapToModel).ToArray();
             
             foreach (var user in users)
@@ -74,14 +74,14 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if (await _userManager.FindByEmailAsync(userModel.Email) != null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.EmailAlreadyInUse}
                     });
                 
                 if (await _userManager.FindByNameAsync(userModel.Username) != null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.UsernameAlreadyInUse}
@@ -108,7 +108,7 @@ namespace WeebReader.Web.Portal.Controllers
                                 await transaction.CommitAsync();
                                 await SendAccountCreationEmail(user);
 
-                                return new JsonResult(new
+                                return Json(new
                                 {
                                     success = true,
                                     destination = Url.Action("Index")
@@ -122,7 +122,7 @@ namespace WeebReader.Web.Portal.Controllers
                             await transaction.CommitAsync();
                             await SendAccountCreationEmail(user);
                             
-                            return new JsonResult(new
+                            return Json(new
                             {
                                 success = true,
                                 destination = Url.Action("Index")
@@ -152,7 +152,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                                     await transaction.CommitAsync();
 
-                                    return new JsonResult(new
+                                    return Json(new
                                     {
                                         success = true,
                                         destination = Url.Action("Index")
@@ -165,7 +165,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                                 await transaction.CommitAsync();
 
-                                return new JsonResult(new
+                                return Json(new
                                 {
                                     success = true,
                                     destination = Url.Action("Index")
@@ -180,7 +180,7 @@ namespace WeebReader.Web.Portal.Controllers
                 }
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -215,21 +215,21 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if (userModel.UserId == null || await _userManager.FindByIdAsync(userModel.UserId.ToString()) is var user && user == null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.UserNotFound}
                     });
                 
                 if (await _userManager.FindByEmailAsync(userModel.Email) is var emailUser && emailUser != null && emailUser != user)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.EmailAlreadyInUse}
                     });
 
                 if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() is var role && role == Utilities.Roles.Administrator && (await _userManager.GetUsersInRoleAsync(Utilities.Roles.Administrator)).Count == 1 && Utilities.ToRole(userModel.Role) != role)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.UserUpdateIsLastAdministrator}
@@ -262,7 +262,7 @@ namespace WeebReader.Web.Portal.Controllers
                         
                         TempData["SuccessMessage"] = new[] {OtherMessages.UserUpdatedSuccessfully};
                         
-                        return new JsonResult(new
+                        return Json(new
                         {
                             success = true,
                             destination = Url.Action("Index")
@@ -273,7 +273,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -284,14 +284,14 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Delete(Guid userId)
         {
             if (await _userManager.FindByIdAsync(userId.ToString()) is var user && user == null)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.UserNotFound}
                 });
 
             if ((await _userManager.GetRolesAsync(user)).SingleOrDefault() == Utilities.Roles.Administrator && (await _userManager.GetUsersInRoleAsync(Utilities.Roles.Administrator)).Count == 1)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.UserDeleteIsLastAdministrator}
@@ -301,13 +301,13 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 TempData["SuccessMessage"] = new[] {OtherMessages.UserDeletedSuccessfully};
 
-                return new JsonResult(new
+                return Json(new
                 {
                     success = true
                 });
             }
 
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = new[] {OtherMessages.SomethingWrong}
@@ -332,7 +332,7 @@ namespace WeebReader.Web.Portal.Controllers
                 var result = await _userManager.ChangePasswordAsync(await _userManager.GetUserAsync(User), changePasswordModel.Password, changePasswordModel.NewPassword);
                 
                 if(result.Succeeded)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         messages = new[] {OtherMessages.PasswordChangedSuccessfully}
@@ -341,7 +341,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("NotSucceeded", OtherMessages.CouldNotChangePassword);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -354,7 +354,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if (await _userManager.FindByEmailAsync(emailModel.Email) is var candidate && candidate != null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.EmailAlreadyInUse}
@@ -372,7 +372,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         messages = new[] {OtherMessages.ChangeEmailSent}
@@ -386,7 +386,7 @@ namespace WeebReader.Web.Portal.Controllers
                     var result = await _userManager.UpdateAsync(user);
                     
                     if(result.Succeeded)
-                        return new JsonResult(new
+                        return Json(new
                         {
                             success = true,
                             messages = new[] {OtherMessages.EmailChangedSuccessfully}
@@ -396,7 +396,7 @@ namespace WeebReader.Web.Portal.Controllers
                 }
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)

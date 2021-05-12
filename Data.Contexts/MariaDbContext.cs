@@ -48,6 +48,7 @@ namespace WeebReader.Data.Contexts
                 typeBuilder.Property(title => title.Status).HasColumnType("TINYINT UNSIGNED");
                 typeBuilder.Property(title => title.Nsfw).HasColumnType("BOOLEAN");
                 typeBuilder.Property(title => title.Visible).HasColumnType("BOOLEAN");
+                typeBuilder.Property<string>("TitleType").HasColumnType("VARCHAR(5)");
             });
 
             builder.Entity<Chapter>(typeBuilder =>
@@ -56,9 +57,14 @@ namespace WeebReader.Data.Contexts
                 typeBuilder.Property(chapter => chapter.Number).HasColumnType("DECIMAL(5,1)");
                 typeBuilder.Property(chapter => chapter.ReleaseDate).HasColumnType("DATETIME");
                 typeBuilder.Property(chapter => chapter.Visible).HasColumnType("BOOLEAN");
+                typeBuilder.Property<string>("ChapterType").HasColumnType("VARCHAR(5)");
             });
 
-            builder.Entity<Page>(typeBuilder => typeBuilder.Property(page => page.Animated).HasColumnType("BOOLEAN"));
+            builder.Entity<Page>(typeBuilder =>
+            {
+                typeBuilder.Property(page => page.Animated).HasColumnType("BOOLEAN");
+                typeBuilder.Property<string>("PageType").HasColumnType("VARCHAR(5)");
+            });
 
             builder.Entity<Comic>(typeBuilder => typeBuilder.Property(comic => comic.LongStrip).HasColumnType("BOOLEAN"));
 
@@ -70,6 +76,7 @@ namespace WeebReader.Data.Contexts
             {
                 typeBuilder.Property(post => post.ReleaseDate).HasColumnType("DATETIME");
                 typeBuilder.Property(post => post.Visible).HasColumnType("BOOLEAN");
+                typeBuilder.Property(post => post.Content).HasColumnType("MEDIUMTEXT");
             });
             
             builder.Entity<Parameter>(typeBuilder =>

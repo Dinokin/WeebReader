@@ -34,14 +34,14 @@ namespace WeebReader.Web.Portal.Controllers
         {
             TempData["ReturnUrl"] = !string.IsNullOrWhiteSpace(returnUrl) ? returnUrl : null;
             
-            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
+            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : View();
         }
         
         [HttpPost("Admin/{action:slugify}")]
         public async Task<IActionResult> SignIn(SignInModel signInModel)
         {
             if (_signInManager.IsSignedIn(User))
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {OtherMessages.AlreadySignedIn}
@@ -52,7 +52,7 @@ namespace WeebReader.Web.Portal.Controllers
                 var result = await _signInManager.PasswordSignInAsync(signInModel.Username, signInModel.Password, false, true);
 
                 if (result.Succeeded)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = string.IsNullOrWhiteSpace(TempData["ReturnUrl"]?.ToString()) ? Url.Action("YourProfile", "UsersManager") : TempData["ReturnUrl"]
@@ -64,7 +64,7 @@ namespace WeebReader.Web.Portal.Controllers
                     ModelState.AddModelError("InvalidCredentials", ValidationMessages.InvalidCredentials);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -86,7 +86,7 @@ namespace WeebReader.Web.Portal.Controllers
             if (!await _parameterManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled))
                 return RedirectToAction("Index","Content");
             
-            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : (IActionResult) View();
+            return _signInManager.IsSignedIn(User) ? RedirectToAction("YourProfile", "UsersManager") : View();
         }
 
         [HttpPost("Admin/{action:slugify}")]
@@ -96,7 +96,7 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 ModelState.AddModelError("FunctionalityDisabled", OtherMessages.DisableFunctionality);
 
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -104,7 +104,7 @@ namespace WeebReader.Web.Portal.Controllers
             }
             
             if (_signInManager.IsSignedIn(User))
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {OtherMessages.AlreadySignedInChangePassword}
@@ -126,14 +126,14 @@ namespace WeebReader.Web.Portal.Controllers
 
                 TempData["SuccessMessage"] = new[] {OtherMessages.EmailAlreadyInDatabaseWarning};
                 
-                return new JsonResult(new
+                return Json(new
                 {
                     success = true,
                     destination = Url.Action("SignIn")
                 });
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -162,7 +162,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> ChangePassword(ResetPasswordModel resetPasswordModel)
         {
             if (_signInManager.IsSignedIn(User))
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {OtherMessages.AlreadySignedInChangePassword}
@@ -179,7 +179,7 @@ namespace WeebReader.Web.Portal.Controllers
                     
                     TempData["SuccessMessage"] = new[] {OtherMessages.PasswordChangedSuccessfully};
                     
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("SignIn")
@@ -189,7 +189,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("NotSucceeded", OtherMessages.CouldNotChangePassword);
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)

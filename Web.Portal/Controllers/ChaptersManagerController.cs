@@ -43,7 +43,7 @@ namespace WeebReader.Web.Portal.Controllers
             }
 
             var totalPages = Math.Ceiling(await _chapterManager.Count(title) / (decimal) Constants.ItemsPerPageChapterAdmin);
-            page = page >= 1 && page <= totalPages ? page : 1;
+            page = page >= 1 && page <= totalPages ? page : (ushort) 1;
 
             ViewData["Title"] = $"{Labels.Chapters} - {title.Name}";
             ViewData["Page"] = page;
@@ -78,14 +78,14 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if (await _titleManager.GetById(chapterModel.TitleId) is var title && title == null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.TitleNotFound}
                     });
 
                 if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == title.Id && entity.Number == chapterModel.Number))
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.ChapterNumberAlreadyExist}
@@ -97,7 +97,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     case ComicChapterModel comicChapterModel:
                         if (comicChapterModel.Pages == null)
-                            return new JsonResult(new
+                            return Json(new
                             {
                                 success = false,
                                 messages = new[] {ValidationMessages.ChapterMustHavePages}
@@ -110,7 +110,7 @@ namespace WeebReader.Web.Portal.Controllers
                         }
 
                         if (!await _chapterArchiver.IsValidComicChapterContent(content))
-                            return new JsonResult(new
+                            return Json(new
                             {
                                 success = false,
                                 messages = new[] {ValidationMessages.ZipDoesntContainSupportedImage}
@@ -125,7 +125,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.ChapterAddedSuccessfully};
 
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("Index", new {titleId = title.Id})
@@ -135,7 +135,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
 
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -167,14 +167,14 @@ namespace WeebReader.Web.Portal.Controllers
             if (ModelState.IsValid)
             {
                 if (chapterModel.ChapterId == null || await _chapterManager.GetById(chapterModel.ChapterId.Value) is var chapter && chapter == null)
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.ChapterNotFound}
                     });
 
                 if ((await _chapterManager.GetAll()).Any(entity => entity.TitleId == chapter.TitleId && entity.Number == chapterModel.Number && entity != chapter))
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = false,
                         messages = new[] {ValidationMessages.ChapterNumberAlreadyExist}
@@ -192,7 +192,7 @@ namespace WeebReader.Web.Portal.Controllers
                         }
 
                         if (!await _chapterArchiver.IsValidComicChapterContent(content))
-                            return new JsonResult(new
+                            return Json(new
                             {
                                 success = false,
                                 messages = new[] {ValidationMessages.ZipDoesntContainSupportedImage}
@@ -209,7 +209,7 @@ namespace WeebReader.Web.Portal.Controllers
                 {
                     TempData["SuccessMessage"] = new[] {OtherMessages.ChapterUpdatedSuccessfully};
 
-                    return new JsonResult(new
+                    return Json(new
                     {
                         success = true,
                         destination = Url.Action("Index", new {titleId = chapterModel.TitleId})
@@ -219,7 +219,7 @@ namespace WeebReader.Web.Portal.Controllers
                 ModelState.AddModelError("SomethingWrong", OtherMessages.SomethingWrong);
             }
 
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
@@ -231,7 +231,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> Delete(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.ChapterNotFound}
@@ -241,13 +241,13 @@ namespace WeebReader.Web.Portal.Controllers
             {
                 TempData["SuccessMessage"] = new[] {OtherMessages.ChapterDeletedSuccessfully};
 
-                return new JsonResult(new
+                return Json(new
                 {
                     success = true
                 });
             }
 
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = new[] {OtherMessages.SomethingWrong}

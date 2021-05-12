@@ -127,14 +127,14 @@ namespace WeebReader.Web.Portal.Controllers
                     case SaveResult.Success:
                         TempData["SuccessMessage"] = new[] {OtherMessages.ParametersUpdatedSuccessfully};
                     
-                        return new JsonResult(new
+                        return Json(new
                         {
                             success = true
                         });
                     case SaveResult.Partial:
                         TempData["ErrorMessage"] = new[] {OtherMessages.SomeParametersFailedToUpdate};
 
-                        return new JsonResult(new
+                        return Json(new
                         {
                             success = true
                         });
@@ -144,7 +144,7 @@ namespace WeebReader.Web.Portal.Controllers
                 }
             }
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = false,
                 messages = ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)

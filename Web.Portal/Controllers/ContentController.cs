@@ -131,20 +131,20 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> TitlesJson(Guid titleId)
         {
             if (await _titlesManager.GetById(titleId) is var title && title == null)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     message = new[] {ValidationMessages.TitleNotFound}
                 });
 
             if (!_signInManager.IsSignedIn(User) && !title.Visible)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     message = new[] {ValidationMessages.ContentNotAvailable}
                 });
             
-            return new JsonResult(new
+            return Json(new
             {
                 success = true,
                 chapters = (await _chapterManager.GetAll(title, _signInManager.IsSignedIn(User))).Select(chapter => new
@@ -243,7 +243,7 @@ namespace WeebReader.Web.Portal.Controllers
         public async Task<IActionResult> ChapterJson(Guid chapterId)
         {
             if (await _chapterManager.GetById(chapterId) is var chapter && chapter == null)
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.ChapterNotFound}
@@ -252,7 +252,7 @@ namespace WeebReader.Web.Portal.Controllers
             var title = await _titlesManager.GetById(chapter.TitleId);
             
             if (!_signInManager.IsSignedIn(User) && (!title!.Visible || !chapter.Visible))
-                return new JsonResult(new
+                return Json(new
                 {
                     success = false,
                     messages = new[] {ValidationMessages.ContentNotAvailable}
@@ -280,7 +280,7 @@ namespace WeebReader.Web.Portal.Controllers
                 }
             };
             
-            return new JsonResult(result);
+            return Json(result);
         }
         
         private IActionResult GetDownload(Title title, Chapter chapter) => chapter switch
