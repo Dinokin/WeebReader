@@ -90,7 +90,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     if (!reCaptchaEnabled || await _reCaptchaValidator.Validate(contactModel.ReCaptchaResponse!, null))
                     {
-                        _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(ParameterTypes.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message);
+                        await _emailSender.SendEmail(contactModel.Email, await _parametersManager.GetValue<string>(ParameterTypes.SiteEmail), string.Format(OtherMessages.MessageFrom, contactModel.Nickname), contactModel.Message);
                         TempData["SuccessMessage"] = new[] {OtherMessages.MessageSentSuccessfully};
 
                         return Json(new
