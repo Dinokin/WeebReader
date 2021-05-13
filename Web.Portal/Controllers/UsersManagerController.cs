@@ -370,7 +370,7 @@ namespace WeebReader.Web.Portal.Controllers
 
                     var message = string.Format(Emails.ChangeEmailBody, user.UserName, siteName, Url.Action("ChangeEmail", "UsersManager", new {userId = user.Id, email = emailModel.Email, token = "replace"}, Request.Scheme).Replace("replace", token));
 
-                    _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
+                    await _emailSender.SendEmail(siteEmail, emailModel.Email, string.Format(Emails.ChangeEmailSubject, siteName), message);
 
                     return Json(new
                     {
@@ -411,7 +411,7 @@ namespace WeebReader.Web.Portal.Controllers
 
             var message = string.Format(Emails.AccountCreationEmailBody, user.UserName, siteName, Url.Action("ResetPassword", "SignIn", new {userId = user.Id, token = "replace" }, Request.Scheme).Replace("replace", token)); 
             
-            _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
+            await _emailSender.SendEmail(siteEmail, user.Email, string.Format(Emails.AccountCreationEmailSubject, siteName), message);
         }
     }
 }
