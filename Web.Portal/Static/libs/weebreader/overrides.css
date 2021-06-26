@@ -1,0 +1,13 @@
+a {
+    color:#e42000;
+    text-decoration:none;
+}
+
+a:hover {
+    color:#ff2400;
+    text-decoration:none;
+}
+
+#jump-button {
+    background-color:#e42000 !important;
+}
