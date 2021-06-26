@@ -294,12 +294,12 @@ namespace WeebReader.Web.Portal.Controllers
 
         private IActionResult GetComicReader(Comic comic, ComicChapter comicChapter)
         {
-            Request.Cookies.TryGetValue($"{comic.Id}_long_strip", out var value);
-
-            if (string.IsNullOrWhiteSpace(value))
-                Response.Cookies.Append($"{comic.Id}_long_strip", comic.LongStrip.ToString().ToLower(), new CookieOptions{ MaxAge = TimeSpan.FromDays(365 * 10) });
-
-            ViewData["LongStrip"] = Convert.ToBoolean(value) || comic.LongStrip;
+            if (Request.Cookies.TryGetValue($"{comic.Id}_long_strip", out var value))
+            {
+                ViewData["LongStrip"] = bool.Parse(value!);
+            }
+            else
+                ViewData["LongStrip"] = comic.LongStrip;
             
             return View("ComicReader", ValueTuple.Create(comic, comicChapter));
         }
