@@ -31,6 +31,7 @@
             });
 
             setPage();
+            nextPagePreload();
         },
         onFailure: response => Array.isArray(response.messages) ? showErrorToast(response.messages[0]) : showErrorToast(requestFailedLabel),
         onError: () => showErrorToast(requestFailedLabel)
