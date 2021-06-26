@@ -162,5 +162,9 @@
   {
     "outputFileName": "Static/libs/weebreader/admin/parameter-ratelimit.min.js",
     "inputFiles": ["Static/libs/weebreader/admin/parameter-ratelimit.js"]
+  },
+  {
+    "outputFileName": "Static/libs/weebreader/admin/parameter-advertisement.min.js",
+    "inputFiles": ["Static/libs/weebreader/admin/parameter-advertisement.js"]
   }
 ]

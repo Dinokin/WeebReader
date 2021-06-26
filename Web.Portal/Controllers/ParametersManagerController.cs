@@ -115,6 +115,12 @@ namespace WeebReader.Web.Portal.Controllers
 
             return await ProcessPatchRequest(rateLimitParametersModel);
         }
+        
+        [HttpGet("{action}")]
+        public async Task<IActionResult> Advertisement() => View(await _parametersManager.GetModel<AdvertisementParametersModel>());
+
+        [HttpPatch("{action}")]
+        public async Task<IActionResult> Advertisement(AdvertisementParametersModel advertisementParametersModel) => await ProcessPatchRequest(advertisementParametersModel);
 
         private async Task<JsonResult> ProcessPatchRequest(object model)
         {

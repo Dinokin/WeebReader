@@ -1,0 +1,41 @@
+﻿@model AdvertisementParametersModel
+
+@{
+    ViewData["Title"] = $"{Labels.Ads} - {Labels.Parameters}";
+}
+
+@section Headers
+{
+    <script>
+    const requestFailedLabel = "@OtherMessages.RequestFailed";
+    const patchRoute = "@Url.Action("Advertisement")";
+    </script>
+    <script src="~/libs/weebreader/admin/parameter-advertisement.js" asp-append-version="true"></script>
+}
+
+<form class="ui form" novalidate>
+    <div class="ui message error"></div>
+    <div class="field">
+        <label>@Labels.Ads</label>
+        <div class="ui toggle checkbox">
+            <input class="hidden" type="checkbox" name="adsEnabled" asp-for="AdsEnabled"/>
+            <label>@Labels.Enable</label>
+        </div>
+    </div>
+    <div class="field">
+        <label>@Labels.AdsHeaderCode</label>
+        <textarea name="adsHeaderCode" placeholder="@Labels.AdsHeaderCode" asp-for="AdsHeaderCode"></textarea>
+    </div>
+    <div class="field">
+        <label>@Labels.AdsTopSlot</label>
+        <textarea name="adsTopSlot" placeholder="@Labels.AdsTopSlot" asp-for="AdsTopSlot"></textarea>
+    </div>
+    <div class="field">
+        <label>@Labels.AdsBottomSlot</label>
+        <textarea name="adsBottomSlot" placeholder="@Labels.AdsBottomSlot" asp-for="AdsBottomSlot"></textarea>
+    </div>
+    <div class="ui divider"></div>
+    <div class="field ov-auto">
+        <div class="ui right floated black submit button ov-hidden">@Labels.UpdateParameters</div>
+    </div>
+</form>
