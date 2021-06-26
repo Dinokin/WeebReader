@@ -1,6 +1,6 @@
 ﻿@model Title
 
-<div class="ui raised card">
+<div class="ui raised inverted card">
     <div class="content">
         @if (Model.Nsfw)
         {
@@ -13,7 +13,7 @@
         </div>
         <h4 class="ui center aligned header line-clamp h-2-7rem"><a href="@Url.Action("Titles", new {titleId = Model.Id})">@Model.Name</a></h4>
     </div>
-    <a class="ui small black bottom attached button" href="@Url.Action("Titles", new {titleId = Model.Id})">
+    <a class="ui small alt-blue-background bottom attached button" href="@Url.Action("Titles", new {titleId = Model.Id})">
         @Labels.ViewDetails
     </a>
 </div>

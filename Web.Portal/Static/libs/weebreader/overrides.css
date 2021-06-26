@@ -1,0 +1,43 @@
+a {
+    color: #5a53b6;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #7d73ff;
+    text-decoration: none;
+}
+
+#jump-button {
+    background-color: #5475b7 !important;
+}
+
+.alt-blue-background {
+    background-color: #5475b7 !important;
+    color: #fff !important;
+}
+
+.button.alt-blue-background:hover {
+    background-color: #6187d2 !important;
+}
+
+.ui.inverted.alt-blue-background.menu .active.item {
+    background: #6187d2 !important;
+}
+
+.status-segment {
+    background-color: #1b1c1d !important;
+    border-bottom: none !important;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.pure-black {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+
+.button.pure-black:hover {
+    background-color: #141414 !important;
+    color: #fff !important;
+}

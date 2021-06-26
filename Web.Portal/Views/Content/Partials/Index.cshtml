@@ -2,7 +2,7 @@
 
 @foreach (var (title, chapter) in Model)
 {
-    <div class="ui raised card">
+    <div class="ui inverted raised card">
         <div class="content">
             @if (title.Nsfw)
             {
@@ -19,7 +19,7 @@
                 <p><i class="calendar alternate outline icon"></i>@chapter.ReleaseDate.ToString("yyyy-MM-dd")</p>
             </div>
         </div>
-        <a class="ui small black bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })">
+        <a class="ui small alt-blue-background bottom attached button" href="@Url.Action("ReadChapter", new { chapterId = chapter.Id })">
             @Labels.Read
             <i class="angle double right fitted icon"></i>
         </a>

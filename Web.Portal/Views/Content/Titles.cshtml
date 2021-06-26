@@ -14,10 +14,10 @@
     
     @if (Model.Any(title => title.Status == Title.Statuses.Ongoing))
     {
-        <h4 class="ui top attached header">
+        <h4 class="ui top attached inverted header">
             @Utilities.FromStatus(Title.Statuses.Ongoing)
         </h4>
-        <div class="ui green attached segment">
+        <div class="ui green attached status-segment segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Ongoing))
                 {
@@ -30,10 +30,10 @@
 
     @if (Model.Any(title => title.Status == Title.Statuses.Hiatus))
     {
-        <h4 class="ui top attached header">
+        <h4 class="ui top attached inverted header">
             @Utilities.FromStatus(Title.Statuses.Hiatus)
         </h4>
-        <div class="ui yellow attached segment">
+        <div class="ui yellow attached status-segment segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Hiatus))
                 {
@@ -46,10 +46,10 @@
     
     @if (Model.Any(title => title.Status == Title.Statuses.Completed))
     {
-        <h4 class="ui top attached header">
+        <h4 class="ui top attached inverted header">
             @Utilities.FromStatus(Title.Statuses.Completed)
         </h4>
-        <div class="ui blue attached segment">
+        <div class="ui blue attached status-segment segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Completed))
                 {
@@ -62,10 +62,10 @@
     
     @if (Model.Any(title => title.Status == Title.Statuses.Dropped))
     {
-        <h4 class="ui top attached header">
+        <h4 class="ui top attached inverted header">
             @Utilities.FromStatus(Title.Statuses.Dropped)
         </h4>
-        <div class="ui red attached segment">
+        <div class="ui red attached status-segment segment">
             <div class="ui four stackable cards">
                 @foreach (var title in Model.Where(title => title.Status == Title.Statuses.Dropped))
                 {

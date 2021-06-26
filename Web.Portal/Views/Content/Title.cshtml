@@ -29,7 +29,7 @@
 }
 
 <div class="ui container">
-    <div class="ui raised segment">
+    <div class="ui raised inverted segment">
         <div class="ui hidden divider"></div>
         <div class="ui large bordered centered fluid image">
             <a class="ui bottom right attached large label" href="@Url.Action("TitlesRss", new {titleId = Model.title.Id})">
@@ -39,10 +39,10 @@
         </div>
         <div class="ui hidden divider"></div>
         <div class="content">
-            <h1 class="ui centered header">@Model.title.Name</h1>
+            <h1 class="ui centered inverted header">@Model.title.Name</h1>
             @if (!string.IsNullOrWhiteSpace(Model.title.OriginalName))
             {
-                <h5 class="ui centered header">@Model.title.OriginalName</h5>
+                <h5 class="ui centered inverted header">@Model.title.OriginalName</h5>
             }
             <div class="ui center aligned container">
                 <p>@Labels.Author: @Model.title.Author</p>
@@ -56,7 +56,7 @@
                     <h5>@Labels.Tags</h5>
                     @foreach (var tag in Model.tags)
                     {
-                        <div class="ui label">@tag.Name</div>
+                        <div class="ui pure-black label">@tag.Name</div>
                     }
                 </div>
                 <div class="ui hidden divider"></div>   
@@ -68,8 +68,8 @@
         </div>
     </div>
     <div class="ui hidden divider"></div>
-    <div class="ui raised segment">
-        <div class="ui top attached tabular menu">
+    <div class="ui raised inverted segment">
+        <div class="ui top attached tabular inverted menu">
             <a class="item menu-item active" data-tab="chapters">
                 @Labels.Chapters
             </a>
@@ -80,10 +80,10 @@
                 </a>   
             }
         </div>
-        <div class="ui active bottom attached tab segment" data-tab="chapters">
+        <div class="ui active bottom attached tab inverted segment" data-tab="chapters">
             @if(Model.chapters.Any())
             {
-                <div id="chapters" class="ui relaxed divided list">
+                <div id="chapters" class="ui relaxed divided inverted list">
                     <partial name="Partials/TitleChapters" model="@Model.chapters"/>
                 </div>
                 <div id="loader" class="ui centered large inline loader"></div>
@@ -99,7 +99,7 @@
         </div>
         @if (disqusEnabled)
         {
-            <div class="ui bottom attached tab segment" data-tab="comments">
+            <div class="ui bottom attached tab inverted segment" data-tab="comments">
                 <partial name="_Disqus"/>
             </div>   
         }

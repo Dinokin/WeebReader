@@ -12,27 +12,27 @@
 <div class="ui container">
     @if (await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutPatreonEnabled))
     {
-        <div class="ui raised segment">
-            <h4 class="ui header">@Labels.BecomeOurPatreon</h4>
+        <div class="ui raised inverted segment">
+            <h4 class="ui inverted header">@Labels.BecomeOurPatreon</h4>
             @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutPatreonNotice))
-            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutPatreonLink))">
+            <a class="ui fluid mini pure-black button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutPatreonLink))">
                 <img class="ui centered small image" src="~/assets/patreon.png" alt="@Labels.Patreon"/>
             </a>
         </div>
     }
     @if (await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutKofiEnabled))
     {
-        <div class="ui raised segment">
+        <div class="ui raised inverted segment">
             <h4 class="ui header">@Labels.BuyUsACoffee</h4>
             @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutKofiNotice))
-            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutKofiLink))">
+            <a class="ui fluid mini pure-black button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutKofiLink))">
                 <img class="ui centered small image" src="~/assets/kofi.png" alt="@Labels.KoFi"/>
             </a>
         </div>
     }
     @if (await ParametersManager.GetValue<bool>(ParameterTypes.PageAboutEnabled))
     {
-        <div class="ui raised segment">
+        <div class="ui raised inverted segment">
             <div class="ui content">
                 @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.PageAboutContent))
             </div>

@@ -29,17 +29,17 @@
 <div class="ui container">
     @if (await ParametersManager.GetValue<bool>(ParameterTypes.ContactDiscordEnabled))
     {
-        <div class="ui raised segment">
-            <h4 class="ui header">@Labels.JoinOurDiscordCommunity</h4>
+        <div class="ui raised inverted segment">
+            <h4 class="ui inverted header">@Labels.JoinOurDiscordCommunity</h4>
             @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.ContactDiscordNotice))
-            <a class="ui fluid mini grey button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactDiscordLink))">
+            <a class="ui fluid mini pure-black button" href="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactDiscordLink))">
                 <img class="ui centered small image" src="~/assets/discord_b.png" alt="@Labels.Discord"/>
             </a>
         </div>
     }
     @if (await ParametersManager.GetValue<bool>(ParameterTypes.EmailSenderEnabled) && await ParametersManager.GetValue<bool>(ParameterTypes.ContactEmailEnabled))
     {
-        <div class="ui raised segment">
+        <div class="ui raised inverted segment">
             <h4 class="ui header">@Labels.ContactUsViaEmail</h4>
             <div class="ui @(successMessage == null && errorMessage == null ? "hidden" : string.Empty) message @(successMessage == null ? "error" : "success")">
                 <i class="close icon"></i>
@@ -56,7 +56,7 @@
                     </ul>
                 }
             </div>
-            <form class="ui form" novalidate>
+            <form class="ui inverted form" novalidate>
                 <div class="ui message error"></div>
                 <input type="hidden" name="reCaptchaResponse" asp-for="ReCaptchaResponse"/>
                 <div class="field">
@@ -75,11 +75,11 @@
                 {
                     <input type="hidden" name="reCaptchaResponse" asp-for="ReCaptchaResponse"/>
                     <div class="field">
-                        <div class="g-recaptcha" data-sitekey="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaClientKey))" data-callback="recaptcha_callback"></div>
+                        <div class="g-recaptcha" data-theme="dark" data-sitekey="@(await ParametersManager.GetValue<string>(ParameterTypes.ContactEmailRecaptchaClientKey))" data-callback="recaptcha_callback"></div>
                     </div>   
                 }
                 <div class="field ov-auto">
-                    <div class="ui right floated black submit button ov-hidden">@Labels.Send</div>
+                    <div class="ui right floated pure-black submit button ov-hidden">@Labels.Send</div>
                 </div>
             </form>
         </div>
