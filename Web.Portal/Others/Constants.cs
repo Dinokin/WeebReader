@@ -2,9 +2,6 @@
 {
     public static class Constants
     {
-        public const string DarkModeClasses = "background dark";
-        public const string LightModeClasses = "background dark light";
-
         public const ushort ItemsPerPageBlogAdmin = 25;
         public const ushort ItemsPerPageTitleAdmin = 25;
         public const ushort ItemsPerPageChapterAdmin = 25;

@@ -209,13 +209,6 @@ namespace WeebReader.Web.Portal.Controllers
             if (!_signInManager.IsSignedIn(User) && (!title!.Visible || !chapter.Visible))
                 return RedirectToAction("Titles");
 
-            Request.Cookies.TryGetValue("reader_theme", out var value);
-            ViewData["BodyClass"] = value switch
-            {
-                "light" => Constants.LightModeClasses,
-                _ => Constants.DarkModeClasses
-            };
-            
             if (title!.Nsfw && !HasNsfwCookie()) 
                 return View("NSFWChapterWarning", (title, chapter));
 

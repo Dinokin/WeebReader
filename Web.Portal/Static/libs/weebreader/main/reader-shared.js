@@ -39,16 +39,6 @@
         on: "click"
     });
 
-    $("#switch-theme").on("click", () => {
-        if (getCookie("reader_theme") !== "light") {
-            setCookie("reader_theme", "light", 3650);
-        } else {
-            setCookie("reader_theme", "dark", 3650);
-        }
-
-        location.reload();
-    });
-
     jumpButton.on("click", () => {
         scrollToTop($("#chapter-container"));
     });

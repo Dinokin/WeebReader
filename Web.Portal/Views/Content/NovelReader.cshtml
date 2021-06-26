@@ -3,7 +3,6 @@
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.novel.Name}";
-    var darkMode = (string) ViewData["BodyClass"] != Constants.LightModeClasses;
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];
     var disqusEnabled = await ParametersManager.GetValue<bool>(ParameterTypes.PageDisqusEnabled);
@@ -37,31 +36,22 @@
     <div class="ui centered grid no-margin-top no-margin-bottom">
         <div class="row no-padding add-ellipsis"><a class="section" href="@Url.Action("Titles", new {titleId = Model.novel.Id})">@Model.novel.Name</a></div>
         <div class="row">
-            <div id="chapter-selector" class="ui scrolling @(darkMode ? "inverted" : null) dropdown mr-1rem">
+            <div id="chapter-selector" class="ui scrolling inverted dropdown mr-1rem">
                 <input type="hidden" value="@Url.Action("ReadChapter", new {chapterId = Model.chapter.Id})"/>
                 <div class="text">@Labels.Chapter @Model.chapter.Number</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
                 </div>
             </div>
-            <div id="options" class="clickable">
-                <i class="eye outline @(darkMode ? "inverted" : "black") icon"></i>
-            </div>
         </div>
     </div>
 </div>
-
-<div id="popup" class="ui popup bottom center hidden">
-    <div class="ui link list">
-        <a id="switch-theme" class="item">@Labels.SwitchTheme</a>
-    </div>
-</div>
 <div id="chapter-container" class="ui centered container">
-    <div id="content" class="ui @(darkMode ? "inverted" : null ) segment mh-100px">
+    <div id="content" class="ui inverted segment mh-100px">
     </div>
 </div>
 <div class="ui container">
-    <div class="ui secondary massive menu @(darkMode ? "inverted" : null)">
+    <div class="ui secondary massive menu inverted">
         <a class="item @(previousChapter != null ? null : "disabled")" href="@(previousChapter != null ? Url.Action("ReadChapter", new {chapterId = previousChapter}) : null)">
             <i class="chevron left icon"></i>
             <i class="book open icon"></i>
