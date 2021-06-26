@@ -15,6 +15,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <partial name="_AdsHeaderCode"/>
     <partial name="_SharedHeaders"/>
     <partial name="_GoogleAnalytics"/>
     <script src="~/libs/weebreader/main/main-shared.js" asp-append-version="true"></script>
@@ -89,9 +90,11 @@
     </div>
 </div>
 <div class="ui hidden divider"></div>
+<partial name="_AdsTopSlot"/>
 <div class="ui fluid container">
     @RenderBody()
 </div>
+<partial name="_AdsBottomSlot"/>
 @if (fixedFooter)
 {
     <div class="ui hidden divider"></div>

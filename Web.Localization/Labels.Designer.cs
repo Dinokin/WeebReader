@@ -133,6 +133,42 @@ namespace WeebReader.Web.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advertisement.
+        /// </summary>
+        public static string Ads {
+            get {
+                return ResourceManager.GetString("Ads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advertisement Bottom Slot.
+        /// </summary>
+        public static string AdsBottomSlot {
+            get {
+                return ResourceManager.GetString("AdsBottomSlot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advertisement Header Code.
+        /// </summary>
+        public static string AdsHeaderCode {
+            get {
+                return ResourceManager.GetString("AdsHeaderCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advertisement Top Slot.
+        /// </summary>
+        public static string AdsTopSlot {
+            get {
+                return ResourceManager.GetString("AdsTopSlot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allowed Requests.
         /// </summary>
         public static string AllowedRequests {

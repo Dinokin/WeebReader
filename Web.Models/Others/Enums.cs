@@ -39,7 +39,11 @@ namespace WeebReader.Web.Models.Others
         RateLimitMaxContentRequests = 32,
         RateLimitMaxApiRequests = 33,
         RateLimitPeriodContent = 34,
-        RateLimitPeriodApi = 35
+        RateLimitPeriodApi = 35,
+        AdsEnabled = 36,
+        AdsHeaderCode = 37,
+        AdsTopSlot = 38,
+        AdsBottomSlot = 39
     }
 
     public enum RateLimitPeriods : byte

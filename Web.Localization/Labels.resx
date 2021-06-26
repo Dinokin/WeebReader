@@ -468,4 +468,16 @@
     <data name="ContentRateLimit">
         <value>Content Rate Limit</value>
     </data>
+    <data name="Ads">
+        <value>Advertisement</value>
+    </data>
+    <data name="AdsHeaderCode">
+        <value>Advertisement Header Code</value>
+    </data>
+    <data name="AdsTopSlot">
+        <value>Advertisement Top Slot</value>
+    </data>
+    <data name="AdsBottomSlot">
+        <value>Advertisement Bottom Slot</value>
+    </data>
 </root>
