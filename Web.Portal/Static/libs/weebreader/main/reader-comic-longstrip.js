@@ -30,7 +30,8 @@
         chapterContainer.children().visibility({
             type: "image",
             transition: "fade in",
-            duration: 1000
+            duration: 500,
+            offset: 500
         });
     }
 });
