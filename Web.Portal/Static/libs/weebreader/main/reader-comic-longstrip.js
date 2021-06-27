@@ -15,7 +15,7 @@
         let skeletonDivider = $("#skeleton-divider");
         
         pageList.forEach(page => {
-            skeletonPage.clone().appendTo(chapterContainer).removeAttr("id").attr("data-src", page.address);
+            skeletonPage.clone().appendTo(chapterContainer).removeAttr("id").attr("src", page.address);
             
             if (!longStrip && pageList[pageList.length - 1].number !== page.number) {
                 skeletonDivider.clone().appendTo(chapterContainer).removeAttr("id");
@@ -26,11 +26,5 @@
         
         if (!longStrip) 
             skeletonDivider.remove();
-
-        chapterContainer.children().visibility({
-            type: "image",
-            transition: "fade in",
-            duration: 1000
-        });
     }
 });

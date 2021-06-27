@@ -4,7 +4,7 @@ $(() => {
 
     $("#parameters").addClass("active");
     $("#parameters-content").addClass("active");
-    $("#parameters-pages").addClass("active");
+    $("#parameters-advertisement").addClass("active");
     $(".checkbox").checkbox();
 
     form.on("keypress", function (event) {
