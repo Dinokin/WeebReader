@@ -127,7 +127,7 @@ namespace WeebReader.Web.Services
             using var zippedPages = new ZipArchive(new MemoryStream(pages));
             
             var location = Utilities.GetChapterFolder(_environment, comicChapter.TitleId, comicChapter.Id);
-            var entries = zippedPages.Entries.Where(entry => HasValidExtension(entry.Name, false))
+            var entries = zippedPages.Entries.Where(entry => HasValidExtension(entry.FullName, false))
                 .OrderBy(entry => Regex.Replace(entry.Name, @"\d+", match => match.Value.PadLeft(10, '0'))).ToArray();
             var comicPages = new List<ComicPage>();
             var files = new List<FileInfo>();
@@ -238,6 +238,9 @@ namespace WeebReader.Web.Services
         {
             if (base64)
                 return Regex.IsMatch(content, "^data:image/(png|jpg|jpeg|gif);base64,.*");
+            
+            if (Regex.IsMatch(content, @"^__MACOSX(\/|\/).*"))
+                return false;
 
             return Path.GetExtension(content).ToLower() == ".png" || Path.GetExtension(content).ToLower() == ".jpg" || Path.GetExtension(content).ToLower() == ".jpeg" || Path.GetExtension(content).ToLower() == ".gif";
         }
