@@ -1,6 +1,0 @@
-﻿@inject ParametersManager ParametersManager
-
-@if (await ParametersManager.GetValue<bool>(ParameterTypes.AdsEnabled))
-{
-    @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.AdsHeaderCode))
-}

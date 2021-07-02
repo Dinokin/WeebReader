@@ -1,0 +1,20 @@
+﻿{
+  "profiles": {
+    "API DEV": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://127.0.0.1:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "API PROD": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://127.0.0.1:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    }
+  }
+}

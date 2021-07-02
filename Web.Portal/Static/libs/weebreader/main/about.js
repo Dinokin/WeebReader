@@ -1,1 +1,0 @@
-﻿$(() => $("#about,#about-mobile").addClass("active"));

@@ -1,8 +1,0 @@
-﻿@inject ParametersManager ParametersManager
-
-@if (await ParametersManager.GetValue<bool>(ParameterTypes.AdsEnabled))
-{
-    <div class="ui container">
-        @Html.Raw(await ParametersManager.GetValue<string>(ParameterTypes.AdsTopSlot))
-    </div>
-}
