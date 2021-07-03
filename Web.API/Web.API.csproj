@@ -17,6 +17,10 @@
       </PackageReference>
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.1" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Data\Services" />
+    </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <DebugSymbols>false</DebugSymbols>

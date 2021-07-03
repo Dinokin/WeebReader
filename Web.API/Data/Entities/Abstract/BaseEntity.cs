@@ -2,7 +2,7 @@
 
 namespace WeebReader.Web.API.Data.Entities.Abstract
 {
-    public abstract record BaseEntity
+    public abstract class BaseEntity
     {
         public Guid Id { get; init; }
     }

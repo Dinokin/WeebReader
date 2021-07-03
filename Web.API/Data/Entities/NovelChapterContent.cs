@@ -3,11 +3,11 @@ using WeebReader.Web.API.Data.Entities.Abstract;
 
 namespace WeebReader.Web.API.Data.Entities
 {
-    public class Post : BaseEntity
+    public class NovelChapterContent : BaseEntity
     {
-        public string Title { get; set; } = string.Empty;
+        public Guid ChapterId { get; init; }
         public string Content { get; set; } = string.Empty;
-        public DateTime ReleaseDate { get; set; }
-        public bool Visible { get; set; }
+        
+        public NovelChapter? Chapter { get; init; }
     }
 }

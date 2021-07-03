@@ -5,17 +5,10 @@ namespace WeebReader.Web.API.Data.Entities
 {
     public class TitleTag : BaseEntity
     {
-        public Guid TitleId { get; }
-        public Guid TagId { get; }
-        public Title? Title { get; set; }
-        public Tag? Tag { get; set; }
-
-        public TitleTag(Guid titleId, Guid tagId) : this(default, titleId, tagId) { }
-
-        public TitleTag(Guid id, Guid titleId, Guid tagId) : base(id)
-        {
-            TitleId = titleId;
-            TagId = tagId;
-        }
+        public Guid TitleId { get; init; }
+        public Guid TagId { get; init; }
+        
+        public Title? Title { get; init; }
+        public Tag? Tag { get; init; }
     }
 }
