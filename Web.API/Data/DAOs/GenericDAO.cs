@@ -8,12 +8,12 @@ using WeebReader.Web.API.Data.Entities.Abstract;
 
 namespace WeebReader.Web.API.Data.DAOs
 {
-    public class GenericDAO<TEntity> where TEntity : BaseEntity
+    public class GenericDao<TEntity> where TEntity : BaseEntity
     {
         protected readonly BaseContext Context;
         protected readonly DbSet<TEntity> DbSet;
 
-        public GenericDAO(BaseContext context)
+        public GenericDao(BaseContext context)
         {
             Context = context;
             DbSet = (DbSet<TEntity>) typeof(BaseContext).GetProperties()

@@ -4,20 +4,20 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using WeebReader.Web.API.Data.Contexts;
 using WeebReader.Web.API.Data.Contexts.Abstract;
+using WeebReader.Web.API.Filters;
 using WeebReader.Web.API.Others;
 using WeebReader.Web.API.Others.Settings;
 using WeebReader.Web.API.Others.Utilities;
@@ -43,7 +43,7 @@ namespace WeebReader.Web.API
         {
             services.Configure<Configuration>(_configuration);
             
-            services.AddDbContext<BaseContext, MariaDBContext>(builder =>
+            services.AddDbContext<BaseContext, MariaDbContext>(builder =>
                 builder.UseMySql(_bindConfiguration.Database.ConnectionString, new MariaDbServerVersion(new Version(10, 3))));
 
             services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
@@ -61,6 +61,24 @@ namespace WeebReader.Web.API
             
             services.AddDataProtection().PersistKeysToFileSystem(Security.KeysDirectory).ProtectKeysWithCertificate(Security.Certificate);
 
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Security.Issuer,
+                    ValidAudience = Security.Audience,
+                    IssuerSigningKey = new X509SecurityKey(Security.Certificate)
+                };
+            });
+
             if (_bindConfiguration.Nginx.Enabled)
                 services.Configure<ForwardedHeadersOptions>(options =>
                 {
@@ -74,14 +92,20 @@ namespace WeebReader.Web.API
                 options.LowercaseUrls = true;
                 options.LowercaseQueryStrings = true;
             });
-            
-            services.AddControllersWithViews()
+
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<ExceptionHandlerFilter>();
+                })
                 .AddJsonOptions(options =>
                 {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
-                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(new SnakeCaseNamingPolicy(), false));
                     options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                })
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressMapClientErrors = true;
                 });
 
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -99,12 +123,6 @@ namespace WeebReader.Web.API
                 options.SupportedCultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
                 options.SupportedUICultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
             });
-            
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
-            }
 
             if (_bindConfiguration.Nginx.Enabled)
                 app.UseForwardedHeaders(new()

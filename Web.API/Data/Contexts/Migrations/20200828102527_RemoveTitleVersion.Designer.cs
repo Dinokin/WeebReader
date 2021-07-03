@@ -9,7 +9,7 @@ using WeebReader.Web.API.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
-    [DbContext(typeof(MariaDBContext))]
+    [DbContext(typeof(MariaDbContext))]
     [Migration("20200828102527_RemoveTitleVersion")]
     partial class RemoveTitleVersion
     {

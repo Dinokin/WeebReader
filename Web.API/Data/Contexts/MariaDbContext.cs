@@ -7,9 +7,9 @@ using WeebReader.Web.API.Data.Entities.Abstract;
 
 namespace WeebReader.Web.API.Data.Contexts
 {
-    public class MariaDBContext : BaseContext
+    public class MariaDbContext : BaseContext
     {
-        public MariaDBContext(DbContextOptions options) : base(options) { }
+        public MariaDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -6,7 +6,7 @@
         public ushort HttpPort { get; set; }
         public bool UseHttps { get; set; }
         public ushort HttpsPort { get; set; }
-        public MariaDB Database { get; set; } = new();
+        public MariaDb Database { get; set; } = new();
         public Nginx Nginx { get; set; } = new();
     }
 }

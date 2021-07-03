@@ -7,6 +7,9 @@ namespace WeebReader.Web.API.Others.Utilities
 {
     public static class Security
     {
+        public const string Issuer = "WeebReader";
+        public const string Audience = "WeebReaderAPI";
+        
         private static X509Certificate2? _certificate;
         
         public static X509Certificate2 Certificate
