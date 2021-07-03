@@ -9,7 +9,7 @@ using WeebReader.Web.API.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
-    [DbContext(typeof(MariaDbContext))]
+    [DbContext(typeof(MariaDBContext))]
     [Migration("20201006174706_RenameTitleLinkToURL")]
     partial class RenameTitleLinkToURL
     {

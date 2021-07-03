@@ -1,30 +1,136 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WeebReader.Web.API.Data.Contexts;
+using WeebReader.Web.API.Data.Contexts.Abstract;
+using WeebReader.Web.API.Others;
+using WeebReader.Web.API.Others.Settings;
+using WeebReader.Web.API.Others.Utilities;
 
 namespace WeebReader.Web.API
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+        private readonly Configuration _bindConfiguration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            _bindConfiguration = new Configuration();
+            
+            _configuration.Bind(_bindConfiguration);
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Configuration>(_configuration);
+            
+            services.AddDbContext<BaseContext, MariaDBContext>(builder =>
+                builder.UseMySql(_bindConfiguration.Database.ConnectionString, new MariaDbServerVersion(new Version(10, 3))));
+
+            services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
+            {
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(1);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = true;
+            }).AddDefaultTokenProviders().AddEntityFrameworkStores<BaseContext>();
+            
+            services.AddDataProtection().PersistKeysToFileSystem(Security.KeysDirectory).ProtectKeysWithCertificate(Security.Certificate);
+
+            if (_bindConfiguration.Nginx.Enabled)
+                services.Configure<ForwardedHeadersOptions>(options =>
+                {
+                    foreach (var ip in _bindConfiguration.Nginx.TrustedIps)
+                        options.KnownProxies.Add(IPAddress.Parse(ip));
+                });
+
+            services.AddRouting(options =>
+            {
+                options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
+                options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
+            });
+            
+            services.AddControllersWithViews()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+                });
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            RunMigrations(app);
+
+            app.UseRequestLocalization(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
+                options.SupportedCultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
+                options.SupportedUICultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
+            });
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
 
-            app.UseRouting();
+            if (_bindConfiguration.Nginx.Enabled)
+                app.UseForwardedHeaders(new()
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
+            
+            if (_bindConfiguration.UseHttps)
+                app.UseHttpsRedirection();
 
-            app.UseEndpoints(endpoints => { endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); }); });
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(builder => builder.MapControllers());
         }
+        
+        private static void RunMigrations(IApplicationBuilder application)
+        {
+            using var scope = application.ApplicationServices.CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<BaseContext>();
+            
+            if (context.Database.GetPendingMigrations().Any())
+                context.Database.Migrate();
+        }
+
     }
 }

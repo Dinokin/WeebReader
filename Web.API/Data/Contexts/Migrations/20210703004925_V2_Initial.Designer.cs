@@ -8,7 +8,7 @@ using WeebReader.Web.API.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
-    [DbContext(typeof(MariaDbContext))]
+    [DbContext(typeof(MariaDBContext))]
     [Migration("20210703004925_V2_Initial")]
     partial class V2_Initial
     {

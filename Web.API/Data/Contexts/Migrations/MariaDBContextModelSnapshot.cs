@@ -7,8 +7,8 @@ using WeebReader.Web.API.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
-    [DbContext(typeof(MariaDbContext))]
-    partial class MariaDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(MariaDBContext))]
+    partial class MariaDBContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

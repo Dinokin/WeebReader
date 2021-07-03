@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace WeebReader.Web.API.Data.Contexts.Factories
 {
-    internal class MariaDbContextFactory : IDesignTimeDbContextFactory<MariaDbContext>
+    internal class MariaDBContextFactory : IDesignTimeDbContextFactory<MariaDBContext>
     {
-        public MariaDbContext CreateDbContext(string[] args)
+        public MariaDBContext CreateDbContext(string[] args)
         {
             var options = new DbContextOptionsBuilder();
             options.UseMySql("Server=localhost;Database=WeebDb;Uid=root;Pwd=123456;", new MariaDbServerVersion(new Version(10, 3)));
             
-            return new MariaDbContext(options.Options);
+            return new MariaDBContext(options.Options);
         }
     }
 }

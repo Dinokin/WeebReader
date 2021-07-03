@@ -9,7 +9,7 @@ using WeebReader.Web.API.Data.Contexts;
 
 namespace WeebReader.Data.Contexts.Migrations
 {
-    [DbContext(typeof(MariaDbContext))]
+    [DbContext(typeof(MariaDBContext))]
     [Migration("20200716115115_MoveNovelContent")]
     partial class MoveNovelContent
     {
