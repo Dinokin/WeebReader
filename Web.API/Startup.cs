@@ -32,7 +32,7 @@ namespace WeebReader.Web.API
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _bindConfiguration = new Configuration();
+            _bindConfiguration = new();
             
             _configuration.Bind(_bindConfiguration);
         }
@@ -95,7 +95,7 @@ namespace WeebReader.Web.API
 
             app.UseRequestLocalization(options =>
             {
-                options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
+                options.DefaultRequestCulture = new(CultureInfo.InvariantCulture);
                 options.SupportedCultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
                 options.SupportedUICultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
             });

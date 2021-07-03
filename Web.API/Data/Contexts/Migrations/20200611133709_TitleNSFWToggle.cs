@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WeebReader.Data.Contexts.Migrations
 {

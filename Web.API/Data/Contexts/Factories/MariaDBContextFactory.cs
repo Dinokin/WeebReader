@@ -11,7 +11,7 @@ namespace WeebReader.Web.API.Data.Contexts.Factories
             var options = new DbContextOptionsBuilder();
             options.UseMySql("Server=localhost;Database=WeebDb;Uid=root;Pwd=123456;", new MariaDbServerVersion(new Version(10, 3)));
             
-            return new MariaDBContext(options.Options);
+            return new(options.Options);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace WeebReader.Web.API.Others.Utilities
                     File.WriteAllBytes($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}{certName}", certificate.Export(X509ContentType.Pfx));
                 }
 
-                _certificate =  new X509Certificate2($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}{certName}");
+                _certificate =  new($"{Location.CurrentDirectory}{Path.DirectorySeparatorChar}{certName}");
 
                 return _certificate;
             }
