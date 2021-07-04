@@ -1,7 +1,10 @@
-﻿namespace WeebReader.Web.API.Models.Response
+﻿using System;
+using System.Collections.Generic;
+
+namespace WeebReader.Web.API.Models.Response
 {
     public class DefaultResponseMessage
     {
-        public string Message { get; set; } = string.Empty;
+        public IEnumerable<string> Message { get; set; } = Array.Empty<string>();
     }
 }

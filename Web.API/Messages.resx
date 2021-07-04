@@ -24,4 +24,25 @@
     <data name="NotAllowedToAuthenticate">
         <value>This user is not allowed to authenticate, please contact an administrator.</value>
     </data>
+    <data name="UsernameRequired">
+        <value>An username is required.</value>
+    </data>
+    <data name="PasswordRequired">
+        <value>A password is required.</value>
+    </data>
+    <data name="MinimumUsernameLength">
+        <value>An username must have at least 1 characters.</value>
+    </data>
+    <data name="MinimumPasswordLength">
+        <value>A password must have at least 8 characters.</value>
+    </data>
+    <data name="CannotProceedAlreadyInstalled">
+        <value>The installation cannot proceed because the application is already installed.</value>
+    </data>
+    <data name="EmailRequired">
+        <value>An e-mail address is required.</value>
+    </data>
+    <data name="ValidEmailRequired">
+        <value>A valid e-mail address is required.</value>
+    </data>
 </root>

@@ -61,6 +61,24 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The installation cannot proceed because the application is already installed..
+        /// </summary>
+        public static string CannotProceedAlreadyInstalled {
+            get {
+                return ResourceManager.GetString("CannotProceedAlreadyInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An e-mail address is required..
+        /// </summary>
+        public static string EmailRequired {
+            get {
+                return ResourceManager.GetString("EmailRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid credentials, please try again..
         /// </summary>
         public static string InvalidCredentials {
@@ -70,11 +88,56 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A password must have at least 8 characters..
+        /// </summary>
+        public static string MinimumPasswordLength {
+            get {
+                return ResourceManager.GetString("MinimumPasswordLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An username must have at least 1 characters..
+        /// </summary>
+        public static string MinimumUsernameLength {
+            get {
+                return ResourceManager.GetString("MinimumUsernameLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This user is not allowed to authenticate, please contact an administrator..
         /// </summary>
         public static string NotAllowedToAuthenticate {
             get {
                 return ResourceManager.GetString("NotAllowedToAuthenticate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A password is required..
+        /// </summary>
+        public static string PasswordRequired {
+            get {
+                return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An username is required..
+        /// </summary>
+        public static string UsernameRequired {
+            get {
+                return ResourceManager.GetString("UsernameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A valid e-mail address is required..
+        /// </summary>
+        public static string ValidEmailRequired {
+            get {
+                return ResourceManager.GetString("ValidEmailRequired", resourceCulture);
             }
         }
     }

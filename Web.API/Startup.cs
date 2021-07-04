@@ -95,6 +95,7 @@ namespace WeebReader.Web.API
 
             services.AddControllers(options =>
                 {
+                    options.Filters.Add<ModelValidatorFilter>();
                     options.Filters.Add<ExceptionHandlerFilter>();
                 })
                 .AddJsonOptions(options =>
@@ -106,6 +107,7 @@ namespace WeebReader.Web.API
                 .ConfigureApiBehaviorOptions(options =>
                 {
                     options.SuppressMapClientErrors = true;
+                    options.SuppressModelStateInvalidFilter = true;
                 });
 
             services.AddDatabaseDeveloperPageExceptionFilter();
