@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using WeebReader.Web.API.Others.Settings;
-using WeebReader.Web.API.Others.Utilities;
+using WeebReader.Web.API.Settings;
+using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API
 {

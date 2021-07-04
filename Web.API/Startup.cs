@@ -17,10 +17,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using WeebReader.Web.API.Data.Contexts;
 using WeebReader.Web.API.Data.Contexts.Abstract;
+using WeebReader.Web.API.Extensions;
 using WeebReader.Web.API.Filters;
 using WeebReader.Web.API.Others;
-using WeebReader.Web.API.Others.Settings;
-using WeebReader.Web.API.Others.Utilities;
+using WeebReader.Web.API.Settings;
+using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API
 {
@@ -46,7 +47,7 @@ namespace WeebReader.Web.API
             services.AddDbContext<BaseContext, MariaDbContext>(builder =>
                 builder.UseMySql(_bindConfiguration.Database.ConnectionString, new MariaDbServerVersion(new Version(10, 3))));
 
-            services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>(options =>
+            services.AddIdentityCore<IdentityUser<Guid>>(options =>
             {
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(1);
                 options.Lockout.MaxFailedAccessAttempts = 5;
@@ -57,7 +58,7 @@ namespace WeebReader.Web.API
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
-            }).AddDefaultTokenProviders().AddEntityFrameworkStores<BaseContext>();
+            }).AddRoles<IdentityRole<Guid>>().AddEntityFrameworkStores<BaseContext>().AddDefaultTokenProviders().AddApiSignInManager();
             
             services.AddDataProtection().PersistKeysToFileSystem(Security.KeysDirectory).ProtectKeysWithCertificate(Security.Certificate);
 
@@ -65,6 +66,10 @@ namespace WeebReader.Web.API
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new()
@@ -94,23 +99,20 @@ namespace WeebReader.Web.API
             });
 
             services.AddControllers(options =>
-                {
-                    options.Filters.Add<ModelValidatorFilter>();
-                    options.Filters.Add<ExceptionHandlerFilter>();
-                })
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(new SnakeCaseNamingPolicy(), false));
-                    options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
-                })
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    options.SuppressMapClientErrors = true;
-                    options.SuppressModelStateInvalidFilter = true;
-                });
+            {
+                options.Filters.Add<ModelValidatorFilter>();
+                options.Filters.Add<ExceptionHandlerFilter>();
+            }).AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(new SnakeCaseNamingPolicy(), false));
+                options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+            }).ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressMapClientErrors = true;
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
-            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddHttpClient();
         }
 

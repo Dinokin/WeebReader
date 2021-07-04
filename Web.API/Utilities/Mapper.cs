@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using WeebReader.Web.API.Models.Request.Authentication;
 
-namespace WeebReader.Web.API.Others
+namespace WeebReader.Web.API.Utilities
 {
     public static class Mapper
     {

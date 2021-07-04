@@ -11,8 +11,8 @@ using WeebReader.Web.API.Data.Contexts.Abstract;
 using WeebReader.Web.API.Models.Request.Authentication;
 using WeebReader.Web.API.Models.Response;
 using WeebReader.Web.API.Models.Response.Authentication;
-using WeebReader.Web.API.Others;
-using WeebReader.Web.API.Others.Utilities;
+using WeebReader.Web.API.Services;
+using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API.Controllers
 {
@@ -20,34 +20,30 @@ namespace WeebReader.Web.API.Controllers
     public class AuthenticationController : ApiController
     {
         private readonly BaseContext _context;
-        private readonly SignInManager<IdentityUser<Guid>> _signInManager;
-        
-        public AuthenticationController(BaseContext context, SignInManager<IdentityUser<Guid>> signInManager)
+        private readonly ApiSignInManager<IdentityUser<Guid>> _apiSignInManager;
+
+        public AuthenticationController(BaseContext context, ApiSignInManager<IdentityUser<Guid>> apiSignInManager)
         {
             _context = context;
-            _signInManager = signInManager;
+            _apiSignInManager = apiSignInManager;
         }
 
         [HttpPost]
         public async Task<IActionResult> Authenticate(AuthenticationRequestModel model)
         {
-            var user = await _signInManager.UserManager.FindByNameAsync(model.Username);
+            var result = await _apiSignInManager.PasswordSignIn(model.Username, model.Password, true);
 
-            if (user == null)
+            if (result.IsLockedOut || result.IsNotAllowed)
                 return Unauthorized(new DefaultResponseMessage
                 {
-                    Message = new[] {Messages.InvalidCredentials}
+                    Message = new[] {Messages.NotAllowedToAuthenticate}
                 });
-
-            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, true);
 
             if (!result.Succeeded)
                 return Unauthorized(new DefaultResponseMessage
                 {
-                    Message = new[] {result.IsLockedOut || result.IsNotAllowed ? Messages.NotAllowedToAuthenticate : Messages.InvalidCredentials}
+                    Message = new[] {Messages.InvalidCredentials}
                 });
-
-            HttpContext.User = await _signInManager.ClaimsFactory.CreateAsync(user);
             
             return Ok(new AuthenticationResponseModel
             {
@@ -58,7 +54,7 @@ namespace WeebReader.Web.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Install(InstallRequestModel model)
         {
-            var userManager = _signInManager.UserManager;
+            var userManager = _apiSignInManager.UserManager;
             
             if (await userManager.Users.AnyAsync())
                 return StatusCode(403, new DefaultResponseMessage

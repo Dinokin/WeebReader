@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WeebReader.Web.API.Others.Utilities
+namespace WeebReader.Web.API.Utilities
 {
     public static class Security
     {

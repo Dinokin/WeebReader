@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace WeebReader.Web.API.Others.Utilities
+namespace WeebReader.Web.API.Utilities
 {
     public static class Location
     {

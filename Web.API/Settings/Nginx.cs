@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WeebReader.Web.API.Others.Settings
+namespace WeebReader.Web.API.Settings
 {
     public class Nginx
     {
