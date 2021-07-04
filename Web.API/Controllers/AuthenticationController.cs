@@ -5,9 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using WeebReader.Web.API.Data.Contexts.Abstract;
 using WeebReader.Web.API.Models.Request.Authentication;
 using WeebReader.Web.API.Models.Response;
 using WeebReader.Web.API.Models.Response.Authentication;
@@ -16,22 +14,16 @@ using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API.Controllers
 {
-    [AllowAnonymous]
     public class AuthenticationController : ApiController
     {
-        private readonly BaseContext _context;
         private readonly ApiSignInManager<IdentityUser<Guid>> _apiSignInManager;
 
-        public AuthenticationController(BaseContext context, ApiSignInManager<IdentityUser<Guid>> apiSignInManager)
-        {
-            _context = context;
-            _apiSignInManager = apiSignInManager;
-        }
+        public AuthenticationController(ApiSignInManager<IdentityUser<Guid>> apiSignInManager) => _apiSignInManager = apiSignInManager;
 
         [HttpPost]
         public async Task<IActionResult> Authenticate(AuthenticationRequestModel model)
         {
-            var result = await _apiSignInManager.PasswordSignIn(model.Username, model.Password, true);
+            var result = await _apiSignInManager.PasswordSignIn(model.Username, model.Password);
 
             if (result.IsLockedOut || result.IsNotAllowed)
                 return Unauthorized(new DefaultResponseMessage
@@ -52,44 +44,31 @@ namespace WeebReader.Web.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Install(InstallRequestModel model)
+        [Authorize]
+        public async Task<IActionResult> Refresh()
         {
-            var userManager = _apiSignInManager.UserManager;
-            
-            if (await userManager.Users.AnyAsync())
-                return StatusCode(403, new DefaultResponseMessage
-                {
-                    Message = new[] {Messages.InvalidCredentials}
-                });
+            var expirationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(HttpContext.User.Claims.Single(claim => claim.Type == "exp").Value));
+            var timeRemaining = expirationDate - DateTimeOffset.Now;
 
-            var user = Mapper.MapToEntity(model);
-            user.EmailConfirmed = true;
-
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            var userResult = await userManager.CreateAsync(user, model.Password);
-
-            if (userResult.Succeeded)
+            if (timeRemaining > TimeSpan.FromMinutes(5))
             {
-                var roleResult = await userManager.AddToRoleAsync(user, Security.Roles.Administrator);
-
-                if (roleResult.Succeeded)
+                return BadRequest(new DefaultResponseMessage
                 {
-                    await transaction.CommitAsync();
-
-                    return await Authenticate(model);
-                }
-
-                await transaction.RollbackAsync();
-                    
-                return StatusCode(500, new DefaultResponseMessage
-                {
-                    Message = roleResult.Errors.Select(error => error.Description)
+                    Message = new[] {Messages.TokenStillValid}
                 });
             }
 
-            return StatusCode(500, new DefaultResponseMessage
+            var result = await _apiSignInManager.RefreshSignInAsync(HttpContext.User);
+
+            if (!result.Succeeded)
+                return Unauthorized(new DefaultResponseMessage
+                {
+                    Message = new[] {Messages.NotAllowedToAuthenticate}
+                });
+            
+            return Ok(new AuthenticationResponseModel
             {
-                Message = userResult.Errors.Select(error => error.Description)
+                Token = BuildJwtToken()
             });
         }
 
@@ -100,10 +79,10 @@ namespace WeebReader.Web.API.Controllers
             {
                 Subject = new(HttpContext.User.Claims),
                 Issuer = Security.Issuer,
-                IssuedAt = DateTime.Now,
                 Audience = Security.Audience,
-                Expires = DateTime.Now.AddMinutes(60),
-                NotBefore = DateTime.Now.AddMinutes(30),
+                IssuedAt = DateTime.Now,
+                NotBefore = DateTime.Now,
+                Expires = DateTime.Now.AddMinutes(30),
                 SigningCredentials = new(key, SecurityAlgorithms.RsaSha256Signature)
             };
 

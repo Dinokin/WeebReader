@@ -79,6 +79,15 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The application is installed..
+        /// </summary>
+        public static string Installed {
+            get {
+                return ResourceManager.GetString("Installed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid credentials, please try again..
         /// </summary>
         public static string InvalidCredentials {
@@ -115,11 +124,29 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The application is not installed..
+        /// </summary>
+        public static string NotInstalled {
+            get {
+                return ResourceManager.GetString("NotInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A password is required..
         /// </summary>
         public static string PasswordRequired {
             get {
                 return ResourceManager.GetString("PasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your current token still has enough time and cannot be refreshed..
+        /// </summary>
+        public static string TokenStillValid {
+            get {
+                return ResourceManager.GetString("TokenStillValid", resourceCulture);
             }
         }
         

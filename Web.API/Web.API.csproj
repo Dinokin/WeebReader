@@ -21,10 +21,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Folder Include="Models\Request" />
-    </ItemGroup>
-    
-    <ItemGroup>
       <EmbeddedResource Update="Messages.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
         <LastGenOutput>Messages.Designer.cs</LastGenOutput>

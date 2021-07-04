@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Identity;
-using WeebReader.Web.API.Models.Request.Authentication;
+using WeebReader.Web.API.Models.Request.Installer;
 
 namespace WeebReader.Web.API.Utilities
 {

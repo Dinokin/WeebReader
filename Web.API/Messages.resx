@@ -45,4 +45,13 @@
     <data name="ValidEmailRequired">
         <value>A valid e-mail address is required.</value>
     </data>
+    <data name="Installed">
+        <value>The application is installed.</value>
+    </data>
+    <data name="NotInstalled">
+        <value>The application is not installed.</value>
+    </data>
+    <data name="TokenStillValid">
+        <value>Your current token still has enough time and cannot be refreshed.</value>
+    </data>
 </root>
