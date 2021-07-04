@@ -14,6 +14,7 @@ using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API.Controllers
 {
+    [Route("[controller]/[action]")]
     public class AuthenticationController : ApiController
     {
         private readonly ApiSignInManager<IdentityUser<Guid>> _apiSignInManager;
