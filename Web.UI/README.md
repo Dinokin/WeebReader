@@ -1,26 +1,24 @@
-# WeebReader (web.ui)
+# web.ui
 
-A comic and novel publishing CMS for scanlation groups.
-
-## Install the dependencies
-```bash
+## Project setup
+```
 npm install
 ```
 
-### Start the app in development mode (hot-code reloading, error reporting, etc.)
-```bash
-quasar dev
+### Compiles and hot-reloads for development
+```
+npm run serve
 ```
 
-### Lint the files
-```bash
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
 npm run lint
 ```
 
-### Build the app for production
-```bash
-quasar build
-```
-
-### Customize the configuration
-See [Configuring quasar.conf.js](https://v2.quasar.dev/quasar-cli/quasar-conf-js).
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
