@@ -26,7 +26,7 @@ namespace WeebReader.Web.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Index() => Ok(new DefaultResponseMessage
         {
-            Message = new[] {await IsInstalled() ? Messages.Installed : Messages.NotInstalled}
+            Messages = new[] {await IsInstalled() ? Messages.Installed : Messages.NotInstalled}
         });
         
         [HttpPost]
@@ -35,7 +35,7 @@ namespace WeebReader.Web.API.Controllers
             if (await IsInstalled())
                 return StatusCode(403, new DefaultResponseMessage
                 {
-                    Message = new[] {Messages.CannotProceedAlreadyInstalled}
+                    Messages = new[] {Messages.CannotProceedAlreadyInstalled}
                 });
 
             var user = Mapper.MapToEntity(model);
@@ -59,13 +59,13 @@ namespace WeebReader.Web.API.Controllers
                     
                 return StatusCode(500, new DefaultResponseMessage
                 {
-                    Message = roleResult.Errors.Select(error => error.Description)
+                    Messages = roleResult.Errors.Select(error => error.Description)
                 });
             }
 
             return StatusCode(500, new DefaultResponseMessage
             {
-                Message = userResult.Errors.Select(error => error.Description)
+                Messages = userResult.Errors.Select(error => error.Description)
             });
         }
 

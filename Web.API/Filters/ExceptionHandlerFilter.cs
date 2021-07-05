@@ -10,7 +10,7 @@ namespace WeebReader.Web.API.Filters
         {
             var result = new JsonResult(new DefaultResponseMessage
             {
-                Message = new[] {context.Exception.Message}
+                Messages = new[] {context.Exception.Message}
             });
 
             context.Result = result;

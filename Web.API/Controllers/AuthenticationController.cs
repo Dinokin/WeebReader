@@ -29,13 +29,13 @@ namespace WeebReader.Web.API.Controllers
             if (result.IsLockedOut || result.IsNotAllowed)
                 return Unauthorized(new DefaultResponseMessage
                 {
-                    Message = new[] {Messages.NotAllowedToAuthenticate}
+                    Messages = new[] {Messages.NotAllowedToAuthenticate}
                 });
 
             if (!result.Succeeded)
                 return Unauthorized(new DefaultResponseMessage
                 {
-                    Message = new[] {Messages.InvalidCredentials}
+                    Messages = new[] {Messages.InvalidCredentials}
                 });
             
             return Ok(new AuthenticationResponseModel
@@ -55,7 +55,7 @@ namespace WeebReader.Web.API.Controllers
             {
                 return BadRequest(new DefaultResponseMessage
                 {
-                    Message = new[] {Messages.TokenStillValid}
+                    Messages = new[] {Messages.TokenStillValid}
                 });
             }
 
@@ -64,7 +64,7 @@ namespace WeebReader.Web.API.Controllers
             if (!result.Succeeded)
                 return Unauthorized(new DefaultResponseMessage
                 {
-                    Message = new[] {Messages.NotAllowedToAuthenticate}
+                    Messages = new[] {Messages.NotAllowedToAuthenticate}
                 });
             
             return Ok(new AuthenticationResponseModel

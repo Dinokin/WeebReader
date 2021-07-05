@@ -13,7 +13,7 @@ namespace WeebReader.Web.API.Filters
             {
                 context.Result = new BadRequestObjectResult(new DefaultResponseMessage
                 {
-                    Message = context.ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
+                    Messages = context.ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)
                 });
             }
         }
