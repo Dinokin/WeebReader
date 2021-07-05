@@ -98,6 +98,8 @@ namespace WeebReader.Web.API
                 options.LowercaseQueryStrings = true;
             });
 
+            services.AddCors(options => options.AddDefaultPolicy(builder => builder.WithOrigins(_bindConfiguration.AllowedOrigins).AllowAnyMethod().AllowAnyHeader()));
+
             services.AddControllers(options =>
             {
                 options.Filters.Add<ModelValidatorFilter>();
@@ -139,6 +141,7 @@ namespace WeebReader.Web.API
 
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 

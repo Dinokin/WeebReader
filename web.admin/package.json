@@ -1,7 +1,7 @@
 {
-  "name": "web.admin",
-  "version": "0.0.1",
-  "description": "WeebReader Admin",
+  "name": "Web.Admin",
+  "version": "2.0.0",
+  "description": "WeebReader CMS Administration Panel",
   "productName": "WeebReader Admin",
   "author": "Micael Valentim <lord.valentim@gmail.com>",
   "private": true,
@@ -15,6 +15,7 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "jwt-decode": "^3.1.2",
     "quasar": "^2.0.0",
     "vuex": "^4.0.1"
   },

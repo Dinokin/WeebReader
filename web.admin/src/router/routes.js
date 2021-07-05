@@ -1,11 +1,20 @@
-
 const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/Index.vue') }
-    ]
+    children: [{
+      path: '', component: () => import('pages/Index.vue')
+    }],
+  },
+
+  {
+    path: '/authentication',
+    component: () => import('layouts/AuthenticationLayout'),
+    children: [{
+      path: 'sign-in',
+      alias: [''],
+      component: () => import('pages/Authentication/SignIn')
+    }]
   },
 
   // Always leave this as last one,

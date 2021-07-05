@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WeebReader.Web.API.Controllers
 {
+    [Route("[controller]/{action=Index}")]
     public class UsersController : ApiController
     {
-        public IActionResult Index(ushort page)
+        public IActionResult Index(ushort? page)
         {
             throw new NotImplementedException();
         }

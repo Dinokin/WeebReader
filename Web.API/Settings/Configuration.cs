@@ -1,4 +1,6 @@
-﻿namespace WeebReader.Web.API.Settings
+﻿using System;
+
+namespace WeebReader.Web.API.Settings
 {
     public class Configuration
     {
@@ -6,6 +8,7 @@
         public ushort HttpPort { get; set; }
         public bool UseHttps { get; set; }
         public ushort HttpsPort { get; set; }
+        public string[] AllowedOrigins { get; set; } = Array.Empty<string>();
         public MariaDb Database { get; set; } = new();
         public Nginx Nginx { get; set; } = new();
     }
