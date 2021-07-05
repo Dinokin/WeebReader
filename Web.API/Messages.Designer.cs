@@ -106,7 +106,7 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An username must have at least 1 characters..
+        ///   Looks up a localized string similar to An username must have at least 3 characters..
         /// </summary>
         public static string MinimumUsernameLength {
             get {
