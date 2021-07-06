@@ -11,8 +11,7 @@ const routes = [
     path: '/authentication',
     component: () => import('layouts/AuthenticationLayout'),
     children: [{
-      path: 'sign-in',
-      alias: [''],
+      path: [''],
       component: () => import('pages/Authentication/SignIn')
     }]
   },

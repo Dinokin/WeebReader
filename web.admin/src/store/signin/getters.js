@@ -1,4 +1,4 @@
-import jwtDecode from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 
 export function isSignedIn(state) {
   let token = state.token;

@@ -1,4 +1,4 @@
-import {api} from "boot/axios";
+import {api} from 'boot/axios';
 
 export function signIn (context, credentials) {
   if (context.getters.isSignedIn)
@@ -8,10 +8,12 @@ export function signIn (context, credentials) {
     .then(response => {
       let token = response.data.token;
 
-      context.commit('addToken', token);
-      fillHeader(token);
+      saveToken(context, token);
 
       return response;
+    })
+    .catch(error => {
+      return error.response;
     });
 }
 
@@ -23,11 +25,12 @@ export function refresh(context) {
     .then(response => {
       let token = response.data.token;
 
-      context.commit('addToken', token);
-      fillHeader(token);
+      saveToken(context, token);
     });
 }
 
-function fillHeader(token) {
+function saveToken(context, token) {
+  context.commit('addToken', token);
   api.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  localStorage.setItem('token', token);
 }

@@ -8,7 +8,11 @@
 
 <script>
 export default {
-  name: "AuthenticationLayout"
+  name: 'AuthenticationLayout',
+  preFetch({store, redirect}) {
+    if (store.getters["signIn/isSignedIn"])
+      redirect({path: '/'});
+  }
 }
 </script>
 

@@ -95,10 +95,17 @@ const linksList = [
   }
 ];
 
-import { defineComponent, ref } from 'vue'
+import {ref} from 'vue'
 
-export default defineComponent({
+export default {
   name: 'MainLayout',
+
+  preFetch({store, redirect}) {
+    store.dispatch('signIn/refresh');
+
+    if (!store.getters["signIn/isSignedIn"])
+      redirect({path: '/authentication'});
+  },
 
   components: {
     EssentialLink
@@ -115,5 +122,5 @@ export default defineComponent({
       }
     }
   }
-})
+}
 </script>
