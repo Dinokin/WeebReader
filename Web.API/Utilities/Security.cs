@@ -15,7 +15,7 @@ namespace WeebReader.Web.API.Utilities
         }
 
         public const string Issuer = "WeebReader";
-        public const string Audience = "WeebReaderAPI";
+        public const string Audience = "WeebReader.Web";
         
         private static X509Certificate2? _certificate;
         

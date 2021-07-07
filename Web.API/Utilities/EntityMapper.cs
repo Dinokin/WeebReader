@@ -4,9 +4,9 @@ using WeebReader.Web.API.Models.Request.Installer;
 
 namespace WeebReader.Web.API.Utilities
 {
-    public static class Mapper
+    public static class EntityMapper
     {
-        public static IdentityUser<Guid> MapToEntity(InstallRequestModel model) => new()
+        public static IdentityUser<Guid> MapToUser(InstallRequestModel model) => new()
         {
             UserName = model.Username,
             Email = model.Email

@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using WeebReader.Web.API.Models.Request.Authentication;
-using WeebReader.Web.API.Models.Response;
-using WeebReader.Web.API.Models.Response.Authentication;
 using WeebReader.Web.API.Services;
 using WeebReader.Web.API.Utilities;
 
@@ -25,29 +23,17 @@ namespace WeebReader.Web.API.Controllers
         public async Task<IActionResult> Authenticate(AuthenticationRequestModel model)
         {
             if (_apiSignInManager.IsSignedIn(User))
-                return Unauthorized(new DefaultResponseMessage
-                {
-                    Messages = new[] {Messages.AlreadyAuthenticated}
-                });
+                return Unauthorized(ModelMapper.MapToDefaultResponse(Messages.AlreadyAuthenticated));
 
             var signInResult = await _apiSignInManager.PasswordSignIn(model.Username, model.Password);
 
             if (signInResult.IsLockedOut || signInResult.IsNotAllowed)
-                return Unauthorized(new DefaultResponseMessage
-                {
-                    Messages = new[] {Messages.NotAllowedToAuthenticate}
-                });
+                return Unauthorized(ModelMapper.MapToDefaultResponse(Messages.NotAllowedToAuthenticate));
 
             if (!signInResult.Succeeded)
-                return Unauthorized(new DefaultResponseMessage
-                {
-                    Messages = new[] {Messages.InvalidCredentials}
-                });
+                return Unauthorized(ModelMapper.MapToDefaultResponse(Messages.InvalidCredentials));
             
-            return Ok(new AuthenticationResponseModel
-            {
-                Token = BuildJwtToken()
-            });
+            return Ok(ModelMapper.MapToAuthenticationResponse(BuildJwtToken()));
         }
 
         [HttpPost]
@@ -58,25 +44,14 @@ namespace WeebReader.Web.API.Controllers
             var timeRemaining = expirationDate - DateTimeOffset.Now;
 
             if (timeRemaining > TimeSpan.FromMinutes(5))
-            {
-                return BadRequest(new DefaultResponseMessage
-                {
-                    Messages = new[] {Messages.TokenStillValid}
-                });
-            }
+                return BadRequest(ModelMapper.MapToDefaultResponse(Messages.TokenStillValid));
 
-            var result = await _apiSignInManager.RefreshSignInAsync(User);
+            var refreshResult = await _apiSignInManager.RefreshSignInAsync(User);
 
-            if (!result.Succeeded)
-                return Unauthorized(new DefaultResponseMessage
-                {
-                    Messages = new[] {Messages.NotAllowedToAuthenticate}
-                });
+            if (!refreshResult.Succeeded)
+                return Unauthorized(ModelMapper.MapToDefaultResponse(Messages.NotAllowedToAuthenticate));
             
-            return Ok(new AuthenticationResponseModel
-            {
-                Token = BuildJwtToken()
-            });
+            return Ok(ModelMapper.MapToAuthenticationResponse(BuildJwtToken()));
         }
 
         private string BuildJwtToken()

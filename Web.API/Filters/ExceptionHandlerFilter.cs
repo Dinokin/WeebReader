@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using WeebReader.Web.API.Models.Response;
+using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API.Filters
 {
@@ -8,10 +8,7 @@ namespace WeebReader.Web.API.Filters
     {
         public void OnException(ExceptionContext context)
         {
-            var result = new JsonResult(new DefaultResponseMessage
-            {
-                Messages = new[] {context.Exception.Message}
-            });
+            var result = new JsonResult(ModelMapper.MapToDefaultResponse(context.Exception.Message));
 
             context.Result = result;
         }

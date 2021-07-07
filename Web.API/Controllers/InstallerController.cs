@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Web.API.Data.Contexts.Abstract;
 using WeebReader.Web.API.Models.Request.Installer;
-using WeebReader.Web.API.Models.Response;
 using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API.Controllers
@@ -24,21 +23,20 @@ namespace WeebReader.Web.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() => Ok(new DefaultResponseMessage
+        public async Task<IActionResult> Index()
         {
-            Messages = new[] {await IsInstalled() ? Messages.Installed : Messages.NotInstalled}
-        });
+            var result = await IsInstalled();
+
+            return result ? Ok(ModelMapper.MapToDefaultResponse(Messages.Installed)) : StatusCode(500, ModelMapper.MapToDefaultResponse(Messages.NotInstalled));
+        }
         
         [HttpPost]
         public async Task<IActionResult> Install(InstallRequestModel model)
         {
             if (await IsInstalled())
-                return StatusCode(403, new DefaultResponseMessage
-                {
-                    Messages = new[] {Messages.CannotProceedAlreadyInstalled}
-                });
+                return StatusCode(403, ModelMapper.MapToDefaultResponse(Messages.CannotProceedAlreadyInstalled));
 
-            var user = Mapper.MapToEntity(model);
+            var user = EntityMapper.MapToUser(model);
             user.EmailConfirmed = true;
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
@@ -57,16 +55,10 @@ namespace WeebReader.Web.API.Controllers
 
                 await transaction.RollbackAsync();
                     
-                return StatusCode(500, new DefaultResponseMessage
-                {
-                    Messages = roleResult.Errors.Select(error => error.Description)
-                });
+                return StatusCode(500, ModelMapper.MapToDefaultResponse(roleResult.Errors.Select(error => error.Description)));
             }
 
-            return StatusCode(500, new DefaultResponseMessage
-            {
-                Messages = userResult.Errors.Select(error => error.Description)
-            });
+            return StatusCode(500, ModelMapper.MapToDefaultResponse(userResult.Errors.Select(error => error.Description)));
         }
 
         private Task<bool> IsInstalled() => _userManager.Users.AnyAsync();
