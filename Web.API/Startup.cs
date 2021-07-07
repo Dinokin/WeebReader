@@ -58,17 +58,12 @@ namespace WeebReader.Web.API
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = true;
-            }).AddRoles<IdentityRole<Guid>>().AddEntityFrameworkStores<BaseContext>().AddDefaultTokenProviders().AddApiSignInManager();
+            }).AddRoles<IdentityRole<Guid>>().AddEntityFrameworkStores<BaseContext>().AddDefaultTokenProviders().AddApiSignInManager().AddSignInManager();
             
             services.AddDataProtection().PersistKeysToFileSystem(Security.KeysDirectory).ProtectKeysWithCertificate(Security.Certificate);
 
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
@@ -80,7 +75,8 @@ namespace WeebReader.Web.API
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = Security.Issuer,
                     ValidAudience = Security.Audience,
-                    IssuerSigningKey = new X509SecurityKey(Security.Certificate)
+                    IssuerSigningKey = new X509SecurityKey(Security.Certificate),
+                    AuthenticationType = TokenValidationParameters.DefaultAuthenticationType
                 };
             });
 

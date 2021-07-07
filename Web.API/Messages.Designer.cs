@@ -61,6 +61,15 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You&apos;re already authenticated..
+        /// </summary>
+        public static string AlreadyAuthenticated {
+            get {
+                return ResourceManager.GetString("AlreadyAuthenticated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The installation cannot proceed because the application is already installed..
         /// </summary>
         public static string CannotProceedAlreadyInstalled {

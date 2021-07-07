@@ -24,15 +24,21 @@ namespace WeebReader.Web.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Authenticate(AuthenticationRequestModel model)
         {
-            var result = await _apiSignInManager.PasswordSignIn(model.Username, model.Password);
+            if (_apiSignInManager.IsSignedIn(User))
+                return Unauthorized(new DefaultResponseMessage
+                {
+                    Messages = new[] {Messages.AlreadyAuthenticated}
+                });
 
-            if (result.IsLockedOut || result.IsNotAllowed)
+            var signInResult = await _apiSignInManager.PasswordSignIn(model.Username, model.Password);
+
+            if (signInResult.IsLockedOut || signInResult.IsNotAllowed)
                 return Unauthorized(new DefaultResponseMessage
                 {
                     Messages = new[] {Messages.NotAllowedToAuthenticate}
                 });
 
-            if (!result.Succeeded)
+            if (!signInResult.Succeeded)
                 return Unauthorized(new DefaultResponseMessage
                 {
                     Messages = new[] {Messages.InvalidCredentials}
@@ -48,7 +54,7 @@ namespace WeebReader.Web.API.Controllers
         [Authorize]
         public async Task<IActionResult> Refresh()
         {
-            var expirationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(HttpContext.User.Claims.Single(claim => claim.Type == "exp").Value));
+            var expirationDate = DateTimeOffset.FromUnixTimeSeconds(long.Parse(User.Claims.Single(claim => claim.Type == "exp").Value));
             var timeRemaining = expirationDate - DateTimeOffset.Now;
 
             if (timeRemaining > TimeSpan.FromMinutes(5))
@@ -59,7 +65,7 @@ namespace WeebReader.Web.API.Controllers
                 });
             }
 
-            var result = await _apiSignInManager.RefreshSignInAsync(HttpContext.User);
+            var result = await _apiSignInManager.RefreshSignInAsync(User);
 
             if (!result.Succeeded)
                 return Unauthorized(new DefaultResponseMessage
@@ -78,7 +84,7 @@ namespace WeebReader.Web.API.Controllers
             var key = new X509SecurityKey(Security.Certificate);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new(HttpContext.User.Claims),
+                Subject = new(User.Claims),
                 Issuer = Security.Issuer,
                 Audience = Security.Audience,
                 IssuedAt = DateTime.Now,

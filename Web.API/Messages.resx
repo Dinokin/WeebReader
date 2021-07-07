@@ -54,4 +54,7 @@
     <data name="TokenStillValid">
         <value>Your current token still has enough time and cannot be refreshed.</value>
     </data>
+    <data name="AlreadyAuthenticated">
+        <value>You're already authenticated.</value>
+    </data>
 </root>

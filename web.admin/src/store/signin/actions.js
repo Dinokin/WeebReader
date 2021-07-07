@@ -26,6 +26,12 @@ export function refresh(context) {
       let token = response.data.token;
 
       saveToken(context, token);
+    })
+    .catch(error => {
+      if (error.response.code !== 401)
+        return;
+
+      removeToken(context);
     });
 }
 
@@ -33,4 +39,10 @@ function saveToken(context, token) {
   context.commit('addToken', token);
   api.defaults.headers.common['Authorization'] = 'Bearer ' + token;
   localStorage.setItem('token', token);
+}
+
+function removeToken(context) {
+  context.commit('removeToken');
+  delete api.defaults.headers.common['Authorization'];
+  localStorage.removeItem('token');
 }
