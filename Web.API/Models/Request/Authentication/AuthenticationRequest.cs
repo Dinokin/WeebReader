@@ -2,7 +2,7 @@
 
 namespace WeebReader.Web.API.Models.Request.Authentication
 {
-    public class AuthenticationRequestModel
+    public class AuthenticationRequest
     {
         [Required(ErrorMessageResourceType = typeof(Messages), ErrorMessageResourceName = "UsernameRequired")]
         [MinLength(3, ErrorMessageResourceType = typeof(Messages), ErrorMessageResourceName = "MinimumUsernameLength")]

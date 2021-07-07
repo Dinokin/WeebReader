@@ -20,7 +20,7 @@ namespace WeebReader.Web.API.Controllers
         public AuthenticationController(ApiSignInManager<IdentityUser<Guid>> apiSignInManager) => _apiSignInManager = apiSignInManager;
 
         [HttpPost]
-        public async Task<IActionResult> Authenticate(AuthenticationRequestModel model)
+        public async Task<IActionResult> Authenticate(AuthenticationRequest model)
         {
             if (_apiSignInManager.IsSignedIn(User))
                 return Unauthorized(ModelMapper.MapToDefaultResponse(Messages.AlreadyAuthenticated));

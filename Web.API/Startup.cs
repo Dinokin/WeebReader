@@ -90,7 +90,6 @@ namespace WeebReader.Web.API
 
             services.AddRouting(options =>
             {
-                options.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
                 options.LowercaseUrls = true;
                 options.LowercaseQueryStrings = true;
             });

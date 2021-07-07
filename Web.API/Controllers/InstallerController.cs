@@ -31,7 +31,7 @@ namespace WeebReader.Web.API.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Install(InstallRequestModel model)
+        public async Task<IActionResult> Install(InstallRequest model)
         {
             if (await IsInstalled())
                 return StatusCode(403, ModelMapper.MapToDefaultResponse(Messages.CannotProceedAlreadyInstalled));

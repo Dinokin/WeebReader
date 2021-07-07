@@ -10,9 +10,8 @@ namespace WeebReader.Web.API.Filters
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)
-            {
-                context.Result = new BadRequestObjectResult(ModelMapper.MapToDefaultResponse(context.ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)));
-            }
+                context.Result = new BadRequestObjectResult(ModelMapper.MapToDefaultResponse(
+                    context.ModelState.SelectMany(state => state.Value.Errors).Select(error => error.ErrorMessage)));
         }
     }
 }

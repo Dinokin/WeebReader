@@ -6,11 +6,7 @@ namespace WeebReader.Web.API.Filters
 {
     public class ExceptionHandlerFilter : IExceptionFilter
     {
-        public void OnException(ExceptionContext context)
-        {
-            var result = new JsonResult(ModelMapper.MapToDefaultResponse(context.Exception.Message));
-
-            context.Result = result;
-        }
+        public void OnException(ExceptionContext context) =>
+            context.Result = new JsonResult(ModelMapper.MapToDefaultResponse(context.Exception.Message));
     }
 }

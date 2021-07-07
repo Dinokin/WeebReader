@@ -6,7 +6,7 @@ namespace WeebReader.Web.API.Utilities
 {
     public static class EntityMapper
     {
-        public static IdentityUser<Guid> MapToUser(InstallRequestModel model) => new()
+        public static IdentityUser<Guid> MapToUser(InstallRequest model) => new()
         {
             UserName = model.Username,
             Email = model.Email

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using WeebReader.Web.API.Settings;
 
@@ -11,9 +12,9 @@ namespace WeebReader.Web.API.Services
         private readonly SmtpClient _smtpClient;
         private readonly MailboxAddress _senderEmail;
 
-        public EmailDispatcher(Configuration configuration, SmtpClient smtpClient)
+        public EmailDispatcher(IOptions<Configuration> configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration.Value;
             _smtpClient = new() {ServerCertificateValidationCallback = (_, _, _, _) => true};
 
             _senderEmail = new(_configuration.Email.SenderName, _configuration.Email.SenderEmailAddress);
