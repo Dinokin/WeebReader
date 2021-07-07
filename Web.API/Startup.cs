@@ -20,6 +20,7 @@ using WeebReader.Web.API.Data.Contexts.Abstract;
 using WeebReader.Web.API.Extensions;
 using WeebReader.Web.API.Filters;
 using WeebReader.Web.API.Others;
+using WeebReader.Web.API.Services;
 using WeebReader.Web.API.Settings;
 using WeebReader.Web.API.Utilities;
 
@@ -80,10 +81,10 @@ namespace WeebReader.Web.API
                 };
             });
 
-            if (_bindConfiguration.Nginx.Enabled)
+            if (_bindConfiguration.Proxy.Enabled)
                 services.Configure<ForwardedHeadersOptions>(options =>
                 {
-                    foreach (var ip in _bindConfiguration.Nginx.TrustedIps)
+                    foreach (var ip in _bindConfiguration.Proxy.TrustedIps)
                         options.KnownProxies.Add(IPAddress.Parse(ip));
                 });
 
@@ -112,6 +113,7 @@ namespace WeebReader.Web.API
             });
 
             services.AddHttpClient();
+            services.AddSingleton<EmailDispatcher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,7 +128,7 @@ namespace WeebReader.Web.API
                 options.SupportedUICultures = new List<CultureInfo>(new[] {CultureInfo.InvariantCulture});
             });
 
-            if (_bindConfiguration.Nginx.Enabled)
+            if (_bindConfiguration.Proxy.Enabled)
                 app.UseForwardedHeaders(new()
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
@@ -135,7 +137,9 @@ namespace WeebReader.Web.API
             if (_bindConfiguration.UseHttps)
                 app.UseHttpsRedirection();
 
-            app.UseStaticFiles();
+            if (_bindConfiguration.ServeStaticFiles)
+                app.UseStaticFiles();
+            
             app.UseRouting();
             app.UseCors();
             app.UseAuthentication();

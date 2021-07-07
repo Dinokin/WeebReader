@@ -1,6 +1,6 @@
 ﻿namespace WeebReader.Web.API.Settings
 {
-    public class MariaDb
+    public class MariaDbConfiguration
     {
         public string Address { get; set; } = string.Empty;
         public string Database { get; set; } = string.Empty;
