@@ -44,7 +44,7 @@ namespace WeebReader.Web.API.Controllers
 
             if (userResult.Succeeded)
             {
-                var roleResult = await _userManager.AddToRoleAsync(user, Security.Roles.Administrator);
+                var roleResult = await _userManager.AddToRoleAsync(user, Identity.Roles.Administrator);
 
                 if (roleResult.Succeeded)
                 {

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,9 +18,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using WeebReader.Web.API.Data.Contexts;
 using WeebReader.Web.API.Data.Contexts.Abstract;
+using WeebReader.Web.API.Data.DAOs.Identity;
 using WeebReader.Web.API.Extensions;
 using WeebReader.Web.API.Filters;
-using WeebReader.Web.API.Others;
 using WeebReader.Web.API.Services;
 using WeebReader.Web.API.Settings;
 using WeebReader.Web.API.Utilities;
@@ -102,8 +103,8 @@ namespace WeebReader.Web.API
                 options.Filters.Add<ExceptionHandlerFilter>();
             }).AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(new SnakeCaseNamingPolicy(), false));
+                options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(null, false));
                 options.JsonSerializerOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
             }).ConfigureApiBehaviorOptions(options =>
             {
@@ -112,6 +113,7 @@ namespace WeebReader.Web.API
             });
 
             services.AddHttpClient();
+            services.AddTransient<UserDAO>();
             services.AddSingleton<EmailDispatcher>();
         }
 

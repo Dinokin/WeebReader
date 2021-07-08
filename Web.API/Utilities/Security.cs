@@ -7,13 +7,6 @@ namespace WeebReader.Web.API.Utilities
 {
     public static class Security
     {
-        public static class Roles
-        {
-            public const string Administrator = "Administrator";
-            public const string Moderator = "Moderator";
-            public const string Uploader = "Uploader";
-        }
-
         public const string Issuer = "WeebReader";
         public const string Audience = "WeebReader.Web";
         

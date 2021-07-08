@@ -37,6 +37,10 @@
         <DependentUpon>Messages.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Others" />
+    </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <DebugSymbols>false</DebugSymbols>
