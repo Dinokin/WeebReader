@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using WeebReader.Web.API.Data.Entities;
 using WeebReader.Web.API.Data.Entities.Abstract;
+using WeebReader.Web.API.Utilities;
 
 namespace WeebReader.Web.API.Data.Contexts.Abstract
 {
@@ -57,20 +58,20 @@ namespace WeebReader.Web.API.Data.Contexts.Abstract
                 typeBuilder.HasData(new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7eb5-4426-82ba-7c4a4ae9d84b"),
-                    Name = "Administrator",
-                    NormalizedName = "Administrator".ToUpperInvariant(),
+                    Name = Identity.Roles.Administrator,
+                    NormalizedName = Identity.Roles.Administrator.ToUpperInvariant(),
                     ConcurrencyStamp = "26cd3943-23ff-41f5-86ed-8b867cf233b4"
                 }, new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7ec1-478f-867c-a8170f075a27"),
-                    Name = "Moderator",
-                    NormalizedName = "Moderator".ToUpperInvariant(),
+                    Name = Identity.Roles.Moderator,
+                    NormalizedName = Identity.Roles.Moderator.ToUpperInvariant(),
                     ConcurrencyStamp = "31bbe05d-7b5a-4b3a-9255-ed262a6a02c7"
                 }, new IdentityRole<Guid>
                 {
                     Id = Guid.Parse("08d79ae6-7ec3-42ce-8a94-00a56192c379"),
-                    Name = "Uploader",
-                    NormalizedName = "Uploader".ToUpperInvariant(),
+                    Name = Identity.Roles.Uploader,
+                    NormalizedName = Identity.Roles.Uploader.ToUpperInvariant(),
                     ConcurrencyStamp = "352e1584-d439-45dc-8015-9428b4e47c76"
                 });
             });

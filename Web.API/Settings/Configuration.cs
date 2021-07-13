@@ -11,7 +11,7 @@ namespace WeebReader.Web.API.Settings
         public string[] AllowedOrigins { get; set; } = Array.Empty<string>();
         public bool ServeStaticFiles { get; set; }
         public MariaDbConfiguration Database { get; set; } = new();
-        public NginxConfiguration Proxy { get; set; } = new();
+        public ProxyConfiguration Proxy { get; set; } = new();
         public EmailConfiguration Email { get; set; } = new();
     }
 }

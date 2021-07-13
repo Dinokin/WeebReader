@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using WeebReader.Web.API.Data.Contexts.Abstract;
 using WeebReader.Web.API.Data.DAOs.Identity;
 using WeebReader.Web.API.Models.Request.Users;
+using WeebReader.Web.API.Services;
 using WeebReader.Web.API.Settings;
 using WeebReader.Web.API.Utilities;
 
@@ -15,14 +18,18 @@ namespace WeebReader.Web.API.Controllers
     public class UsersController : ApiController
     {
         private readonly Configuration _configuration;
+        private readonly BaseContext _baseContext;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
         private readonly UserDAO _userDAO;
-        
-        public UsersController(IOptions<Configuration> configuration, UserManager<IdentityUser<Guid>> userManager, UserDAO userDAO)
+        private readonly EmailDispatcher _emailDispatcher;
+
+        public UsersController(IOptions<Configuration> configuration, BaseContext baseContext, UserManager<IdentityUser<Guid>> userManager, UserDAO userDAO, EmailDispatcher emailDispatcher)
         {
             _configuration = configuration.Value;
+            _baseContext = baseContext;
             _userManager = userManager;
             _userDAO = userDAO;
+            _emailDispatcher = emailDispatcher;
         }
 
         [HttpGet("{page:int?}")]
@@ -38,16 +45,44 @@ namespace WeebReader.Web.API.Controllers
 
         [HttpPost]
         [Authorize(Roles = Identity.Roles.Administrator)]
-        public IActionResult Add(AddUserRequest model)
+        public async Task<IActionResult> Add(AddUserRequest model)
         {
-            throw new NotImplementedException();
+            var user = EntityMapper.MapToUser(model);
+            user.EmailConfirmed = !_configuration.Email.Enabled;
+
+            await using var transaction = await _baseContext.Database.BeginTransactionAsync();
+
+            if (!_configuration.Email.Enabled && string.IsNullOrWhiteSpace(model.Password))
+                return BadRequest(ModelMapper.MapToDefaultResponse(Messages.PasswordRequired));
+
+            var userResult = string.IsNullOrWhiteSpace(model.Password) ? await _userManager.CreateAsync(user) : await _userManager.CreateAsync(user, model.Password);
+
+            if (!userResult.Succeeded)
+                return StatusCode(500, ModelMapper.MapToDefaultResponse(userResult.Errors.Select(error => error.Description)));
+
+            if (model.Role != Identity.Roles.None)
+            {
+                var roleResult = await _userManager.AddToRoleAsync(user, model.Role);
+
+                if (!roleResult.Succeeded)
+                    return StatusCode(500, ModelMapper.MapToDefaultResponse(roleResult.Errors.Select(error => error.Description)));
+            }
+
+            await transaction.CommitAsync();
+
+            return Ok(ModelMapper.MapToDefaultResponse(Messages.UserCreatedSuccessfully));
         }
         
         [HttpGet("{userId:guid}")]
         [Authorize(Roles = Identity.Roles.Administrator)]
-        public IActionResult Get(Guid userId)
+        public async Task<IActionResult> Get(Guid userId)
         {
-            throw new NotImplementedException();
+            var (user, role) = await _userDAO.GetUserByIdWithRole(userId);
+
+            if (user == null)
+                return NotFound(ModelMapper.MapToDefaultResponse(Messages.UserNotFound));
+
+            return Ok(ModelMapper.MapToUserResponse(user, role));
         }
 
         [HttpPatch("{userId:guid}")]
@@ -107,6 +142,11 @@ namespace WeebReader.Web.API.Controllers
         [HttpPatch("[action]")]
         [Authorize]
         public IActionResult ChangeEmail(ChangeEmailRequest model)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async Task SendAccountCreationEmail(IdentityUser<Guid> user)
         {
             throw new NotImplementedException();
         }

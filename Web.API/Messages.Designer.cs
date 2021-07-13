@@ -106,6 +106,15 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The role &apos;{0}&apos; is not a valid role..
+        /// </summary>
+        public static string InvalidRole {
+            get {
+                return ResourceManager.GetString("InvalidRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A password must have at least 8 characters..
         /// </summary>
         public static string MinimumPasswordLength {
@@ -160,11 +169,29 @@ namespace WeebReader.Web.API {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User created successfully..
+        /// </summary>
+        public static string UserCreatedSuccessfully {
+            get {
+                return ResourceManager.GetString("UserCreatedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An username is required..
         /// </summary>
         public static string UsernameRequired {
             get {
                 return ResourceManager.GetString("UsernameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified user was not found..
+        /// </summary>
+        public static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
         

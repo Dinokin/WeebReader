@@ -57,4 +57,13 @@
     <data name="AlreadyAuthenticated">
         <value>You're already authenticated.</value>
     </data>
+    <data name="InvalidRole">
+        <value>The role '{0}' is not a valid role.</value>
+    </data>
+    <data name="UserCreatedSuccessfully">
+        <value>User created successfully.</value>
+    </data>
+    <data name="UserNotFound">
+        <value>The specified user was not found.</value>
+    </data>
 </root>

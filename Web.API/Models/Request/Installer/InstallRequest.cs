@@ -7,6 +7,6 @@ namespace WeebReader.Web.API.Models.Request.Installer
     {
         [Required(ErrorMessageResourceType = typeof(Messages), ErrorMessageResourceName = "EmailRequired")]
         [EmailAddress(ErrorMessageResourceType = typeof(Messages), ErrorMessageResourceName = "ValidEmailRequired")]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; init; } = string.Empty;
     }
 }

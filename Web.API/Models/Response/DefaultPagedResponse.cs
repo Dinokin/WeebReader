@@ -2,7 +2,7 @@
 {
     public abstract class PagedResponse
     {
-        public ushort Page { get; set; }
-        public ushort TotalPages { get; set; }
+        public ushort Page { get; init; }
+        public ushort TotalPages { get; init; }
     }
 }
