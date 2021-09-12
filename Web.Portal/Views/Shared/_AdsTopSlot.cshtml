@@ -2,7 +2,7 @@
 
 @{
     var allowAlternateAds = ViewData["AllowAlternateAds"] as bool? ?? false;
-    var useAlternateAds = DateTime.Now >= DateTime.Parse("2021-08-23") && DateTime.Now < DateTime.Parse("2021-08-30");
+    var useAlternateAds = true;
 }
 
 @if (await ParametersManager.GetValue<bool>(ParameterTypes.AdsEnabled))

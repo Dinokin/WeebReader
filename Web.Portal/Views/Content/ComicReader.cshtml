@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = $"{Labels.Chapter} {Model.chapter.Number} - {Model.comic.Name}";
+    ViewData["AllowAlternateAds"] = true;
     var longStrip = (bool) ViewData["LongStrip"];
     var previousChapter = (Guid?) ViewData["PreviousChapter"];
     var nextChapter = (Guid?) ViewData["NextChapter"];

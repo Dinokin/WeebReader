@@ -3,6 +3,7 @@
 
 @{
     var siteDescription = await ParameterManager.GetValue<string>(ParameterTypes.SiteDescription);
+    var allowAlternateAds = ViewData["AllowAlternateAds"] as bool? ?? false;
 }
 
 <!-- Standard Meta -->
@@ -29,6 +30,10 @@
 <link rel="stylesheet" href="~/libs/weebreader/weebreader-shared.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/libs/cookieconsent.css" asp-append-version="true"/>
 <link rel="stylesheet" href="~/libs/weebreader/overrides.css" asp-append-version="true"/>
+@if (allowAlternateAds)
+{
+    <link rel="stylesheet" href="~/libs/kenmei.css" asp-append-version="true"/>
+}
 <script src="~/libs/jquery.js" asp-append-version="true"></script>
 <script src="~/libs/jquery.serialize-object.js" asp-append-version="true"></script>
 <script src="~/libs/fomantic/semantic.min.js" asp-append-version="true"></script>

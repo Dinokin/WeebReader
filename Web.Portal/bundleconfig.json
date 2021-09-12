@@ -166,5 +166,9 @@
   {
     "outputFileName": "Static/libs/weebreader/admin/parameter-advertisement.min.js",
     "inputFiles": ["Static/libs/weebreader/admin/parameter-advertisement.js"]
+  },
+  {
+    "outputFileName": "Static/libs/kenmei.min.css",
+    "inputFiles": ["Static/libs/kenmei.css"]
   }
 ]
