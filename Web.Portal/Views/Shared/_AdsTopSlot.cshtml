@@ -1,8 +1,11 @@
 ﻿@inject ParametersManager ParametersManager
 
 @{
-    var allowAlternateAds = ViewData["AllowAlternateAds"] as bool? ?? false;
-    var useAlternateAds = true;
+  var currentDate = DateTime.Now;
+  var startDate = DateTime.Parse("2021-10-25");
+  var endDate = DateTime.Parse("2021-10-31");
+  var allowAlternateAds = ViewData["AllowAlternateAds"] as bool? ?? false;
+  var useAlternateAds = currentDate >= startDate && currentDate <= endDate;
 }
 
 @if (await ParametersManager.GetValue<bool>(ParameterTypes.AdsEnabled))
